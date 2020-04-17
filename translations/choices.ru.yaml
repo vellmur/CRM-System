@@ -1,7 +1,5 @@
 # Software modules
-Crops: Урожаи
 Customers: Клиенты
-Company: Компания
 
 # Customer statuses
 ACTIVE: АКТИВНО
@@ -17,68 +15,3 @@ thursday: Четверг
 friday: Пятница
 saturday: Суббота
 sunday: Воскресенье
-
-# Plant families
-Alliaceae: Луковые
-Asteraceae: Астровые
-Brassicaceae: Капустные
-Chenopodiaceae: Маревые
-Cucurbitaceae: Тыквенные
-Lamiaceae: Яснотковые
-Leguminosae: Бобовые культуры
-Miscellaneous: Разные (смешанные)
-Polygonaceae: Гречишные
-Solanaceae: Паслёновые
-Umbelliferae: Зонтичные
-
-# Plants names (for choices)
-Arugula: Руккола
-Broccoli: Брокколи
-Broccoli, De Cicco: Брокколи, Де Чикко
-Basil: Базилик
-Beans: Бобы
-Beets: Свёкла
-Buckwheat: Гречка
-Carrots: Морковь
-Cauliflower: Цветная капуста
-Chard: Мангольд
-Chives: Лук
-Cilantro: Кориандр
-Clover: Клевер
-Cucumbers: Огурец
-Dill: Укроп
-Eggplant: Баклажан
-Garlic: Чеснок
-Kale: Кудрявая капуста
-Mixed greens: Смешанная зелень
-Onions, Green: Лук, Зеленый
-Onions, Bunching: Лук, Батун
-Onions, Head: Лук, Репчатый
-Parsley: Петрушка
-Peas: Горох
-Fall Mix Cover Crop: Покровная культура
-Peppers: Перец красный
-Potato: Картошка
-Radish: Редька
-Rye: Рожь
-Spinach, Savoyed: Шпинат, Огородный
-Summer squash, Yellow: Летняя тыква, Желтая
-Summer squash, Green: Летняя тыква, Зеленая
-Tomatoes, Cherry: Томат, Черри
-Tomatoes: Томат
-Winter Squash: Зимняя тыква
-Zucchini: Кабачок
-
-# Plants names
-Onions: Лук
-Spinach: Шпинат
-Summer squash: Летняя тыква
-
-# Plants subnames
-De Cicco: Де Чикко
-Bunching: Батун
-Head: Репчатый
-Yellow: Желтая
-Green: Зеленая
-Cherry: Черри
-Savoyed: Огородный

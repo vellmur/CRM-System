@@ -1,7 +1,5 @@
 # Software modules
-Crops: Crops
 Customers: Customers
-Company: Company
 
 # Customer statuses
 ACTIVE: ACTIVE
@@ -17,68 +15,3 @@ thursday: Thursday
 friday: Friday
 saturday: Saturday
 sunday: Sunday
-
-# Plant families
-Alliaceae: Alliaceae
-Asteraceae: Asteraceae
-Brassicaceae: Brassicaceae
-Chenopodiaceae: Chenopodiaceae
-Cucurbitaceae: Cucurbitaceae
-Lamiaceae: Lamiaceae
-Leguminosae: Leguminosae
-Miscellaneous: Miscellaneous
-Polygonaceae: Polygonaceae
-Solanaceae: Solanaceae
-Umbelliferae: Umbelliferae
-
-# Plants names (for choices)
-Arugula: Arugula
-Broccoli: Broccoli
-Broccoli, De Cicco: Broccoli, De Cicco
-Basil: Basil
-Beans: Beans
-Beets: Beets
-Buckwheat: Buckwheat
-Carrots: Carrots
-Cauliflower: Cauliflower
-Chard: Chard
-Chives: Chives
-Cilantro: Cilantro
-Clover: Clover
-Cucumbers: Cucumbers
-Dill: Dill
-Eggplant: Eggplant
-Garlic: Garlic
-Kale: Kale
-Mixed greens: Mixed greens
-Onions, Green: Onions, Green
-Onions, Bunching: Onions, Bunching
-Onions, Head: Onions, Head
-Parsley: Parsley
-Peas: Peas
-Fall Mix Cover Crop: Fall Mix Cover Crop
-Peppers: Peppers
-Potato: Potato
-Radish: Radish
-Rye: Rye
-Spinach, Savoyed: Spinach, Savoyed
-Summer squash, Yellow: Summer squash, Yellow
-Summer squash, Green: Summer squash, Green
-Tomatoes, Cherry: Tomatoes, Cherry
-Tomatoes: Tomatoes
-Winter Squash: Winter Squash
-Zucchini: Zucchini
-
-# Plants names
-Onions: Onions
-Spinach: Spinach
-Summer squash: Summer squash
-
-# Plants subnames
-De Cicco: De Cicco
-Bunching: Bunching
-Head: Head
-Yellow: Yellow
-Green: Green
-Cherry: Cherry
-Savoyed: Savoyed

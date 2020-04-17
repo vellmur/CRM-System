@@ -1,7 +1,5 @@
 navigation:
-    module_crops: 'Модуль: Урожай'
     module_customers: 'Модуль: Клиенты'
-    module_company: 'Модуль: Компания'
     account:
         account: Аккаунт
         profile: Профиль
@@ -12,37 +10,8 @@ navigation:
         employee: Работник
         translation: Перевод
         logout: Выйти
-    setup:
-        setup: Настройки
-        plants: Растения
-        gardens: Теплицы
-        notes: Заметки
-        crops: Урожай
-    crops:
-        crops: Управление урожаем
-        dashboard: Панель управления
-        tray_starts: Рассады
-        plants_in_garden: Растения в теплице
-        harvest_date: Сбор урожая
-        end_of_garden: Завершение выращивания
-        setup: Настроить
-        crop: Урожай
-    seeds:
-        manage_seeds: Управление семенами
-        seeds: Семена
-        inventory: Инвентарь семян
-    tasks:
-        tasks: Задания
-        list: Список
     reports:
-        reports: Отчеты
-        garden: Теплица
-        garden_history: История теплиц
-        now_growing: Выращивается сейчас
-        seed: Семена
         share_day: Дата выдачи
-        what_we_grew: Что выращивается
-        where_to_plant: Где садить
     customers:
         manage_customers: Управление клиентами
         add: Добавить
@@ -59,7 +28,6 @@ navigation:
         logs: Логи
     orders:
         orders: Заказы
-        available_plants: Доступные растения
         for_members: Для клиентов
         for_vendors: Для поставщиков
         harvest_list: Список урожая
@@ -78,20 +46,6 @@ navigation:
         vendors: Поставщики
         add: Добавить
         search: Поиск
-    website:
-        website: Вебсайт
-        blog: Блог
-        create_website: Создать вебсайт
-        manage_website: Управление вебсайтом
-        media_gallery: Медиа галерея
-    widgets:
-        widgets: Виджеты
-    tools:
-        tools: Утилиты
-        editor: Редактор
-        invoices: Чеки
-        merchant: Торговый счет
-        statistics: Статистика
     help:
         help: Помощь
         support: Поддержка
@@ -111,11 +65,8 @@ account:
         when_to_disable: Когда отключать
         day_before: За день
         day_of: День в день
-        crops_enabled: Включение или выключение модуля «Урожай»
         shares_enabled: Включить или отключить функцию «Продукты»
-        crop_module: Модуль Урожай
         customer_module: Модуль Клиент
-        company_module: Модуль Кампания
         client_name: Название фермы или сада
         my_settings: Профиль
         firstname: Имя
@@ -138,9 +89,7 @@ account:
     payment:
         payment: Оплата
         module: Модуль
-        crops: Урожай
         customers: Клиенты
-        company: Кампания
         price: Цена
         description: Описание
         pay: Оплатить
@@ -180,95 +129,10 @@ translation:
     of: с
     filtered_from: отфильтровано с
     total_entries: общего количества
-setup:
-    gardens:
-        rowsNum: Сколько рядов у вашей фермы?
-        sameLength: Все ли ваши ряды одинаковой длины?
-        rowsLength: Насколько длинные ваши ряды?
-        gardens: Теплицы
-        name: Название
-        rows: Ряды
-        length: Длина
-        area: Площадь
-        not_removable_garden: Сад с растениями нельзя удалить.
-    crops:
-        add_crop: Добавить урожай
-        edit_crop: Изменить урожай
-        plant: Растение
-        plant_name: Название растения
-        tray_starts: Рассады
-        trays_num: '# рассад'
-        plants_num: '# растений'
-        seeds_num: '# семян'
-        start_date: Начало выращивания
-        days_in_tray: Дней в рассаде
-        planted_in: Посажено в
-        plant_in_garden: Растение в теплице
-        garden: Теплица
-        garden_plants: Растения в теплице
-        plant_date: Дата посадки
-        days_in_garden: Дней в теплице
-        harvest_date: Дата сбора
-        end_date: Дата завершения
-        end_of_garden: Завершение выращивания
-    notes:
-        notes: Заметки
-        week: Неделя
-        comment: Комментарий
-    plants:
-        plants: Растения
-        family_name: Семья растений
-        name: Имя растения
-        subname: Второе имя
-        active_button_lock: Растения, которые в данный момент находятся в теплице, не могут быть Неактивными.
-    seeds:
-        order_date: Дата заказа
-crops:
-    search: Поиск
-    search_by: Поиск по имени растения, теплицы...
-    records_found: Найдено
-    dashboard:
-        dashboard: Панель управления
-        open_gardens: Доступные теплицы
-        gardens: Теплицы
-        average_days_in_tray: Среднее количество дней в рассаде
-        days_until_harvest: Дней до созревания
-        average_days_in_garden: Среднее количество дней в теплице
-        notes_for_current_week: Заметки для текущей недели
-        current_trays: Текущие рассады по дням
-        seeds_amount: Инвентарь семян
-        week: Неделя
-        note: Заметка
-seeds:
-    seed_vendor: Поставщик семян
-    company: Кампания
-    seed_order: Заказ семян
-    order_number: Номер заказа
-    order_date: Дата заказа
-    seeds: Семена
-    plant: Растение
-    plant_name: Название растения
-    seeds_qty: Количество семян
-    seed_inventory: Инвентарь семян
-    notification: Уведомление
-    denied_remove:
-        company_order_removing: Компания с заказами не может быть удалена.
-        seed_order_removing: Заказ с семенами не может быть удален.
-tasks:
-    add_task: Добавить задание
-    type: Тип
-    description: Описание
-    employee: Работник
-    date_to_complete: Дата для завершения
-    date_completed: Дата завершения
 report:
     report: Отчет
-    garden_report: Отчет о теплицах
-    open_gardens: Доступные теплицы
     count: Номер
     year: Год
-    history:
-        plant_family: Семья растений
 customer:
     customer: Покупатель
     add:
@@ -364,9 +228,6 @@ customer:
         in_file_uploaded: в файле были успешно загружены
         in_file_not_uploaded: в файле не были загружены
     orders:
-        plants: Растения
-        active_plants: Активные растения
-        available_plants: Доступные растения
         for_members: Для клиентов
         start_date: Дата начала
         end_date: Дата завершения
@@ -603,134 +464,6 @@ invoice:
     paid: Оплачено
     unpaid: Неоплачено
     is_paid: Оплачено?
-blog:
-    title: Заголовок
-    text: Текст
-    thumb: Миниатюра
-website:
-    blog:
-        blog_title: Создать новую запись в блоге
-        create_post: Новая запись в блоге
-        posts: Публикации
-        edit_post: Изменить публикацию
-    create_website: Создать сайт
-    manage_website: Управление сайтом
-    domain_name: Доменное имя
-    website_name: Название сайта
-    templates: Шаблоны
-    pages: Страницы
-    view_website: Просмотр вашего сайта
-    media:
-        media_gallery: Медиа Галерея
-        preview: Предварительный просмотр
-        file_info: Информация о файле
-        size: Размер
-        format: Формат
-        no_file_selected: Файл не выбран
-        drag_and_drop_title: Перетащите файлы сюда …
-        recommended_dimension: Рекомендуемое разрешение
-    editor:
-        market: Маркет
-builder:
-    asset_manager:
-        add_button: 'Добавить изображение'
-        modal_title: 'Выбрать изображение'
-        upload_title: 'Переместите файлы сюда для закрузки'
-    dom_components:
-        box: 'Элемент'
-        wrapper: 'Контейнер'
-        header: 'Заголовок'
-        text: 'Текст'
-        comment: 'Комментарий'
-        image: 'Изображение'
-        video: 'Видео'
-        label: 'Метка'
-        link: 'Ссылка'
-        map: 'Карта'
-    panels:
-        buttons:
-            preview: 'Предпросмотр'
-            fullscreen: 'Полный экран'
-            sw-visibility: 'Просмотреть компоненты'
-            export-template: 'Просмотреть код'
-            open-sm: 'Открыть менеджер стилей'
-            open-tm: 'Настройки'
-            open-layers: 'Открыть менеджер слоев'
-            open-blocks: 'Открыть блоки'
-            save-db: 'Сохранить в базу данных'
-    selector_manager:
-        label: 'Классы'
-        selected: 'Выбран'
-        emptyState: '- Состояние элемента -'
-        states:
-            hover: 'Накрыт'
-            active: 'Клик'
-            odd: 'Любой'
-    style_manager:
-        empty: 'Выберите элемент перед использованием менеджера стилей'
-        layer: 'Слой'
-        file_button: 'Изображения'
-        sectors:
-            general: 'Основные'
-            layout: 'Слой'
-            typography: 'Шрифты'
-            decorations: 'Декорация'
-            extra: 'Дополнительно'
-            flex: 'Гибкость'
-            dimension: 'Размеры'
-    trait_manager:
-        empty: 'Выберите элемент перед использованием Trait Manager'
-        label: 'Настройки компонента'
-    plugins:
-        basic:
-            category: Основные
-            label_column:
-                1: 1 Колонка
-                2: 2 Колонки
-                3: 3 Колонки
-                37: 2 Колонки 3/7
-            label_text: Текст
-            label_link: Ссылка
-            label_image: Изображение
-            label_video: Видео
-            label_map: Карта
-        header:
-            label: Заголовок
-            content: Вставьте свой текст заголовка здесь
-        widgets:
-            category: Виджеты
-widget:
-    contact:
-        contact: Контакт
-        add_contact: Добавить контакт
-        name: Имя
-        email: Email
-        message: Сообщение
-    subscription:
-        subscription: Подписка
-        subscribe: Подписаться
-        tip: Подпишитесь на статьи, новости и обновления.
-    testimonials:
-        testimonials: Отзывы
-        our_testimonials: Наши отзывы
-    market:
-        market: Рынок
-        our_market: Наш маркет
-    embed: Чтобы вставить этот виджет на свой сайт, скопируйте HTML-код и вставьте его на свой сайт.
-merchant:
-    merchant: Торговый счет
-    merchant_setup: Настройка торгового счета
-    merchant_select: Выбор торгового счета
-    key: Ключ
-    pin: Пин
-    currency: Валюта
-    sandbox: Песочница
-    is_sandbox: Тестовый режим?
-company:
-    statistics:
-        statistics: Статистика
-        page_views: Просмотры страниц
-        revenue: Доходы
 label:
     image: Изображение
     all: Все
@@ -782,9 +515,6 @@ table:
     date: Дата
     updated_at: Обновлено
     created_at: Создано
-choices:
-    farm: Ферма
-    crop: Урожай
 notifications:
     notification: Уведомления
     no_new_notifications: Нет новых уведомлений

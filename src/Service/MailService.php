@@ -4,7 +4,6 @@ namespace App\Service;
 
 use App\Entity\Customer\Email\AutoEmail;
 use App\Entity\Email\RecipientInterface;
-use App\Entity\Master\Email\Recipient;
 use App\Entity\Customer\Invoice;
 use App\Entity\Customer\Email\EmailRecipient;
 use App\Entity\Customer\Customer;
@@ -132,6 +131,9 @@ class MailService
      * @param Customer $customer
      * @param null $share
      * @return bool
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     public function sendAutomatedEmail(CustomerEmail $email, Customer $customer, $share = null)
     {
@@ -167,9 +169,12 @@ class MailService
     }
 
     /**
-     * @param Recipient|EmailRecipient $recipient
+     * @param RecipientInterface $recipient
      * @param $message
-     * @return mixed
+     * @return bool
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     public function sendComposedMail(RecipientInterface $recipient, $message)
     {
@@ -232,7 +237,7 @@ class MailService
      */
     public function sendCustomerInvoice(Invoice $invoice)
     {
-        $client = $invoice->getMember()->getClient();
+        $client = $invoice->getCustomer()->getClient();
 
         $template = $this->templating->render('customer/emails/renewal_invoice.html.twig', [
             'invoice' => $invoice
@@ -240,7 +245,7 @@ class MailService
 
         $to = [$client->getContactEmail(), 'kinroom@blackdirt.org'];
 
-        if ($invoice->getMember()->getEmail()) $to[] = $invoice->getMember()->getEmail();
+        if ($invoice->getCustomer()->getEmail()) $to[] = $invoice->getCustomer()->getEmail();
 
         $message = $this->mailer->createMessage()
             ->setSubject($this->translator->trans('invoice.title', [], 'labels'))
@@ -338,7 +343,7 @@ class MailService
         $subject = $status . ' address change';
         $template = 'emails/member/addresses_updated.html.twig';
 
-        $this->sendMail($customer->getClient()->getName(), $customer->getClient()->getContactEmail(), $template, $subject, [
+        $this->sendMail($customer->getClientName(), $customer->getClient()->getContactEmail(), $template, $subject, [
             'member' => $customer,
             'status' => $status,
             'addresses' => $addresses
@@ -358,7 +363,7 @@ class MailService
 
         $data = [
             'member' => $share->getCustomer(),
-            'share' => $share->getShare()->getName(),
+            'share' => $share->getShareName(),
             'action' => $shareBeforeSkipping['action'],
             'previousRenewalDate' => $shareBeforeSkipping['renewalDate'],
             'renewalDate' => $share->getRenewalDate()->format('Y-m-d'),
@@ -572,7 +577,8 @@ class MailService
      * @param $html
      * @param $recipientId
      * @param $recipientType
-     * @return mixed
+     * @return string|string[]
+     * @throws \Exception
      */
     public function addOpeningTracking($html, $recipientId, $recipientType)
     {
@@ -594,6 +600,9 @@ class MailService
 
     /**
      * @param User $user
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     public function sendResettingEmailMessage(User $user)
     {
@@ -613,7 +622,10 @@ class MailService
     /**
      * @param Customer $contact
      * @param $msg
-     * @param null $error
+     * @param $error
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     public function sendContactErrorNotify(Customer $contact, $msg, $error)
     {
@@ -651,6 +663,9 @@ class MailService
     /**
      * @param $data
      * @param $error
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     public function sendMarketErrorNotify($data, $error)
     {
@@ -675,6 +690,9 @@ class MailService
      * @param $subject
      * @param $error
      * @param null $content
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     public function sendExceptionNotify($subject, $error, $content = null)
     {

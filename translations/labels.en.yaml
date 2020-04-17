@@ -1,7 +1,5 @@
 navigation:
-    module_crops: 'Module: Crops'
     module_customers: 'Module: Customers'
-    module_company: 'Module: Company'
     account:
         account: Account
         profile: Profile
@@ -12,37 +10,8 @@ navigation:
         employee: Employee
         translation: Translation
         logout: Log out
-    setup:
-        setup: Setup
-        plants: Plants
-        gardens: Gardens
-        notes: Notes
-        crops: Crops
-    crops:
-        crops: Manage crops
-        dashboard: Dashboard
-        tray_starts: Tray Starts
-        plants_in_garden: Plants in Garden
-        harvest_date: Harvest Date
-        end_of_garden: End of Garden
-        setup: Setup
-        crop: Crops
-    seeds:
-        manage_seeds: Manage Seeds
-        seeds: Seeds
-        inventory: Seed inventory
-    tasks:
-        tasks: Tasks
-        list: List
     reports:
-        reports: Reports
-        garden: Garden
-        garden_history: Garden history
-        now_growing: Now growing
-        seed: Seed
         share_day: Share day
-        what_we_grew: What we grew
-        where_to_plant: Where to plant
     customers:
         manage_customers: Manage customers
         add: Add
@@ -59,7 +28,6 @@ navigation:
         logs: Logs
     orders:
         orders: Orders
-        available_plants: Available plants
         for_members: For members
         for_vendors: For vendors
         harvest_list: Harvest list
@@ -78,20 +46,6 @@ navigation:
         vendors: Vendors
         add: Add
         search: Search
-    website:
-        website: Website
-        blog: Blog
-        create_website: Create Website
-        manage_website: Manage Website
-        media_gallery: Media Gallery
-    widgets:
-        widgets: Widgets
-    tools:
-        tools: Tools
-        editor: Editor
-        invoices: Invoices
-        merchant: Merchant
-        statistics: Statistics
     help:
        help: Help
        support: Support
@@ -111,12 +65,9 @@ account:
         when_to_disable: When to disable
         day_before: Day before
         day_of: Day of
-        crops_enabled: Turn Module Crops on or off
         shares_enabled: Turn Module Customer share functionality on or off
-        crop_module: Module Crop
         customer_module: Module Customer
-        company_module: Module Company
-        client_name: Farm or garden name
+        client_name: Client name
         my_settings: Profile
         firstname: Firstname
         lastname: Lastname
@@ -138,9 +89,7 @@ account:
     payment:
         payment: Payment
         module: Module
-        crops: Crops
         customers: Customers
-        company: Company
         price: Price
         description: Description
         pay: Pay
@@ -180,95 +129,10 @@ translation:
     of: of
     filtered_from: filtered from
     total_entries: total entries
-setup:
-    gardens:
-        rowsNum: How many rows does your farm have?
-        sameLength: Are all of your rows the same length?
-        rowsLength: How long are your rows?
-        gardens: Gardens
-        name: Name
-        rows: Rows
-        length: Length
-        area: Area
-        not_removable_garden: Garden with crops can't be removed.
-    crops:
-        add_crop: Add crop
-        edit_crop: Edit Crop
-        plant: Plant
-        plant_name: Plant name
-        tray_starts: Tray starts
-        trays_num: '# of trays'
-        plants_num: '# of plants'
-        seeds_num: '# of seeds'
-        start_date: Start date
-        days_in_tray: Days in tray
-        planted_in: Planted in
-        plant_in_garden:  Plant in garden
-        garden: Garden
-        garden_plants: Plants in Garden
-        plant_date: Plant date
-        days_in_garden: Days in garden
-        harvest_date: Harvest date
-        end_date: End date
-        end_of_garden: End of garden
-    notes:
-        notes: Notes
-        week: Week
-        comment: Comment
-    plants:
-        plants: Plants
-        family_name: Family name
-        name: Plant name
-        subname: Sub name
-        active_button_lock: Plants that are currently in a garden can not be Inactive.
-    seeds:
-        order_date: Order date
-crops:
-    search: Search
-    search_by: Search by plant name, garden name...
-    records_found: Records found
-    dashboard:
-        dashboard: Dashboard
-        open_gardens: Open garden(s)
-        gardens: Gardens
-        average_days_in_tray: Average days in tray
-        days_until_harvest: Days until harvest
-        average_days_in_garden: Average days in garden
-        notes_for_current_week: Notes for current week
-        current_trays: Current trays by days
-        seeds_amount: Seed inventory
-        week: Week
-        note: Note
-seeds:
-    seed_vendor: Seed vendor
-    company: Company
-    seed_order: Seed order
-    order_number: Order number
-    order_date: Order date
-    seeds: Seeds
-    plant: Plant
-    plant_name: Plant name
-    seeds_qty: Seeds qty
-    seed_inventory: Seed inventory
-    notification: Notification
-    denied_remove:
-        company_order_removing: Company with orders can't be removed.
-        seed_order_removing: Order with seeds can't be removed.
-tasks:
-    add_task: Add task
-    type: Type
-    description: Description
-    employee: Employee
-    date_to_complete: Date to be completed
-    date_completed: Date completed
 report:
     report: Report
-    garden_report: Report about Gardens
-    open_gardens: Open garden(s)
     count: Count
     year: Year
-    history:
-        plant_family: Plant family
 customer:
     customer: Customer
     add:
@@ -364,9 +228,6 @@ customer:
         in_file_uploaded: in the file were uploaded successfully
         in_file_not_uploaded: in the file were not uploaded
     orders:
-        plants: Plants
-        active_plants: Active plants
-        available_plants: Available plants
         for_members: For members
         start_date: Start date
         end_date: End date
@@ -603,134 +464,6 @@ invoice:
     paid: Paid
     unpaid: Unpaid
     is_paid: Is paid
-blog:
-    title: Title
-    text: Text
-    thumb: Thumbnail
-website:
-    blog:
-       blog_title: Create new blog entry
-       create_post: New blog entry
-       posts: Posts
-       edit_post: Edit post
-    create_website: Create Website
-    manage_website: Manage Website
-    domain_name: Domain name
-    website_name: Website name
-    templates: Templates
-    pages: Pages
-    view_website: View your website
-    media:
-        media_gallery: Media Gallery
-        preview: Preview
-        file_info: File info
-        size: Size
-        format: Format
-        no_file_selected: No file selected
-        drag_and_drop_title: Drag & drop files here …
-        recommended_dimension: Recommended dimension
-    editor:
-        market: Market
-builder:
-    asset_manager:
-        add_button: 'Add image'
-        modal_title: 'Select Image'
-        upload_title: 'Drop files here or click to upload'
-    dom_components:
-        box: 'Box'
-        wrapper: 'Body'
-        header: 'Header'
-        text: 'Text'
-        comment: 'Comment'
-        image: 'Image'
-        video: 'Video'
-        label: 'Label'
-        link: 'Link'
-        map: 'Map'
-    panels:
-        buttons:
-            preview: 'Preview'
-            fullscreen: 'Fullscreen'
-            sw-visibility: 'View components'
-            export-template: 'View code'
-            open-sm: 'Open Style Manager'
-            open-tm: 'Settings'
-            open-layers: 'Open Layer Manager'
-            open-blocks: 'Open Blocks'
-            save-db: 'Save to database'
-    selector_manager:
-        label: 'Classes'
-        selected: 'Selected'
-        emptyState: '- State -'
-        states:
-            hover: 'Hover'
-            active: 'Click'
-            odd: 'Even/Odd'
-    style_manager:
-        empty: 'Select an element before using Style Manager'
-        layer: 'Layer'
-        file_button: 'Images'
-        sectors:
-            general: 'General'
-            layout: 'Layout'
-            typography: 'Typography'
-            decorations: 'Decorations'
-            extra: 'Extra'
-            flex: 'Flex'
-            dimension: 'Dimension'
-    trait_manager:
-        empty: 'Select an element before using Trait Manager'
-        label: 'Component settings'
-    plugins:
-        basic:
-            category: Basic
-            label_column:
-                1: 1 Column
-                2: 2 Columns
-                3: 3 Columns
-                37: 2 Columns 3/7
-            label_text: Text
-            label_link: Link
-            label_image: Image
-            label_video: Video
-            label_map: Map
-        header:
-            label: Title
-            content: Insert your header text here
-        widgets:
-            category: Widgets
-widget:
-    contact:
-        contact: Contact
-        add_contact: Add contact
-        name: Name
-        email: Email
-        message: Message
-    subscription:
-        subscription: Subscription
-        subscribe: Subscribe
-        tip: Sign up for articles, news, and updates.
-    testimonials:
-        testimonials: Yestimonials
-        our_testimonials: Our testimonials
-    market:
-        market: Market
-        our_market: Our market
-    embed: To embed this widget on your website, copy the HTML code and paste it in your website.
-merchant:
-    merchant: Merchant
-    merchant_setup: Merchant Setup
-    merchant_select: Select a merchant
-    key: Key
-    pin: Pin
-    currency: Currency
-    sandbox: Sandbox
-    is_sandbox: Sandbox mode?
-company:
-    statistics:
-        statistics: Statistics
-        page_views: Page views
-        revenue: Revenue
 label:
     image: Image
     all: All
@@ -782,9 +515,6 @@ table:
     date: Date
     updated_at: Updated at
     created_at: Created at
-choices:
-    farm: Farm
-    crop: Crop
 notifications:
     notification: Notifications
     no_new_notifications: No new notifications
