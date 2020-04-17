@@ -1,0 +1,44 @@
+{% extends 'media/browser_layout.html.twig' %}
+
+{% block body %}
+    {{ include('media/manager.html.twig') }}
+
+    {{ include ("media/image_list.html.twig", {images: images, isModal: true}) }}
+{% endblock %}
+
+{% block scripts %}
+    {% if app.request.get('CKEditorFuncNum') %}
+        <script>
+            $(function () {
+                let $body = $('body');
+
+                $body.on('click', '.select-image', function (e) {
+                    e.preventDefault();
+                    window.opener.CKEDITOR.tools.callFunction(
+                        "{{ app.request.get('CKEditorFuncNum')|escape('js') }}",
+                        $(this).attr("href")
+                    );
+                    window.close();
+                });
+            });
+        </script>
+    {% endif %}
+
+    {% if app.request.get('formSelection') %}
+        <script>
+            $(function () {
+                let $body = $('body'),
+                    selectId = '{{ app.request.get('imageSelectId') }}',
+                    originalUrl = '{{ app.request.get('originalUrl') }}',
+                    imagePreloadId = '{{ app.request.get('imagePreloadId') }}';
+
+                $body.on('click', '.select-image', function (e) {
+                    e.preventDefault();
+                    let $this = $(this);
+                    window.opener.setImageField($this.data("name"), $this.attr('href'), originalUrl, selectId, imagePreloadId);
+                    window.close();
+                });
+            });
+        </script>
+    {% endif %}
+{% endblock %}

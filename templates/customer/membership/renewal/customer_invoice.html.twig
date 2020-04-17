@@ -1,0 +1,5 @@
+{% extends "front-layout.html.twig" %}
+
+{% block body %}
+    {{ include ("customer/membership/renewal/renewal_invoice.html.twig", {invoice: invoice}) }}
+{% endblock %}

@@ -1,0 +1,184 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ form_start(form, {'attr': {'class': 'form-horizontal', 'action' : path('payment_card_create', {'modules' : modules | json_encode}), 'id' : 'payment-form', 'form-validate' : 'false', 'data-page' : 'stripe'} }) }}
+    <span class="payment-errors"></span>
+    <div class="panel panel-default">
+        <div class="panel-heading heading-style">
+            <h5 class="panel-title">Pay with card</h5>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="col-md-12">
+                        <div class="form-group has-feedback has-feedback-right">
+                            {{ form_widget(form.name, {'id' : 'cardName', 'attr' : {'autocomplete' : 'cc-fullname'}}) }}
+                            <div class="form-control-feedback">
+                                <i class="icon-user"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group has-feedback has-feedback-right">
+                            {{ form_widget(form.number, {'id' : 'cardNumber', 'attr' : {'autocomplete' : 'cc-number'}}) }}
+                            <div class="form-control-feedback">
+                                <i class="icon-vcard"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group has-feedback has-feedback-right">
+                            {{ form_widget(form.month, {'id' : 'creditCardMonth', 'attr' : {'autocomplete' : 'cc-exp-month'}}) }}
+                            {{ form_widget(form.year, {'id' : 'creditCardYear', 'attr' : {'autocomplete' : 'cc-exp-year'}}) }}
+                            {{ form_widget(form.expiredAt, {'id' : 'cardExp'}) }}
+                            <div class="form-control-feedback">
+                                <i class="icon-calendar2"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-md-offset-1">
+                        <div class="form-group has-feedback has-feedback-right">
+                            {{ form_widget(form.cvc, {'id' : 'csc','attr' : {'autocomplete' : 'cc-csc'}}) }}
+                            <div class="form-control-feedback">
+                                <i class="icon-lock2"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label"></label>
+                            <div class="col-xs-11">
+                                <div class="form-actions text-right pay-button">
+                                    <button type="submit" id="submitForm" class="btn btn-action">Pay</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock body %}
+
+{% block scripts %}
+    <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+    <script type="text/javascript">
+        Stripe.setPublishableKey('{{ stripe_publishable_key }}');
+    </script>
+
+    <script>
+        setMessage('card_payment[number]', 'required', {{ 'validation.form.required'|trans({}, 'validators') | json_encode | raw }});
+        setMessage('card_payment[number]', 'minlength', {{ 'validation.form.minlength'|trans({'{{ limit }}' : '13'}, 'validators') | json_encode | raw }});
+        setMessage('card_payment[number]', 'maxlength', {{ 'validation.form.maxlength'|trans({'{{ limit }}' : '20'}, 'validators') | json_encode | raw}});
+        setMessage('card_payment[cvc]', 'required', {{ 'validation.form.required'|trans({}, 'validators') | json_encode | raw }});
+        setMessage('card_payment[cvc]', 'minlength', {{ 'validation.form.minlength'|trans({'{{ limit }}' : '3'}, 'validators') | json_encode | raw }});
+        setMessage('card_payment[cvc]', 'maxlength', {{ 'validation.form.maxlength'|trans({'{{ limit }}' : '4'}, 'validators') | json_encode | raw}});
+        setMessage('card_payment[month]', 'required', {{ 'validation.form.required'|trans({}, 'validators') | json_encode | raw }});
+        setMessage('card_payment[month]', 'minlength', {{ 'validation.form.minlength'|trans({'{{ limit }}' : '2'}, 'validators') | json_encode | raw }});
+        setMessage('card_payment[month]', 'maxlength', {{ 'validation.form.maxlength'|trans({'{{ limit }}' : '2'}, 'validators') | json_encode | raw}});
+        setMessage('card_payment[year]', 'required', {{ 'validation.form.required'|trans({}, 'validators') | json_encode | raw }});
+        setMessage('card_payment[year]', 'minlength', {{ 'validation.form.minlength'|trans({'{{ limit }}' : '2'}, 'validators') | json_encode | raw }});
+        setMessage('card_payment[year]', 'maxlength', {{ 'validation.form.maxlength'|trans({'{{ limit }}' : '2'}, 'validators') | json_encode | raw}});
+
+        var rules = {
+            'card_payment[number]' : {
+                required: true,
+                minlength: 13,
+                maxlength: 20
+            },
+            'card_payment[cvc]' : {
+                required: true,
+                minlength: 3,
+                maxlength: 4
+            },
+            'card_payment[month]' : {
+                required: true,
+                minlength: 2,
+                maxlength: 2
+            },
+            'card_payment[year]' : {
+                required: true,
+                minlength: 2,
+                maxlength: 2
+            }
+        };
+
+        // Grab the form:
+        var $form = $('#payment-form');
+
+        validateForm($form, rules);
+
+        $form.submit(function(event) {
+            event.preventDefault();
+            $form.find('#submitForm').prop('disabled', true);
+
+            Stripe.card.createToken($form, stripeResponseHandler);
+
+            // Prevent the form from being submitted:
+            return false;
+        });
+
+        function stripeResponseHandler(status, response)
+        {
+            console.log(response)
+            if (response.error) { // Problem!
+
+                var message = "<div class='alert alert-danger trial-expired'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>" + response.error.message + "</div>";
+
+                // Show the errors on the form:
+                $form.find('.payment-errors').append(message);
+                $form.find('#submitForm').prop('disabled', false); // Re-enable submission
+
+            } else { // Token was created!
+
+                // Get the token ID:
+                var token = response.id;
+
+                // Insert the token ID into the form so it gets submitted to the server:
+                $form.append($('<input type="hidden" name="card_payment[stripeToken]">').val(token));
+
+                $form[0].submit();
+            }
+        }
+
+        /* Credit Card validation */
+        // Auto-populate expired At value from month and year fields (that must be hidden)
+        $('#creditCardMonth, #creditCardYear').on("change", function () {
+            $('#cardExp').val($('#creditCardMonth').val() + $('#creditCardYear').val());
+        });
+
+        // Without this, second autofill not works
+        $('#cardExp').on('change keyup', function () {
+            var $expiration = $(this).val().split(' / ');
+
+            $('#creditCardMonth').val($expiration[0]);
+            $('#creditCardYear').val($expiration[1]);
+        });
+
+        $('#cardNumber').inputmask({
+            mask : '9999 9999 9999 9999',
+            showMaskOnHover: false,
+            showMaskOnFocus: false,
+            placeholder: ' '
+        });
+
+        /* Add input masks */
+        $('#cardExp').inputmask({
+            mask : '99 / 99',
+            showMaskOnHover: false,
+            showMaskOnFocus: false,
+            placeholder: ' '
+        });
+
+        $('#csc').inputmask({
+            mask : '999[9]',
+            showMaskOnHover: false,
+            showMaskOnFocus: false,
+            placeholder: ' '
+        });
+        /* /add input masks */
+        /* /Credit card validation */
+    </script>
+
+{% endblock %}

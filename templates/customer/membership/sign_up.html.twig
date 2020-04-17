@@ -1,0 +1,39 @@
+{% extends "front-layout.html.twig" %}
+
+{% block styles %}
+    <!-- Countdown files -->
+    <script src="{{ asset('js/plugins/ui/moment/moment.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/ui/moment/moment_timezone.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/plugins/countdown/jquery.countdown.min.js') }}"></script>
+    <!-- /End of countdown files -->
+{% endblock %}
+
+{% block body %}
+    <div class="col-md-8 col-md-offset-2">
+        <!-- Basic setup -->
+        <div class="panel">
+            <div class="panel-heading theme-style">
+                <h6 class="panel-title">Sign up</h6>
+            </div>
+            <div class="panel-body">
+                {{ include ("company/widgets/market/market_widget.twig", {form: form}) }}
+            </div>
+        </div>
+        <!-- /basic setup -->
+    </div>
+
+    <!-- /page header -->
+{% endblock body %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{{ asset('js/pages/membership/customer_search.js') }}"></script>
+    <script>
+        enableEmailSearch('{{ path('membership_check_email', {'token': app.request.get('token')}) }}');
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFudPQ3bgPztQLPBngp9B425BBl9q5Duo&libraries=places"></script>
+    <script src="{{ asset('js/plugins/googleMapsSearch.js') }}"></script>
+    <script>
+        // Enable google address search autocomplete
+        initAutocomplete($('input[name$="street]"]'), '{{ country }}');
+    </script>
+{% endblock %}

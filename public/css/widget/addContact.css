@@ -1,0 +1,16 @@
+.btn-action {
+    background-color: #144072;
+    border-color: #144072;
+    color: #fff;
+}
+
+.btn-action:hover {
+    color: white;
+    opacity: 0.8;
+}
+
+.btn-action:disabled,
+.btn-action[disabled]{
+    cursor: default;
+    opacity: 0.5;
+}

@@ -1,0 +1,126 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="panel panel-default">
+        <div class="datatable-ajax-source">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr role="row" class="heading-style">
+                        <th>Module</th>
+                        <th>Total</th>
+                        <th>Pending</th>
+                        <th>Active</th>
+                        <th>Renewal overdue</th>
+                        <th>Lapsed</th>
+                        <th>New in last 7 days</th>
+                        <th>New in last 30 days</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for level in clientsSummary %}
+                        <tr>
+                            <td>{{ level.name }}</td>
+                            <td>
+                                {% if level.total != 0 %}
+                                    <span data-path="{{ path('master_clients_filter', {'status' : 'all'}) }}" class="summary-search">
+                                        {{ level.total }}
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if level.statusNum['pending'] is defined %}
+                                    <span data-path="{{ path('master_clients_filter', {'status' : 'unconfirmed'}) }}" class="summary-search">
+                                        {{ level.statusNum['pending'] }}
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if level.statusNum['active'] is defined %}
+                                    <span data-path="{{ path('master_clients_filter', {'status' : 'confirmed'}) }}" class="summary-search">
+                                        {{ level.statusNum['active'] }}
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if level.statusNum['renewal'] is defined %}
+                                    <span class="summary-search">
+                                    {{ level.statusNum['renewal'] }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if level.statusNum['lapsed'] is defined %}
+                                    <span class="summary-search">{{ level.statusNum['lapsed'] }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if level.weekNum != 0 %}
+                                    <span data-path="{{ path('master_clients_filter', {'status' : 'week'}) }}" class="summary-search">
+                                        {{ level.weekNum }}
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if level.monthNum != 0 %}
+                                    <span data-path="{{ path('master_clients_filter', {'status' : 'month'}) }}" class="summary-search">
+                                        {{ level.monthNum }}
+                                    </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label for="search_text">Search:</label>
+                        <input type="text"
+                               class="form-control"
+                               data-action="/master/clients/search"
+                               data-block="content_list"
+                               data-counter="users_counter"
+                               name="search_text"
+                               id="search_text"
+                               autocomplete="off"
+                               placeholder="Search...">
+                    </div>
+                    <div class="col-sm-6 vertical-table-text">
+                        <p class="vertical-text">Records found: <span id="users_counter">{{ clients|length }}</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="datatable-ajax-source">
+            <table class="table">
+                <thead>
+                <tr role="row" class="heading-style">
+                    <th>Client Name</th>
+                    <th>Level</th>
+                    <th>Confirmed email</th>
+                    <th>Completed setup</th>
+                    <th>Last login</th>
+                    <th>Delete</th>
+                </tr>
+                </thead>
+                <tbody id="content_list">
+                    {{ include ("master/client/search.html.twig") }}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {{ include ("modal/delete-modal.html.twig") }}
+{% endblock body %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{{ asset('js/pages/master/client_search.js') }}"></script>
+{% endblock %}

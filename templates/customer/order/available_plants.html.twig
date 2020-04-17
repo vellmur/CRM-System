@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="panel panel-default">
+        <div class="panel-heading heading-style">
+            <h6 class="panel-title">{{ 'customer.orders.plants'|trans({}, 'labels') }}</h6>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                <tr class="row-style">
+                    <th>{{ 'customer.orders.active_plants'|trans({}, 'labels') }}</th>
+                    <th>{{ 'customer.orders.available_plants'|trans({}, 'labels') }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for key, plant in plants %}
+                    <tr {% if key is not divisible by (2) %} class="row-style" {% endif %}>
+                        <td>
+                            <div class="checkbox checkbox-small">
+                                <label class="checkbox-inline checkbox-info">
+                                    <input type="checkbox"
+                                           id="changeAvailablePlant{{ key }}"
+                                           data-path="{{ path('member_available_plant_update') }}"
+                                           class="styled"
+                                           name="{{ plant.id }}"
+                                            {% if plant.id in availableIds %} checked="checked" value="1" {% endif %}
+                                    >
+                                    {{ plant.getFullname }}
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            {% if availablePlants[key] is  defined %}
+                                {{ availablePlants[key].fullname }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock body %}
+
+{% block scripts %}
+    <script>
+        // Admin plants page
+        $("input[id^='changeAvailablePlant']").on('change', function ()
+        {
+            if ($(this).is(':checked')) {
+                var isAvailable = 1;
+            } else {
+                isAvailable = 0;
+            }
+
+            $.ajax({
+                url: $(this).attr('data-path'),
+                type: "POST",
+                data: { id: $(this).attr('name'),isAvailable: isAvailable },
+                success: function (response) {
+                    console.log(response)
+                },
+                error: function (response) {
+                    console.log(response)
+                }
+            });
+        });
+    </script>
+{% endblock %}

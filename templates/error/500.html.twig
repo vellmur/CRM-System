@@ -1,0 +1,30 @@
+{% extends "front-layout.html.twig" %}
+
+{% block body %}
+    <div class="text-center content-group">
+        <h1 class="error-title">500</h1>
+        <h5>{{ 'error.500.message'|trans({}, 'messages') }}</h5>
+
+        <div class="error-content">
+            <div class="row">
+                <div class="col-md-12">
+                    <a href="{{ path('home_index') }}" class="btn btn-action">
+                        {{ 'error.500.button'|trans({}, 'messages') }}
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 20px;">
+            <a href="#error-details" data-toggle="collapse" class="collapsed" aria-expanded="false">
+                <i class="icon-embed2 position-left"></i>
+                {{ 'error.500.show_exception'|trans({}, 'messages') }} →
+            </a>
+            <div class="mt-10 collapse" id="error-details" aria-expanded="false" style="height: 0px;">
+                <p>Error: {{ error }}</p>
+                <p>File: {{ file }}</p>
+                <p>Trace: {{ trace|raw }}</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

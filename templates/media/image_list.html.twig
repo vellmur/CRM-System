@@ -1,0 +1,72 @@
+<div class="panel panel-white">
+    <table class="table table-striped media-library table-lg" id="image-list">
+        <thead>
+        <tr class="heading-style">
+            <th>{{ 'website.media.preview'|trans({}, 'labels') }}</th>
+            <th>{{ 'table.name'|trans({}, 'labels') }}</th>
+            <th>{{ 'table.date'|trans({}, 'labels') }}</th>
+            <th>{{ 'website.media.file_info'|trans({}, 'labels') }}</th>
+            <th>{{ 'table.delete'|trans({}, 'labels') }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for image in images %}
+            <tr>
+                <td>
+                    <a href="{{ asset(vich_uploader_asset(image)) }}"
+                       data-name="{{ image.name }}"
+                            {{ app.request.get('CKEditor') or app.request.get('postSelection') or (isModal is defined and isModal == true)
+                            ? 'class="select-image"' : 'class="view-image" data-popup="lightbox"' }}>
+                        <img src="{{ asset(vich_uploader_asset(image)) }}" alt="{{ image.name }}" class="img-rounded img-preview">
+                    </a>
+                </td>
+                <td style="max-width: 200px; overflow: hidden;text-overflow: ellipsis;">
+                    <a href="{{ asset(vich_uploader_asset(image)) }}"
+                       data-name="{{ image.name }}"
+                            {{ app.request.get('CKEditor') or app.request.get('postSelection') or (isModal is defined and isModal == true)
+                            ? 'class="select-image"' : 'class="view-image" data-popup="lightbox"' }}>
+                        {{ image.name }}
+                    </a>
+                </td>
+                <td>
+                    {{ image.createdAt|date(app.user.getTwigFormatDate()) }}
+                </td>
+                <td>
+                    <ul class="list-condensed list-unstyled no-margin">
+                        <li>
+                            <span class="text-semibold">{{ 'website.media.size'|trans({}, 'labels') }}:</span>
+                            {{ image.size|file_size }}
+                        </li>
+                        <li>
+                            <span class="text-semibold">{{ 'website.media.format'|trans({}, 'labels') }}:</span>
+                            {{ image.mimeType }}
+                        </li>
+                    </ul>
+                </td>
+                <td>
+                    <button type="button"
+                            data-path="{{ path('media_image_delete', {id: image.id}) }}"
+                            data-toggle="modal"
+                            href="#small_modal"
+                            class="btn btn-danger btn-icon btn-delete">
+                        <i class="icon-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="navigation text-right">
+        {{ knp_pagination_render(images, 'parts/pagination.html.twig') }}
+    </div>
+
+    {% if not app.request.get('CKEditorFuncNum') and not app.request.get('postSelection') %}
+        <script type="text/javascript" src="{{ asset('js/plugins/media/fancybox.min.js') }}"></script>
+        <script>
+            var $body = $('body');
+            $body.find('.view-image').fancybox({padding: 3});
+        </script>
+    {% endif %}
+</div>
+
+{{ include ("modal/delete-modal.html.twig") }}

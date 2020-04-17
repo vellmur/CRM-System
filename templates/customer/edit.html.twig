@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="panel panel-default">
+        <div class="panel-head">
+            <h6><i class="icon-user"></i> {{ ('customer.search.' ~ status)|trans({}, 'labels') }}
+                {% if member is defined and is_granted('ROLE_PREVIOUS_ADMIN') %}
+                    - <a href="{{ member|profile_link }}" target="_blank">{{ 'membership.view_profile'|trans({}, 'labels') }}</a>
+                {% endif %}
+            </h6>
+        </div>
+        <div class="panel-body">
+            {{ include ("customer/forms/member.html.twig") }}
+        </div>
+    </div>
+{% endblock body %}
+
+{% block scripts %}
+    <!-- skip a week feature with countdown files -->
+    <script src="{{ asset('js/plugins/ui/moment/moment.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/ui/moment/moment_timezone.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/plugins/countdown/jquery.countdown.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/pages/membership/control_pickup.js') }}?v=5"></script>
+    <!-- /End of countdown files -->
+
+    <script>
+        let $addressFields = $('input[name$="street]"]');
+
+        if ($addressFields[0]) {
+            // Enable google address search autocomplete
+            let country = '{{ app.user.client.country }}'.length > 0 ? '{{ app.user.client.country }}' : null;
+            initAutocomplete($addressFields, country);
+        }
+    </script>
+{% endblock %}

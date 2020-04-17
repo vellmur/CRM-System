@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ form_start(form, {'attr': {'role': 'form', 'class': 'form-horizontal'} }) }}
+    <!-- Page tabs -->
+    <div class="tabbable page-tabs">
+        <ul class="nav nav-tabs left-tabs">
+            {% for key, type in automatedTypes %}
+                <li {{ key == 1 ? 'class="active"' }}><a href="#{{ type }}-tab" data-toggle="tab">{{ key }}. {{ type|capitalize }}</a></li>
+            {% endfor %}
+        </ul>
+        <div class="tab-content">
+            {% for key, automatedEmail in form.automatedEmails %}
+                <div class="tab-pane fade {{ key == 0 ? 'active in' }}" id="{{ automatedTypes[automatedEmail.vars.value.id] }}-tab">
+                    <div class="block">
+                        <div class="form-group row">
+                            {{ form_label(automatedEmail.subject) }}
+                            <div class="col-md-11 {{ automatedEmail.subject.vars.errors|length ? 'has-error' }}">
+                                {% if not automatedEmail.subject.vars.valid %}
+                                    {{ form_widget(automatedEmail.subject, {
+                                        'id' : 'activationSubject',
+                                        'attr' : {
+                                            'data-placement': 'top',
+                                            'title': form.automatedEmails[0].subject.vars.errors[0].message,
+                                            'class': 'form-control tip tip-open'
+                                        }
+                                    }) }}
+                                {% else %}
+                                    {{ form_widget(automatedEmail.subject, {id : 'activationSubject'}) }}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-12 {{ automatedEmail.text.vars.errors|length ? 'has-error' }}">
+                                {% if not automatedEmail.text.vars.valid %}
+                                    {{ form_widget(automatedEmail.text, {
+                                        'id': automatedTypes[automatedEmail.vars.value.id],
+                                        'attr': {
+                                            'data-placement': 'top',
+                                            'title': form.automatedEmails[0].text.vars.errors[0].message,
+                                            'class': 'form-control tip tip-open'
+                                        }
+                                    }) }}
+                                {% else %}
+                                    {{ form_widget(automatedEmail.text, {id: automatedTypes[automatedEmail.vars.value.id]}) }}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <button type="submit" class="btn btn-success">Save</button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <!-- /page tabs -->
+    {{ form_end(form) }}
+
+    {{ include ("modal/macros-modal.html.twig", {'macros': macros}) }}
+{% endblock body %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{{ asset('js/plugins/ckeditor/ckeditor.js') }}"></script>
+    <script>
+        var options = {
+            'language': 'en',
+            'skin': 'moono-lisa',
+            'height': 300,
+            'extraPlugins': 'macro,autogrow',
+            'customConfig': ''
+        };
+
+        {% for type in automatedTypes %}
+            CKEDITOR.replace('{{ type }}', options);
+        {% endfor %}
+    </script>
+{% endblock %}

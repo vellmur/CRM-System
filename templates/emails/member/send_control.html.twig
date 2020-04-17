@@ -1,0 +1,9 @@
+{% extends 'emails/base.html.twig' %}
+
+{% block body %}
+    <h4>{{ 'membership.email_access.control'|trans({}, 'labels') }}</h4>
+    <p>{{ 'membership.email_access.hello'|trans({}, 'labels') }}: {{ member }}</p>
+    <p>{{ 'membership.email_access.link_description'|trans({}, 'labels') }}:
+        <a href="{{ link }}">{{ 'membership.email_access.profile'|trans({}, 'labels') }}</a>
+    </p>
+{% endblock %}

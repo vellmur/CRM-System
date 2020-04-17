@@ -1,0 +1,145 @@
+{% extends "front-layout.html.twig" %}
+
+{% block body %}
+    {% if not form.vars.valid and form_errors(form) %}
+        <div class="alert alert-danger center-block" style="width: 300px; margin-top:40px;word-break: break-word;">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            {{ form_errors(form) }}
+        </div>
+    {% endif %}
+
+    <div class="login-form">
+        {{ form_start(form, {'method': 'post'}) }}
+            <div class="panel">
+                <div class="panel-body">
+                    <div class="text-center">
+                        <h5 class="content-group">{{ 'register.create_account'|trans({}, 'messages') }}</h5>
+                    </div>
+                    <div class="form-group has-feedback has-feedback-right">
+                        {{ form_widget(form.username) }}
+                        <div class="form-control-feedback">
+                            <i class="icon-user text-muted"></i>
+                        </div>
+                        {% if form.username.vars.errors|length %}
+                            <span class="help-block text-danger">
+                                <i class="icon-cancel-circle2 position-left"></i>
+                                {{ form.username.vars.errors[0].message }}
+                            </span>
+                        {% endif %}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group has-feedback">
+                                {{ form_widget(form.locale) }}
+                                {% if form.locale.vars.errors|length %}
+                                    <span class="help-block text-danger">
+                                        <i class="icon-cancel-circle2 position-left"></i>
+                                        {{ form.locale.vars.errors[0].message }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group has-feedback">
+                                {{ form_widget(form.email) }}
+                                <div class="form-control-feedback">
+                                    <i class="icon-mention text-muted"></i>
+                                </div>
+                                {% if form.email.vars.errors|length %}
+                                    <span class="help-block text-danger">
+                                        <i class="icon-cancel-circle2 position-left"></i>
+                                        {{ form.email.vars.errors[0].message }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group has-feedback">
+                                {{ form_widget(form.client.name) }}
+                                <div class="form-control-feedback">
+                                    <i class="icon-user-check text-muted"></i>
+                                </div>
+                                {% if form.client.name.vars.errors|length %}
+                                    <span class="help-block text-danger">
+                                        <i class="icon-cancel-circle2 position-left"></i>
+                                        {{ form.client.name.vars.errors[0].message }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group has-feedback">
+                                {{ form_widget(form.plainPassword.first) }}
+                                <div class="form-control-feedback">
+                                    <i class="icon-user-lock text-muted"></i>
+                                </div>
+                                {% if form.plainPassword.first.vars.errors|length %}
+                                    <span class="help-block text-danger">
+                                        <i class="icon-cancel-circle2 position-left"></i>
+                                        {{ form.plainPassword.first.vars.errors[0].message }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group has-feedback">
+                                {{ form_widget(form.plainPassword.second) }}
+                                <div class="form-control-feedback">
+                                    <i class="icon-user-lock text-muted"></i>
+                                </div>
+                                {% if form.plainPassword.first.vars.errors|length %}
+                                    <span class="help-block text-danger">
+                                        <i class="icon-cancel-circle2 position-left"></i>
+                                        {{ form.plainPassword.first.vars.errors[0].message }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 text-center {{ form.recaptcha.vars.errors|length ? 'has-error' }}" id="recaptcha-wrapper">
+                            {% form_theme form '@EWZRecaptcha/Form/ewz_recaptcha_widget.html.twig' %}
+                            {{ form_widget(form.recaptcha) }}
+                            {% if form.recaptcha.vars.errors|length %}
+                                <span class="help-block text-danger">
+                                    <i class="icon-cancel-circle2 position-left"></i>{{ form.recaptcha.vars.errors[0].message }}
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p class="help-block text-center content-group"> {{ 'register.terms'|trans({}, 'messages') }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="text-center">
+                                <button type="submit" name="_submit" id="_submit" class="btn-website btn-secondary content-group">
+                                    {{ 'register.create_account'|trans({}, 'messages') }}
+                                </button>
+                                <div class="content-divider text-muted form-group">
+                                    <span>{{ 'register.have_account'|trans({}, 'messages') }}</span>
+                                </div>
+                                <a href="{{ path('app_login') }}" class="btn-website btn-main content-group">
+                                    {{ 'login.login'|trans({}, 'messages') }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{ form_widget(form._token) }}
+        {{ form_end(form, {'render_rest': false}) }}
+    </div>
+{% endblock body %}
+

@@ -1,0 +1,17 @@
+{% extends 'emails/base.html.twig' %}
+
+{% block body %}
+    <h4>Member {{ member.getFullname }} shares was updated</h4>
+    {% if sharesChanges | length %}
+        {% for key, fields in sharesChanges %}
+            {% for field, changes in fields %}
+                {% if field == 'name' %}
+                    <p><b>{{ changes }} was updated:</b></p>
+                {% else %}
+                    <p>{{ field | upper }} was changed from {{ changes[0] }} to {{ changes[1] }}.</p>
+                {% endif %}
+            {% endfor %}
+            <p> - </p>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

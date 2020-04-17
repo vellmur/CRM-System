@@ -1,0 +1,56 @@
+{{ form_start(form) }}
+    <div class="form-group">
+        {{ form_widget(form.client.country) }}
+    </div>
+    <div class="form-group {% if form.client.timezone.vars.errors|length %} has-error {% endif %}">
+        <label>{{ 'account.settings.timezone'|trans({}, 'labels') }}</label>
+        {% if not form.client.timezone.vars.valid %}
+            {{ form_widget(form.client.timezone, {'attr': {
+                'data-placement':
+                'top',
+                'title': form.client.timezone.vars.errors[0].message, 'class': 'select tip tip-open'
+            }}) }}
+        {% else %}
+            {{ form_widget(form.client.timezone)}}
+        {% endif %}
+    </div>
+    <div class="form-group {% if form.client.postalCode.vars.errors | length > 0 %} has-error {% endif %}">
+        <label>{{ 'account.settings.postal_code'|trans({}, 'labels') }}</label>
+        {% if not form.client.postalCode.vars.valid %}
+            {{ form_widget(form.client.postalCode, {
+                'attr': {
+                    'data-placement': 'top',
+                    'title': form.client.postalCode.vars.errors[0].message,
+                    'class': 'form-control tip tip-open'
+                }}) }}
+        {% else %}
+            {{ form_widget(form.client.postalCode, { 'attr': {'class': 'form-control'} })}}
+        {% endif %}
+    </div>
+    <div class="form-group {% if form.client.region.vars.errors | length > 0 %} has-error {% endif %}">
+        {{ form_label(form.client.region) }}
+        {% if not form.client.region.vars.valid %}
+            {{ form_widget(form.client.region, {'attr': {
+                'data-placement': 'top',
+                'title': form.client.region.vars.errors[0].message,
+                'class': 'select tip tip-open',
+                'placeholder': 'account.settings.region_placeholder'|trans({}, 'labels')
+            }}) }}
+        {% else %}
+            {{ form_widget(form.client.region) }}
+        {% endif %}
+    </div>
+    <div class="form-group {% if form.client.city.vars.errors | length > 0 %} has-error {% endif %}">
+        <label>{{ 'account.settings.city'|trans({}, 'labels') }}</label>
+        {% if not form.client.city.vars.valid %}
+            {{ form_widget(form.client.city, {'attr': {
+                'data-placement': 'top',
+                'title': form.client.city.vars.errors[0].message,
+                'class': 'select tip tip-open',
+                'placeholder': 'account.settings.city_placeholder'|trans({}, 'labels')
+            }}) }}
+        {% else %}
+            {{ form_widget(form.client.city) }}
+        {% endif %}
+    </div>
+{{ form_end(form) }}

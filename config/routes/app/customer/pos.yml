@@ -1,0 +1,38 @@
+pos_entry:
+    path:     /pos-entry
+    defaults: { _controller: App\Controller\Customer\POSController::entry }
+    methods:  [GET, POST]
+
+pos_customers_search:
+    path:     /search-customers
+    defaults: { _controller: App\Controller\Customer\POSController::searchCustomers }
+    methods:  POST
+    options:
+          expose: true
+
+pos_products_search:
+    path:     /search-products
+    defaults: { _controller: App\Controller\Customer\POSController::searchPOSProducts }
+    methods:  POST
+    options:
+          expose: true
+
+pos_orders:
+    path:     /pos-orders/{period}/
+    defaults: { _controller: App\Controller\Customer\POSController::orders }
+    methods:  GET
+
+pos_order_delete:
+    path:     /order/{id}/delete
+    defaults: { _controller: App\Controller\Customer\POSController::deleteOrder }
+    methods:  DELETE
+
+pos_invoice:
+    path:     /order/invoice/{id}/view
+    defaults: { _controller: App\Controller\Customer\POSController::invoice }
+    methods:  GET
+
+pos_dashboard:
+    path:     /pos-dashboard
+    defaults: { _controller: App\Controller\Customer\POSController::dashboard }
+    methods:  GET

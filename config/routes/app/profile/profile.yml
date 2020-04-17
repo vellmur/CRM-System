@@ -1,0 +1,24 @@
+profile_edit:
+    path:     /edit/profile
+    defaults: { _controller: App\Controller\User\UserController::update }
+    methods:  [GET, POST]
+
+profile_settings:
+    path:     /settings
+    defaults: { _controller: App\Controller\User\UserController::settings }
+    methods:  [GET, POST]
+
+help_support:
+    path:     /support
+    defaults: { _controller: App\Controller\Security\HelpController::support }
+    methods:  [GET, POST]
+
+translation:
+    path:       /translation
+    defaults:   { _controller: App\Controller\Translation\TranslationController::userTranslations }
+    methods:    GET
+
+translation_translate:
+    path:       /translation/translate/{locale}/{domain}/
+    defaults:   { _controller: App\Controller\Translation\TranslationController::translate }
+    methods:    [GET, POST]

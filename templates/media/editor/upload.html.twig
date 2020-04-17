@@ -1,0 +1,6 @@
+<script>
+    window.parent.CKEDITOR.tools.callFunction(
+        "{{ app.request.get('CKEditorFuncNum')|escape('js') }}",
+        "{{ asset(vich_uploader_asset(image)) }}"
+    );
+</script>

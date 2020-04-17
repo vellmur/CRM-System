@@ -1,0 +1,115 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="panel panel-default">
+        <div class="panel-head">
+            <h6><i class="icon-file-excel"></i> {{ 'customer.upload.upload'|trans({}, 'labels') }}</h6>
+        </div>
+        <div class="panel-body">
+            <div class="col-md-12">
+                <form name="parseMembers" class="form-horizontal" id="uploadForm" method="post" enctype="multipart/form-data">
+                    <div class="row">
+                        <p>{{ 'customer.upload.instructions.instructions'|trans({}, 'messages') }}:</p>
+                        <ul>
+                            <li>{{ 'customer.upload.instructions.1'|trans({}, 'messages') }}:</li>
+                            <li>{{ 'customer.upload.instructions.2'|trans({}, 'messages') }}</li>
+                            <li>{{ 'customer.upload.instructions.3'|trans({}, 'messages') }}</li>
+                            <li>{{ 'customer.upload.instructions.4'|trans({}, 'messages') }}</li>
+                        </ul>
+                        <hr/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="members-status">{{ 'customer.upload.upload_as'|trans({}, 'labels') }}:</label>
+                        <select id="members-status" name="parseMembers[status]" class="select" required>
+                            <option value="1" selected>{{ 'customer.search.leads'|trans({}, 'labels') }}</option>
+                            <option value="0">{{ 'customer.search.contacts'|trans({}, 'labels') }}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="file"
+                               name="parseMembers[file]"
+                               id="fileUploader"
+                               class="file-styled"
+                               accept=".csv, text/csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                        >
+                        <input type="hidden" name="max_file_size" value="5" />
+                        <span class="help-block">
+                            {{ 'customer.upload.supported_formats'|trans({}, 'labels') }}: XLS, XLSX, CSV, XML {{ 'customer.upload.spreadsheet'|trans({}, 'labels') }}
+                            <br/>
+                            {{ 'customer.upload.max_file_size'|trans({}, 'labels') }}: 50 MB
+                        </span>
+                        <span id="rows_num_message" class="hidden">{{ 'customer.upload.rows_num'|trans({}, 'labels') }}:
+                            <span id="rows_num"></span>
+                        </span>
+                        <p class="text-danger hidden" id="error-message"></p>
+                        {% if rowsCounter > 0 %}
+                            <hr/>
+                            <p>{{ 'customer.upload.upload_results'|trans({}, 'labels') }}:</p>
+
+                            {% if imported > 0 %}
+                                <p>
+                                    {{ imported }} {{ 'customer.upload.rows_of'|trans({}, 'labels') }}
+                                    {{ rowsCounter }} {{ 'customer.upload.in_file_uploaded'|trans({}, 'labels') }}.
+                                </p>
+                            {% endif %}
+                            {% if rowsCounter - imported > 0 %}
+                                <p>
+                                    {{ rowsCounter - imported }} {{ 'customer.upload.rows_of'|trans({}, 'labels') }}
+                                    {{ rowsCounter }} {{ 'customer.upload.in_file_not_uploaded'|trans({}, 'labels') }}.
+                                </p>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+
+                    <div class="row form-actions pull-right">
+                        <button type="submit" class="btn btn-action">{{ 'button.upload'|trans({}, 'labels') }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock body %}
+
+{% block scripts %}
+    <script>
+        // File input
+        $(".file-styled").uniform({
+            fileButtonClass: 'action btn btn-action',
+            fileButtonHtml: '{{ 'button.choose_file'|trans({}, 'labels') }}',
+            fileDefaultHtml: '{{ 'website.media.no_file_selected'|trans({}, 'labels') }}'
+        });
+
+        $('#fileUploader').on('change', function () {
+            $.ajax({
+                url: '{{ path('members_file_count') }}',
+                type: "POST",
+                data: new FormData($('#uploadForm')[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    var result = jQuery.parseJSON(response),
+                        rowsNum = $('#rows_num_message'),
+                        errorMessage = $('#error-message');
+
+                    if (result.rows !== undefined) {
+                        rowsNum.find('#rows_num').text(result.rows);
+                        rowsNum.removeClass('hidden');
+                        errorMessage.addClass('hidden');
+                    }
+                },
+                error: function (response) {
+                    var result = jQuery.parseJSON(response.responseJSON),
+                        rowsNum = $('#rows_num_message'),
+                        errorMessage = $('#error-message');
+
+                    errorMessage.text(result.error);
+                    errorMessage.removeClass('hidden');
+                    rowsNum.addClass('hidden');
+                }
+            });
+        })
+    </script>
+{% endblock %}

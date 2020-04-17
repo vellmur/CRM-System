@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>formatter.js by firstopinion</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  </head>
+  <body>
+    <div class="wrapper">
+      <section>
+        <h2 id="credit">Credit Card</h2>
+        <p><strong>Ex</strong>: 4242-4242-4242-4242</p>
+        <div class="demo-input">
+          <div class="input-wrap input-s1 input-white">
+            <input type="text" class="input" id="credit-input">
+          </div>
+        </div>
+      </section>
+    </div>
+    <script src="../javascripts/jquery.min.js"></script>
+    <script src="../javascripts/jquery.formatter.js"></script>
+    <script>
+       $('#credit-input').formatter({
+         'pattern': '{{9999}}-{{9999}}-{{9999}}-{{9999}}'
+       });
+
+    </script>
+
+  </body>
+</html>

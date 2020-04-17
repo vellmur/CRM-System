@@ -1,0 +1,68 @@
+<div class="col-md-12 table-responsive pickups-table">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>{{ 'membership.pickups.share_date'|trans({}, 'labels') }}</th>
+            <th>{{ 'membership.pickups.time_to_skip'|trans({}, 'labels') }}</th>
+            <th>{{ 'membership.pickups.status'|trans({}, 'labels') }}</th>
+        </tr>
+        </thead>
+        <tbody class="pickups-list">
+        {% for key, pickup in pickups %}
+            <tr id="pickup-{{ pickup.id }}">
+                <td class="pickup-date">{{ pickup.date|date(pickup.share.member.client.getTwigFormatDate()) }}</td>
+                <td class="timer-place">
+                    {% if pickup.isSuspended == false %}
+                        <!-- Show timer to disable skip a week feature for next pickup if pickup date is not today, else show timer for the next pickup -->
+                        {% if key == 0 %}
+                            {% if date("now", "Europe/Paris")|date('Y-m-d H:i:s') < pickup.date|date_modify("-4 hours")|date('Y-m-d H:i:s') %}
+                                <span class="skip_countdown"
+                                      id="pickup_timer_{{ pickup.id }}"
+                                      data-date="{{ pickup.date|date('Y-m-d') }}" style="font-weight: 500;"></span>
+                            {% else %}
+                                <span class="red-text">{{ 'membership.pickups.time_past'|trans({}, 'labels') }}</span>
+                            {% endif %}
+                        {% elseif key == 1 and date("now", "Europe/Paris")|date('Y-m-d H:i:s') >= pickups[key - 1].date|date_modify("-4 hours")|date('Y-m-d H:i:s') %}
+                            <span class="skip_countdown"
+                                  id="pickup_timer_{{ pickup.id }}"
+                                  data-date="{{ pickup.date|date('Y-m-d') }}" style="font-weight: 500;"></span>
+                        {% endif %}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if pickup.isSuspended == false %}
+                        {% if date("now", "Europe/Paris")|date('Y-m-d H:i:s') < pickup.date|date_modify("-4 hours")|date('Y-m-d H:i:s') %}
+                            <button type="button"
+                                    data-pickup="{{ pickup.id }}"
+                                    data-path="{{ path('membership_skip_pickup') }}"
+                                    class="btn btn-pickup {{ pickup.skipped == false ? 'btn-success' : 'btn-danger' }}">
+                                {% if pickup.skipped == false %}
+                                    {{ 'membership.pickups.skip'|trans({}, 'labels') }}
+                                {% else %}
+                                    {{ 'membership.pickups.receive'|trans({}, 'labels') }}
+                                {% endif %}
+                            </button>
+                        {% else %}
+                            <button type="button"
+                                    class="btn btn-pickup {{ pickup.skipped == false ? 'btn-success' : 'btn-danger' }} bg-grey custom-read-only">
+                                {% if pickup.skipped == false %}
+                                    {{ 'membership.pickups.skip'|trans({}, 'labels') }}
+                                {% else %}
+                                    {{ 'membership.pickups.receive'|trans({}, 'labels') }}
+                                {% endif %}
+                            </button>
+                        {% endif %}
+                    {% else %}
+                        <button type="button" class="btn btn-dark custom-read-only">
+                            {{ 'membership.pickups.suspended'|trans({}, 'labels') }}
+                        </button>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <input type="hidden" id="pickup-label-skip" value="{{ 'membership.pickups.skip'|trans({}, 'labels') }}">
+    <input type="hidden" id="pickup-label-receive" value="{{ 'membership.pickups.receive'|trans({}, 'labels') }}">
+    <input type="hidden" id="pickup-label-suspended" value="{{ 'membership.pickups.suspended'|trans({}, 'labels') }}">
+</div>

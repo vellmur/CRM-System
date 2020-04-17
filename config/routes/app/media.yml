@@ -1,0 +1,14 @@
+manager_images_upload:
+  path:      /manager/upload
+  defaults: {_controller: App\Controller\ImageController::upload }
+  methods:  POST
+
+image_browse:
+  path:     /image/browse
+  defaults: {_controller: App\Controller\ImageController::browse }
+  methods:  GET
+
+media_image_delete:
+  path:     /image/delete/{id}
+  defaults: {_controller: App\Controller\ImageController::delete }
+  methods:  DELETE

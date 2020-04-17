@@ -1,0 +1,145 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="panel panel-default">
+        <div class="panel-head">
+            <h6><i class="icon-key"></i> Add translation key (only for admin)</h6>
+        </div>
+        <div class="panel-body">
+            {{ form_start(form, {'attr':{'class':'form-horizontal'}}) }}
+                <div class="form-group {{ form.key.vars.errors|length ? 'has-error' }}">
+                    {{ form_label(form.key) }}
+                    <div class="col-md-10 col-sm-9 col-xs-7">
+                        {{ form_widget(form.key)}}
+                        {% if form.key.vars.errors|length %}
+                            <label id="{{ form.key.vars.id }}-error" class="validation-error-label" for="{{ form.key.vars.id }}">
+                                {{ form.key.vars.errors[0].message }}
+                            </label>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-group {{ form.translation.vars.errors|length ? 'has-error' }}">
+                    {{ form_label(form.translation) }}
+                    <div class="col-md-10 col-sm-9 col-xs-7">
+                        {{ form_widget(form.translation)}}
+                        {% if form.translation.vars.errors|length %}
+                            <label id="{{ form.translation.vars.id }}-error" class="validation-error-label" for="{{ form.translation.vars.id }}">
+                                {{ form.translation.vars.errors[0].message }}
+                            </label>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-actions text-right">
+                    <button type="submit" class="btn btn-icon btn-success" id="btn-submit">Add</button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+    {{ form_start(keysForm) }}
+        <div class="panel panel-flat">
+            <table class="table" id="scrollableTable">
+                <thead>
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                        <th>Save</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for key, translation in keysForm.keys %}
+                    <tr data-action="{{ path('master_translation_update_key', {'id': translation.vars.value.id}) }}">
+                        <td style="max-width: 200px;">{{ form_widget(translation.key) }}</td>
+                        <td>{{ form_widget(translation.translation) }}</td>
+                        <td>
+                            <span id="form-status">
+                                <button type="button" class="btn btn-success save-translation-key">
+                                    <i class="icon-floppy-disk"></i>
+                                </button>
+                            </span>
+                        </td>
+                        <td>
+                            <button type="button"
+                                    data-path="{{ path('master_translation_delete_key', {id: translation.vars.value.id}) }}"
+                                    data-toggle="modal"
+                                    href="#small_modal"
+                                    class="btn btn-danger btn-icon btn-delete">
+                                <i class="icon-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {{ form_end(keysForm) }}
+
+    {{ include ("modal/delete-modal.html.twig") }}
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ asset('js/plugins/tables/datatables/datatables.min.js') }}"></script>
+    <script src="{{ asset('js/pages/translation/table_scrollable.js') }}?v=1"></script>
+    <script>
+        $('body').on('click', '.save-translation-key', function () {
+            var $this = $(this),
+                $button = $(this).parent(),
+                $form = $this.closest('form').first(),
+                $tr = $this.closest('tr'),
+                action = $tr.data('action'),
+                buttonHTML = $button.html(),
+                key = $tr.find('textarea[id$="_key"]').val().trim(),
+                translation = $tr.find('textarea[id$="_translation"]').val().trim();
+
+            // Replace the button to show spinner and remove errors from previous submission
+            $button.html('<button class="btn btn-success btn-icon"><i class="icon-spinner3 spinner"></i></button>');
+            $form.find('.form-group').removeClass('has-error');
+            $form.find('.tooltip').tooltip('destroy');
+
+            $.ajax({
+                url: action,
+                type: 'POST',
+                data: {key: key, translation: translation},
+                success: function (response) {
+                    console.log(response)
+                    buttonHTML = $(buttonHTML).filter(".btn").removeClass('btn-danger');
+                },
+                error: function (response) {
+                    buttonHTML = $(buttonHTML).filter(".btn").addClass('btn-danger');
+                },
+                complete: function () {
+                    $button.html(buttonHTML);
+                }
+            });
+        });
+
+        $(document).ready(function() {
+            let labels = {
+                'search':  '{{ 'translation.search'|trans({}, 'labels') }}',
+                'no_results':  '{{ 'translation.no_results'|trans({}, 'labels') }}',
+                'showing':  '{{ 'translation.showing'|trans({}, 'labels') }}',
+                'to':  '{{ 'translation.to'|trans({}, 'labels') }}',
+                'of':  '{{ 'translation.of'|trans({}, 'labels') }}',
+                'entries':  '{{ 'translation.entries'|trans({}, 'labels') }}',
+                'filtered_from':  '{{ 'translation.filtered_from'|trans({}, 'labels') }}',
+                'total_entries':  '{{ 'translation.total_entries'|trans({}, 'labels') }}'
+            };
+
+            let options = {
+                scrollY: 480,
+                pageLength: 100,
+                language: {
+                    search: labels['search'] + ': ',
+                    zeroRecords: labels['no_results'],
+                    info: labels['showing'] + " _START_ " + labels['to'] + " _END_ " + labels['of'] + " _TOTAL_ " + labels['entries'],
+                    infoFiltered: '(' + labels['filtered_from'] +  " _TOTAL_ " + labels['total_entries'] + ')'
+                }
+            };
+
+            dataTableInit('#scrollableTable', options, [0, 1]);
+        });
+    </script>
+{% endblock %}

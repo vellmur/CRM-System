@@ -1,0 +1,27 @@
+<div class="product-tile__product-visuals">
+    <a href="javascript:void(0);">
+        {% if productData['data-image-path'] is defined %}
+            <img class="product-tile__product-photo" src="{{ asset(productData['data-image-path'])|imagine_filter('product_default') }}" />
+        {% endif %}
+    </a>
+    <div class="product-tile__product-photo-tinter {{ not productData['data-image-path'] is defined ? 'product-image-background' }}"></div>
+
+    <div class="product-add">
+        <div class="product-add-count {{ qty == 0 ? 'is-transparent' }}">
+            <div class="product-add-quantity">
+                <div class="product-spinner product-spinner__quantity">{{ qty }}</div>
+            </div>
+            <div class="product-add-quantity-label">
+                <div class="product-add-quantity-label-summary">{{ 'membership.renew.in_basket'|trans({}, 'labels') }}</div>
+            </div>
+        </div>
+        <div class="product-add-buttons">
+            <button type="button" class="btn product-add-button product-add-button-remove product-minus">
+                <div class="product-add-minus"></div>
+            </button>
+            <button type="button" class="btn product-add-button product-add-button-add product-plus">
+                <div class="product-add-plus"></div>
+            </button>
+        </div>
+    </div>
+</div>

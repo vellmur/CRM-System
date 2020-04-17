@@ -1,0 +1,112 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    <div class="form-group form-group-material">
+                        <label for="search_filter">Filter by:</label>
+                        <select class="select" id="search_filter" data-width="100%" onchange="location = this.value;">
+                            <option>Select client:</option>
+                            {% for client in clients %}
+                                <option value="{{ path('master_statistics', {
+                                    'module': app.request.get('module') ?? 'all',
+                                    'client': client.id
+                                }) }}"
+                                        {{ app.request.get('client') and client.id == app.request.get('client').id ? 'selected' }}>
+                                    {{ client.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-6" style="margin-top: 20px;">
+                    <p class="vertical-text">{{ 'customer.search.records_found'|trans({}, 'labels') }}:
+                        <span id="content_counter">{{ clients|length }}</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-head">
+            <h6><i class="icon-stats-bars2"></i> Statistics</h6>
+        </div>
+        <div class="panel-body panel-navs">
+            <div class="row">
+                <div class="tabbable">
+                    <ul class="nav nav-pills">
+                        <li {{ not app.request.get('module') or app.request.get('module') == 'all' ? 'class="active"' }}>
+                            <a href="{{ path('master_statistics', {
+                                'module': 'all',
+                                'client': app.request.get('client').id ?? null
+                            }) }}" class="chart-period-btn">All</a>
+                        </li>
+                        {% for name in modules %}
+                            <li {{ app.request.get('module') == name ? 'class="active"' }}>
+                                <a href="{{ path('master_statistics', {
+                                    'module': name,
+                                    'client': app.request.get('client').id ?? null
+                                }) }}" class="chart-period-btn">{{ name|capitalize }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="tabbable">
+                    <ul class="nav nav-pills">
+                        {% for key, item in items %}
+                            <li {{ key == 0 ? 'class="active"' }} data-type="item">
+                                <a data-value="{{ item }}" class="chart-period-btn">{{ item }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="tabbable">
+                    <ul class="nav nav-pills">
+                        <li class="active" data-type="period">
+                            <a data-value="day" class="chart-period-btn">Day</a>
+                        </li>
+                        <li data-type="period">
+                            <a data-value="month" class="chart-period-btn">Month</a>
+                        </li>
+                        <li data-type="period">
+                            <a data-value="year" class="chart-period-btn"  data-period="year">Year</a>
+                        </li>
+                        <li data-type="period">
+                            <a data-value="last12" class="chart-period-btn">Last 12</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="chart-container">
+                <div class="chart has-fixed-height" id="views_chart"></div>
+            </div>
+        </div>
+    </div>\
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ asset('js/plugins/ui/moment/moment.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/ui/moment/moment_timezone.js') }}"></script>
+
+    <script type="text/javascript" src="{{ asset('js/plugins/visualization/echarts/echarts.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/pages/company/market_statistics.js') }}"></script>
+    <script>
+        chartInit(
+            '{{ app.request.get('module') }}',
+            {{ stats|json_encode|raw }},
+            "{{ absolute_url(asset('js/plugins/visualization/echarts/echarts.js'|replace({'echarts.js': ''}))) }}"
+        );
+    </script>
+{% endblock %}

@@ -1,0 +1,14 @@
+user_index:
+    path:     /
+    defaults: { _controller: App\Controller\User\UserController::list }
+    methods:  [GET, POST]
+
+ajax_user_update:
+    path:     /update/{id}
+    defaults: { _controller: App\Controller\User\UserController::ajaxUpdate }
+    methods:  POST
+
+ajax_user_password_change:
+    path:     /change_password
+    defaults: { _controller: App\Controller\User\UserController::changePassword }
+    methods:  POST

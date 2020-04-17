@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            {{ form_start(form, {'attr':{'class':'form-horizontal', 'enctype': 'multipart/form-data'}}) }}
+                {% include 'blog/post_form.html.twig' %}
+
+                <div class="form-actions text-right">
+                    <button type="submit" class="btn btn-icon btn-success" id="btn-submit">Add</button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

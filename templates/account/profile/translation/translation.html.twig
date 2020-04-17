@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+     <div class="panel panel-default">
+        <div class="panel-head">
+            <h6><i class="icon-earth"></i> {{ 'navigation.account.translation'|trans({}, 'labels') }}</h6>
+        </div>
+        <div class="panel-body">
+        </div>
+     </div>
+    <div class="panel panel-default">
+        <table class="table">
+            <thead>
+            <tr class="heading-style">
+                <th>{{ 'translation.language'|trans({}, 'labels') }}</th>
+                <th>{{ 'translation.domain'|trans({}, 'labels') }}</th>
+                <th>{{ 'translation.progress'|trans({}, 'labels') }}</th>
+                <th>{{ 'translation.keys'|trans({}, 'labels') }}</th>
+                <th>{{ 'table.updated_at'|trans({}, 'labels') }}</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% if translations[0] is defined and translations[0][0] != null %}
+                    {% for key, translation in translations %}
+                        <tr>
+                            {% set translationPercent = ((translation.completed/translation.total) * 100)|number_format(0, ',', ' ') %}
+                            <td>
+                                <a href="{{ path('translation_translate', {locale: translation[0].locale.code, domain: translation[0].domain.domain }) }}">
+                                    {{ languages[translation[0].locale.code] }}
+                                </a>
+                            </td>
+                            <td>{{ translation[0].domain.domain }}</td>
+                            <td>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-striped progress-bar-success"
+                                         style="width: {{ translationPercent < 10 ? 10 : translationPercent }}%">
+                                        <span>{{ translationPercent }}%</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ translation.completed }} / {{ translation.total }}</td>
+                            <td>{{ translation[0].updatedAt|date(app.user.twigFormatDate ~ ' H:i:s') }}</td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+{% endblock body %}
+
+{% block scripts %}
+    <script src="{{ asset('js/plugins/loaders/progressbar.min.js') }}"></script>
+    <script>
+        var $bars = $('.progress-bar');
+
+        $bars.each(function () {
+            $(this).progressbar({display_text: 'center', use_percentage: true});
+        });
+    </script>
+{% endblock %}

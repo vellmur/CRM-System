@@ -1,0 +1,20 @@
+{% extends "front-layout.html.twig" %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-body text-center">
+                    <h1>{{ 'register.account_created'|trans({}, 'messages') }}</h1>
+
+                    <p style="margin-top: 20px;"> {{ 'register.check_your_inbox'|trans({}, 'messages') }}</p>
+                    <p style="margin-top: 20px;"> * {{ 'register.if_no_email'|trans({}, 'messages') }},
+                        <span class="text-semibold">{{ 'register.check_spam'|trans({}, 'messages') }} </span>
+                        {{ 'register.email_in_spam'|trans({}, 'messages') }}.<br/>{{ 'register.if_so'|trans({}, 'messages') }},
+                        <span class="text-semibold"> {{ 'register.mark_not_spam'|trans({}, 'messages') }}</span>,
+                        {{ 'register.receive_in_future'|trans({}, 'messages') }}.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock body %}

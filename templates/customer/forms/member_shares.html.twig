@@ -1,0 +1,17 @@
+<div id="cart-memberShares">
+    Renew current shares
+    {% for key, share in shares %}
+         <div class="product-info">
+             <div class="row">
+                 <div class="col-md-6 col-xs-5">
+                     {{ share.shareName }} <br/>
+                     Shares left: {% if sharesLeft[share.share.id] is defined %} {{ sharesLeft[share.share.id] }} {% else %} 0 {% endif %}
+                     <input type="checkbox" value="{{ share.share.id }}" class="customer-product hidden" name="renew[shares][]" data-name="{{ share.shareName }}" data-price="{{ share.share.price }}" data-description="{{ share.share.description }}" data-shareType="{{ share.share.getTypeName() }}">
+                 </div>
+                 <div class="col-md-6 col-xs-7">
+                     <input type="text" value="0" name="renew[shareQty][{{ share.share.id }}]" id="renew_shares_{{ share.id }}" class="touchspin-postfix share-weeks">
+                 </div>
+             </div>
+         </div>
+    {% endfor %}
+</div>

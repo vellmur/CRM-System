@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% if drafts | length %}
+        <!-- Table view -->
+        <div class="panel panel-default">
+            <div class="panel-heading heading-style">
+                <h5 class="panel-title">Drafts</h5>
+            </div>
+            <div class="datatable-media">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Subject</th>
+                        <th class="text-center">Number of recipients</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for key, draft in drafts %}
+                        <tr>
+                            <td>{{ draft.createdAt|date(app.user.getTwigFormatDate()) }}</td>
+                            <td>{{ draft.automatedEmail ? 'Auto' : 'Manual' }}</td>
+                            <td>{{ draft.subject }}</td>
+                            <td class="text-center">{{ draft.recipients|length }}</td>
+                            <td><a class="btn btn-action btn-icon" href="{{ path('master.email.compose', {id : draft.id}) }}"><i class="icon-pencil7"></i></a></td>
+                            <td><button type="button" data-path="{{ path('master.email.delete', {id : draft.id}) }}" data-toggle="modal" href="#small_modal" class="btn btn-danger btn-icon btn-delete"> <i class="icon-trash"></i></button></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <!-- /table view -->
+        </div>
+
+        {{ include ("modal/delete-modal.html.twig") }}
+    {% endif %}
+{% endblock body %}

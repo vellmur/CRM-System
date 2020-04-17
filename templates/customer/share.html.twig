@@ -1,0 +1,103 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ form_start(form, {'attr': {'class': 'form-horizontal'} }) }}
+        <div class="panel panel-default">
+            <div class="panel-head">
+                <h6><i class="icon-bag"></i> {{ 'navigation.customers.shares'|trans({}, 'labels') }}</h6>
+            </div>
+            <div class="panel-body">
+                <div class="form-group {{ form.name.vars.errors|length ? 'has-error' }}">
+                    {{ form_label(form.name) }}
+                    <div class="col-md-10 col-sm-9 col-xs-7">
+                        {{ form_widget(form.name) }}
+                        {{ form_errors(form.name) }}
+                    </div>
+                </div>
+                <div class="form-group {{ form.price.vars.errors|length ? 'has-error' }}">
+                    {{ form_label(form.price) }}
+                    <div class="col-md-10 col-sm-9 col-xs-7">
+                        {{ form_widget(form.price) }}
+                        {{ form_errors(form.price) }}
+                    </div>
+                </div>
+                <div class="form-group {{ form.description.vars.errors|length ? 'has-error' }}">
+                    {{ form_label(form.description) }}
+                    <div class="col-md-10 col-sm-9 col-xs-7">
+                        {{ form_widget(form.description) }}
+                        {{ form_errors(form.description) }}
+                    </div>
+                </div>
+                <div class="form-actions text-right">
+                    <button type="submit" class="btn btn-action" onclick="validate(this)">
+                        {{ 'button.add'|trans({}, 'labels') }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    {{ form_end(form) }}
+
+    {% if forms|length %}
+        <div class="panel panel-default">
+            <div class="table-vertical">
+                <table class="table">
+                    <thead>
+                    <tr class="heading-style">
+                        <th>{{ 'customer.level.name'|trans({}, 'labels') }}</th>
+                        <th>{{ 'customer.level.price'|trans({}, 'labels') }}</th>
+                        <th>{{ 'customer.level.description'|trans({}, 'labels') }}</th>
+                        <th>{{ 'table.active'|trans({}, 'labels') }}</th>
+                        <th>{{ 'table.save'|trans({}, 'labels') }}</th>
+                        <th>{{ 'table.delete'|trans({}, 'labels') }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {%  for key, form in forms %}
+                        <tr {% if key is not divisible by (2) %} class="row-style" {% endif %}>
+                            {{ form_start(form, {'attr': {
+                                'action': path('ajax_member_share_update', {id : form.vars.value.id}),
+                                'class': 'ajaxUpdate'}
+                            }) }}
+                                <td class="form-group">{{ form_widget(form.name) }}</td>
+                                <td class="form-group">{{ form_widget(form.price) }}</td>
+                                <td class="form-group">{{ form_widget(form.description) }}</td>
+                                <td class="form-group">
+                                    <div class="checkbox checkbox-switchery table-switch">
+                                        {{ form_widget(form.isActive) }}
+                                    </div>
+                                </td>
+                                <td class="form-group">
+                                    <span id="form-status">
+                                        <button type="submit" class="btn btn-success btn-icon btn-save">
+                                            <i class="icon-floppy-disk"></i>
+                                        </button>
+                                    </span>
+                                </td>
+                                <td class="form-group">
+                                    {% if form.vars.value.shares|length == 0 %}
+                                        <button type="button"
+                                                data-path="{{ path('ajax_share_delete', {id : form.vars.value.id}) }}"
+                                                data-toggle="modal"
+                                                href="#small_modal"
+                                                class="btn btn-danger btn-icon btn-delete">
+                                            <i class="icon-trash"></i>
+                                        </button>
+                                    {% else %}
+                                        <span class="tip" data-placement="top" title="{{ 'customer.share.denied_remove'|trans({}, 'labels') }}">
+                                            <button type="button" class="btn btn-danger btn-icon disabled">
+                                                <i class="icon-trash"></i>
+                                            </button>
+                                        </span>
+                                    {% endif %}
+                                </td>
+                            {{ form_end(form) }}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {{ include ("modal/delete-modal.html.twig") }}
+    {% endif %}
+{% endblock body %}

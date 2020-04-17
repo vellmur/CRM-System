@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ include('media/manager.html.twig') }}
+
+    {% if images|length %}
+        {{ include ("media/image_list.html.twig", {images: images}) }}
+    {% endif %}
+{% endblock %}

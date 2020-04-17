@@ -1,0 +1,223 @@
+{{ form_start(form, {'attr': {'class': 'form-horizontal jquery-validation', 'role' : 'form'} }) }}
+    <h6><i class="icon-user-plus"></i> {{ 'customer.vendor.vendor'|trans({}, 'labels') }}</h6><hr>
+    <div class="form-group {{ form.name.vars.errors|length ? 'has-error' }}">
+        {{ form_label(form.name) }}
+        <div class="col-md-10 col-sm-9 col-xs-7">
+            {{ form_widget(form.name)}}
+            {% if not form.name.vars.valid %}
+                <label id="{{ form.name.vars.id }}-error" class="validation-error-label" for="{{ form.name.vars.id }}">
+                    {{ form.name.vars.errors[0].message }}
+                </label>
+            {% endif %}
+        </div>
+    </div>
+    <div {% if form.category.vars.errors|length > 0 %} class="form-group has-error" {% else %} class="form-group" {% endif %}>
+        {{ form_label(form.category) }}
+        <div class="col-md-10 col-sm-9 col-xs-7">
+            {% for child in form.category.children %}
+                <div class="checkbox">
+                    <label class="checkbox-info" for="{{ child.vars.id }}">
+                        {{ form_widget(child, {'attr' : {'class' : 'styled'}}) }}
+                        {{ child.vars.label }}
+                    </label>
+                </div>
+            {% endfor %}
+            {% if not form.category.vars.valid %}
+                <label id="{{ form.category.vars.id }}-error" class="validation-error-label" for="{{ form.category.vars.id }}">
+                    {{ form.category.vars.errors[0].message }}
+                </label>
+            {% endif %}
+        </div>
+    </div>
+    <div {% if form.orderDay.vars.errors|length > 0 %} class="form-group has-error" {% else %} class="form-group" {% endif %}>
+        {{ form_label(form.orderDay) }}
+        <div class="col-md-10 col-sm-9 col-xs-7">
+            {% for child in form.orderDay.children %}
+                <div class="checkbox">
+                    <label class="checkbox-info" for="{{ child.vars.id }}">
+                        {{ form_widget(child, {'attr' : {'class' : 'styled'}}) }}
+                        {{ child.vars.label }}
+                    </label>
+                </div>
+            {% endfor %}
+            {% if not form.orderDay.vars.valid %}
+                <label id="{{ form.orderDay.vars.id }}-error" class="validation-error-label" for="{{ form.orderDay.vars.id }}">
+                    {{ form.orderDay.vars.errors[0].message }}
+                </label>
+            {% endif %}
+        </div>
+    </div>
+    <div class="form-group {{ form.isActive.vars.errors|length ? ' has-error' }}">
+        {{ form_label(form.isActive) }}
+        <div class="col-md-10 col-sm-9 col-xs-7">
+            <div class="checkbox checkbox-switchery table-switch">
+                {{ form_widget(form.isActive)}}
+            </div>
+        </div>
+    </div>
+    <h6><i class="icon-truck"></i> {{ 'membership.renew.addresses.delivery_address'|trans({}, 'labels') }}</h6><hr>
+    <div class="address">
+        <div class="form-group {{ form.address.street.vars.errors|length ? 'has-error' }}">
+            {{ form_label(form.address.street) }}
+            <div class="col-md-10 col-sm-9 col-xs-7">
+                {{ form_widget(form.address.street)}}
+                {% if not form.address.street.vars.valid %}
+                    <label id="{{ form.address.street.vars.id }}-error" class="validation-error-label" for="{{ form.address.street.vars.id }}">
+                        {{ form.address.street.vars.errors[0].message }}
+                    </label>
+                {% endif %}
+            </div>
+        </div>
+        <div class="form-group {{ form.address.apartment.vars.errors|length ? 'has-error' }}">
+            {{ form_label(form.address.apartment) }}
+            <div class="col-md-10 col-sm-9 col-xs-7">
+                {{ form_widget(form.address.apartment)}}
+                {% if not form.address.apartment.vars.valid %}
+                    <label id="{{ form.address.apartment.vars.id }}-error" class="validation-error-label" for="{{ form.address.apartment.vars.id }}">
+                        {{ form.address.apartment.vars.errors[0].message }}
+                    </label>
+                {% endif %}
+            </div>
+        </div>
+        <div class="form-group {{ form.address.postalCode.vars.errors|length ? 'has-error' }}">
+            {{ form_label(form.address.postalCode) }}
+            <div class="col-md-10 col-sm-9 col-xs-7">
+                {{ form_widget(form.address.postalCode)}}
+                {% if not form.address.postalCode.vars.valid %}
+                    <label id="{{ form.address.postalCode.vars.id }}-error" class="validation-error-label" for="{{ form.address.postalCode.vars.id }}">
+                        {{ form.address.postalCode.vars.errors[0].message }}
+                    </label>
+                {% endif %}
+            </div>
+        </div>
+        <div class="form-group {{ form.address.region.vars.errors|length ? 'has-error' }}">
+            {{ form_label(form.address.region) }}
+            <div class="col-md-10 col-sm-9 col-xs-7">
+                {{ form_widget(form.address.region) }}
+                {% if not form.address.region.vars.valid %}
+                    <label id="{{ form.address.region.vars.id }}-error" class="validation-error-label" for="{{ form.address.region.vars.id }}">
+                        {{ form.address.region.vars.errors[0].message }}
+                    </label>
+                {% endif %}
+            </div>
+        </div>
+        <div class="form-group {{ form.address.city.vars.errors|length ? 'has-error' }}">
+            {{ form_label(form.address.city) }}
+            <div class="col-md-10 col-sm-9 col-xs-7">
+                {{ form_widget(form.address.city) }}
+                {% if not form.address.city.vars.valid %}
+                    <label id="{{ form.address.city.vars.id }}-error" class="validation-error-label" for="{{ form.address.city.vars.id }}">
+                        {{ form.address.city.vars.errors[0].message }}
+                    </label>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <h6><i class="icon-address-book3"></i> {{ 'customer.vendor.contacts'|trans({}, 'labels') }}</h6><hr>
+    <div class="collection"
+         data-prototype="
+            {% apply escape %}
+                {{ include('parts/collection-theme.twig', { 'form': form.contacts.vars.prototype }) }}
+            {% endapply %}">
+        {% for key, contact in form.contacts %}
+            <div class="collection_item">
+                <div class="form-group {{ contact.name.vars.errors|length ? 'has-error' }}">
+                    {{ form_label(contact.name) }}
+                    <div class="col-md-10 col-sm-9 col-xs-7">
+                        {{ form_widget(contact.name)}}
+                        {% if not contact.name.vars.valid %}
+                            <label id="{{ contact.name.vars.id }}-error" class="validation-error-label" for="{{ contact.name.vars.id }}">
+                                {{ contact.name.vars.errors[0].message }}
+                            </label>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group {{ contact.email.vars.errors|length ? 'has-error' }}">
+                    {{ form_label(contact.email) }}
+                    <div class="col-md-10 col-sm-9 col-xs-7">
+                        {{ form_widget(contact.email)}}
+                        {% if not contact.email.vars.valid %}
+                            <label id="{{ contact.email.vars.id }}-error" class="validation-error-label" for="{{ contact.email.vars.id }}">
+                                {{ contact.email.vars.errors[0].message }}
+                            </label>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group {{ contact.phone.vars.errors|length ? 'has-error' }}">
+                    {{ form_label(contact.phone) }}
+                    <div class="col-md-10 col-sm-9 col-xs-7">
+                        {{ form_widget(contact.phone)}}
+                        {% if not contact.phone.vars.valid %}
+                            <label id="{{ contact.phone.vars.id }}-error" class="validation-error-label" for="{{ contact.phone.vars.id }}">
+                                {{ contact.phone.vars.errors[0].message }}
+                            </label>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group {{ contact.notifyEnabled.vars.errors|length ? 'has-error' }}">
+                    {{ form_label(contact.notifyEnabled) }}
+                    <div class="col-md-10 col-sm-9 col-xs-7">
+                        {{ form_widget(contact.notifyEnabled)}}
+                        {% if not contact.notifyEnabled.vars.valid %}
+                            <label id="{{ contact.notifyEnabled.vars.id }}-error" class="validation-error-label" for="{{ contact.notifyEnabled.vars.id }}">
+                                {{ contact.notifyEnabled.vars.errors[0].message }}
+                            </label>
+                        {% endif %}
+                    </div>
+                </div>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <div class="form-group">
+                        <label class="control-label col-md-2 col-sm-3 col-xs-5">
+                            {{ 'membership.profile_link'|trans({}, 'labels') }}
+                        </label>
+                        <div class="col-md-10 col-sm-9 col-xs-7 contact-link">
+                            <a href="{{ path('vendor_profile', {token: contact.vars.value.token}) }}" target="_blank">
+                                {{ 'membership.view_profile'|trans({}, 'labels') }}
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+                <button type="button" class="btn btn-icon btn-danger delete-collection" href="#"><i class="icon-trash"></i></button>
+            </div>
+        {% endfor %}
+        <button href="#" class="btn btn-action add_collection_link">{{ 'button.add'|trans({}, 'labels') }}</button>
+    </div>
+
+    <div class="form-actions text-right">
+        <button type="submit" class="btn btn-success" id="btn-submit">{{ 'button.save'|trans({}, 'labels') }}</button>
+
+        {% if form.vars.value.id is not null %}
+            <button type="button"
+                    data-toggle="modal"
+                    href="#delete-modal"
+                    data-delete-path="{{ path('vendor_delete', {id : form.vars.value.id }) }}"
+                    class="btn btn-danger btn-icon">
+                <i class="icon-trash"></i>
+            </button>
+        {% endif %}
+    </div>
+
+    {% do form.contacts.setRendered %}
+    {% do form.address.setRendered %}
+{{ form_end(form) }}
+
+{{ include ("modal/modal-with-message.html.twig", {'id': 'delete-modal'}) }}
+
+{% block scripts %}
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFudPQ3bgPztQLPBngp9B425BBl9q5Duo&libraries=places"></script>
+    <script src="{{ asset('js/plugins/googleMapsSearch.js') }}"></script>
+    <script>
+        var $addressFields = $('input[name$="street]"]');
+
+        if ($addressFields[0]) {
+            // Enable google address search autocomplete
+            var country = '{{ app.user.client.country }}'.length > 0 ? '{{ app.user.client.country }}' : null;
+            initAutocomplete($addressFields, country);
+        }
+    </script>
+    <style>
+        .contact-link  {
+            margin-top: 8px;
+        }
+    </style>
+{% endblock %}

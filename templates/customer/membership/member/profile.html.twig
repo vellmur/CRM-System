@@ -1,0 +1,788 @@
+{% extends "front-layout.html.twig" %}
+
+{% block styles %}
+    <!-- Countdown files -->
+    <script src="{{ asset('js/plugins/ui/moment/moment.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/ui/moment/moment_timezone.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/plugins/countdown/jquery.countdown.min.js') }}"></script>
+    <!-- /End of countdown files -->
+{% endblock %}
+
+{% block body %}
+    {% set domain = app.request.schemeAndHttpHost ~ app.request.baseUrl %}
+    <!-- Page tabs -->
+    <div class="tabbable page-tabs membership-panel tab-spaceless">
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a href="#profile" data-toggle="tab">
+                    <span class="icon-user"></span> {{ 'membership.profile'|trans({}, 'labels') }}
+                </a>
+            </li>
+            {% if status == 'customer' or status == 'patron' %}
+                {% if shares|length %}
+                    <li>
+                        <a href="#skip_week" data-toggle="tab">
+                            <span class="icon-calendar2"></span> {{ 'membership.skip_a_week'|trans({}, 'labels') }}
+                        </a>
+                    </li>
+                {% endif %}
+                {% if isWeekSuspended == false and sharesProducts|length %}
+                    <li>
+                        <a href="#customize" data-toggle="tab">
+                            <span class="icon-cog2"></span> {{ 'membership.customize.customize'|trans({}, 'labels') }}
+                        </a>
+                    </li>
+                {% endif %}
+                {% if isWeekSuspended == false and feedback|length %}
+                    <li>
+                        <a href="#feedback" data-toggle="tab">
+                            <span class="icon-comment-discussion"></span> {{ 'membership.feedback.feedback'|trans({}, 'labels') }}
+                        </a>
+                    </li>
+                {% endif %}
+            {% endif %}
+            <li>
+                <a href="#market" data-toggle="tab">
+                    <span class="icon-credit-card"></span>
+                    {{ status == 'customer' ? 'membership.renew.renew'|trans({}, 'labels') : 'button.purchase'|trans({}, 'labels') }}
+                </a>
+            </li>
+            <li>
+                <a href="#testimonial" data-toggle="tab">
+                    <span class="icon-comment"></span> {{ 'membership.testimonial.testimonial'|trans({},'labels') }}
+                </a>
+            </li>
+        </ul>
+        {{ form_start(form, {'attr': {
+            'class': 'form-horizontal jquery-validation',
+            'id': 'profileForm',
+            'action': path('membership_profile_save', {'token': app.request.get('token')})}
+        }) }}
+        <div class="tab-content">
+            <!-- Profile -->
+            <div class="tab-pane active fade in" id="profile">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2">
+                        <div class="panel panel-default">
+                            <div class="panel-heading theme-style">
+                                <h6 class="panel-title"> {{ 'membership.profile'|trans({}, 'labels') }}</h6>
+                            </div>
+                            <div class="panel-body form-body">
+                                <div class="form-group {% if form.firstname.vars.errors | length > 0 %} has-error {% endif %}">
+                                    <label class="col-md-3 col-sm-3 col-xs-5 control-label" for="{{ form.firstname.vars.id }}">
+                                        {{ form.firstname.vars.label|trans({}, 'labels') }}
+                                    </label>
+                                    <div class="col-md-9 col-sm-9 col-xs-7">
+                                        {{ form_widget(form.firstname) }}
+                                        {% if not form.firstname.vars.valid %}
+                                            <label id="{{ form.firstname.vars.id }}-error" class="validation-error-label" for="{{ form.firstname.vars.id }}">
+                                                {{ form.firstname.vars.errors[0].message }}
+                                            </label>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="form-group {% if form.lastname.vars.errors | length > 0 %} has-error {% endif %}">
+                                    <label class="col-md-3 col-sm-3 col-xs-5 control-label" for="{{ form.lastname.vars.id }}">
+                                        {{ form.lastname.vars.label|trans({}, 'labels') }}
+                                    </label>
+                                    <div class="col-md-9 col-sm-9 col-xs-7">
+                                        {{ form_widget(form.lastname) }}
+                                        {% if not form.lastname.vars.valid %}
+                                            <label id="{{ form.lastname.vars.id }}-error" class="validation-error-label" for="{{ form.lastname.vars.id }}">
+                                                {{ form.lastname.vars.errors[0].message }}
+                                            </label>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="form-group {% if form.phone.vars.errors | length > 0 %} has-error {% endif %}">
+                                    <label class="col-md-3 col-sm-3 col-xs-5 control-label" for="{{ form.phone.vars.id }}">
+                                        {{ form.phone.vars.label|trans({}, 'labels') }}
+                                    </label>
+                                    <div class="col-md-9 col-sm-9 col-xs-7">
+                                        {{ form_widget(form.phone) }}
+                                        {% if not form.phone.vars.valid %}
+                                            <label id="{{ form.phone.vars.id }}-error" class="validation-error-label" for="{{ form.phone.vars.id }}">
+                                                {{ form.phone.vars.errors[0].message }}
+                                            </label>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="form-group {% if form.email.vars.errors | length > 0 %} has-error {% endif %}">
+                                    <label class="col-md-3 col-sm-3 col-xs-5 control-label" for="{{ form.email.vars.id }}">
+                                        {{ form.email.vars.label|trans({}, 'labels') }}
+                                    </label>
+                                    <div class="col-md-9 col-sm-9 col-xs-7">
+                                        {{ form_widget(form.email) }}
+                                        {% if not form.email.vars.valid %}
+                                            <label id="{{ form.email.vars.id }}-error" class="validation-error-label" for="{{ form.email.vars.id }}">
+                                                {{ form.email.vars.errors[0].message }}
+                                            </label>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <!-- Show readonly delivery day field only for Leads and Contacts with saved delivery day and Delivery address -->
+                                {% if (status == 'lead' or status == 'contact')
+                                    and form.vars.value.deliveryDay
+                                    and form.vars.value.getAddressByType('Delivery') %}
+                                    <div class="form-group">
+                                        <label class="col-md-3 col-sm-3 col-xs-5 control-label">
+                                            {{ 'customer.add.delivery_day'|trans({}, 'labels') }}
+                                        </label>
+                                        <div class="col-md-9 col-sm-9 col-xs-7">
+                                            <input type="text"
+                                                   disabled
+                                                   readonly
+                                                   class="form-control custom-read-only"
+                                                   value="{{ form.vars.value.deliveryDay|dayOfWeek }}"/>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="control-label">{{ 'membership.automated_emails'|trans({}, 'labels') }}</label>
+                                        <div class="col-md-12">
+                                            {% for key, notification in form.notifications %}
+                                                {% set notifyName = notification.vars.value.getNotifyName() %}
+                                                {% if (status == 'customer' and notifyName != 'delivery_day')
+                                                    or ((status == 'contact' or status == 'lead') and notifyName == 'delivery_day')
+                                                %}
+                                                    <div class="checkbox">
+                                                        {{ form_widget(notification) }}
+                                                        <label for="member_notifications_{{ key }}_isActive" class="control-label">
+                                                            {{ ('membership.notifies.' ~ notifyName)|trans({}, 'labels') }}
+                                                        </label>
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Start of addresses section -->
+                                <h6><i class="icon-home2"></i> {{ 'customer.address.address'|trans({}, 'labels') }}</h6><hr>
+                                <div class="collection address-collection"
+                                     data-collection="address"
+                                     data-prototype="
+                                        {% apply escape('html') %}
+                                            {{ include('parts/collection-theme.twig', { 'form': form.addresses.vars.prototype }) }}
+                                        {% endapply %}">
+                                    {% for key, address in form.addresses %}
+                                        <div class="collection_item address-item">
+                                            <div class="form-group {% if address.type.vars.errors | length > 0 %} has-error {% endif %}">
+                                                <label class="col-md-3 col-sm-3 col-xs-5 control-label" for="{{ address.type.vars.id }}">
+                                                    {{ address.type.vars.label|trans({}, 'labels') }}
+                                                </label>
+                                                <div class="col-md-9 col-sm-9 col-xs-7">
+                                                    {{ form_widget(address.type)}}
+                                                    {% if not address.type.vars.valid %}
+                                                        <label id="{{ address.type.vars.id }}-error"
+                                                               class="validation-error-label"
+                                                               for="{{ address.type.vars.id }}">
+                                                            {{ address.type.vars.errors[0].message }}
+                                                        </label>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="form-group {% if address.street.vars.errors | length > 0 %} has-error {% endif %}">
+                                                <label class="col-md-3 col-sm-3 col-xs-5 control-label" for="{{ address.street.vars.id }}">
+                                                    {{ address.street.vars.label|trans({}, 'labels') }}
+                                                </label>
+                                                <div class="col-md-9 col-sm-9 col-xs-7">
+                                                    {{ form_widget(address.street)}}
+                                                    {% if not address.street.vars.valid %}
+                                                        <label id="{{ address.street.vars.id }}-error"
+                                                               class="validation-error-label"
+                                                               for="{{ address.street.vars.id }}">
+                                                            {{ address.street.vars.errors[0].message }}
+                                                        </label>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="form-group {% if address.apartment.vars.errors | length > 0 %} has-error {% endif %}">
+                                                <label class="col-md-3 col-sm-3 col-xs-5 control-label" for="{{ address.apartment.vars.id }}">
+                                                    {{ address.apartment.vars.label|trans({}, 'labels') }}
+                                                </label>
+                                                <div class="col-md-9 col-sm-9 col-xs-7">
+                                                    {{ form_widget(address.apartment)}}
+                                                    {% if not address.apartment.vars.valid %}
+                                                        <label id="{{ address.apartment.vars.id }}-error"
+                                                               class="validation-error-label"
+                                                               for="{{ address.apartment.vars.id }}">
+                                                            {{ address.apartment.vars.errors[0].message }}
+                                                        </label>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="form-group {% if address.postalCode.vars.errors | length > 0 %} has-error {% endif %}">
+                                                <label class="col-md-3 col-sm-3 col-xs-5 control-label" for="{{ address.postalCode.vars.id }}">
+                                                    {{ address.postalCode.vars.label|trans({}, 'labels') }}
+                                                </label>
+                                                <div class="col-md-9 col-sm-9 col-xs-7">
+                                                    {{ form_widget(address.postalCode)}}
+                                                    {% if not address.postalCode.vars.valid %}
+                                                        <label id="{{ address.postalCode.vars.id }}-error"
+                                                               class="validation-error-label"
+                                                               for="{{ address.postalCode.vars.id }}">
+                                                            {{ address.postalCode.vars.errors[0].message }}
+                                                        </label>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="form-group {% if address.region.vars.errors | length > 0 %} has-error {% endif %}">
+                                                <label class="col-md-3 col-sm-3 col-xs-5 control-label" for="{{ address.region.vars.id }}">
+                                                    {{ address.region.vars.label|trans({}, 'labels') }}
+                                                </label>
+                                                <div class="col-md-9 col-sm-9 col-xs-7">
+                                                    {{ form_widget(address.region)}}
+                                                    {% if not address.region.vars.valid %}
+                                                        <label id="{{ address.region.vars.id }}-error"
+                                                               class="validation-error-label"
+                                                               for="{{ address.region.vars.id }}">
+                                                            {{ address.region.vars.errors[0].message }}
+                                                        </label>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="form-group {% if address.city.vars.errors | length > 0 %} has-error {% endif %}">
+                                                <label class="col-md-3 col-sm-3 col-xs-5 control-label" for="{{ address.city.vars.id }}">
+                                                    {{ address.city.vars.label|trans({}, 'labels') }}
+                                                </label>
+                                                <div class="col-md-9 col-sm-9 col-xs-7">
+                                                    {{ form_widget(address.city)}}
+                                                    {% if not address.city.vars.valid %}
+                                                        <label id="{{ address.city.vars.id }}-error"
+                                                               class="validation-error-label"
+                                                               for="{{ address.city.vars.id }}">
+                                                            {{ address.city.vars.errors[0].message }}
+                                                        </label>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+                                            <button type="button"
+                                                    class="btn btn-danger btn-icon delete-collection-modal"
+                                                    id="address-{{ address.vars.value.id }}" href="#">
+                                                <i class="icon-trash"></i>
+                                            </button>
+                                        </div>
+                                    {% endfor %}
+
+                                    <button type="button"
+                                            class="btn btn-action add_collection_link add-address"
+                                            id="add-address"
+                                            {% if form.addresses|length == 2 or (form.addresses|length == 1 and form.addresses[0].type.vars.value == 2) %}
+                                                style="display: none;"
+                                            {% endif %}>
+                                        {{ 'button.add'|trans({}, 'labels') }}
+                                    </button>
+                                </div>
+                                <!--/End of addresses section -->
+
+                                {{ include ("modal/modal-with-message.html.twig", {'id': 'address-modal'}) }}
+
+                                <div class="row form-actions text-right">
+                                    <div class="col-xs-12">
+                                        <span class="save_status" style="margin-right: 10px;"
+                                               data-no-changes="{{ 'membership.no_changes'|trans({}, 'labels') }}"
+                                               data-changes-made="{{ 'membership.changes_made'|trans({}, 'labels') }}"
+                                               data-autosaved="{{ 'membership.changes_saved'|trans({}, 'labels') }}">
+                                            {{ 'membership.no_changes'|trans({}, 'labels') }}
+                                        </span>
+                                        {% if status == 'lead' or status == 'contact' %}
+                                            <button type="button"
+                                                    data-toggle="modal"
+                                                    href="#delete-modal"
+                                                    data-delete-path="{{ path('membership_delete', {id: form.vars.value.id }) }}"
+                                                    class="btn btn-danger btn-icon btn-delete">
+                                                <i class="icon-trash"></i>
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Delete modal for member delete button -->
+                            {{ include ("modal/modal-with-message.html.twig", {'id': 'delete-modal'}) }}
+                        </div>
+                    </div>
+                    {% do form.notifications.setRendered %}
+                </div>
+            </div>
+            <!-- /profile -->
+
+            <!-- Testimonial -->
+            <div class="tab-pane" id="testimonial">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2">
+                        <div class="panel">
+                            <div class="panel-heading theme-style">
+                                <h6 class="panel-title"> {{ 'membership.testimonial.testimonial'|trans({},'labels') }}</h6>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-group {{ form.testimonial.vars.errors|length ? 'has-error' }}">
+                                    <label class="col-md-3 col-sm-3 col-xs-5 control-label" for="{{ form.testimonial.vars.id }}">
+                                        {{ form.testimonial.vars.label|trans({}, 'labels') }}
+                                    </label>
+                                    <div class="col-md-9 col-sm-9 col-xs-7">
+                                        {{ form_widget(form.testimonial) }}
+                                        {% if not form.testimonial.vars.valid %}
+                                            <label id="{{ form.testimonial.vars.id }}-error" class="validation-error-label" for="{{ form.testimonial.vars.id }}">
+                                                {{ form.testimonial.vars.errors[0].message }}
+                                            </label>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div id="testimonial-mail" style="display: none;">
+                                    <div class="form-group {{ form.testimonialRecipient.firstname.vars.errors|length ? 'has-error' }}">
+                                        <label class="col-md-3 col-sm-3 col-xs-5 control-label" for="{{ form.testimonialRecipient.firstname.vars.id }}">
+                                            {{ form.testimonialRecipient.firstname.vars.label|trans({}, 'labels') }}
+                                        </label>
+                                        <div class="col-md-9 col-sm-9 col-xs-7">
+                                            {{ form_widget(form.testimonialRecipient.firstname) }}
+                                            {% if not form.testimonialRecipient.firstname.vars.valid %}
+                                                <label id="{{ form.testimonialRecipient.firstname.vars.id }}-error"
+                                                       class="validation-error-label"
+                                                       for="{{ form.testimonialRecipient.firstname.vars.id }}">
+                                                    {{ form.testimonialRecipient.firstname.vars.errors[0].message }}
+                                                </label>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group {{ form.testimonialRecipient.lastname.vars.errors|length ? 'has-error' }}">
+                                        <label class="col-md-3 col-sm-3 col-xs-5 control-label" for="{{ form.testimonialRecipient.lastname.vars.id }}">
+                                            {{ form.testimonialRecipient.lastname.vars.label|trans({}, 'labels') }}
+                                        </label>
+                                        <div class="col-md-9 col-sm-9 col-xs-7">
+                                            {{ form_widget(form.testimonialRecipient.lastname) }}
+                                            {% if not form.testimonialRecipient.lastname.vars.valid %}
+                                                <label id="{{ form.testimonialRecipient.lastname.vars.id }}-error"
+                                                       class="validation-error-label"
+                                                       for="{{ form.testimonialRecipient.lastname.vars.id }}">
+                                                    {{ form.testimonialRecipient.lastname.vars.errors[0].message }}
+                                                </label>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group {{ form.testimonialRecipient.email.vars.errors|length ? 'has-error' }}">
+                                        <label class="col-md-3 col-sm-3 col-xs-5 control-label" for="{{ form.testimonialRecipient.email.vars.id }}">
+                                            {{ form.testimonialRecipient.email.vars.label|trans({}, 'labels') }}
+                                        </label>
+                                        <div class="col-md-9 col-sm-9 col-xs-7">
+                                            {{ form_widget(form.testimonialRecipient.email) }}
+                                            {% if not form.testimonialRecipient.email.vars.valid %}
+                                                <label id="{{ form.testimonialRecipient.email.vars.id }}-error"
+                                                       class="validation-error-label"
+                                                       for="{{ form.testimonialRecipient.email.vars.id }}">
+                                                    {{ form.testimonialRecipient.email.vars.errors[0].message }}
+                                                </label>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <input type="hidden" id="member-id" value="{{ form.vars.value.id }}">
+                                    <button type="button"
+                                            class="btn btn-action pull-right"
+                                            data-toggle="modal"
+                                            href="#send-testimonial"
+                                            id="send-testimonial-btn">
+                                        {{ 'button.send'|trans({}, 'labels') }}
+                                    </button>
+                                </div>
+                                <div class="row form-actions text-right">
+                                    <div class="col-xs-12">
+                                        <span class="save_status" style="margin-right: 10px;"
+                                              data-no-changes="{{ 'membership.no_changes'|trans({}, 'labels') }}"
+                                              data-changes-made="{{ 'membership.changes_made'|trans({}, 'labels') }}"
+                                              data-autosaved="{{ 'membership.changes_saved'|trans({}, 'labels') }}">
+                                            {{ 'membership.no_changes'|trans({}, 'labels') }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{ form_end(form) }}
+            </div>
+            <!-- /testimonial -->
+
+
+            <!-- Skip a week -->
+            <div class="tab-pane" id="skip_week">
+                <div class="row">
+                    <!-- Calendar inside panel -->
+                    {% for share in shares %}
+                        <div class="col-md-8 col-md-offset-2" id="share-{{ share.id }}">
+                            <div class="panel">
+                                <div class="panel-heading heading-style">
+                                    <h6 class="panel-title">{{ 'customer.share.share'|trans({}, 'labels') }}</h6>
+                                </div>
+                                <div class="panel-body form-horizontal">
+                                    <div class="form-group">
+                                        <label class="col-md-3 col-sm-3 col-xs-5 control-label">
+                                            {{ 'customer.share.type'|trans({}, 'labels') }}
+                                        </label>
+                                        <div class="col-md-9 col-sm-9 col-xs-7">
+                                            <input type="text" value="{{ share.share.name }}" class="form-control custom-read-only">
+                                        </div>
+                                    </div>
+                                    {% if share.typeName == 'MEMBER' %}
+                                        <div class="form-group">
+                                            <label class="col-md-3 col-sm-3 col-xs-5 control-label">
+                                                {{ 'customer.share.status'|trans({}, 'labels') }}
+                                            </label>
+                                            <div class="col-md-9 col-sm-9 col-xs-7">
+                                                <input type="text" value="{{ share.statusName }}" class="form-control custom-read-only">
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    <div class="form-group">
+                                        <label class="col-md-3 col-sm-3 col-xs-5 control-label">
+                                            {% if share.typeName == 'MEMBER' %}
+                                                {{ 'customer.share.renewal_date'|trans({}, 'labels') }}
+                                            {% else %}
+                                                {{ 'membership.profile'|trans({}, 'labels') }}
+                                            {% endif %}
+                                        </label>
+                                        <div class="col-md-9 col-sm-9 col-xs-7">
+                                            <input type="text"
+                                                   class="form-control custom-read-only"
+                                                   id="{{ share.id }}_renewalDate"
+                                                   value="{{ share.renewalDate|date(form.vars.value.client.getTwigFormatDate()) }}">
+                                        </div>
+                                    </div>
+                                    {% if share.typeName == 'MEMBER' %}
+                                        <div class="form-group">
+                                            <label class="col-md-3 col-sm-3 col-xs-5 control-label">
+                                                {{ 'customer.share.remaining_shares'|trans({}, 'labels') }}
+                                            </label>
+                                            <div class="col-md-9 col-sm-9 col-xs-7">
+                                                <input title="Remaining shares"
+                                                       type="text"
+                                                       disabled
+                                                       value="{{ sharesLeft[share.share.id] is defined ? sharesLeft[share.share.id] : 0 }}"
+                                                       class="form-control custom-read-only shares-left">
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    {% if share.shareDay is defined %}<div class="form-group">
+                                        <label class="col-md-3 col-sm-3 col-xs-5 control-label">
+                                            {% if share.typeName == 'MEMBER' %}
+                                                {{ 'customer.share.share_day'|trans({}, 'labels') }}
+                                            {% else %}
+                                                {{ 'customer.share.order_day'|trans({}, 'labels') }}
+                                            {% endif %}
+                                        </label>
+                                        <div class="col-md-9 col-sm-9 col-xs-7">
+                                            <input type="text" value="{{ share.shareDay }}" class="form-control custom-read-only"></div>
+                                        </div>
+                                    {% endif %}
+                                    {% if share.location %}
+                                        <div class="form-group">
+                                            <label class="col-md-3 col-sm-3 col-xs-5 control-label">
+                                                {% if share.typeName == 'MEMBER' %}
+                                                    {{ 'customer.share.share_location'|trans({}, 'labels') }}
+                                                {% else %}
+                                                    {{ 'customer.share.order_location'|trans({}, 'labels') }}
+                                                {% endif %}
+                                            </label>
+                                            <div class="col-md-9 col-sm-9 col-xs-7">
+                                                <input type="text" value="{{ share.location.name }}" class="form-control custom-read-only">
+                                            </div>
+                                        </div>
+                                    {% endif %}
+
+                                    {% if share.typeName == 'MEMBER' and share.pickups|length %}
+                                        <div class="row">
+                                            <hr>
+                                            <div class="skip_instructions">
+                                                <p>{{ 'membership.instruction.instructions'|trans({}, 'labels') }}:</p>
+                                                <ul>
+                                                    <li>{{ 'membership.instruction.first'|trans({}, 'labels') }}</li>
+                                                    <li>{{ 'membership.instruction.second'|trans({}, 'labels') }}</li>
+                                                    <li>{{ 'membership.instruction.third'|trans({}, 'labels') }}</li>
+                                                    <li>{{ 'membership.instruction.fourth'|trans({}, 'labels') }}</li>
+                                                </ul>
+                                            </div>
+                                            <hr>
+
+                                            {{ include ("customer/forms/pickups.html.twig", {pickups: share.pickups}) }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- /skip a week -->
+
+            {% if isWeekSuspended == false and sharesProducts|length %}
+                <!-- Customize -->
+                <div class="tab-pane" id="customize">
+                    <div class="row">
+                        {% for share in sharesProducts %}
+                            <div class="col-md-8 col-md-offset-2">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading theme-style">
+                                        <h6 class="panel-title">{{ share.shareName }}</h6>
+                                    </div>
+                                    <div class="customize-item table-responsive">
+                                        {% set shareToday =
+                                            date("now", "Europe/Paris")|date('Y-m-d H:i:s') >= share.pickups[0].date|date_modify("-4 hours")|date('Y-m-d H:i:s') %}
+
+                                        <p {{ share.pickups[0].skipped == false ? ' class="hidden"' }}>
+                                            {{ 'membership.customize.share_skipped'|trans({}, 'labels') }}
+                                        </p>
+
+                                        <table id="custom-{{ share.id }}" class="table {{ share.pickups[0].skipped  ? 'hidden' }}">
+                                            <thead>
+                                            <tr>
+                                                <th class="custom-share-heads" colspan="3">
+                                                    {{ 'membership.customize.next_share'|trans({}, 'labels') }}
+                                                </th>
+                                                <th class="custom-share-heads" colspan="3">
+                                                    {{ 'membership.customize.customize_share'|trans({}, 'labels') }}
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th>{{ 'membership.customize.product_name'|trans({}, 'labels') }}</th>
+                                                <th>{{ 'membership.customize.weight'|trans({}, 'labels') }} ({{ form.vars.value.client.getWeightName }})</th>
+                                                <th>{{ 'membership.customize.price'|trans({}, 'labels') }}</th>
+                                                <th>{{ 'membership.customize.product_name'|trans({}, 'labels') }}</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% set totalSharePrice = 0 %}
+
+                                            {% for key, shareProduct in share.share.memberOrders[0].shareProducts %}
+                                                {% set customShare = customShares[share.id][shareProduct.id] is defined
+                                                    ? customShares[share.id][shareProduct.id] : null %}
+                                                {% set selectedProduct = customShare ? customShare.product : shareProduct.product %}
+                                                <tr>
+                                                    <td>{{ shareProduct.product.name }}</td>
+                                                    <td>{{ shareProduct.weight }}</td>
+                                                    <td>${{ shareProduct.price }}</td>
+                                                    <td>
+                                                        <!-- For custom share needs custom id/For product needs share product id -->
+                                                        <select title="Custom product" id="shareProduct_{{ key }}"
+                                                                data-product="{{ customShare is null ? shareProduct.id }}"
+                                                                data-custom="{{ customShare ? customShare.id }}"
+                                                                data-path="{{ path('membership_share_customize', {id: share.id }) }}"
+                                                                class="form-control" {{ shareToday ? 'disabled' }}
+                                                        >
+                                                            {% if not shareToday %}
+                                                                {% for product in products %}
+                                                                    <option value="{{ product.id }}"{{ product.plant.id == selectedProduct.plant.id ? 'selected' }}>
+                                                                        {{ product.name }}
+                                                                    </option>
+                                                                {% endfor %}
+                                                            {% else %}
+                                                                <option selected>{{ selectedProduct.name }}</option>
+                                                            {% endif %}
+                                                        </select>
+                                                    </td>
+
+                                                    {% set totalSharePrice = totalSharePrice + shareProduct.price %}
+                                                </tr>
+                                            {% endfor %}
+                                            <tr>
+                                                <td><b>{{ 'membership.customize.total'|trans({}, 'labels') }}</b></td>
+                                                <td> - </td>
+                                                <td>${{ totalSharePrice|number_format }}</td>
+                                                <td></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <!--/customize -->
+            {% endif %}
+
+            <!-- Feedback -->
+            {% if isWeekSuspended == false and feedback|length > 0 %}
+                <div class="tab-pane" id="feedback">
+                    <div class="row">
+                         <div class="col-md-8 col-md-offset-2">
+                             <div class="panel panel-default">
+                                 <div class="panel-heading theme-style">
+                                     <h6 class="panel-title">{{ 'membership.feedback.feedback'|trans({}, 'labels') }}</h6>
+                                 </div>
+                                 <div class="panel-body">
+                                     <form method="POST" class="form-horizontal" name="feedback">
+                                         <div class="table-responsive">
+                                             <table class="table">
+                                                 <thead>
+                                                    <tr>
+                                                        <th>{{ 'customer.share.share'|trans({}, 'labels') }}</th>
+                                                        <th>{{ 'membership.feedback.satisfied'|trans({}, 'labels') }}</th>
+                                                    </tr>
+                                                 </thead>
+                                                 {% for pickup in feedback %}
+                                                     <tr>
+                                                         <td>{{ pickup.share.shareName }}</td>
+                                                         <td>
+                                                             <div class="radio">
+                                                                 <input type="radio" class="styled"
+                                                                        data-share-date="{{ pickup.date|date('Y-m-d') }}"
+                                                                        data-share-id="{{ pickup.share.share.id }}"
+                                                                        id="feedback_pickup_{{ pickup.id }}_1"
+                                                                        name="feedback[share][{{ pickup.share.share.id }}]" value="1"
+                                                                         {% if pickup.share.share.feedback|length
+                                                                            and pickup.share.share.feedback[0].isSatisfied == true
+                                                                         %}
+                                                                            checked
+                                                                         {% endif %}
+                                                                 />
+                                                                 <label for="feedback_pickup_{{ pickup.id }}_1">
+                                                                     {{ 'membership.feedback.satisfied'|trans({}, 'labels') }}
+                                                                 </label>
+                                                             </div>
+                                                             <div class="radio">
+                                                                 <input type="radio" class="styled"
+                                                                        data-share-date="{{ pickup.date|date('Y-m-d') }}"
+                                                                        data-share-id="{{ pickup.share.share.id }}"
+                                                                        id="feedback_pickup_{{ pickup.id }}_2"
+                                                                        name="feedback[share][{{ pickup.share.share.id }}]" value="0"
+                                                                         {% if pickup.share.share.feedback|length
+                                                                            and pickup.share.share.feedback[0].isSatisfied == false
+                                                                         %}
+                                                                            checked
+                                                                         {% endif %}
+                                                                 />
+                                                                 <label for="feedback_pickup_{{ pickup.id }}_2">
+                                                                     {{ 'membership.feedback.not_satisfied'|trans({}, 'labels') }}
+                                                                 </label>
+                                                             </div>
+                                                         </td>
+                                                     </tr>
+                                                 {% endfor %}
+                                             </table>
+                                         </div>
+
+                                         <div class="row form-actions text-right">
+                                             <div class="col-xs-12">
+                                                 <span id="feedback_save_status"
+                                                       style="margin-right: 10px;"
+                                                       data-no-changes="{{ 'membership.no_changes'|trans({}, 'labels') }}"
+                                                       data-changes-made="{{ 'membership.changes_made'|trans({}, 'labels') }}"
+                                                       data-autosaved="{{ 'membership.changes_saved'|trans({}, 'labels') }}">
+                                                     {{ 'membership.no_changes'|trans({}, 'labels') }}
+                                                 </span>
+                                             </div>
+                                         </div>
+                                         <hr/>
+                                         <div class="col-md-12">
+                                             <div class="form-group">
+                                                 <label class="col-md-2 control-label">
+                                                     {{ 'membership.feedback.reason'|trans({}, 'labels') }}:
+                                                 </label>
+                                                 <div class="col-md-10">
+                                                     <textarea name="feedback[message]"
+                                                               placeholder="{{ 'membership.feedback.reason_placeholder'|trans({}, 'labels') }}"
+                                                               title="Review"
+                                                               id="text"
+                                                               class="form-control"
+                                                               rows="4">
+                                                     </textarea>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                         <div class="col-md-12">
+                                             <div class="form-actions text-right">
+                                                 <input type="submit"
+                                                        class="btn btn-action btn-feedback-send"
+                                                        value="{{ 'button.send'|trans({}, 'labels') }}">
+                                             </div>
+                                         </div>
+                                     </form>
+                                 </div>
+                             </div>
+                         </div>
+                    </div>
+                </div>
+            {% endif %}
+            <!--/feedback -->
+
+            <!-- Renew -->
+            <div class="tab-pane" id="market">
+                {% if invoice %}
+                    {{ include ("customer/membership/renewal/renewal_invoice.html.twig", {invoice: invoice}) }}
+                {% else %}
+                    <div class="row">
+                        <div class="col-md-8 col-md-offset-2">
+                            <div class="panel panel-default">
+                                <div class="panel-heading theme-style">
+                                    <h6 class="panel-title">
+                                        {{ status == 'customer' ? 'membership.renew.renew'|trans({}, 'labels') : 'button.purchase'|trans({}, 'labels') }}
+                                    </h6>
+                                </div>
+                                <div class="panel-body" id="renew-panel">
+                                    {{ include ("company/widgets/market/market_widget.html.twig", {form: renewForm}) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            <!--/renew -->
+        </div>
+    </div>
+    <!-- /page tabs -->
+
+    {{ include ("modal/send-email-modal.html.twig") }}
+    {{ include ("modal/info-modal.html.twig") }}
+{% endblock body %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{{ asset('js/collections.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/pages/member/addresses.js') }}"></script>
+
+    <!-- Google maps files -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFudPQ3bgPztQLPBngp9B425BBl9q5Duo&libraries=places"></script>
+    <script src="{{ asset('js/plugins/googleMapsSearch.js') }}"></script>
+    <!-- /End of google maps files -->
+
+    <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+
+    <script type="text/javascript" src="{{ asset('js/pages/membership/membership.js') }}?v=4"></script>
+    <script type="text/javascript" src="{{ asset('js/pages/membership/control_pickup.js') }}?v=1"></script>
+    <script>
+        // Autosaving of feedback votes
+        $('input[name^="feedback"]').on('change', function () {
+            var $this = $(this),
+                shareId = $this.data('share-id'),
+                isSatisfied = $this.val(),
+                shareDate = $this.data('share-date'),
+                $status = $('#feedback_save_status');
+
+            $status.text($status.data('changes-made'));
+
+            var path = Routing.generate('membership_feedback_save', {'token': '{{ app.request.get('token') }}'});
+
+            $.ajax({
+                url: path,
+                type: "POST",
+                data: {shareId: shareId, isSatisfied : isSatisfied, shareDate: shareDate},
+                success: function (response) {
+                    $status.text($status.data('autosaved'));
+                },
+                error: function (response) {
+                }
+            });
+        });
+
+        // Enable google address search auto-complete
+        var country = '{{ form.vars.value.client.country }}';
+        initAutocomplete($('input[name$="street]"]'), country);
+    </script>
+{% endblock %}

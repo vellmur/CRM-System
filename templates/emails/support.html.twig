@@ -1,0 +1,9 @@
+{% extends 'emails/base.html.twig' %}
+
+{% block body %}
+    <h4>Support</h4>
+    <p>From: {{ email }}</p>
+    <p>Name: {{ name }}</p>
+    <p>Subject: {{ subject }}</p>
+    <p>Message: {{ message }}</p>
+{% endblock %}

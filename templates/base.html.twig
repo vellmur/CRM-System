@@ -1,12 +1,271 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+
+        <title>Black Dirt Software</title>
+
+        <!-- Favicons --->
+        <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('apple-touch-icon.png') }}">
+        <link rel="icon" type="image/png" href="{{ asset('favicon-32x32.png') }}" sizes="32x32">
+        <link rel="icon" type="image/png" href="{{ asset('favicon-16x16.png') }}" sizes="16x16">
+        <link rel="manifest" href="{{ asset('manifest.json') }}">
+        <link rel="mask-icon" href="{{ asset('safari-pinned-tab.svg') }}" color="#6ca564">
+        <meta name="msapplication-TileColor" content="#00aba9">
+        <meta name="msapplication-TileImage" content="{{ asset('mstile-144x144.png') }}">
+        <meta name="theme-color" content="#ffffff">
+        <!-- End favicons -->
+
+        <link href="{{ asset('css/style.css') }}?v=4" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
+        <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
+        <link href="{{ asset('css/icons/icomoon/styles.min.css') }}" rel="stylesheet" type="text/css">
+        <link href="{{ asset('css/core.min.css') }}" rel="stylesheet" type="text/css">
+        <link href="{{ asset('css/components.min.css') }}" rel="stylesheet" type="text/css">
+        <link href="{{ asset('css/colors.min.css') }}" rel="stylesheet" type="text/css">
+
+        <!-- Core and Theme JS files -->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+        <script src="{{ asset('js/core/libraries/bootstrap.min.js') }}"></script>
+        <script src="{{ asset('js/plugins/forms/styling/switchery.min.js') }}"></script>
+        <script src="{{ asset('js/plugins/pickers/pickadate/picker.js') }}"></script>
+        <script src="{{ asset('js/plugins/pickers/pickadate/picker.date.js') }}"></script>
+        <script src="{{ asset('js/plugins/pickers/pickadate/legacy.js') }}"></script>
+        <script src="{{ asset('js/plugins/forms/inputs/jquery.maskedinput.js') }}"></script>
+        <script src="{{ asset('js/plugins/forms/selects/bootstrap_select.min.js') }}"></script>
+        <script src="{{ asset('js/plugins/forms/styling/uniform.min.js') }}"></script>
+        <!-- /theme JS files -->
+
+        <!-- Added JS files -->
+        <script src="{{ asset('js/core/app.js') }}?v=5"></script>
+        <script src="{{ asset('js/validation/validation.js') }}?v=2"></script>
+        <script src="{{ asset('js/functions.js') }}?v=5"></script>
+        <!-- /added JS files -->
+
         {% block stylesheets %}{% endblock %}
     </head>
-    <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+    <body class="navbar-bottom">
+        <div class="navbar navbar-inverse">
+            <div class="navbar-header">
+                <span class="navbar-brand">Black Dirt Software</span>
+                <ul class="nav navbar-nav visible-xs-block">
+                    <li><a data-toggle="collapse" data-target="#navbar-mobile"><i class="icon-tree5"></i></a></li>
+                    <li><a class="sidebar-mobile-main-toggle"><i class="icon-paragraph-justify3"></i></a></li>
+                </ul>
+            </div>
+            <div class="navbar-collapse collapse" id="navbar-mobile">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a class="sidebar-control sidebar-main-toggle hidden-xs">
+                            <i class="icon-paragraph-justify3"></i>
+                        </a>
+                    </li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="/logout">
+                            <i class="icon-exit position-left"></i>
+                            {{ 'navigation.account.logout'|trans({}, 'labels') }}
+                        </a>
+                    </li>
+                </ul>
+
+                {% if (is_granted('ROLE_OWNER') or is_granted('ROLE_EMPLOYEE'))
+                    and (app.session.get('modules_statuses') is null or 'customers' not in app.session.get('modules_statuses').lapsed) %}
+                    <div class="customer-search navbar navbar-right ">
+                        <div class="has-feedback has-feedback-right">
+                            <input type="text" id="customer-search" class="form-control text-uppercase"
+                                   placeholder="{{ 'customer.search.search_by'|trans({}, 'labels') }}" autocomplete="off">
+                            <div class="form-control-feedback">
+                                <i class="icon-search4"></i>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="page-header">
+            <div class="breadcrumb-line">
+                <ul class="breadcrumb">
+                    {% for breadcrumb_item in knp_menu_get_breadcrumbs_array(knp_menu_get_current_item('main')) %}
+                        {% if breadcrumb_item.label != 'root'  %}
+                            {% if not loop.last %}
+                                <li>
+                                    <i class="{{ breadcrumb_item.item.attributes.icon }} position-left"></i>
+                                    <span>{{ breadcrumb_item.label|upper }}</span>
+                                </li>
+                            {% else %}
+                                <li><a href="{{ breadcrumb_item.uri }}">{{ breadcrumb_item.label }}</a></li>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+
+                <ul class="breadcrumb-elements">
+                    {% set notifiesExists = notifications is defined and notifications|length > 0 %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle navbar-notifications" data-toggle="dropdown">
+                            <i class="icon-bell2"></i><span class="badge bg-warning-400">{{ notifiesExists ? notifications|length }}</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-content width-350">
+                            <div class="dropdown-content-heading">
+                                {{ 'notifications.notification'|trans({}, 'labels') }}
+                            </div>
+
+                            <ul class="media-list dropdown-content-body">
+                                {% if notifiesExists %}
+                                    {% for notify in notifications %}
+                                        <li class="media">
+                                            <div class="media-body">
+                                                {% if not notify.seen %}
+                                                    {% set notifyLink = (notify.notification.link ?? app.request.pathinfo)
+                                                        ~ '?clicked_notification=' ~ notify.id
+                                                    %}
+                                                    {% set userDateFormat = app.user.getTwigFormatDate() ~ ' H:i:s'  %}
+                                                    <a href="{{ notifyLink }}"
+                                                       class="media-heading">
+                                                        <span class="text-semibold">
+                                                            {{ notify.notification.subject }}
+                                                        </span>
+                                                        <span class="media-annotation pull-right">
+                                                            {{ notify.notification.createdAt|date(userDateFormat) }}
+                                                        </span>
+                                                    </a>
+                                                {% else %}
+                                                    <div class="block">
+                                                        <span class="text-semibold">
+                                                            {{ notify.notification.subject }}
+                                                        </span>
+                                                        <span class="media-annotation pull-right">
+                                                            {{ notify.notification.createdAt|date(userDateFormat) }}
+                                                        </span>
+                                                    </div>
+                                                {% endif %}
+
+                                                <span class="text-muted">{{ notify.notification.message }}</span>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                {% else %}
+                                    <li class="media">
+                                        <div class="media-body">
+                                            <span> {{ 'notifications.no_new_notifications'|trans({}, 'labels') }}.</span>
+                                        </div>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="icon-help position-left"></i>
+                            {{ 'navigation.help.help'|trans({}, 'labels') }}
+                            <span class="caret"></span>
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li>
+                                <a href="{{ path('help_support') }}"><i class="icon-comment-discussion"></i>
+                                    {{ 'navigation.help.support'|trans({}, 'labels') }}
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="page-container">
+            <div class="page-content">
+                <div class="sidebar sidebar-main sidebar-default">
+                    <div class="sidebar-content">
+                        <div class="sidebar-category sidebar-category-visible">
+                            {% if app.user.team %}
+                                <div class="category-content sidebar-user">
+                                    <div class="media">
+                                        <div class="media-body">
+                                            <span class="media-heading text-semibold">
+                                                {{ app.user.client.name }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <div class="category-content no-padding">
+                                <ul class="navigation navigation-main navigation-accordion">
+                                    {{ knp_menu_render('main', {currentClass: 'menu-highlight'}) }}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-wrapper">
+                    {% block body %}{% endblock %}
+                    <div id="picker-holder"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="navbar navbar-default navbar-fixed-bottom footer">
+            <ul class="nav navbar-nav visible-xs-block">
+                <li>
+                    <a class="text-center collapsed" data-toggle="collapse" data-target="#footer">
+                        <i class="icon-circle-up2"></i>
+                    </a>
+                </li>
+            </ul>
+            <div class="navbar-collapse collapse" id="footer">
+                <div class="navbar-text">
+                    &copy; 2019. Developed by Black Dirt Software
+                </div>
+                <div class="navbar-right">
+                    <ul class="nav navbar-nav">
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Terms</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- /footer -->
     </body>
+
+    <footer>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
+        <script src="{{ asset('js/validation/jquery-validation.js') }}?v=8"></script>
+
+        {% if app.request.locale != 'en' %}
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/localization/messages_{{ app.request.locale }}.js"></script>
+        {% endif %}
+        <input type="hidden" id="locale" value="{{ app.request.locale }}"/>
+        <script src="{{ asset('js/ajax.js') }}?v=7"></script>
+        <script src="{{ asset('js/plugins/visibility/jquery.visible.min.js') }}"></script>
+
+        <!-- Scripts for work of top bar search by customers -->
+        <script src="{{ asset('js/plugins/forms/inputs/typeahead/typeahead.bundle.min.js') }}"></script>
+        <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+        <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+        <script src="{{ asset('js/pages/top_search.js') }}"></script>
+        <!-- /End of scripts for work of top bar search by customers -->
+
+        <script>
+            {% if is_granted('ROLE_OWNER') or is_granted('ROLE_EMPLOYEE') %}
+                var country = '{{ app.request.locale }}'.length > 0 ? '{{ app.request.locale }}' : null;
+            {% endif %}
+        </script>
+
+        {% block scripts %} {% endblock %}
+
+        <script>
+            let dateFormat = '{{ app.user.getDateFormatName }}'.toLowerCase();
+            enableDatepickers(dateFormat.toLowerCase());
+        </script>
+    </footer>
 </html>

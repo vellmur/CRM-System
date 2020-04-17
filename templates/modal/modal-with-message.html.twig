@@ -1,0 +1,28 @@
+{% block window %}
+    <!-- Small modal -->
+    <div id="{{ id }}" class="modal fade">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <button type="button" id='delete_modal_close' class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"><i class="icon-accessibility"></i> {{ 'modals.delete.title'|trans({}, 'messages') }}</h4>
+                </div>
+
+                <div class="modal-body with-padding">
+                    {% if message is defined %}
+                        <p>{{ message }}</p>
+                    {% else %}
+                        <p>{{ 'modals.delete.message'|trans({}, 'messages') }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-link btn-break" data-dismiss="modal">{{ 'button.close' | trans({}, 'labels') }}</button>
+                    <button class="btn btn-action btn-continue">{{ 'button.yes'|trans({}, 'labels') }}</button>
+                    <div class="data-area" id="data-area"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /small modal -->
+{% endblock window %}

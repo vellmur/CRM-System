@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="panel panel-default">
+        <div class="panel-head">
+            <h6><i class="icon-pause"></i> {{ 'customer.suspend.suspend'|trans({}, 'labels') }} </h6>
+        </div>
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>{{ 'customer.suspend.week'|trans({}, 'labels') }}</th>
+                            <th>{{ 'customer.suspend.status'|trans({}, 'labels') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for week in sharesWeeks %}
+                            <tr>
+                                <td>{{ week.number }}</td>
+                                <td>
+                                    <button type="button"
+                                            data-week="{{ week.number }}"
+                                            data-year="{{ week.year }}"
+                                            data-path="{{ path('app_share_suspend') }}"
+                                            data-suspend-label="{{ 'customer.suspend.suspend_btn'|trans({}, 'labels') }}"
+                                            data-suspended-label="{{ 'customer.suspend.suspended'|trans({}, 'labels') }}"
+                                            class="btn btn-suspend
+                                            {{ week.isSuspended == false ? 'btn-success' : 'btn-dark' }}">
+                                            {{ week.isSuspended == false
+                                                ? 'customer.suspend.suspend_btn'|trans({}, 'labels')
+                                                : 'customer.suspend.suspended'|trans({}, 'labels')
+                                            }}
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock body %}
+
+{% block scripts %}
+    <script>
+        $('body').on('click', '.btn-suspend', function ()
+        {
+            var $this = $(this);
+
+            if (!ajaxRunning && !$this.hasClass('custom-read-only')) {
+                $this.addClass('custom-read-only disabled');
+
+                var ajaxRunning = true;
+
+                $.ajax({
+                    url : $this.data('path'),
+                    type: 'post',
+                    data : { week: $this.data('week'), year: $this.data('year') },
+                    success: function(response) {
+                        // Add new or remove last pickups list row
+                        if ($this.hasClass('btn-success')) {
+                            $this.attr('class', 'btn btn-suspend btn-dark');
+                            $this.text($this.data('suspended-label'));
+                        } else {
+                            $this.attr('class', 'btn btn-suspend btn-success');
+                            $this.text($this.data('suspend-label'));
+                        }
+                    },
+                    error: function(response, status, error){
+                        console.log(response.responseJSON.error)
+                    },
+                    complete: function () {
+                        ajaxRunning = false;
+                    }
+                });
+            }
+        });
+    </script>
+{% endblock %}

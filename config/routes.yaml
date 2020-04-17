@@ -1,3 +1,46 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+website:
+  resource: "routes/app/website.yml"
+  prefix: /
+  host: "%domain%"
+
+auth:
+  resource: "routes/app/authorization.yaml"
+  prefix: /
+  host: "%domain%"
+
+master:
+  resource: "routes/app/master/master.yml"
+  prefix:   /master
+
+media:
+  resource: "routes/app/media.yml"
+  prefix:   /media
+
+profile:
+  resource: "routes/app/profile/profile.yml"
+  prefix:   /owner/profile
+
+user:
+  resource: "routes/app/profile/user.yml"
+  prefix:   /owner/users
+
+employee.profile.edit:
+  path:     /employee/edit/profile
+  defaults: { _controller: App\Controller\UserController::update }
+  methods:  [GET, POST]
+
+api:
+  resource: "routes/app/api.yml"
+  prefix:   /api
+
+customer:
+  resource: "routes/app/customer/customer.yml"
+  prefix:   /module/customers
+
+membership:
+  resource: "routes/app/customer/membership.yml"
+  prefix:   /module/membership/{_locale}
+
+subscription:
+  resource: "routes/app/subscription.yml"
+  prefix:   /owner/subscription

@@ -1,0 +1,13 @@
+{% extends 'emails/base.html.twig' %}
+
+{% block body %}
+    <h4>Member {{ action }} the "{{ share }}"</h4>
+    <p>Name: {{ member.fullname }}</p>
+    <p>Email: {{ member.email }}</p>
+    <p>Share day: {{ shareDay }}</p>
+    <p>Profile link: {{ member|profile_link }}</p>
+    <p>Remaining shares before {{ action }}: {{ previousSharesNum }}</p>
+    <p>Remaining shares after {{ action }}: {{ sharesNum }}</p>
+    <p>Renewal date before {{ action }}: {{ previousRenewalDate }}</p>
+    <p>Renewal date after {{ action }}: {{ renewalDate }}</p>
+{% endblock %}

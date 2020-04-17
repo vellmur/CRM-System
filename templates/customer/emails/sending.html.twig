@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="panel panel-body">
+        <div class="text-center">
+            <h6 class="text-semibold">{{ not error ? 'Sending...' : 'Sending failed'}}</h6>
+        </div>
+
+        {% if not error %}
+            <div class="progress">
+                <div class="progress-bar progress-bar-success progress-bar-striped active" style="width: 0%" id="progressBar">
+                    <span id="percents">0%</span>
+                </div>
+            </div>
+        {% else %}
+            <div class="progress">
+                <div class="progress-bar progress-bar-danger progress-bar-striped active" style="width: 100%" id="progressBar">
+                    <span id="percents">0%</span>
+                </div>
+            </div>
+            <div class="error-message" style="margin-top: 20px;">
+                <p>{{ error }}</p>
+            </div>
+        {% endif %}
+    </div>
+
+    {% if not error %}
+        <script src="{{ asset('js/pages/member/emails/sending.js') }}"></script>
+        <script>
+            initSendingCheck("{{ path('member.compose.sending_check', {'id': emailId})|escape('js') }}",
+                "{{ path('member.email.details', {'id': emailId})|escape('js') }}",
+                "{{ path('member.email.sending_error', {'id': emailId})|escape('js') }}"
+            );
+        </script>
+    {% endif %}
+{% endblock body %}

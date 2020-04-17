@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="panel panel-default">
+        <div class="panel-head">
+            <h6><i class="icon-key"></i> Edit translation keys (only for admin)</h6>
+        </div>
+        <div class="panel-body"></div>
+    </div>
+    <div class="panel panel-default">
+        <table class="table">
+            <thead>
+            <tr class="heading-style">
+                <th>{{ 'translation.domain'|trans({}, 'labels') }}</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for domain in domains %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('master_translation_edit_keys', {'domain': domain}) }}">
+                                {{ domain }}
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -1,0 +1,34 @@
+home_index:
+    path:     /
+    defaults: { _controller: App\Controller\HomeController::index }
+    methods:  GET
+
+home_mission:
+    path:     /home/mission/
+    defaults: { _controller: App\Controller\HomeController::mission }
+    methods:  GET
+
+home_faq:
+    path:     /home/faq/
+    defaults: { _controller: App\Controller\HomeController::faq }
+    methods:  GET
+
+home_blog:
+    path:     /home/blog/
+    defaults: { _controller: App\Controller\Master\BlogController::index }
+    methods:  GET
+
+home_ebook:
+    path:     /home/ebook/
+    defaults: { _controller: App\Controller\HomeController::eBook }
+    methods:  GET
+
+home_post:
+    path:     /home/post/{slug}/
+    defaults: { _controller: App\Controller\Master\BlogController::show }
+    methods:  GET
+
+home_free:
+    path:     /free
+    defaults: { _controller: App\Controller\HomeController::free }
+    methods:  GET

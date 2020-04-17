@@ -1,0 +1,23 @@
+{% extends 'emails/base.html.twig' %}
+
+{% block body %}
+    <p style="padding-left: 3px">Name: {{ member.fullname }}</p>
+    <p style="padding-left: 3px">Email: {{ member.email }}</p>
+    <p style="padding-left: 3px">Share day: {{ shareDay }}</p>
+    <p style="padding-left: 3px">Profile link: {{ member|profile_link }}#customize</p>
+
+    <table>
+        <thead>
+            <tr style="text-align: left;">
+                <th style="padding: 5px 0;">Original plant</th>
+                <th style="padding: 5px 20px;">Customized plant</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="text-align: left;">
+                <td style="padding: 5px 0;">{{ originalProduct }}</td>
+                <td style="padding: 5px 20px;">{{ customProduct }}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}

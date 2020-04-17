@@ -1,0 +1,64 @@
+<div class="form-group {{ form.title.vars.errors|length ? 'has-error' }}">
+    {{ form_label(form.title) }}
+    <div class="col-md-10 col-sm-9 col-xs-7">
+        {{ form_widget(form.title)}}
+        {% if form.title.vars.errors|length %}
+            <label id="{{ form.title.vars.id }}-error" class="validation-error-label" for="{{ form.title.vars.id }}">
+                {{ form.title.vars.errors[0].message }}
+            </label>
+        {% endif %}
+    </div>
+</div>
+<div class="form-group {{ form.text.vars.errors|length ? 'has-error' }}">
+    {{ form_label(form.text) }}
+    <div class="col-md-10 col-sm-9 col-xs-7">
+        {{ form_widget(form.text)}}
+        {% if form.text.vars.errors|length %}
+            <label id="{{ form.text.vars.id }}-error" class="validation-error-label" for="{{ form.text.vars.id }}">
+                {{ form.text.vars.errors[0].message }}
+            </label>
+        {% endif %}
+    </div>
+</div>
+<div class="form-group {{ form.thumb.vars.errors|length ? 'has-error' }}">
+    {{ form_label(form.thumb) }}
+    <div class="col-md-10 col-sm-9 col-xs-7">
+        {{ form_widget(form.thumb)}}
+        <input type="file"
+               id="thumbPreload"
+               data-image-url="{{ form.vars.value.thumb ? asset(vich_uploader_asset(form.vars.value.thumb)) }}"
+               data-name="{{ form.vars.value.thumb ? form.vars.value.thumb.name }}"
+        >
+        <button type="button"
+                data-path="{{ path('image_browse', {
+                    'formSelection': true,
+                    'imageSelectId': 'post_thumb',
+                    'imagePreloadId': 'thumbPreload',
+                    'originalUrl': app.request.requestUri
+                }) }}"
+                onclick="openImageGallery(this.getAttribute('data-path'))"
+                class="btn btn-action">
+            <i class="icon-file-plus"></i> {{ 'button.browse'|trans({}, 'labels') }}
+        </button>
+    </div>
+</div>
+<div class="form-group {% if form.isActive.vars.errors|length %} has-error {% endif %}">
+    {{ form_label(form.isActive) }}
+    <div class="col-md-10 col-sm-9 col-xs-7">
+        {{ form_widget(form.isActive)}}
+        {% if not form.isActive.vars.valid %}
+            <label id="{{ form.isActive.vars.id }}-error" class="validation-error-label" for="{{ form.isActive.vars.id }}">
+                {{ form.text.vars.errors[0].message }}
+            </label>
+        {% endif %}
+    </div>
+</div>
+
+<script src="{{ asset('js/plugins/uploaders/fileinput/fileinput.min.js') }}"></script>
+<script src="{{ asset('js/pages/media/image_field.js') }}"></script>
+<script>
+    let $thumbPreload = $('#thumbPreload');
+    initImageField($thumbPreload);
+
+    CKEDITOR.addCss('.cke_editable img {max-width:100% !important;height:auto !important;}');
+</script>

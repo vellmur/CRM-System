@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% if drafts|length %}
+        <div class="panel panel-default">
+            <div class="panel-heading heading-style">
+                <h5 class="panel-title">{{ 'navigation.emails.drafts'|trans({}, 'labels') }}</h5>
+            </div>
+            <div class="datatable-media">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>{{ 'table.date'|trans({}, 'labels') }}</th>
+                        <th>{{ 'emails.type'|trans({}, 'labels') }}</th>
+                        <th>{{ 'emails.subject'|trans({}, 'labels') }}</th>
+                        <th class="text-center">{{ 'emails.recipients_num'|trans({}, 'labels') }}</th>
+                        <th>{{ 'emails.reply_to'|trans({}, 'labels') }}</th>
+                        <th>{{ 'emails.reply_name'|trans({}, 'labels') }}</th>
+                        <th>{{ 'table.edit'|trans({}, 'labels') }}</th>
+                        <th>{{ 'table.delete'|trans({}, 'labels') }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for key, draft in drafts %}
+                        <tr>
+                            <td>{{ draft.createdAt|date(app.user.getTwigFormatDate()) }}</td>
+                            <td>
+                                {% if draft.automatedEmail == null %}
+                                    {{ 'emails.types.manual'|trans({}, 'labels') }}
+                                {% else %}
+                                    {{ 'emails.types.automated'|trans({}, 'labels') }}
+                                {% endif %}
+                            </td>
+                            <td>{{ draft.subject }}</td>
+                            <td class="text-center">{{ draft.recipients|length }}</td>
+                            <td>{{ draft.replyEmail }}</td>
+                            <td>{{ draft.replyName }}</td>
+                            <td>
+                                <a class="btn btn-action btn-icon"
+                                   href="{{ path('member.email.compose', {id : draft.id}) }}">
+                                    <i class="icon-pencil7"></i>
+                                </a>
+                            </td>
+                            <td>
+                                <button type="button"
+                                        data-path="{{ path('ajax_email_delete', {id: draft.id}) }}"
+                                        data-toggle="modal"
+                                        href="#small_modal"
+                                        class="btn btn-danger btn-icon btn-delete">
+                                    <i class="icon-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {{ include ("modal/delete-modal.html.twig") }}
+    {% endif %}
+{% endblock body %}

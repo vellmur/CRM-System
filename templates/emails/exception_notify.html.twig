@@ -1,0 +1,10 @@
+{% extends 'emails/base.html.twig' %}
+
+{% block body %}
+    <h4>{{ subject }}</h4>
+    <p>{{ error }}</p>
+
+    {% if content %}
+        {{ content|raw }}
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="panel panel-body">
+        <div class="text-center">
+            <h6 class="no-margin text-semibold">Error while sending email. Try again or contact support.</h6>
+            <p></p>
+            <p> * Reason: Waiting too long for a response from the sender.</p>
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar progress-bar-danger progress-bar-striped active" style="width: 100%" id="progressBar">
+                <span id="percents">0%</span>
+            </div>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <p class="text-center"><a href="{{ path('member.email.details', {id: emailId}) }}">Go to email log</a></p>
+        </div>
+    </div>
+{% endblock body %}

@@ -1,0 +1,293 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ form_start(form, {'attr': {'class': 'form-horizontal', 'data-page': 'master', 'data-draft': path('master.email.save_draft', {id: form.vars.value.id})}}) }}
+        <!-- Page tabs -->
+        <div class="tabbable page-tabs">
+            <ul class="nav nav-tabs left-tabs">
+                <li class="active"><a href="#design" data-toggle="tab" id="tab1"><span class="icon-design"></span> 1. Design </a></li>
+                <li><a href="#preview" data-toggle="tab" id="tab2"> <span class="icon-screen3"></span> 2. Preview</a></li>
+                <li><a href="#recipients" data-toggle="tab" id="tab3"><span class="icon-users"></span> 3. Recipients </a></li>
+                <li><a href="#review" data-toggle="tab" id="tab4"><span class="icon-envelop"></span> 4. Review and send </a></li>
+            </ul>
+            <div class="tab-content">
+                <!-- First tab -->
+                <div class="tab-pane active fade in block" id="design">
+                    <!-- Design -->
+                    <div class="block">
+                        <!-- WYSIWYG editor -->
+                        <div class="form-group row">
+                            <div class="col-md-12{% if form.text.vars.errors|length > 0 %} has-error {% endif %}" id="editor-block">
+                                {% if not form.text.vars.valid %}
+                                    {{ form_widget(form.text, {id: '#editor', 'attr': {'data-placement': 'top', 'title': form.text.vars.errors[0].message, 'class': 'form-control tip tip-open'}}) }}
+                                {% else %}
+                                    {{ form_widget(form.text, {id: '#editor'}) }}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <!-- /WYSIWYG editor -->
+                    </div>
+                </div>
+                <!-- /design -->
+                <!-- /first tab -->
+
+                <!-- Second tab -->
+                <div class="tab-pane fade tab-spaceless" id="preview">
+                    <!-- Preview -->
+                    <div class="block">
+                        <div class="tabbable page-tabs">
+                            <ul class="nav nav-tabs spaceless-tabs borderless-tabs">
+                                <li class="active"><a href="#pc" data-toggle="tab"><span class="icon-screen3"></span></a></li>
+                                <li><a href="#ipad" data-toggle="tab"><span class="icon-tablet"></span></a></li>
+                                <li><a href="#iphone" data-toggle="tab"> <span class="icon-mobile2"></span></a></li>
+                                <li><a href="#small_phone" data-toggle="tab"><span class="icon-mobile"></span></a></li>
+                            </ul>
+                        </div>
+                        <div class="tab-content borderless">
+                            <div class="tab-pane fade text-center" id="small_phone">
+                                <div class="frame">
+                                    <iframe sandbox="allow-same-origin" width="240" height="320"></iframe>
+                               </div>
+                            </div>
+                            <div class="tab-pane fade text-center" id="iphone">
+                                <div class="frame">
+                                    <iframe sandbox="allow-same-origin" width="320" height="480"></iframe>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade text-center" id="ipad">
+                                <div class="frame">
+                                    <iframe sandbox="allow-same-origin" width="768" height="1024"></iframe>
+                                </div>
+                            </div>
+                            <div class="tab-pane active fade in text-center" id="pc">
+                                <div class="frame">
+                                    <iframe sandbox="allow-same-origin" width="1039" height="768"></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /second tab -->
+                </div>
+
+                <!-- Third tab -->
+                <div class="tab-pane fade" id="recipients">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="block">
+                                <!-- Recipients -->
+                                <div class="form-group">
+                                    <span class="col-md-2">Recipients</span>
+                                    <div class="col-md-10 info-block">
+                                        <div id="members-list">
+                                            <span class="red-text">No recipients</span>
+                                        </div>
+                                        <button type="button" data-toggle="modal" href="#recipients_modal" class="btn btn-success">Add</button>
+                                        <button type="button" id="clear_recipients" class="btn btn-danger">Clear all</button>
+                                    </div>
+                                </div>
+                                <div class="form-group{% if form.subject.vars.errors | length > 0 %} has-error {% endif %}">
+                                    {{ form_label(form.subject) }}
+                                    <div class="col-md-10">
+                                        {% if not form.subject.vars.valid %}
+                                            {{ form_widget(form.subject, {'attr': {'data-placement': 'top', 'title': form.subject.vars.errors[0].message, 'class': 'form-control tip tip-open'}}) }}
+                                        {% else %}
+                                            {{ form_widget(form.subject) }}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recipients modal -->
+                    <div id="recipients_modal" class="modal fade" tabindex="-1" role="dialog">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <div class="page-close">
+                                        <button type="button" id='delete_modal_close' class="close" data-dismiss="modal" aria-hidden="true" style="color: black;">&times;</button>
+                                    </div>
+
+                                    <div class="panel panel-default">
+                                        <div class="panel-head">
+                                            <h6><i class="icon-users2"></i> Recipients</h6>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="col-sm-2">
+                                                        <div class="form-group form-group-material">
+                                                            <label for="search_filter">Filter:</label>
+                                                            <select class="select" id="search_customers_filter" data-width="100%">
+                                                                <option value="all">All</option>
+                                                                <option value="confirmed">Confirmed</option>
+                                                                <option value="unconfirmed">Unconfirmed</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-7">
+                                                        <label for="search_text">Search:</label>
+                                                        <input type="text"
+                                                               class="form-control"
+                                                               data-action="{{ path('master.email.recipients.search') }}"
+                                                               data-block="content_list"
+                                                               data-counter="content_counter"
+                                                               name="search_text"
+                                                               id="search_customers_text"
+                                                               placeholder="Search by clients">
+                                                    </div>
+                                                    <div class="col-sm-3 vertical-table-text">
+                                                        <p class="vertical-text">Records found: <span id="content_counter">{{ clients|length }}</span></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="panel panel-default">
+                                        <div class="datatable-ajax-source">
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <thead>
+                                                    <tr role="row" class="heading-style">
+                                                        <th>Client</th>
+                                                        <th>Email</th>
+                                                        <th>
+                                                            <label class="checkbox-info">
+                                                                All<br/>
+                                                                <input type="checkbox" id="all_recipients" class="form-control styled" style="border-color: white !important;">
+                                                            </label>
+                                                        </th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody id="content_list">
+                                                        {{ include ("master/email/recipients_list.html.twig") }}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type='button' id='addRecipients' class="btn btn-action">Add</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /recipients modal -->
+                </div>
+                <!-- /third tab -->
+
+                <!-- Fourth tab -->
+                <div class="tab-pane fade" id="review">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <!-- Review -->
+                            <div class="block">
+                                <div class="row form-group">
+                                    <div class="frame col-md-12">
+                                        <iframe sandbox="allow-same-origin" class="review-frame"></iframe>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <button type="submit" class="btn btn-success">Send</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- /review -->
+                </div>
+                <!-- /fourth tab -->
+            </div>
+            <!-- /page tabs -->
+        </div>
+    {{ form_end(form) }}
+
+    {{ include ("modal/macros-modal.html.twig", {'macros': macros}) }}
+{% endblock body %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{{ asset('js/plugins/ckeditor/ckeditor.js') }}?v=1"></script>
+    <script type="text/javascript" src="{{ asset('js/pages/member/emails/compose.js') }}?v=1"></script>
+    <script>
+        $('#search_customers_filter, #search_customers_text').on('keyup change', function ()
+        {
+            if ($(this).attr('id') === 'search_customers_text') {
+                searchField = $(this);
+                searchBy = $('#search_customers_filter');
+            } else {
+                var searchField = $('#search_customers_text');
+                var searchBy = $(this);
+            }
+
+            var url = searchField.attr('data-action');
+            var block = $('#' + searchField.attr('data-block'));
+            var counter = $('#' + searchField.attr('data-counter'));
+
+            url +=  '?status=' + (searchBy.length ? searchBy.val() : 'all');
+
+            if (searchField.length && searchField.val().length > 0) url += '&search=' + searchField.val();
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                success: function (response) {
+                    response = jQuery.parseJSON(response);
+
+                    var data = $(response.template);
+                    var checkboxes = data.find('.styled');
+
+                    if (checkboxes.length > 0) {
+                        checkboxes.uniform({
+                            radioClass: 'choice'
+                        });
+
+                        $.uniform.update('.styled');
+                    }
+
+                    block.empty();
+                    block.append(data);
+
+                    counter.empty();
+                    counter.append(response.counter);
+                },
+                error: function (response) {
+                    counter.empty();
+                    counter.append(0);
+                }
+            });
+        });
+    </script>
+    <style>
+        th label {
+            font-weight: 500;
+        }
+
+        #preview .frame iframe {
+            padding: 20px;
+        }
+
+        .frame iframe {
+            border: none;
+            background-color: white !important;
+        }
+
+        #members-list {
+            margin-bottom: 10px;
+        }
+
+        .spaceless-tabs {
+            margin-bottom: 0 !important;
+        }
+
+        .borderless-tabs {
+            border: 0 !important;
+        }
+
+        .review-frame {
+            width: 100%;
+            min-height: 400px;
+        }
+    </style>
+{% endblock %}

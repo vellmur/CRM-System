@@ -1,0 +1,11 @@
+{% extends 'emails/base.html.twig' %}
+
+{% block body %}
+    <h4>{{ subject }}</h4>
+
+    {% if customer.id %}
+        <p>Name: {{ customer.fullname }}</p>
+    {% endif %}
+
+    <p>Email: {{ customer.email }}</p>
+{% endblock %}

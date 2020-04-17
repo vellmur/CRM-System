@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="panel panel-default">
+        <div class="panel-heading heading-style">
+            <h6 class="panel-title">{{ teams[0].client.name }} users</h6>
+        </div>
+        <div class="datatable-ajax-source">
+            <table class="table">
+                <thead>
+                <tr role="row" class="row-style">
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Login as</th>
+                </tr>
+                </thead>
+                <tbody id="users_list">
+                    {% for key, team in teams %}
+                        <tr role="row" class="odd">
+                            <td>{{ team.user.username }}</td>
+                            <td>{{ team.user.email }}</td>
+                            <td>
+                                {% if 'ROLE_OWNER' in team.user.roles|json_encode %}
+                                    OWNER
+                                {% else %}
+                                    EMPLOYEE
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if app.user.id != team.user.id %}
+                                    <a role="button" href="{{ path('dashboard_index', {'_switch_user' : team.user.username}) }}" class="btn btn-success btn-icon"><i class="icon-enter2"></i></a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% if forms|length > 0 %}
+        <div class="panel panel-default">
+            <div class="panel-heading heading-style">
+                <h6 class="panel-title">Client access</h6>
+            </div>
+            <table class="table">
+                <thead>
+                <tr class="row-style">
+                    <th>Module</th>
+                    <th>Status</th>
+                    <th>Expires on</th>
+                    <th>Save</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for key, form in forms %}
+                    <tr {% if key is not divisible by (2) %} class="row-style" {% endif %}>
+                        {{ form_start(form, { 'attr': {'action': path('master_client_access_update', { 'id' : form.vars.value.id }), 'role' : 'form', 'class' : 'ajaxUpdate'} }) }}
+                        <td class="form-group">{{ modules[form.vars.value.module] is defined ? modules[form.vars.value.module] }}</td>
+                        <td class="form-group">{{ form.vars.value.statusName }}</td>
+                        <td class="form-group">{{ form_widget(form.expiredAt,  {'id' : '' ~ form.vars.value.id}) }}</td>
+                        <td class="form-group">
+                            <span id="form-status"><button type="submit" class="btn btn-success btn-icon btn-save"><i class="icon-floppy-disk"></i></button></span>
+                        </td>
+                        {{ form_end(form) }}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+{% endblock body %}

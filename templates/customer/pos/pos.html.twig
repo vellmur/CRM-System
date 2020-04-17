@@ -1,0 +1,278 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="panel panel-default">
+        <div class="panel-head">
+            <h6><i class="icon-calculator"></i> {{ 'pos.entry'|trans({}, 'labels') }}</h6>
+        </div>
+        <div class="panel-body">
+            {{ form_start(form, {'attr': {'class': 'form-horizontal jquery-validation'}}) }}
+                <div class="col-md-6">
+                    <div id="products">
+                        <div class="form-group {{ form.total.vars.errors|length and form.products|length == 0 ? 'has-error' }}">
+                            <div class="col-md-12">
+                                <div class="has-feedback has-feedback-right">
+                                    {{ form_widget(form.productSearch, {'id':'product-search'}) }}
+                                    <div class="form-control-feedback">
+                                        <i class="icon-search4"></i>
+                                    </div>
+                                </div>
+                                {% if form.total.vars.errors|length and form.products|length == 0 %}
+                                    <label id="{{ form.total.vars.id }}-error" class="validation-error-label" for="{{ form.total.vars.id }}">
+                                        Products are required.
+                                    </label>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="collection"
+                         id="order-collection"
+                         data-collection="order"
+                         data-prototype='{{ include('customer/pos/product_prototype.html.twig', {'form': form.products.vars.prototype|e('html_attr')}) }}'>
+                        {% for product in form.products %}
+                            {{ include('customer/pos/product_prototype.html.twig', {'form': product}) }}
+                        {% endfor %}
+                    </div>
+                    <hr/>
+                    <div class="form-group {{ form.receivedAmount.vars.errors|length ? 'has-error' }}">
+                        <div class="col-md-12">
+                            <div class="has-feedback has-feedback-right">
+                                {{ form_widget(form.receivedAmount) }}
+                                <div class="form-control-feedback">
+                                    <i class="icon-cash"></i>
+                                </div>
+                            </div>
+                            {% if form.receivedAmount.vars.errors|length %}
+                                <label id="{{ form.receivedAmount.vars.id }}-error" class="validation-error-label" for="{{ form.receivedAmount.vars.id }}">
+                                    {{ form.receivedAmount.vars.errors[0].message }}
+                                </label>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <div class="has-feedback has-feedback-right">
+                                {% set change = form.receivedAmount.vars.value and form.total.vars.value ? form.receivedAmount.vars.value - form.total.vars.value : '0.00' %}
+                                {{ form_widget(form.returnedAmount, {'attr': {'value': change|number_format(2, '.', ',') }}) }}
+                                <div class="form-control-feedback">
+                                    <i class="icon-cash"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% if app.request.request.get('pos') %}
+                        {% set customer = app.request.request.get('pos')['customer'] %}
+                        {% set showCustomer = (customer.firstname|length or customer.lastname|length or customer.email|length or customer.phone|length) or not form.customer.vars.valid   %}
+                    {% endif %}
+                    <div id="customer-fields" {% if not showCustomer is defined or not showCustomer %} style="display: none;"{% endif %}>
+                        <hr/>
+                        <h5>{{ 'customer.customer'|trans({}, 'labels') }}</h5>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <div class="has-feedback has-feedback-right form-group">
+                                    {{ form_widget(form.customerSearch, {'id':'customer-find'}) }}
+                                    <div class="form-control-feedback">
+                                        <i class="icon-search4"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group {{ form.customer.firstname.vars.errors|length ? 'has-error' }}">
+                            <div class="col-md-12">
+                                {{ form_widget(form.customer.firstname) }}
+                                {% if form.customer.firstname.vars.errors|length %}
+                                    <label id="{{ form.customer.firstname.vars.id }}-error" class="validation-error-label" for="{{ form.customer.firstname.vars.id }}">
+                                        {{ form.customer.firstname.vars.errors[0].message }}
+                                    </label>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="form-group {{ form.customer.lastname.vars.errors|length ? 'has-error' }}"">
+                            <div class="col-md-12">
+                                {{ form_widget(form.customer.lastname) }}
+                                {% if form.customer.lastname.vars.errors|length %}
+                                    <label id="{{ form.customer.lastname.vars.id }}-error" class="validation-error-label" for="{{ form.customer.lastname.vars.id }}">
+                                        {{ form.customer.lastname.vars.errors[0].message }}
+                                    </label>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="form-group {{ form.customer.phone.vars.errors|length ? 'has-error' }}"">
+                            <div class="col-md-12">
+                                {{ form_widget(form.customer.phone) }}
+                                {% if form.customer.phone.vars.errors|length %}
+                                    <label id="{{ form.customer.phone.vars.id }}-error" class="validation-error-label" for="{{ form.customer.phone.vars.id }}">
+                                        {{ form.customer.phone.vars.errors[0].message }}
+                                    </label>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="form-group {{ form.customer.email.vars.errors|length ? 'has-error' }}"">
+                            <div class="col-md-12">
+                                {{ form_widget(form.customer.email) }}
+                                {% if form.customer.email.vars.errors|length %}
+                                    <label id="{{ form.customer.email.vars.id }}-error" class="validation-error-label" for="{{ form.customer.email.vars.id }}">
+                                        {{ form.customer.email.vars.errors[0].message }}
+                                    </label>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% if not form.vars.valid and form_errors(form) %}
+                        <div class="error-feedback">
+                            <div class="alert alert-danger no-border">
+                                {{ form_errors(form) }}
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="form-action text-right">
+                        <button type="button" class="btn btn-default" id="new-customer">{{ 'pos.new_customer'|trans({}, 'labels') }}</button>
+                        <button type="button" class="btn btn-default" id="cancel-order">{{ 'pos.cancel_order'|trans({}, 'labels') }}</button>
+                        <button type="submit"
+                                class="btn btn-default {{ form.products|length == 0 ? 'custom-read-only' }}"
+                                id="create-order"
+                                {{ form.products|length == 0 ? 'disabled' }}>{{ 'pos.next_order'|trans({}, 'labels') }}</button>
+                    </div>
+                </div>
+                {% do form.products.setRendered('true') %}
+                {{ form_widget(form.total) }}
+            {{ form_end(form) }}
+            <div class="col-md-6" id="cart-content" style="margin-top:-5px;">
+                <div class="total-info">
+                    <div class="row cart-list">
+                        <div id="products-list">
+                            {% set order = app.request.request.get('pos') %}
+                            {% set total = 0 %}
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>{{ 'product.name'|trans({}, 'labels') }}</th>
+                                            <th>{{ 'product.qty'|trans({}, 'labels') }}</th>
+                                            <th>{{ 'product.weight'|trans({}, 'labels') }}</th>
+                                            <th>{{ 'product.price'|trans({}, 'labels') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% if order %}
+                                            {% for key, product in order.products %}
+                                                {% set productEntity = form.products[key].vars.value.product %}
+
+                                                {% if product.qty is defined and product.qty|length %}
+                                                    {% set productQty = product.qty %}
+                                                {% elseif product.weight is defined and product.weight|length %}
+                                                    {% set productQty = product.weight %}
+                                                {% else %}
+                                                    {% set productQty = 0 %}
+                                                {% endif %}
+
+                                                <tr id="pos_products_{{ key }}_product_cart">
+                                                    <td>{{ productEntity.name }}</td>
+                                                    <td class="productQty">{{ product.qty is defined and product.qty|length ? product.qty }}</td>
+                                                    <td><span class="productWeight">{{ product.weight is defined ? product.weight }}</span> {{ product.weight is defined and product.weight|length ? 'Kg' }}</td>
+                                                    <td>{{ app.user.client.currencyFormat }}<span class="productPrice">{{ (productEntity.price * productQty)|number_format(2, '.', ',') }}</span></td>
+                                                </tr>
+                                                {% set total = total + (productEntity.price * productQty) %}
+                                            {% endfor %}
+                                        {% endif %}
+                                        <tr>
+                                            <td>{{ 'pos.total'|trans({}, 'labels')|upper }}</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>{{ app.user.client.currencyFormat }}<span id='total'>{{ total|number_format(2, '.', ',') }}</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-head">
+            <h6><i class="icon-coins"></i> {{ 'pos.summary'|trans({}, 'labels') }}</h6>
+        </div>
+        <div class="panel-body">
+            <div class="col-md-6">
+                <span class="text-semibold">{{ 'pos.orders'|trans({}, 'labels') }}:</span><br/> {{ summary.totalCount }}
+            </div>
+            <div class="col-md-6">
+                <span class="text-semibold">{{ 'pos.total'|trans({}, 'labels') }}:</span> <br/>{{ app.user.client.currencyFormat }}{{ summary.totalSum|number_format(2, '.', ',') }}
+            </div>
+        </div>
+    </div>
+
+    <div class="panel">
+        <table class="table">
+            <thead>
+            <tr class="heading-style">
+                <th>{{ 'pos.counter'|trans({}, 'labels') }}</th>
+                <th>{{ 'pos.total'|trans({}, 'labels') }}</th>
+                <th>{{ 'pos.order_date'|trans({}, 'labels') }}</th>
+                <th>{{ 'table.view'|trans({}, 'labels') }}</th>
+                <th>{{ 'table.print'|trans({}, 'labels') }}</th>
+
+                {% if is_granted('ROLE_OWNER') %}
+                    <th>{{ 'table.delete'|trans({}, 'labels') }}</th>
+                {% endif %}
+            </tr>
+            </thead>
+            <tbody>
+            {% set total = 0 %}
+
+            {% for key, order in orders %}
+                <tr>
+                    <td>{{ key + 1 }}</td>
+                    <td>{{ app.user.client.currencyFormat }}{{ order.total }}</td>
+                    <td>{{ order.createdAt|date(app.user.getTwigFormatDate() ~ ' H:i:s') }}</td>
+                    <td>
+                        <a type="button" href="{{ path('pos_invoice', {'id': order.id}) }}" class="btn btn-icon btn-action" target="_blank"><i class="icon-file-text"></i></a>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-icon btn-default" onclick="printJS('{{ path('pos_invoice', {'id': order.id}) }}')"><i class="icon-printer2"></i></button>
+                    </td>
+
+                    {% if is_granted('ROLE_OWNER') %}
+                        <td>
+                            <button type="button" data-path="{{ path('pos_order_delete', {id: order.id}) }}" data-toggle="modal" href="#small_modal" class="btn btn-danger btn-icon btn-delete"> <i class="icon-trash"></i></button>
+                        </td>
+                    {% endif %}
+                </tr>
+
+                {% set total = total + order.total %}
+            {% endfor %}
+            <tr>
+                <td class="text-semibold">{{ orders|length }}</td>
+                <td class="text-semibold">{{ app.user.client.currencyFormat }}{{ total|number_format(2, '.', ',') }}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+
+                {% if is_granted('ROLE_OWNER') %}
+                    <td></td>
+                {% endif %}
+            </tr>
+            </tbody>
+        </table>
+        <div class="navigation text-right">
+            {{ knp_pagination_render(orders, 'parts/pagination.html.twig') }}
+        </div>
+    </div>
+
+    {{ include ("modal/delete-modal.html.twig") }}
+
+    <input type="hidden" id="currency_format" value="{{ app.user.client.currencyFormat }}">
+    <input type="hidden" id="product_search_path" value="{{ path('pos_products_search') }}">
+    <input type="hidden" id="customer_search_path" value="{{ path('pos_customers_search') }}">
+{% endblock %}
+
+{% block scripts %}
+    <link href="{{ asset('css/pages/widgets/market.css') }}?v=2" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="{{ asset('css/jquery.bootstrap-touchspin.min.css') }}">
+    <script type="text/javascript" src="{{ asset('js/plugins/forms/inputs/jquery.bootstrap-touchspin.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/pages/member/product/pos.js') }}"></script>
+    <script type="text/javascript" src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
+{% endblock %}

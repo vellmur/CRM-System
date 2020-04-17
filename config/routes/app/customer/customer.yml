@@ -1,0 +1,67 @@
+members_parse:
+    path:     /customer-upload
+    defaults: { _controller: App\Controller\Customer\CustomerController::parse }
+    methods:  [GET, POST]
+
+members_file_count:
+    path:     /file-count
+    defaults: { _controller: App\Controller\Customer\CustomerController::countFileRows }
+    methods:  POST
+
+member_check_email:
+    path:     /email-check
+    defaults: { _controller: App\Controller\Customer\CustomerController::checkEmail }
+    methods:  POST
+
+customer_search:
+    path:     /customer-find
+    defaults: { _controller: App\Controller\Customer\CustomerController::searchCustomers }
+    methods:  POST
+    options:
+          expose: true
+
+app_shares_weeks:
+     path:     /admin/shares/weeks
+     defaults: { _controller: App\Controller\Customer\ShareController::sharesWeeks }
+     methods:  GET
+
+app_share_suspend:
+     path:     /shares/suspend-week
+     defaults: { _controller: App\Controller\Customer\ShareController::suspendWeek }
+     methods:  POST
+
+customers_list:
+    prefix:   /
+    resource: list.yml
+
+customers_shares:
+    prefix:   /shares
+    resource: share.yml
+
+customers_locations:
+    prefix:   /locations
+    resource: location.yml
+
+customers_emails:
+    prefix:   /emails
+    resource: email.yml
+
+customers_report:
+    resource: report.yml
+    prefix:    /report
+
+customers_vendor:
+    resource: vendor.yml
+    prefix:    /vendors
+
+customers_orders:
+    resource: order.yml
+    prefix:   /orders
+
+customers_products:
+    prefix:   /products
+    resource: product.yml
+
+customers_pos:
+    prefix:   /pos
+    resource: pos.yml

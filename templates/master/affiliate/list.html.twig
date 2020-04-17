@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ form_start(form, {'attr': {'class': 'form-horizontal', 'role' : 'form'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div {% if form.name.vars.errors|length %} class="form-group has-error" {% else %} class="form-group" {% endif %}>
+                {{ form_label(form.name) }}
+                <div class="col-md-10 col-sm-9 col-xs-7">
+                    {{ form_widget(form.name) }}
+                    {{ form_errors(form.name) }}
+                </div>
+            </div>
+            <div {% if form.email.vars.errors|length %} class="form-group has-error" {% else %} class="form-group" {% endif %}>
+                {{ form_label(form.email) }}
+                <div class="col-md-10 col-sm-9 col-xs-7">
+                    {{ form_widget(form.email) }}
+                    {{ form_errors(form.email) }}
+                </div>
+            </div>
+            <div class="form-actions text-right">
+                <button type="submit" class="btn btn-action">{{ 'button.add'|trans({}, 'labels') }}</button>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+
+    {% if affiliates|length %}
+        <div class="panel panel-default">
+            <div class="datatable-ajax-source">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr role="row" class="heading-style">
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Referral link</th>
+                            <th>Referrals</th>
+                            <th>Unpaid referrals</th>
+                            <th>Created at</th>
+                        </tr>
+                        </thead>
+                        <tbody id="users_list">
+                        {%  for key, affiliate in affiliates %}
+                            <tr {% if key is not divisible by (2) %} class="row-style" {% endif %}>
+                                {% if affiliate['affiliate'].client is null %}
+                                    <td><a class="website-link" href="{{ path('master_affiliate_edit', {id : affiliate['affiliate'].id}) }}">{{ affiliate['affiliate'].name }}</a></td>
+                                {% else %}
+                                    <td>{{ affiliate['affiliate'].client.name }}</td>
+                                {% endif %}
+                                <td>{{ affiliate['affiliate'].email }}</td>
+                                <td>{{ affiliate['affiliate'].referralLink }}</td>
+                                <td>
+                                    {% if affiliate.affiliate.referrals | length > 0 %}
+                                        <a href="{{ path('master_affiliate_referrals', {id : affiliate['affiliate'].id, status : 'all'}) }}">{{ affiliate.affiliate.referrals | length }}</a>
+                                    {% else %}
+                                        {{ affiliate.affiliate.referrals | length }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if affiliate.unpaidReferrals.num > 0 %}
+                                        <a href="{{ path('master_affiliate_referrals', {id : affiliate['affiliate'].id, status: 'unpaid'}) }}">{{ affiliate.unpaidReferrals.num }}</a>
+                                    {% else %}
+                                        {{ affiliate.unpaidReferrals.num }}
+                                    {% endif %}
+                                </td>
+                                <td>{{ affiliate['affiliate'].createdAt | date('d-m-Y') }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock body %}

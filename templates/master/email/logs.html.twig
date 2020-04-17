@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <!-- Table view -->
+    <div class="panel panel-default">
+        <div class="panel-heading heading-style">
+            <h5 class="panel-title">Logs</h5>
+        </div>
+        <div class="datatable-media">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr class="row-style">
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Subject</th>
+                    <th class="text-center">Number of recipients</th>
+                    <th class="text-center">Delivered</th>
+                    <th class="text-center">Opened</th>
+                    <th class="text-center">Clicked</th>
+                    <th class="text-center">Failed</th>
+                    <th class="text-center">Bounced</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for key, log in logs %}
+                    {% set email = log.email %}
+                    <tr {% if key is not divisible by (2) %} class="row-style" {% endif %}>
+                        <td>
+                            <a class="website-link" href="{{ path('master.email.details', {id : email.id}) }}">
+                                {{ email.createdAt|date(app.user.getTwigFormatDate()) }} <br/>
+                                {{ email.createdAt|date('H:m:s') }}
+                            </a>
+                        </td>
+                        <td>{{ email.automatedEmail ? 'Auto' : 'Manual' }}</td>
+                        <td>{{ email.subject }}</td>
+                        <td class="text-center">{{ log.total }}</td>
+                        <td class="text-center">{{ log.delivered }}</td>
+                        <td class="text-center">{{ log.opened }}</td>
+                        <td class="text-center">{{ log.clicked }}</td>
+                        <td class="text-center">{% if log.email.isInProcess != true %} {{ log.total - log.delivered }} {% else %} 0 {% endif %}</td>
+                        <td class="text-center">{{ log.bounced }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="navigation text-right">
+                {{ knp_pagination_render(logs, 'parts/pagination.html.twig') }}
+            </div>
+        </div>
+        <!-- /table view -->
+    </div>
+{% endblock body %}

@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="panel panel-default">
+        <div class="panel-head">
+            <h6><i class="icon-coins"></i> {{ 'pos.summary'|trans({}, 'labels') }}</h6>
+        </div>
+        <div class="panel-body">
+            <div class="col-md-6">
+                <span class="text-semibold">{{ 'pos.month_average_sales'|trans({}, 'labels') }}:</span> <br/>{{ app.user.client.currencyFormat }}{{ monthSales.averageDaySales|number_format(2, '.', ',') }}
+            </div>
+            <div class="col-md-6">
+                <span class="text-semibold">{{ 'pos.average_sale_price'|trans({}, 'labels') }}:</span> <br/>{{ app.user.client.currencyFormat }}{{ monthSales.averageSalePrice|number_format(2, '.', ',') }}
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-head">
+            <h6><i class="icon-cart5"></i> {{ 'pos.daily_sales'|trans({}, 'labels') }}</h6>
+        </div>
+        <div class="panel-body">
+            <div class="chart-container">
+                <div class="chart has-fixed-height" id="daily_sales" data-name="{{ 'pos.daily_sales'|trans({}, 'labels') }}"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-head">
+            <h6><i class="icon-watch"></i> {{ 'pos.hour_sales'|trans({}, 'labels') }}</h6>
+        </div>
+        <div class="panel-body">
+            <div class="chart-container">
+                <div class="chart has-fixed-height" id="hour_sales" data-name="{{ 'pos.hour_sales'|trans({}, 'labels') }}"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-head">
+            <h6><i class="icon-price-tag"></i> {{ 'pos.average_sale'|trans({}, 'labels') }}</h6>
+        </div>
+        <div class="panel-body">
+            <div class="chart-container">
+                <div class="chart has-fixed-height" id="average_sale" data-name="{{ 'pos.average_sale'|trans({}, 'labels') }}"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-head">
+            <h6><i class="icon-star-full2"></i> {{ 'pos.most_purchased'|trans({}, 'labels') }}</h6>
+        </div>
+        <div class="panel-body">
+            <div class="chart-container">
+                <div class="chart has-fixed-height" id="most_purchased" data-name="{{ 'pos.most_purchased'|trans({}, 'labels') }}"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ asset('js/plugins/ui/moment/moment.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/ui/moment/moment_timezone.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/plugins/visualization/echarts/echarts.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/pages/member/product/pos_dashboard.js') }}?v=2"></script>
+    <script>
+        var currency = HtmlDecode('{{ app.user.client.currencyFormat|raw }}'),
+            $dailySales = document.getElementById('daily_sales'),
+            $averageSales = document.getElementById('average_sale'),
+            $hourSales = document.getElementById('hour_sales'),
+            $mostPurchases = document.getElementById('most_purchased'),
+            $emptyData = '<p>Not enough data to draw chart.</p>',
+            stats = {{ stats|raw }};
+
+        Object.keys(stats.dailySales).length ? chartInit($dailySales, stats.dailySales, currency) : $($dailySales).html($emptyData);
+        Object.keys(stats.averageSale).length ? chartInit($averageSales, stats.averageSale, currency) : $($averageSales).html($emptyData);
+        Object.keys(stats.hourSales).length ? chartInit($hourSales, stats.hourSales, currency) : $($hourSales).html($emptyData);
+        Object.keys(stats.mostPurchased).length ? chartInit($mostPurchases, stats.mostPurchased, currency) : $($mostPurchases).html($emptyData);
+    </script>
+{% endblock %}

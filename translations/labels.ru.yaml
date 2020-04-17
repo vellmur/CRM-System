@@ -1,0 +1,790 @@
+navigation:
+    module_crops: 'Модуль: Урожай'
+    module_customers: 'Модуль: Клиенты'
+    module_company: 'Модуль: Компания'
+    account:
+        account: Аккаунт
+        profile: Профиль
+        users: Пользователи
+        settings: Настройки
+        subscription: Подписка
+        owner: Владелец
+        employee: Работник
+        translation: Перевод
+        logout: Выйти
+    setup:
+        setup: Настройки
+        plants: Растения
+        gardens: Теплицы
+        notes: Заметки
+        crops: Урожай
+    crops:
+        crops: Управление урожаем
+        dashboard: Панель управления
+        tray_starts: Рассады
+        plants_in_garden: Растения в теплице
+        harvest_date: Сбор урожая
+        end_of_garden: Завершение выращивания
+        setup: Настроить
+        crop: Урожай
+    seeds:
+        manage_seeds: Управление семенами
+        seeds: Семена
+        inventory: Инвентарь семян
+    tasks:
+        tasks: Задания
+        list: Список
+    reports:
+        reports: Отчеты
+        garden: Теплица
+        garden_history: История теплиц
+        now_growing: Выращивается сейчас
+        seed: Семена
+        share_day: Дата выдачи
+        what_we_grew: Что выращивается
+        where_to_plant: Где садить
+    customers:
+        manage_customers: Управление клиентами
+        add: Добавить
+        location: Места выдачи
+        search: Поиск
+        shares: Продукты
+        suspend: Приостановить
+        upload: Загрузить
+    emails:
+        emails: Почта
+        auto: Автоматическая
+        drafts: Черновики
+        compose: Создать
+        logs: Логи
+    orders:
+        orders: Заказы
+        available_plants: Доступные растения
+        for_members: Для клиентов
+        for_vendors: Для поставщиков
+        harvest_list: Список урожая
+        packaging: Пакетирование
+    pos:
+        pos: Касса
+        dashboard: Панель управления
+        entry: Добавления
+        orders: Заказы
+    products:
+        products: Продукты
+        add: Добавить
+        pricing: Цены
+        search: Поиск
+    vendors:
+        vendors: Поставщики
+        add: Добавить
+        search: Поиск
+    website:
+        website: Вебсайт
+        blog: Блог
+        create_website: Создать вебсайт
+        manage_website: Управление вебсайтом
+        media_gallery: Медиа галерея
+    widgets:
+        widgets: Виджеты
+    tools:
+        tools: Утилиты
+        editor: Редактор
+        invoices: Чеки
+        merchant: Торговый счет
+        statistics: Статистика
+    help:
+        help: Помощь
+        support: Поддержка
+account:
+    profile:
+        profile: Профиль
+        referral_link: Ваша реферальная ссылка
+        membership_link: Ваше ссылка для регистрации клиентов
+    subscription: Подписка
+    settings:
+        settings: Настройки
+        method: Метод
+        description: Описание
+        payment_methods: Способы оплаты
+        delivery_price: Цена доставки
+        time_to_order: Время для заказа
+        when_to_disable: Когда отключать
+        day_before: За день
+        day_of: День в день
+        crops_enabled: Включение или выключение модуля «Урожай»
+        shares_enabled: Включить или отключить функцию «Продукты»
+        crop_module: Модуль Урожай
+        customer_module: Модуль Клиент
+        company_module: Модуль Кампания
+        client_name: Название фермы или сада
+        my_settings: Профиль
+        firstname: Имя
+        lastname: Фамилия
+        country: Страна
+        region: Штат/Провинция
+        postal_code: Почтовый индекс
+        city: Город
+        timezone: Временная зона
+        email: Email
+        region_placeholder: Выберите штат / провинцию
+        city_placeholder: Выберите город
+        country_placeholder: Выберите страну
+        date_format: Формат даты
+        weight_format: Вес
+        language: Язык
+        form_repeat_password: Повторите пароль
+        new_password: Новый пароль
+        currency: Валюта
+    payment:
+        payment: Оплата
+        module: Модуль
+        crops: Урожай
+        customers: Клиенты
+        company: Кампания
+        price: Цена
+        description: Описание
+        pay: Оплатить
+        card:
+            card: Кредитная карта
+            name: Имя на карте
+            number: Номер карты
+    users:
+        users: Пользователи
+        role: Тип аккаунта
+        owner: Владелец
+        employee: Работник
+        language: Язык
+        date_format: Формат даты
+        new_password: Новый пароль
+        prev_password: Предыдущий пароль
+        change_password: Смена пароля
+        successful_saving: Успешное сохранение!
+        change_password_for_user: Изменить пароль для пользователя
+        username: Логин
+        email: Email
+        password: Пароль
+        repeat_password: Повторите пароль
+translation:
+    translation: Перевод
+    language: Язык
+    key: Ключ
+    keys: Ключи
+    original: Оригинал
+    domain: Домен
+    search: Поиск
+    progress: Прогресс перевода
+    no_results: Не найдено совпадений
+    showing: Показывается
+    entries: результатов
+    to: по
+    of: с
+    filtered_from: отфильтровано с
+    total_entries: общего количества
+setup:
+    gardens:
+        rowsNum: Сколько рядов у вашей фермы?
+        sameLength: Все ли ваши ряды одинаковой длины?
+        rowsLength: Насколько длинные ваши ряды?
+        gardens: Теплицы
+        name: Название
+        rows: Ряды
+        length: Длина
+        area: Площадь
+        not_removable_garden: Сад с растениями нельзя удалить.
+    crops:
+        add_crop: Добавить урожай
+        edit_crop: Изменить урожай
+        plant: Растение
+        plant_name: Название растения
+        tray_starts: Рассады
+        trays_num: '# рассад'
+        plants_num: '# растений'
+        seeds_num: '# семян'
+        start_date: Начало выращивания
+        days_in_tray: Дней в рассаде
+        planted_in: Посажено в
+        plant_in_garden: Растение в теплице
+        garden: Теплица
+        garden_plants: Растения в теплице
+        plant_date: Дата посадки
+        days_in_garden: Дней в теплице
+        harvest_date: Дата сбора
+        end_date: Дата завершения
+        end_of_garden: Завершение выращивания
+    notes:
+        notes: Заметки
+        week: Неделя
+        comment: Комментарий
+    plants:
+        plants: Растения
+        family_name: Семья растений
+        name: Имя растения
+        subname: Второе имя
+        active_button_lock: Растения, которые в данный момент находятся в теплице, не могут быть Неактивными.
+    seeds:
+        order_date: Дата заказа
+crops:
+    search: Поиск
+    search_by: Поиск по имени растения, теплицы...
+    records_found: Найдено
+    dashboard:
+        dashboard: Панель управления
+        open_gardens: Доступные теплицы
+        gardens: Теплицы
+        average_days_in_tray: Среднее количество дней в рассаде
+        days_until_harvest: Дней до созревания
+        average_days_in_garden: Среднее количество дней в теплице
+        notes_for_current_week: Заметки для текущей недели
+        current_trays: Текущие рассады по дням
+        seeds_amount: Инвентарь семян
+        week: Неделя
+        note: Заметка
+seeds:
+    seed_vendor: Поставщик семян
+    company: Кампания
+    seed_order: Заказ семян
+    order_number: Номер заказа
+    order_date: Дата заказа
+    seeds: Семена
+    plant: Растение
+    plant_name: Название растения
+    seeds_qty: Количество семян
+    seed_inventory: Инвентарь семян
+    notification: Уведомление
+    denied_remove:
+        company_order_removing: Компания с заказами не может быть удалена.
+        seed_order_removing: Заказ с семенами не может быть удален.
+tasks:
+    add_task: Добавить задание
+    type: Тип
+    description: Описание
+    employee: Работник
+    date_to_complete: Дата для завершения
+    date_completed: Дата завершения
+report:
+    report: Отчет
+    garden_report: Отчет о теплицах
+    open_gardens: Доступные теплицы
+    count: Номер
+    year: Год
+    history:
+        plant_family: Семья растений
+customer:
+    customer: Покупатель
+    add:
+        lead: Лид
+        firstname: Имя
+        lastname: Фамилия
+        phone: Телефон
+        email: Email
+        notes: Заметки
+        list_shares: Список покупок
+        delivery_day: День доставки
+    share:
+        share: Покупка
+        shares: Покупки
+        type: Тип
+        status: Статус
+        renewal_date: Дата обновления
+        remaining_shares: Осталось пакетов
+        share_day: День выдачи
+        order_day: День заказа
+        share_location: Место выдачи
+        order_location: Место заказа
+        add_share: Добавить покупку
+        add_another_share: Добавить еще одну покупку
+        shares_num: Сколько покупок
+        start_date: Дата начала
+        order_date: Дата заказа
+        denied_remove: Покупка с оформленными покупателями не может быть удалена.
+    address:
+        address: Адрес
+        type: Тип адреса
+        street: Улица
+        apartment: Квартира
+        region: Область/Штат
+        city: Город
+        postal_code: Почтовый адресс
+        types:
+            delivery: Доставка
+            billing: Платежи
+            billing_and_delivery: Доставка и Платежи
+    level:
+        name: Название
+        description: Описание
+        price: Цена
+    location:
+        location: Место выдачи
+        locations: Места выдачи
+        name: Название
+        description: Описание
+        hours: Часов
+        denied_remove: Место выдачи с оформленными покупками не может быть удалено.
+    search:
+        search: Поиск
+        share: Пакет
+        total: Всего
+        pending: В ожидании
+        active: Активно
+        renewal_overdue: Срок обновления
+        lapsed: Просрочено
+        new_in_last: Новые за %days% дней
+        open_orders: Открытые заказы
+        todays_orders: Сегодняшние заказы
+        future_orders: Будущие заказы
+        filter: Фильтр
+        contact: Контакт
+        contacts: Контакты
+        lead: Лид
+        leads: Лиды
+        customer: Покупатель
+        customers: Покупатели
+        members: Клиенты
+        member: Клиент
+        patron: Покупатель
+        patrons: Покупатели
+        records_found: Найдено записей
+        search_by_placeholder: ПОИСК по КЛИЕНТУ, ПОЧТЕ, ПОКУПКЕ ...
+        search_by: ПОИСК ПО ПОКУПАТЕЛЮ
+    suspend:
+        suspend: Приостановить покупки
+        week: Неделя
+        status: Статус
+        suspend_btn: Приостановить
+        suspended: Приостановлено
+    upload:
+        upload: Загрузить
+        upload_as: Загрузить данные как
+        supported_formats: Поддерживаемые форматы
+        spreadsheet: таблицы
+        max_file_size: Максимальный размер файла для загрузки
+        rows_num: Количество строк в файле для загрузки
+        upload_results: Результаты загрузки
+        rows_of: строк
+        in_file_uploaded: в файле были успешно загружены
+        in_file_not_uploaded: в файле не были загружены
+    orders:
+        plants: Растения
+        active_plants: Активные растения
+        available_plants: Доступные растения
+        for_members: Для клиентов
+        start_date: Дата начала
+        end_date: Дата завершения
+        for_vendors: Для поставщиков
+        vendor: Поставщик
+        order_date: Дата заказа
+        total_weight: Общий вес
+        units: Единиц
+        order: Заказ
+    vendor:
+        vendor: Поставщик
+        contacts: Контакты
+        name: Имя
+        category: Категория
+        order_day: День заказа
+        status: Статус
+        search_by_placeholder: ПОИСК ПО ПОСТАВЩИКУ
+        vendor_activated: Vendor is not activated!
+emails:
+    subject: Тема
+    text: Текст
+    reply_to: Ответить на
+    reply_name: Имя для ответа
+    details: Детали
+    recipients: Получатели
+    recipient: Получатель
+    no_recipients: Нет получателей
+    stats: Статистика
+    hello: Здравствуйте
+    regards: С уважением
+    design: Дизайн
+    preview: Предпросмотр
+    review_and_send: Просмотреть и отправить
+    is_notification_enabled: Уведомления активированы?
+    macros:
+        MemberData: Данные клиента
+        BillingAddressData: Данные платежного адреса
+        DeliveryAddressData: Данные адреса доставки
+        ShareData:  Данные покупок
+        ClientData: Данные клиента
+        Pages: Страницы
+    type: Тип
+    status:
+        status: Статус
+        delivered: Доставлено
+        opened: Открыто
+        clicked: Кликнуто
+        failed: Ошибка
+        bounced: Вернулось
+    types:
+        manual: Ручное
+        automated: Автоматическое
+        activation: Активация
+        weekly: Еженедельные
+        feedback: Отзывы
+        renewal: Обновление
+        lapsed: Просрочка
+        delivery_day: День доставки
+    recipients_num: Количество получателей
+    activation:
+        subject: Сервис активирован
+        your_membership_with: Ваш сервис с
+        membership_activated: был активирован
+    weekly:
+        subject: Еженедельное напоминание
+        title: Еженедельное уведомление о ваших покупках
+        skip_week: Нажмите здесь, чтобы пропустить неделю
+        customize_share: Нажмите здесь, чтобы настроить свою покупку
+    feedback:
+        subject: Уведомление об обратной связи
+        title: Вы довольны своим последним заказом?
+    renewal:
+        subject: Продление сервиса
+        title: Уведомление об обновлении вашего сервиса
+        your_renewal_date: дата завершения ваших покупок это
+        renew_link: Нажмите здесь, чтобы просмотреть свои покупки
+    lapsed:
+        subject: Сервис истек
+        title: Ваш сервис истек
+    delivery_day:
+        subject: Уведомление о дне доставки
+        title: Уведомление о дне доставке вашего сервиса
+        profile_link: Нажмите здесь, чтобы посмотреть свой профиль
+        your_delivery_day: ваш день доставки
+pos:
+    entry: Запись
+    products_search: Поиск по названию продукта, SKU...
+    customers_search: Поиск по клиентам
+    received_amount: Полученная сумма
+    change: Сдача
+    total: Всего
+    new_customer: Новый покупатель
+    cancel_order: Отменить заказ
+    next_order: Следующий заказ
+    products: Товары
+    orders: Заказы
+    order_id: ID заказа
+    counter: Номер
+    order_date: Дата заказа
+    receipt: Чек
+    summary: Итог
+    daily_sales: Ежедневные общие продажи
+    average_sale: Средняя цена продажи
+    hour_sales: Ежедневные продажи по часам
+    most_purchased: Самый покупаемый товар
+    month_average_sales: Среднесуточные продажи за последние 30 дней
+    average_sale_price: Средняя цена продажи за последние 30 дней
+product:
+    pricing: Ценообразование
+    category: Категория
+    name: Название
+    product: Товар
+    description: Описание
+    product_weight: Вес (%format%)
+    price: Розничная цена
+    delivery_price: Цена доставки
+    sku: SKU
+    pay_by: Оплата за
+    item: Единица
+    qty: К-во
+    weight: Вес
+    filter: Фильтр
+    filters: Фильтры
+    search_by: ПОИСК ПО НАИМЕНОВАНИЮ, ТОВАРУ, ОПИСАНИЮ...
+    vendor_eatery: Продавец - Столовая
+    vendor_market: Продавец - Рынок
+membership:
+    profile_link: Ссылка на профиль
+    view_profile: Просмотреть профиль
+    membership: Сервис
+    login_description: Введите адрес электронной почты, нажмите кнопку «Отправить», и мы отправим вам ссылку на ваш профиль.
+    client: Клиент
+    access_sent: Доступ был отправлен на вашу электронную почту. Пожалуйста, проверьте свою электронную почту и перейдите по ссылке.
+    profile: Профиль
+    automated_emails: Автоматизированные письма
+    send_access_tip: Введите ваш email и нажмите кнопку Отправить. Вы получите письмо со ссылкой на ваш профиль.
+    notifies:
+        activation: Уведомление об активации
+        weekly: Еженедельное уведомление
+        renewal: Уведомление о продлении
+        lapsed: Уведомление о просрочке
+        delivery_day: Уведомление о дне доставке
+        feedback: Уведомление об обратной связи
+    no_changes: Без изменений
+    changes_made: Внесены изменения
+    changes_saved: Сохранено
+    skip_a_week: Пропустить неделю
+    email_access:
+        control: Контроль членства
+        hello: Здравствуйте
+        link_description: Это ссылка на вашу сервисную панель
+        profile: Ваш профиль
+    instruction:
+        instructions: Инструкции
+        first: Когда кнопка зеленая, вы получите свою покупку.
+        second: Когда кнопка красного цвета, мы пропустим вашу покупку.
+        third: Нажмите зеленую кнопку «Пропустить», чтобы пропустить свою покупку.
+        fourth: Нажмите красную кнопку «Получить», чтобы получить свою покупку.
+    pickups:
+        share_date: Дата получения
+        time_to_skip: Время для пропуска
+        status: Статус
+        skip: Пропустить
+        receive: Получить
+        suspended: Приостановлено
+        time_past: Время пропустить эту неделю прошло.
+    customize:
+        customize: Настроить
+        share_skipped: Вы пропускаете свою покупку на этой неделе.
+        next_share: Покупка следующей недели
+        customize_share: Настроить свою покупку
+        product_name: Наименование товара
+        weight: Вес
+        price: Цена
+        total: Всего
+    feedback:
+        feedback: Отзыв
+        satisfied: Удовлетворен
+        not_satisfied: Не удовлетворен
+        reason: Причина
+        reason_placeholder: ПОЖАЛУЙСТА, СКАЖИТЕ НАМ, ПОЧЕМУ ВЫ УДОВЛЕТВОРЕНЫ / НЕ УДОВЛЕТВОРЕНЫ ВАШЕЙ ПОКУПКОЙ
+    renew:
+        renew: Возобновить
+        weeks: недель
+        qty: к-во
+        in_basket: В вашей корзине
+        filter_by: Фильтр по
+        shares: Покупки
+        products: Товары
+        renew_current_shares: Обновить текущие покупки
+        add_new_shares: Добавить новые покупки
+        shares_left: Покупок осталось
+        each: каждый
+        per_item: за единицу
+        per_Kg: за Кг
+        per_Lbs: за Lbs
+        cart:
+            cart: Корзина
+            subtotal: Подытог
+            delivery: Доставка
+            total: Всего
+        payment_method: Метод оплаты
+        location:
+            home_delivery: Доставка на дом
+            different_billing_address: Платежный адрес отличается от адреса доставки
+            expired_order_time: Время заказа на эту дату прошло.
+            delivery_day: День доставки
+            delivery_date: Дата доставки
+            delivery_description: Описание доставки
+            pickup_day: День получения
+            pickup_date: Дата получения
+            pickup_description: Описание получения
+            time_to_order: Время до заказа
+        payment_methods:
+            cash: Наличные
+            card: Кредитная карта
+            venmo: Venmo
+        addresses:
+            addresses: Адреса
+            delivery_address: Адрес доставки
+            billing_address: Платежный адрес
+            billing_and_delivery_address: Адрес для Счета и Доставки
+        summary: Итог
+    testimonial:
+        testimonial: Отзыв
+        share_testimonial: Поделитесь своим отзывом
+invoice:
+    invoice: Счет
+    date_created: Дата создания
+    title: Квитанция для фермерского рынка
+    transaction: Транзакция
+    amount_paid: Оплачено
+    total_owed: Всего долга
+    paid: Оплачено
+    unpaid: Неоплачено
+    is_paid: Оплачено?
+blog:
+    title: Заголовок
+    text: Текст
+    thumb: Миниатюра
+website:
+    blog:
+        blog_title: Создать новую запись в блоге
+        create_post: Новая запись в блоге
+        posts: Публикации
+        edit_post: Изменить публикацию
+    create_website: Создать сайт
+    manage_website: Управление сайтом
+    domain_name: Доменное имя
+    website_name: Название сайта
+    templates: Шаблоны
+    pages: Страницы
+    view_website: Просмотр вашего сайта
+    media:
+        media_gallery: Медиа Галерея
+        preview: Предварительный просмотр
+        file_info: Информация о файле
+        size: Размер
+        format: Формат
+        no_file_selected: Файл не выбран
+        drag_and_drop_title: Перетащите файлы сюда …
+        recommended_dimension: Рекомендуемое разрешение
+    editor:
+        market: Маркет
+builder:
+    asset_manager:
+        add_button: 'Добавить изображение'
+        modal_title: 'Выбрать изображение'
+        upload_title: 'Переместите файлы сюда для закрузки'
+    dom_components:
+        box: 'Элемент'
+        wrapper: 'Контейнер'
+        header: 'Заголовок'
+        text: 'Текст'
+        comment: 'Комментарий'
+        image: 'Изображение'
+        video: 'Видео'
+        label: 'Метка'
+        link: 'Ссылка'
+        map: 'Карта'
+    panels:
+        buttons:
+            preview: 'Предпросмотр'
+            fullscreen: 'Полный экран'
+            sw-visibility: 'Просмотреть компоненты'
+            export-template: 'Просмотреть код'
+            open-sm: 'Открыть менеджер стилей'
+            open-tm: 'Настройки'
+            open-layers: 'Открыть менеджер слоев'
+            open-blocks: 'Открыть блоки'
+            save-db: 'Сохранить в базу данных'
+    selector_manager:
+        label: 'Классы'
+        selected: 'Выбран'
+        emptyState: '- Состояние элемента -'
+        states:
+            hover: 'Накрыт'
+            active: 'Клик'
+            odd: 'Любой'
+    style_manager:
+        empty: 'Выберите элемент перед использованием менеджера стилей'
+        layer: 'Слой'
+        file_button: 'Изображения'
+        sectors:
+            general: 'Основные'
+            layout: 'Слой'
+            typography: 'Шрифты'
+            decorations: 'Декорация'
+            extra: 'Дополнительно'
+            flex: 'Гибкость'
+            dimension: 'Размеры'
+    trait_manager:
+        empty: 'Выберите элемент перед использованием Trait Manager'
+        label: 'Настройки компонента'
+    plugins:
+        basic:
+            category: Основные
+            label_column:
+                1: 1 Колонка
+                2: 2 Колонки
+                3: 3 Колонки
+                37: 2 Колонки 3/7
+            label_text: Текст
+            label_link: Ссылка
+            label_image: Изображение
+            label_video: Видео
+            label_map: Карта
+        header:
+            label: Заголовок
+            content: Вставьте свой текст заголовка здесь
+        widgets:
+            category: Виджеты
+widget:
+    contact:
+        contact: Контакт
+        add_contact: Добавить контакт
+        name: Имя
+        email: Email
+        message: Сообщение
+    subscription:
+        subscription: Подписка
+        subscribe: Подписаться
+        tip: Подпишитесь на статьи, новости и обновления.
+    testimonials:
+        testimonials: Отзывы
+        our_testimonials: Наши отзывы
+    market:
+        market: Рынок
+        our_market: Наш маркет
+    embed: Чтобы вставить этот виджет на свой сайт, скопируйте HTML-код и вставьте его на свой сайт.
+merchant:
+    merchant: Торговый счет
+    merchant_setup: Настройка торгового счета
+    merchant_select: Выбор торгового счета
+    key: Ключ
+    pin: Пин
+    currency: Валюта
+    sandbox: Песочница
+    is_sandbox: Тестовый режим?
+company:
+    statistics:
+        statistics: Статистика
+        page_views: Просмотры страниц
+        revenue: Доходы
+label:
+    image: Изображение
+    all: Все
+    completed: Завершенный
+    pending: В ожидании
+    day: День
+    month: Месяц
+    year: Год
+    last: Последние
+    today: Сегодня
+    yesterday: Вчера
+    this_week: Эта неделя
+    this_month: Этот месяц
+button:
+    add: Добавить
+    yes: Да
+    no: Нет
+    save: Сохранить
+    send: Отправить
+    return: Вернуться на сайт
+    close: Закрыть
+    change: Изменить
+    continue: Продолжить
+    pay: Оплатить
+    subscribe: Подписаться
+    download: Скачать
+    purchase: Оплатить
+    upload: Загрузить
+    create: Создать
+    browse: Просмотреть
+    remove: Удалить
+    select: Выбрать
+    selected: Выбрано
+    edit: Изменить
+    choose_file: Выбрать файл
+    clear: Очистить
+    cancel: Отменить
+table:
+    amount: Сумма
+    save: Сохранить
+    edit: Изменить
+    delete: Удалить
+    active: Активно
+    inactive: Неактивно
+    name: Название
+    view: Просмотр
+    print: Печать
+    add_items: Добавить
+    date: Дата
+    updated_at: Обновлено
+    created_at: Создано
+choices:
+    farm: Ферма
+    crop: Урожай
+notifications:
+    notification: Уведомления
+    no_new_notifications: Нет новых уведомлений

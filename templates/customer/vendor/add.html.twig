@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            {{ include ("customer/forms/vendor.html.twig") }}
+        </div>
+    </div>
+{% endblock body %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{{ asset('js/collections.js') }}?v=1"></script>
+{% endblock %}

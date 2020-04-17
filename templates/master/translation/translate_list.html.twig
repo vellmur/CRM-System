@@ -1,0 +1,86 @@
+<div class="panel panel-default">
+    <div class="panel-head">
+        <h6><i class="icon-file-text2"></i> {{ language }}</h6>
+    </div>
+    <div class="panel-body"></div>
+</div>
+
+{{ form_start(form) }}
+    <div class="panel panel-default">
+        <div class="table-responsive" id="content_list">
+            <table class="table nowrap" id="scrollableTable">
+                <thead>
+                <tr class="heading-style">
+                    <th>{{ 'translation.key'|trans({}, 'labels') }}</th>
+
+                    {% if app.request.get('locale') != 'en' %}
+                        <th>{{ 'translation.original'|trans({}, 'labels') }}</th>
+                    {% endif %}
+
+                    <th>{{ 'translation.translation'|trans({}, 'labels') }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for key, translation in form.translations %}
+                    <tr>
+                        <td style="max-width: 200px;">{{ translation.vars.value.key.key }}</td>
+                        {% if app.request.get('locale') != 'en' %}
+                            <td style="max-width: 200px;">
+                                {{ originalLabels[translation.vars.value.key.key] is defined
+                                ? originalLabels[translation.vars.value.key.key] }}
+                            </td>
+                        {% endif %}
+                        <td>
+                            {{ form_widget(translation) }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="panel-actions">
+            <button type="submit" class="btn btn-action">{{ 'button.save'|trans({}, 'labels') }}</button>
+        </div>
+    </div>
+{{ form_end(form) }}
+
+{% block scripts %}
+    <script src="{{ asset('js/plugins/tables/datatables/datatables.min.js') }}"></script>
+    <script src="{{ asset('js/pages/translation/table_scrollable.js') }}?v=1"></script>
+    <script>
+        $(document).ready(function() {
+            let labels = {
+                'search': '{{ 'translation.search'|trans({}, 'labels') }}',
+                'no_results': '{{ 'translation.no_results'|trans({}, 'labels') }}',
+                'showing': '{{ 'translation.showing'|trans({}, 'labels') }}',
+                'to': '{{ 'translation.to'|trans({}, 'labels') }}',
+                'of': '{{ 'translation.of'|trans({}, 'labels') }}',
+                'entries': '{{ 'translation.entries'|trans({}, 'labels') }}',
+                'filtered_from': '{{ 'translation.filtered_from'|trans({}, 'labels') }}',
+                'total_entries': '{{ 'translation.total_entries'|trans({}, 'labels') }}'
+            };
+
+            let options = {
+                scrollY: 480,
+                pageLength: 100,
+                language: {
+                    search: labels['search'] + ': ',
+                    zeroRecords: labels['no_results'],
+                    info: labels['showing'] + " _START_ " + labels['to'] + " _END_ " + labels['of'] + " _TOTAL_ " + labels['entries'],
+                    infoFiltered: '(' + labels['filtered_from'] +  " _TOTAL_ " + labels['total_entries'] + ')'
+                }
+            };
+
+            dataTableInit('#scrollableTable', options, [2]);
+        });
+    </script>
+    <style>
+        .dataTable td {
+            word-break: break-word;
+            white-space: normal !important;
+        }
+        .dataTable, .dataTables_scrollHeadInner {
+            width: 100% !important;
+        }
+    </style>
+{% endblock %}

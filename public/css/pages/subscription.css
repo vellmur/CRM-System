@@ -1,0 +1,32 @@
+.summary-title {
+    font-weight: 500;
+}
+.summary-block {
+    margin: 10px 0;
+}
+.summary-items {
+    padding-bottom: 10px;
+}
+.summary-item {
+    padding: 10px 10px;
+    margin: 0 10px !important;
+    border-bottom: 1px solid #ddd;
+}
+.summary-item-name {
+    float: left;
+}
+.summary-item-price {
+    text-align: right;
+    font-weight: 500;
+}
+.donations-options {
+    margin: 0 0 10px 30px;
+}
+.donations-options > .validation-error-label {
+    margin-left: -8px;
+    margin-top: 0;
+}
+.payment-methods > .validation-error-label {
+    margin-left: 22px;
+    margin-top: -10px;
+}

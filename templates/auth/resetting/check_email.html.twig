@@ -1,0 +1,15 @@
+{% extends "front-layout.html.twig" %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-body text-center">
+                    <h1>{{ 'resetting.email_sent'|trans({}, 'messages') }}</h1>
+                    <p style="margin-top: 20px;">{{ 'resetting.check_your_inbox'|trans({}, 'messages') }}</p>
+                    <p>{{ 'resetting.resetting_timeout'|trans({'%hours%': tokenLifetime}, 'messages') }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

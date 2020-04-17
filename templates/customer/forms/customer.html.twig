@@ -1,0 +1,360 @@
+{{ form_start(form, {'attr': {'class': 'form-horizontal jquery-validation'} }) }}
+    <div class="form-group {% if form.firstname.vars.errors|length %} has-error {% endif %}">
+        {{ form_label(form.firstname) }}
+        <div class="col-md-10 col-sm-9 col-xs-7">
+            {{ form_widget(form.firstname)}}
+            {% if not form.firstname.vars.valid %}
+                <label id="{{ form.firstname.vars.id }}-error" class="validation-error-label" for="{{ form.firstname.vars.id }}">
+                    {{ form.firstname.vars.errors[0].message }}
+                </label>
+            {% endif %}
+        </div>
+    </div>
+    <div class="form-group {% if form.lastname.vars.errors|length %} has-error {% endif %}">
+        {{ form_label(form.lastname) }}
+        <div class="col-md-10 col-sm-9 col-xs-7">
+            {{ form_widget(form.lastname)}}
+            {% if not form.lastname.vars.valid %}
+                <label id="{{ form.lastname.vars.id }}-error" class="validation-error-label" for="{{ form.lastname.vars.id }}">
+                    {{ form.lastname.vars.errors[0].message }}
+                </label>
+            {% endif %}
+        </div>
+    </div>
+    <div class="form-group {% if form.phone.vars.errors|length %} has-error {% endif %}">
+        {{ form_label(form.phone) }}
+        <div class="col-md-10 col-sm-9 col-xs-7">
+            {{ form_widget(form.phone)}}
+            {% if not form.phone.vars.valid %}
+                <label id="{{ form.phone.vars.id }}-error" class="validation-error-label" for="{{ form.phone.vars.id }}">
+                    {{ form.phone.vars.errors[0].message }}
+                </label>
+            {% endif %}
+        </div>
+    </div>
+    <div class="form-group {% if form.email.vars.errors|length %} has-error {% endif %}">
+        {{ form_label(form.email) }}
+        <div class="col-md-10 col-sm-9 col-xs-7">
+            {{ form_widget(form.email)}}
+            {% if not form.email.vars.valid %}
+                <label id="{{ form.email.vars.id }}-error" class="validation-error-label" for="{{ form.email.vars.id }}">
+                    {{ form.email.vars.errors[0].message }}
+                </label>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Show share day field in edit member page (when id exists) only for Contacts or Leads with saved Delivery address -->
+    {% if form.vars.value.id is not null and (status == 'lead' or status == 'contact') and form.vars.value.getAddressByType('Delivery') %}
+        <div {% if form.deliveryDay.vars.errors|length %} class="form-group has-error" {% else %} class="form-group" {% endif %}>
+            {{ form_label(form.deliveryDay) }}
+            <div class="col-md-10 col-sm-9 col-xs-7">
+                {{ form_widget(form.deliveryDay)}}
+                {% if not form.deliveryDay.vars.valid %}
+                    <label id="{{ form.deliveryDay.vars.id }}-error" class="validation-error-label" for="{{ form.deliveryDay.vars.id }}">
+                        {{ form.deliveryDay.vars.errors[0].message }}
+                    </label>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="form-group {% if form.notes.vars.errors|length %} has-error {% endif %}">
+        {{ form_label(form.notes) }}
+        <div class="col-md-10 col-sm-9 col-xs-7">
+            {{ form_widget(form.notes)}}
+            {% if not form.notes.vars.valid %}
+                <label id="{{ form.notes.vars.id }}-error" class="validation-error-label" for="{{ form.notes.vars.id }}">
+                    {{ form.notes.vars.errors[0].message }}
+                </label>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if not app.session.get('modules_statuses') or 'shares' not in app.session.get('modules_statuses').disabled %}
+        <h6><i class="icon-cart5"></i> {{ 'customer.share.share'|trans({}, 'labels') }}</h6><hr>
+        <div class="collection shares-collection" data-collection="shares"
+             data-prototype='{{include('parts/collection-theme.twig',{'form':form.shares.vars.prototype|e('html_attr') })}}'>
+            {% for key, share in form.shares %}
+                <div class="collection_item">
+                    <div class="form-group {% if share.share.vars.errors|length %} has-error {% endif %}">
+                        {{ form_label(share.share) }}
+                        <div class="col-md-10 col-sm-9 col-xs-7">
+                            {% if share.vars.data.status is not null and share.vars.data.statusName == 'ACTIVE' %}
+                                {{ form_widget(share.share, {'attr': {'class': 'select custom-read-only'}})}}
+                            {% else %}
+                                {{ form_widget(share.share) }}
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% if share.vars.value.id and share.vars.data.typeName != 'PATRON' %}
+                        <div class="form-group">
+                            <label class="col-md-2 col-sm-3 col-xs-5 control-label"> {{ 'customer.share.status'|trans({}, 'labels') }}</label>
+                            <div class="col-md-10 col-sm-9 col-xs-7">
+                                <input type="text" value="{{ share.vars.data.statusName|trans({}, 'choices')  }}" class="form-control custom-read-only">
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="form-group {% if share.startDate.vars.errors|length %} has-error {% endif %}">
+                        {{ form_label(share.startDate) }}
+                        <div class="col-md-10 col-sm-9 col-xs-7">
+                            {{ form_widget(share.startDate, {'id': 'share' ~ share.vars.data.id})}}
+                            {% if not share.startDate.vars.valid %}
+                                <label id="{{ share.startDate.vars.id }}-error" class="validation-error-label" for="{{ share.startDate.vars.id }}">
+                                    {{ share.startDate.vars.errors[0].message }}
+                                </label>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if share.pickupsNum.vars.attr.class != 'hidden' %}
+                        <div class="form-group {% if share.pickupsNum.vars.errors|length %} has-error {% endif %}">
+                            {{ form_label(share.pickupsNum) }}
+                            <div class="col-md-10 col-sm-9 col-xs-7">
+                                {{ form_widget(share.pickupsNum) }}
+                                {% if not share.pickupsNum.vars.valid %}
+                                    <label id="{{ share.pickupsNum.vars.id }}-error" class="validation-error-label" for="{{ share.pickupsNum.vars.id }}">
+                                        {{ share.pickupsNum.vars.errors[0].message }}
+                                    </label>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% else %}
+                        {{ form_widget(share.pickupsNum) }}
+                    {% endif %}
+
+                    {% if share.sharesRemaining is defined %}
+                        <div class="form-group {% if share.sharesRemaining.vars.errors|length %} has-error {% endif %}">
+                            {{ form_label(share.sharesRemaining) }}
+                            <div class="col-md-10 col-sm-9 col-xs-7">
+                                {{ form_widget(share.sharesRemaining) }}
+                                {% if not share.sharesRemaining.vars.valid %}
+                                    <label id="{{ share.sharesRemaining.vars.id }}-error" class="validation-error-label" for="{{ share.sharesRemaining.vars.id }}">
+                                        {{ share.sharesRemaining.vars.errors[0].message }}
+                                    </label>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if share.renewalDate is defined %}
+                        <div class="form-group {% if share.renewalDate.vars.errors|length %} has-error {% endif %}">
+                            {{ form_label(share.renewalDate) }}
+                            <div class="col-md-10 col-sm-9 col-xs-7">
+                                {{ form_widget(share.renewalDate) }}
+                                {% if not share.renewalDate.vars.valid %}
+                                    <label id="{{ share.renewalDate.vars.id }}-error" class="validation-error-label" for="{{ share.renewalDate.vars.id }}">
+                                        {{ share.renewalDate.vars.errors[0].message }}
+                                    </label>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <div class="form-group {% if share.pickUpDay.vars.errors|length %} has-error {% endif %}">
+                        {{ form_label(share.pickUpDay) }}
+                        <div class="col-md-10 col-sm-9 col-xs-7">
+                            {{ form_widget(share.pickUpDay) }}
+                            {% if not share.pickUpDay.vars.valid %}
+                                <label id="{{ share.pickUpDay.vars.id }}-error" class="validation-error-label" for="{{ share.pickUpDay.vars.id }}">
+                                    {{ share.pickUpDay.vars.errors[0].message }}
+                                </label>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group {% if share.location.vars.errors|length %} has-error {% endif %}">
+                        {{ form_label(share.location) }}
+                        <div class="col-md-10 col-sm-9 col-xs-7">
+                            {{ form_widget(share.location) }}
+                            {% if not share.location.vars.valid %}
+                                <label id="{{ share.location.vars.id }}-error" class="validation-error-label" for="{{ share.location.vars.id }}">
+                                    {{ share.location.vars.errors[0].message }}
+                                </label>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% if share.vars.data.statusName == 'LAPSED'
+                        or (share.vars.data.typeName == 'PATRON' and share.vars.data.renewalDate|date('Y/m/d') < "now"|date('Y/m/d'))
+                    %}
+                        <button type="button" class="btn btn-danger btn-icon delete-collection-modal" id="share-{{ key }}" href="#">
+                            <i class="icon-trash"></i>
+                        </button>
+                    {% endif %}
+
+                    {% if share.vars.data.typeName == 'MEMBER' and pickups is defined and pickups|length
+                        and pickups[share.vars.data.id] is defined and pickups[share.vars.data.id]|length
+                    %}
+                        <button type="button" data-toggle="collapse" href="#pickups{{ share.vars.value.id }}" class="btn btn-action">
+                            {{ 'customer.add.list_shares'|trans({}, 'labels') }}
+                        </button>
+                        <div id="pickups{{ share.vars.value.id }}" class="panel-collapse collapse">
+                            {{ include ("customer/forms/pickups.html.twig", {pickups: pickups[share.vars.data.id]}) }}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <button type="button" class="btn btn-action add_collection_link"
+                    data-first-button-label="{{ 'customer.share.add_share'|trans({}, 'labels') }}"
+                    data-second-button-label="{{ 'customer.share.add_another_share'|trans({}, 'labels') }}">
+                    {{ form.shares|length
+                        ? 'customer.share.add_another_share'|trans({}, 'labels')
+                        : 'customer.share.add_share'|trans({}, 'labels')
+                    }}
+            </button>
+        </div>
+    {% endif %}
+    <h6><i class="icon-home2"></i> {{ 'customer.address.address'|trans({}, 'labels') }}</h6><hr>
+    <div class="collection address-collection"
+         data-collection="address"
+         data-prototype='{{ include('parts/collection-theme.twig', {'form': form.addresses.vars.prototype|e('html_attr') }) }}'
+    >
+        {% for key, address in form.addresses %}
+            <div class="collection_item address-item">
+                <div class="form-group {% if address.type.vars.errors|length %} has-error {% endif %}">
+                    {{ form_label(address.type) }}
+                    <div class="col-md-10 col-sm-9 col-xs-7">
+                        {{ form_widget(address.type)}}
+                        {% if not address.type.vars.valid %}
+                            <label id="{{ address.type.vars.id }}-error" class="validation-error-label" for="{{ address.type.vars.id }}">
+                                {{ address.type.vars.errors[0].message }}
+                            </label>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group {% if address.street.vars.errors|length %} has-error {% endif %}">
+                    {{ form_label(address.street) }}
+                    <div class="col-md-10 col-sm-9 col-xs-7">
+                        {{ form_widget(address.street)}}
+                        {% if not address.street.vars.valid %}
+                            <label id="{{ address.street.vars.id }}-error" class="validation-error-label" for="{{ address.street.vars.id }}">
+                                {{ address.street.vars.errors[0].message }}
+                            </label>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group {% if address.apartment.vars.errors|length %} has-error {% endif %}">
+                    {{ form_label(address.apartment) }}
+                    <div class="col-md-10 col-sm-9 col-xs-7">
+                        {{ form_widget(address.apartment)}}
+                        {% if not address.apartment.vars.valid %}
+                            <label id="{{ address.apartment.vars.id }}-error" class="validation-error-label" for="{{ address.apartment.vars.id }}">
+                                {{ address.apartment.vars.errors[0].message }}
+                            </label>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group {% if address.postalCode.vars.errors|length %} has-error {% endif %}">
+                    {{ form_label(address.postalCode) }}
+                    <div class="col-md-10 col-sm-9 col-xs-7">
+                        {{ form_widget(address.postalCode)}}
+                        {% if not address.postalCode.vars.valid %}
+                            <label id="{{ address.postalCode.vars.id }}-error" class="validation-error-label" for="{{ address.postalCode.vars.id }}">
+                                {{ address.postalCode.vars.errors[0].message }}
+                            </label>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group {% if address.region.vars.errors|length %} has-error {% endif %}">
+                    {{ form_label(address.region) }}
+                    <div class="col-md-10 col-sm-9 col-xs-7">
+                        {{ form_widget(address.region)}}
+                        {% if not address.region.vars.valid %}
+                            <label id="{{ address.region.vars.id }}-error" class="validation-error-label" for="{{ address.region.vars.id }}">
+                                {{ address.region.vars.errors[0].message }}
+                            </label>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group {% if address.city.vars.errors|length %} has-error {% endif %}">
+                    {{ form_label(address.city) }}
+                    <div class="col-md-10 col-sm-9 col-xs-7">
+                        {{ form_widget(address.city)}}
+                        {% if not address.city.vars.valid %}
+                            <label id="{{ address.city.vars.id }}-error" class="validation-error-label" for="{{ address.city.vars.id }}">
+                                {{ address.city.vars.errors[0].message }}
+                            </label>
+                        {% endif %}
+                    </div>
+                </div>
+                <button type="button" class="btn btn-icon btn-danger delete-collection-modal"
+                        id="address-{{ address.vars.value.id }}" href="#">
+                    <i class="icon-trash"></i>
+                </button>
+            </div>
+        {% endfor %}
+
+        <button type="button"
+                class="btn btn-action add_collection_link add-address"
+                {% if form.addresses|length == 2 or (form.addresses|length == 1 and form.addresses[0].type.vars.value == 2) %}
+                    style="display: none;"
+                {% endif %}
+        >{{ 'button.add'|trans({}, 'labels') }}</button>
+    </div>
+    <div class="form-actions text-right">
+        <button type="submit" class="btn btn-icon btn-success" id="btn-submit">
+            {{ 'button.save'|trans({}, 'labels') }}
+        </button>
+
+        {% if form.vars.value.id is not null %}
+            <button type="button" data-toggle="modal" href="#delete-modal"
+                    data-delete-path="{{ path('member_delete', {id: form.vars.value.id }) }}"
+                    class="btn btn-danger btn-icon">
+                <i class="icon-trash"></i>
+            </button>
+        {% endif %}
+    </div>
+
+    {% if form.deliveryDay is defined %}
+        {% do form.deliveryDay.setRendered %}
+    {% endif %}
+
+    {% do form.shares.setRendered %}
+    {% do form.addresses.setRendered %}
+{{ form_end(form) }}
+
+{{ include ("modal/modal-with-message.html.twig", {'id': 'address-modal'}) }}
+{{ include ("modal/modal-with-message.html.twig", {'id': 'share-modal'}) }}
+{{ include ("modal/modal-with-message.html.twig", {'id': 'delete-modal'}) }}
+
+<script src="{{ asset('js/pages/member/member.js') }}"></script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFudPQ3bgPztQLPBngp9B425BBl9q5Duo&libraries=places"></script>
+<script src="{{ asset('js/plugins/googleMapsSearch.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/collections.js') }}?v=1"></script>
+<script type="text/javascript" src="{{ asset('js/pages/member/addresses.js') }}"></script>
+<script>
+    $('#member_email').on('mouseleave', function () {
+        var $email = $(this);
+
+        if ($email.val().length > 5) {
+            var id = '{{ form.vars.value.id }}';
+
+            $.ajax({
+                url: '{{ path('member_check_email') }}',
+                type: "POST",
+                data: { id: id, email: $email.val(), client: '{{ app.user.team.client.id }}'},
+                success: function (response) {
+                    var link = jQuery.parseJSON(response).link;
+                    if (link !== undefined) {
+
+                        $email.tooltip('destroy');
+
+                        $email.tooltip({trigger: 'manual', placement: 'top', html: true, title: link})
+                            .attr('data-original-title', link)
+                            .tooltip('fixTitle')
+                            .tooltip('show');
+
+                        $email.parent().addClass('has-error');
+                    } else {
+                        $email.tooltip({trigger: 'manual', placement: 'top', html: true, title: link}).trigger('destroy');
+                        $email.parent().removeClass('has-error');
+                    }
+                },
+                error: function (response) {
+                    console.log(response)
+                }
+            });
+        }
+    });
+</script>

@@ -1,0 +1,21 @@
+<!-- Small modal -->
+<div id="information-modal" class="modal fade">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <button type="button" id='delete_modal_close' class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"><i class="icon-envelope"></i> <span id="information-modal-title">{{ subject is defined ? subject }}</span></h4>
+            </div>
+
+            <div class="modal-body with-padding">
+                <p id="information-modal-message">{{ message is defined ? message }}</p>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-action" data-dismiss="modal">OK</button>
+                <div class="data-area" id="data-area"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /small modal -->

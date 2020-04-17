@@ -1,0 +1,790 @@
+navigation:
+    module_crops: 'Module: Crops'
+    module_customers: 'Module: Customers'
+    module_company: 'Module: Company'
+    account:
+        account: Account
+        profile: Profile
+        users: Users
+        settings: Settings
+        subscription: Subscription
+        owner: Owner
+        employee: Employee
+        translation: Translation
+        logout: Log out
+    setup:
+        setup: Setup
+        plants: Plants
+        gardens: Gardens
+        notes: Notes
+        crops: Crops
+    crops:
+        crops: Manage crops
+        dashboard: Dashboard
+        tray_starts: Tray Starts
+        plants_in_garden: Plants in Garden
+        harvest_date: Harvest Date
+        end_of_garden: End of Garden
+        setup: Setup
+        crop: Crops
+    seeds:
+        manage_seeds: Manage Seeds
+        seeds: Seeds
+        inventory: Seed inventory
+    tasks:
+        tasks: Tasks
+        list: List
+    reports:
+        reports: Reports
+        garden: Garden
+        garden_history: Garden history
+        now_growing: Now growing
+        seed: Seed
+        share_day: Share day
+        what_we_grew: What we grew
+        where_to_plant: Where to plant
+    customers:
+        manage_customers: Manage customers
+        add: Add
+        location: Locations
+        search: Search
+        shares: Shares
+        suspend: Suspend
+        upload: Upload
+    emails:
+        emails: Emails
+        auto: Auto
+        drafts: Drafts
+        compose: Compose
+        logs: Logs
+    orders:
+        orders: Orders
+        available_plants: Available plants
+        for_members: For members
+        for_vendors: For vendors
+        harvest_list: Harvest list
+        packaging: Packaging
+    pos:
+        pos: POS
+        dashboard: Dashboard
+        entry: Entry
+        orders: Orders
+    products:
+        products: Products
+        add: Add
+        pricing: Pricing
+        search: Search
+    vendors:
+        vendors: Vendors
+        add: Add
+        search: Search
+    website:
+        website: Website
+        blog: Blog
+        create_website: Create Website
+        manage_website: Manage Website
+        media_gallery: Media Gallery
+    widgets:
+        widgets: Widgets
+    tools:
+        tools: Tools
+        editor: Editor
+        invoices: Invoices
+        merchant: Merchant
+        statistics: Statistics
+    help:
+       help: Help
+       support: Support
+account:
+    profile:
+        profile: Profile
+        referral_link: Your referral link
+        membership_link: Your membership Sign up link
+    subscription: Subscription
+    settings:
+        settings: Settings
+        method: Method
+        description: Description
+        payment_methods: Payment methods
+        delivery_price: Delivery price
+        time_to_order: Time to order
+        when_to_disable: When to disable
+        day_before: Day before
+        day_of: Day of
+        crops_enabled: Turn Module Crops on or off
+        shares_enabled: Turn Module Customer share functionality on or off
+        crop_module: Module Crop
+        customer_module: Module Customer
+        company_module: Module Company
+        client_name: Farm or garden name
+        my_settings: Profile
+        firstname: Firstname
+        lastname: Lastname
+        country: Country
+        region: State/Province
+        postal_code: Postal code
+        city: City
+        timezone: Time zone
+        email: Email
+        region_placeholder: Choose a state/province
+        city_placeholder: Choose a city
+        country_placeholder: Choose a country
+        date_format: Date format
+        weight_format: Weight
+        language: Language
+        form_repeat_password: Repeat password
+        new_password: New password
+        currency: Currency
+    payment:
+        payment: Payment
+        module: Module
+        crops: Crops
+        customers: Customers
+        company: Company
+        price: Price
+        description: Description
+        pay: Pay
+        card:
+            card: Credit card
+            name: Name on card
+            number: Card nubmer
+    users:
+        users: Users
+        role: Account type
+        owner: Owner
+        employee: Employee
+        language: Language
+        date_format: Date format
+        new_password: New password
+        prev_password: Previous password
+        change_password: Change password
+        successful_saving: Successful saving!
+        change_password_for_user: Change password for user
+        username: Username
+        email: Email
+        password: Password
+        repeat_password: Repeat password
+translation:
+    translation: Translation
+    language: Language
+    key: Key
+    keys: Keys
+    original: Original
+    domain: Domain
+    search: Search
+    progress: Translation progress
+    no_results: No matching records found
+    showing: Showing
+    entries: entries
+    to: to
+    of: of
+    filtered_from: filtered from
+    total_entries: total entries
+setup:
+    gardens:
+        rowsNum: How many rows does your farm have?
+        sameLength: Are all of your rows the same length?
+        rowsLength: How long are your rows?
+        gardens: Gardens
+        name: Name
+        rows: Rows
+        length: Length
+        area: Area
+        not_removable_garden: Garden with crops can't be removed.
+    crops:
+        add_crop: Add crop
+        edit_crop: Edit Crop
+        plant: Plant
+        plant_name: Plant name
+        tray_starts: Tray starts
+        trays_num: '# of trays'
+        plants_num: '# of plants'
+        seeds_num: '# of seeds'
+        start_date: Start date
+        days_in_tray: Days in tray
+        planted_in: Planted in
+        plant_in_garden:  Plant in garden
+        garden: Garden
+        garden_plants: Plants in Garden
+        plant_date: Plant date
+        days_in_garden: Days in garden
+        harvest_date: Harvest date
+        end_date: End date
+        end_of_garden: End of garden
+    notes:
+        notes: Notes
+        week: Week
+        comment: Comment
+    plants:
+        plants: Plants
+        family_name: Family name
+        name: Plant name
+        subname: Sub name
+        active_button_lock: Plants that are currently in a garden can not be Inactive.
+    seeds:
+        order_date: Order date
+crops:
+    search: Search
+    search_by: Search by plant name, garden name...
+    records_found: Records found
+    dashboard:
+        dashboard: Dashboard
+        open_gardens: Open garden(s)
+        gardens: Gardens
+        average_days_in_tray: Average days in tray
+        days_until_harvest: Days until harvest
+        average_days_in_garden: Average days in garden
+        notes_for_current_week: Notes for current week
+        current_trays: Current trays by days
+        seeds_amount: Seed inventory
+        week: Week
+        note: Note
+seeds:
+    seed_vendor: Seed vendor
+    company: Company
+    seed_order: Seed order
+    order_number: Order number
+    order_date: Order date
+    seeds: Seeds
+    plant: Plant
+    plant_name: Plant name
+    seeds_qty: Seeds qty
+    seed_inventory: Seed inventory
+    notification: Notification
+    denied_remove:
+        company_order_removing: Company with orders can't be removed.
+        seed_order_removing: Order with seeds can't be removed.
+tasks:
+    add_task: Add task
+    type: Type
+    description: Description
+    employee: Employee
+    date_to_complete: Date to be completed
+    date_completed: Date completed
+report:
+    report: Report
+    garden_report: Report about Gardens
+    open_gardens: Open garden(s)
+    count: Count
+    year: Year
+    history:
+        plant_family: Plant family
+customer:
+    customer: Customer
+    add:
+        lead: Lead
+        firstname: First name
+        lastname: Last name
+        phone: Phone
+        email: Email
+        notes: Notes
+        list_shares: List shares
+        delivery_day: Delivery day
+    share:
+        share: Share
+        shares: Shares
+        type: Type
+        status: Status
+        renewal_date: Renewal date
+        remaining_shares: Remaining shares
+        share_day: Share day
+        order_day: Order day
+        share_location: Share location
+        order_location: Order location
+        add_share: Add share
+        add_another_share: Add another share
+        shares_num: How many shares
+        start_date: Start date
+        order_date: Order date
+        denied_remove: Share with members can't be removed.
+    address:
+        address: Address
+        type: Address type
+        street: Street
+        apartment: Apartment
+        region: Province/State
+        city: City
+        postal_code: Postal code
+        types:
+           delivery: Delivery
+           billing: Billing
+           billing_and_delivery: Billing and Delivery
+    level:
+        name: Name
+        description: Description
+        price: Price
+    location:
+        location: Location
+        locations: Locations
+        name: Name
+        description: Description
+        hours: Hours
+        denied_remove: Location with shares can't be removed.
+    search:
+        search: Search
+        share: Share
+        total: Total
+        pending: Pending
+        active: Active
+        renewal_overdue: Renewal overdue
+        lapsed: Lapsed
+        new_in_last: New in last %days% days
+        open_orders: Open orders
+        todays_orders: Today's orders
+        future_orders: Future orders
+        filter: Filter
+        contact: Contact
+        contacts: Contacts
+        lead: Lead
+        leads: Leads
+        customer: Customer
+        customers: Customers
+        member: Member
+        members: Members
+        patron: Patrons
+        patrons: Patrons
+        records_found: Records found
+        search_by_placeholder: SEARCH BY CUSTOMER, EMAIL, SHARE...
+        search_by: SEARCH BY CUSTOMER
+    suspend:
+        suspend: Suspend shares
+        week: Week
+        status: Status
+        suspend_btn: Suspend
+        suspended: Suspended
+    upload:
+        upload: Upload
+        upload_as: Upload data as
+        supported_formats: Supported formats
+        spreadsheet: spreadsheet
+        max_file_size: Maximum file size for upload
+        rows_num: Number of rows in the file to upload
+        upload_results: Uploading results
+        rows_of: rows of
+        in_file_uploaded: in the file were uploaded successfully
+        in_file_not_uploaded: in the file were not uploaded
+    orders:
+        plants: Plants
+        active_plants: Active plants
+        available_plants: Available plants
+        for_members: For members
+        start_date: Start date
+        end_date: End date
+        for_vendors: For vendors
+        vendor: Vendor
+        order_date: Order date
+        total_weight: Total weight
+        units: Units
+        order: Order
+    vendor:
+        vendor: Vendor
+        contacts: Contacts
+        name: Name
+        category: Category
+        order_day: Order day
+        status: Status
+        search_by_placeholder: SEARCH BY VENDOR
+        vendor_activated: Vendor is now activated!
+emails:
+    subject: Subject
+    text: Text
+    reply_to: Reply to
+    reply_name: Reply name
+    details: Details
+    recipients: Recipients
+    recipient: Recipient
+    no_recipients: No recipients
+    stats: Stats
+    hello: Hello
+    regards: Regards
+    design: Design
+    preview: Preview
+    review_and_send: Review and send
+    is_notification_enabled: Is notification enabled?
+    macros:
+        MemberData: Customer data
+        BillingAddressData: Billing address data
+        DeliveryAddressData: Delivery address data
+        ShareData:  Share data
+        ClientData: Client data
+        Pages: Pages
+    type: Type
+    status:
+        status: Status
+        delivered: Delivered
+        opened: Opened
+        clicked: Clicked
+        failed: Failed
+        bounced: Bounced
+    types:
+        manual: Manual
+        automated: Automated
+        activation: Activation
+        weekly: Weekly
+        feedback: Feedback
+        renewal: Renewal
+        lapsed: Lapsed
+        delivery_day: Delivery day
+    recipients_num: Number of recipients
+    activation:
+        subject: Membership Activated
+        your_membership_with: Your membership with
+        membership_activated: has been activated
+    weekly:
+        subject: Membership Weekly Reminder
+        title: Your membership weekly email reminder
+        skip_week: Click here to skip a week
+        customize_share: Click here to customize your share
+    feedback:
+        subject: Feedback notification
+        title: Are you satisfied with your recent order?
+    renewal:
+        subject: Membership Renewal
+        title: Your membership renewal notification
+        your_renewal_date: your renewal date is
+        renew_link: Click here to renew your membership
+    lapsed:
+        subject: Membership Lapsed
+        title: Your membership has lapsed
+    delivery_day:
+        subject: Delivery day notification
+        title: Your membership delivery day notification
+        profile_link: Click here to view your profile
+        your_delivery_day: your delivery day is
+pos:
+    entry: Entry
+    products_search: Search by Product name, SKU...
+    customers_search: Search by Customers
+    received_amount: Received amount
+    change: Change
+    total: Total
+    new_customer: New customer
+    cancel_order: Cancel order
+    next_order: Next order
+    products: Products
+    orders: Orders
+    order_id: Order ID
+    counter: Counter
+    order_date: Order date
+    receipt: Receipt
+    summary: Summary
+    daily_sales: Daily total sales
+    average_sale: Average sale price
+    hour_sales: Daily sales by hour
+    most_purchased: Most purchased product
+    month_average_sales: The average daily sales for the past 30 days
+    average_sale_price: The average sale price for the past 30 days
+product:
+    pricing: Pricing
+    category: Category
+    name: Name
+    product: Product
+    description: Description
+    product_weight: Weight (%format%)
+    price: Retail price
+    delivery_price: Delivery price
+    sku: SKU
+    pay_by: Pay by
+    item: Item
+    qty: Qty
+    weight: Weight
+    filter: Filter
+    filters: Filters
+    search_by: SEARCH BY NAME, PRODUCT, DESCRIPTION...
+    vendor_eatery: Vendor - Eatery
+    vendor_market: Vendor - Market
+membership:
+    profile_link: Profile link
+    view_profile: View profile
+    membership: Membership
+    login_description: Enter your email, click the Send button and we will send you a link to your profile.
+    client: Client
+    access_sent: Access was sent to your email. Please check your email and go to the link.
+    profile: Profile
+    automated_emails: Automated emails
+    send_access_tip: Enter in your email and click the Send button. You will receive an email with a link to your profile.
+    notifies:
+        activation: Activation notification
+        weekly: Weekly notification
+        renewal: Renewal notification
+        lapsed: Lapsed notification
+        delivery_day: Delivery day notification
+        feedback: Feedback notification
+    no_changes: No changes
+    changes_made: Changes made
+    changes_saved: Auto saved
+    skip_a_week: Skip a week
+    email_access:
+        control: Membership control
+        hello: Hello
+        link_description: This is a link to your membership panel
+        profile: Your profile
+    instruction:
+        instructions: Instructions
+        first: When the button is Green, you will receive your share.
+        second: When the button is Red, we will skip your share.
+        third: Click the Green "Skip" button to skip your share.
+        fourth: Click the Red "Receive" button to receive your share.
+    pickups:
+        share_date: Share date
+        time_to_skip: Time to skip
+        status: Status
+        skip: Skip
+        receive: Receive
+        suspended: Suspended
+        time_past: The time to skip this week has past.
+    customize:
+        customize: Customize
+        share_skipped: You are skipping your share this week.
+        next_share: Next week share
+        customize_share: Customize your share
+        product_name: Product name
+        weight: Weight
+        price: Price
+        total: Total
+    feedback:
+        feedback: Feedback
+        satisfied: Satisfied
+        not_satisfied: Not satisfied
+        reason: Reason
+        reason_placeholder: PLEASE TELL US WHY YOU ARE SATISFIED/NOT SATISFIED WITH YOUR SHARE
+    renew:
+        renew: Renew
+        weeks: weeks
+        qty: qty
+        in_basket: In your basket
+        filter_by: Filter by
+        shares: Shares
+        products: Products
+        renew_current_shares: Renew current shares
+        add_new_shares: Add new shares
+        shares_left: Shares left
+        each: each
+        per_item: per item
+        per_Kg: per Kg
+        per_Lbs: per Lbs
+        cart:
+            cart: Cart
+            subtotal: Subtotal
+            delivery: Delivery
+            total: Total
+        payment_method: Payment method
+        location:
+            home_delivery: Home delivery
+            different_billing_address: Billing address is different from Delivery address
+            expired_order_time: The time to order on this date has past.
+            delivery_day: Delivery day
+            delivery_date: Delivery date
+            delivery_description: Delivery description
+            pickup_day: Pickup day
+            pickup_date: Pickup date
+            pickup_description: Pickup description
+            time_to_order: Time to order
+        payment_methods:
+            cash: Cash
+            card: Credit card
+            venmo: Venmo
+        addresses:
+            addresses: Addresses
+            delivery_address: Delivery address
+            billing_address: Billing address
+            billing_and_delivery_address: Billing and Delivery address
+        summary: Summary
+    testimonial:
+        testimonial: Testimonial
+        share_testimonial: Share your testimony
+invoice:
+    invoice: Invoice
+    date_created: Date created
+    title: Receipt for Farm Market
+    transaction: Transaction
+    amount_paid: Amount paid
+    total_owed: Total amount owed
+    paid: Paid
+    unpaid: Unpaid
+    is_paid: Is paid
+blog:
+    title: Title
+    text: Text
+    thumb: Thumbnail
+website:
+    blog:
+       blog_title: Create new blog entry
+       create_post: New blog entry
+       posts: Posts
+       edit_post: Edit post
+    create_website: Create Website
+    manage_website: Manage Website
+    domain_name: Domain name
+    website_name: Website name
+    templates: Templates
+    pages: Pages
+    view_website: View your website
+    media:
+        media_gallery: Media Gallery
+        preview: Preview
+        file_info: File info
+        size: Size
+        format: Format
+        no_file_selected: No file selected
+        drag_and_drop_title: Drag & drop files here …
+        recommended_dimension: Recommended dimension
+    editor:
+        market: Market
+builder:
+    asset_manager:
+        add_button: 'Add image'
+        modal_title: 'Select Image'
+        upload_title: 'Drop files here or click to upload'
+    dom_components:
+        box: 'Box'
+        wrapper: 'Body'
+        header: 'Header'
+        text: 'Text'
+        comment: 'Comment'
+        image: 'Image'
+        video: 'Video'
+        label: 'Label'
+        link: 'Link'
+        map: 'Map'
+    panels:
+        buttons:
+            preview: 'Preview'
+            fullscreen: 'Fullscreen'
+            sw-visibility: 'View components'
+            export-template: 'View code'
+            open-sm: 'Open Style Manager'
+            open-tm: 'Settings'
+            open-layers: 'Open Layer Manager'
+            open-blocks: 'Open Blocks'
+            save-db: 'Save to database'
+    selector_manager:
+        label: 'Classes'
+        selected: 'Selected'
+        emptyState: '- State -'
+        states:
+            hover: 'Hover'
+            active: 'Click'
+            odd: 'Even/Odd'
+    style_manager:
+        empty: 'Select an element before using Style Manager'
+        layer: 'Layer'
+        file_button: 'Images'
+        sectors:
+            general: 'General'
+            layout: 'Layout'
+            typography: 'Typography'
+            decorations: 'Decorations'
+            extra: 'Extra'
+            flex: 'Flex'
+            dimension: 'Dimension'
+    trait_manager:
+        empty: 'Select an element before using Trait Manager'
+        label: 'Component settings'
+    plugins:
+        basic:
+            category: Basic
+            label_column:
+                1: 1 Column
+                2: 2 Columns
+                3: 3 Columns
+                37: 2 Columns 3/7
+            label_text: Text
+            label_link: Link
+            label_image: Image
+            label_video: Video
+            label_map: Map
+        header:
+            label: Title
+            content: Insert your header text here
+        widgets:
+            category: Widgets
+widget:
+    contact:
+        contact: Contact
+        add_contact: Add contact
+        name: Name
+        email: Email
+        message: Message
+    subscription:
+        subscription: Subscription
+        subscribe: Subscribe
+        tip: Sign up for articles, news, and updates.
+    testimonials:
+        testimonials: Yestimonials
+        our_testimonials: Our testimonials
+    market:
+        market: Market
+        our_market: Our market
+    embed: To embed this widget on your website, copy the HTML code and paste it in your website.
+merchant:
+    merchant: Merchant
+    merchant_setup: Merchant Setup
+    merchant_select: Select a merchant
+    key: Key
+    pin: Pin
+    currency: Currency
+    sandbox: Sandbox
+    is_sandbox: Sandbox mode?
+company:
+    statistics:
+        statistics: Statistics
+        page_views: Page views
+        revenue: Revenue
+label:
+    image: Image
+    all: All
+    completed: Completed
+    pending: Pending
+    day: Day
+    month: Month
+    year: Year
+    last: Last
+    today: Today
+    yesterday: Yesterday
+    this_week: This week
+    this_month: This month
+button:
+    add: Add
+    yes: Yes
+    no: No
+    save: Save
+    send: Send
+    return: Return to the site
+    close: Close
+    change: Change
+    continue: Continue
+    pay: Pay
+    subscribe: Subscribe
+    download: Download
+    purchase: Purchase
+    upload: Upload
+    create: Create
+    browse: Browse
+    remove: Remove
+    select: Select
+    selected: Selected
+    edit: Edit
+    choose_file: Choose file
+    clear: Clear
+    cancel: Cancel
+table:
+    amount: Amount
+    save: Save
+    edit: Edit
+    delete: Delete
+    active: Active
+    inactive: Inactive
+    name: Name
+    view: View
+    print: Print
+    add_items: Add items
+    date: Date
+    updated_at: Updated at
+    created_at: Created at
+choices:
+    farm: Farm
+    crop: Crop
+notifications:
+    notification: Notifications
+    no_new_notifications: No new notifications

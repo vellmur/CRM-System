@@ -1,0 +1,135 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <!-- Quick stats boxes -->
+    <div class="row">
+        <div class="summary-search" data-path="{{ path('master_clients_filter', {'status' : 'all'}) }}">
+            <div class="col-lg-4">
+                <div class="panel bg-blue">
+                    <div class="panel-body">
+                        <h3 class="no-margin">{{ stats.total }}</h3>
+                        Total sites
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="summary-search" data-path="{{ path('master_clients_filter', {'status': 'confirmed'}) }}">
+            <div class="col-lg-4">
+                <div class="panel bg-blue-400">
+                    <div class="panel-body">
+                        <h3 class="no-margin">{{ stats.confirmed }}</h3>
+                        Confirmed emails
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="summary-search" data-path="{{ path('master_clients_filter', {'status': 'unconfirmed'}) }}">
+            <div class="col-lg-4">
+                <div class="panel bg-warning-400">
+                    <div class="panel-body">
+                        <h3 class="no-margin">{{ stats.unconfirmed }}</h3>
+                        Unconfirmed emails
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /quick stats boxes -->
+
+    <div class="row">
+        <div class="summary-search" data-path="{{ path('master_clients_filter', {'status': 'month'}) }}">
+            <div class="col-lg-4">
+                <div class="panel bg-success-600">
+                    <div class="panel-body">
+                        <h3 class="no-margin">{{ stats.month }}</h3>
+                        New sites in the last 30 days
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="summary-search" data-path="{{ path('master_clients_filter', {'status': 'week'}) }}">
+            <div class="col-lg-4">
+                <div class="panel bg-success">
+                    <div class="panel-body">
+                        <h3 class="no-margin">{{ stats.week }}</h3>
+                        New sites in the last 7 days
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="summary-search" data-path="{{ path('master_clients_filter', {'status': 'today'}) }}">
+            <div class="col-lg-4">
+                <div class="panel bg-success-400">
+                    <div class="panel-body">
+                        <h3 class="no-margin">{{ stats.today }}</h3>
+                        New sites today
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick stats boxes -->
+    <div class="row">
+        <div>
+            <div class="col-lg-4">
+                <div class="panel">
+                    <div class="panel-body">
+                        <h3 class="no-margin">{{ stats.visits ? stats.visits.month }}</h3>
+                        New landing page visits in the last 30 days
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="col-lg-4">
+                <div class="panel">
+                    <div class="panel-body">
+                        <h3 class="no-margin">{{ stats.visits ? stats.visits.week }}</h3>
+                        New landing page visits in the last 7 days
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="col-lg-4">
+                <div class="panel">
+                    <div class="panel-body">
+                        <h3 class="no-margin">{{ stats.visits ? stats.visits.today }}</h3>
+                        New landing page visits today
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /quick stats boxes -->
+
+    <div class="panel panel-default">
+        <div class="datatable-ajax-source">
+            <table class="table">
+                <thead>
+                <tr role="row" class="heading-style">
+                    <th>Client Name</th>
+                    <th>Level</th>
+                    <th>Confirmed email</th>
+                    <th>Created at</th>
+                    <th>Delete</th>
+                </tr>
+                </thead>
+                <tbody id="content_list">
+                    {{ include ("master/client/search.html.twig") }}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {{ include ("modal/delete-modal.html.twig") }}
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{{ asset('js/pages/master/client_search.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,69 @@
+#subscription_widget_container * {
+    box-sizing: border-box;
+}
+
+#subscription_widget_container {
+    display: block;
+    opacity: 1;
+    z-index: 9999;
+    position: fixed;
+    width: 100% !important;
+    background: transparent;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    animation: 500ms slideIn cubic-bezier(.35,.57,.4,.89);
+}
+
+#subscription_widget_container iframe {
+    display: block;
+    width: 100%;
+    border: 0;
+}
+
+.bd-modal {
+    display: block;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+    -webkit-overflow-scrolling: touch; /* Fix iOS scrolling bug */
+}
+
+.bd-close-modal {
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    z-index: 2;
+}
+
+.bd-close-modal:before, .bd-close-modal:after {
+    background-color: #414141;
+    content: '';
+    position: absolute;
+    left: 14px;
+    top: 8px;
+    height: 14px;
+    width: 2px;
+}
+
+.bd-close-modal:before {
+    transform: rotate(45deg);
+}
+
+.bd-close-modal:after {
+    transform: rotate(-45deg);
+}
+
+@keyframes slideIn {
+    from { bottom: -500px; }
+    to { bottom: 0; }
+}
+
+@keyframes slideOut {
+    from { bottom: 0; }
+    to { bottom: -500px; }
+}
+

@@ -1,0 +1,74 @@
+{% extends "front-layout.html.twig" %}
+
+{% block body %}
+    {% if error %}
+        <div class="alert alert-danger center-block" style="width: 300px; margin-top:40px;">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            {{ error.messageKey|trans(error.messageData, 'security')|raw }}
+        </div>
+    {% endif %}
+
+    <div class="login-form">
+        <form method="post">
+            <div class="panel panel-body login-form">
+                <div class="text-center">
+                    <h5 class="content-group">{{ 'login.log_into'|trans({}, 'messages') }} Black Dirt</h5>
+                </div>
+
+                <div class="form-group has-feedback has-feedback-right">
+                    <input class="form-control"
+                           type="text"
+                           title="{{ 'login.username'|trans({}, 'messages') }}"
+                           placeholder="{{ 'login.username'|trans({}, 'messages') }}"
+                           id="username"
+                           name="username"
+                           value="{{ last_username }}"
+                           required="required"
+                           autofocus />
+                    <div class="form-control-feedback">
+                        <i class="icon-user text-muted"></i>
+                    </div>
+                </div>
+
+                <div class="form-group has-feedback has-feedback-right">
+                    <input class="form-control"
+                           type="password"
+                           title="{{ 'login.password'|trans({}, 'messages') }}"
+                           placeholder="{{ 'login.password'|trans({}, 'messages') }}"
+                           id="password"
+                           name="password"
+                           required="required" />
+                    <div class="form-control-feedback">
+                        <i class="icon-lock2 text-muted"></i>
+                    </div>
+                </div>
+
+                <div class="form-group login-options">
+                    <div class="row">
+                        <div class="col-sm-12 text-center">
+                            <a href="{{ path('app_resetting_request') }}" class="website-link">
+                                {{ 'login.forgot_password'|trans({}, 'messages') }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <div class="form-group">
+                        <button type="submit" name="_submit" id="_submit" class="btn-website btn-main">
+                            {{ 'login.login'|trans({}, 'messages') }}
+                        </button>
+                    </div>
+                    <div class="content-divider text-muted form-group">
+                        <span>{{ 'login.have_no_account'|trans({}, 'messages') }}</span>
+                    </div>
+                    <a href="{{ path('app_registration') }}" class="btn-website btn-secondary content-group">
+                        {{ 'login.create_account'|trans({}, 'messages') }}
+                    </a>
+                </div>
+            </div>
+
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" />
+        </form>
+    </div>
+{% endblock body %}

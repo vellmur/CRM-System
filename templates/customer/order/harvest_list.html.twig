@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="well block">
+        <div class="tabbable">
+            <ul class="nav nav-pills">
+                {% for key, date in datesNav %}
+                    {% if key == 0 and app.request.get('date') is null %}
+                        <li class="active">
+                            <a href="{{ path('member_harvest_list', {date : date }) }}">
+                                {{ date|date(app.user.team.client.twigFormatDate) }}
+                            </a>
+                        </li>
+                    {% else %}
+                        <li {% if (date == app.request.get('date')) %} class="active" {% endif %}>
+                            <a href="{{ path('member_harvest_list', {date : date }) }}">
+                                {{ date|date(app.user.team.client.twigFormatDate) }}
+                            </a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    {% if reports | length > 0 %}
+        <div class="panel panel-default">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr class="heading-style">
+                        <th>{{ 'setup.crops.plant_name'|trans({}, 'labels') }}</th>
+                        <th>{{ 'customer.orders.total_weight'|trans({}, 'labels') }} ({{ app.user.team.client.getWeightName }})</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% set key = 0 %}
+
+                        {% for plant, weight in reports %}
+                            <tr {% if key is not divisible by (2) %} class="row-style" {% endif %}>
+                                <td class="table-data">{{ plant }}</td>
+                                <td class="table-data">{{ weight }}</td>
+                            </tr>
+                            {% set key = key + 1 %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+{% endblock body %}

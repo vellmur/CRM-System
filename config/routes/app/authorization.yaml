@@ -1,0 +1,62 @@
+app_login:
+    path:     /login
+    defaults: { _controller: App\Controller\Security\SecurityController::login }
+    methods:  [GET, POST]
+    host: "%domain%"
+
+app_logout:
+    path: /logout
+    methods: GET
+
+app_registration:
+    path:     /register
+    defaults: { _controller: App\Controller\Security\RegistrationController::register }
+    methods:  [GET, POST]
+    host: "%domain%"
+
+app_registration_confirm:
+    path:     /confirm/{token}
+    defaults: { _controller: App\Controller\Security\RegistrationController::confirm }
+    methods:  GET
+    host: "%domain%"
+
+app_registration_check_email:
+    path:     /register/check-email
+    defaults: { _controller: App\Controller\Security\RegistrationController::checkEmail }
+    methods:  GET
+    host: "%domain%"
+
+app_registration_confirmed:
+    path: /confirmed/{username}
+    defaults: { _controller: App\Controller\Security\RegistrationController::confirmed }
+    methods:  GET
+    host: "%domain%"
+
+app_resetting_request:
+    path:     /resetting/request
+    defaults: { _controller: App\Controller\Security\SecurityController::resetting }
+    host: "%domain%"
+
+app_resetting_send_email:
+    path:     /resetting/send-email
+    defaults: { _controller: App\Controller\Security\SecurityController::sendResettingEmail }
+    methods:  POST
+    host: "%domain%"
+
+app_resetting_check_email:
+    path:     /resetting/check-email
+    defaults: { _controller: App\Controller\Security\SecurityController::checkEmail }
+    methods:  GET
+    host: "%domain%"
+
+app_resetting_reset:
+    path:     /resetting/reset/{token}
+    defaults: { _controller: App\Controller\Security\SecurityController::reset }
+    methods:  [GET, POST]
+    host: "%domain%"
+
+app_resetting_resetted:
+    path:     /resetting/resetted/{username}
+    defaults: { _controller: App\Controller\Security\SecurityController::resetted }
+    methods:  GET
+    host: "%domain%"

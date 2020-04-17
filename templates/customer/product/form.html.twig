@@ -1,0 +1,242 @@
+{{ form_start(form, {'attr': {'class': 'form-horizontal jquery-validation'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-head">
+            <h6><i class="icon-cart-add"></i> {{ 'product.product'|trans({}, 'labels') }}</h6>
+        </div>
+        <div class="panel-body">
+            <div class="form-group {{ form.category.vars.errors|length ? 'has-error' }}">
+                {{ form_label(form.category) }}
+                <div class="col-md-10 col-sm-9 col-xs-7">
+                    {{ form_widget(form.category)}}
+                    {% if not form.category.vars.valid %}
+                        <label id="{{ form.category.vars.id }}-error" class="validation-error-label" for="{{ form.category.vars.id }}">
+                            {{ form.category.vars.errors[0].message }}
+                        </label>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="form-group {{ form.isPos.vars.errors|length ? 'has-error' }}"
+                    {{ form.vars.value is null or form.vars.value.category != 1 ? 'style="display:none;"' }}>
+                {{ form_label(form.isPos) }}
+                <div class="col-md-10 col-sm-9 col-xs-7">
+                    {{ form_widget(form.isPos)}}
+                </div>
+            </div>
+            {% if form.plant is defined %}
+                <div class="form-group {{ form.plant.vars.errors|length ? 'has-error' }}">
+                    {{ form_label(form.plant) }}
+                    <div class="col-md-10 col-sm-9 col-xs-7">
+                        {{ form_widget(form.plant)}}
+                        {% if not form.plant.vars.valid %}
+                            <label id="{{ form.plant.vars.id }}-error" class="validation-error-label" for="{{ form.plant.vars.id }}">
+                                {{ form.plant.vars.errors[0].message }}
+                            </label>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+            <div class="form-group {{ form.name.vars.errors|length ? 'has-error' }}">
+                {{ form_label(form.name) }}
+                <div class="col-md-10 col-sm-9 col-xs-7">
+                    {{ form_widget(form.name)}}
+                    {% if not form.name.vars.valid %}
+                        <label id="{{ form.name.vars.id }}-error" class="validation-error-label" for="{{ form.name.vars.id }}">
+                            {{ form.name.vars.errors[0].message }}
+                        </label>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="form-group {{ form.description.vars.errors|length ? 'has-error' }}">
+                {{ form_label(form.description) }}
+                <div class="col-md-10 col-sm-9 col-xs-7">
+                    {% if not form.description.vars.valid %}
+                        {{ form_widget(form.description, {'attr': {
+                            'data-placement': 'top',
+                            'title': form.description.vars.errors[0].message,
+                            'class': 'form-control tip tip-open'}
+                        }) }}
+                    {% else %}
+                        {{ form_widget(form.description)}}
+                    {% endif %}
+                    {% if not form.description.vars.valid %}
+                        <label id="{{ form.description.vars.id }}-error" class="validation-error-label" for="{{ form.description.vars.id }}">
+                            {{ form.description.vars.errors[0].message }}
+                        </label>
+                    {% endif %}
+                </div>
+            </div>
+            {% if form.weight is defined %}
+                <div class="form-group {{ form.weight.vars.errors|length ? 'has-error' }}">
+                    {{ form_label(form.weight) }}
+                    <div class="col-md-10 col-sm-9 col-xs-7">
+                        {{ form_widget(form.weight)}}
+                        {% if not form.weight.vars.valid %}
+                            <label id="{{ form.weight.vars.id }}-error" class="validation-error-label" for="{{ form.weight.vars.id }}">
+                                {{ form.weight.vars.errors[0].message }}
+                            </label>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+            <div class="form-group {{ form.price.vars.errors|length ? 'has-error' }}">
+                {{ form_label(form.price) }}
+                <div class="col-md-10 col-sm-9 col-xs-7">
+                    {{ form_widget(form.price)}}
+                    {% if not form.price.vars.valid %}
+                        <label id="{{ form.price.vars.id }}-error" class="validation-error-label" for="{{ form.price.vars.id }}">
+                            {{ form.price.vars.errors[0].message }}
+                        </label>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="form-group {{ form.deliveryPrice.vars.errors|length ? 'has-error' }}">
+                {{ form_label(form.deliveryPrice) }}
+                <div class="col-md-10 col-sm-9 col-xs-7">
+                    {{ form_widget(form.deliveryPrice)}}
+                    {% if not form.deliveryPrice.vars.valid %}
+                        <label id="{{ form.deliveryPrice.vars.id }}-error"
+                               class="validation-error-label"
+                               for="{{ form.deliveryPrice.vars.id }}">
+                            {{ form.deliveryPrice.vars.errors[0].message }}
+                        </label>
+                    {% endif %}
+                </div>
+            </div>
+            {% if form.payByItem is defined %}
+            <div class="form-group {{ form.payByItem.vars.errors|length ? 'has-error' }}">
+                {{ form_label(form.payByItem) }}
+                <div class="col-md-10 col-sm-9 col-xs-7">
+                    {% for key, child in form.payByItem.children %}
+                        <div class="">
+                            {{ form_widget(child) }}
+                            <span class="radio-link">{{ form_label(child) }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            <div class="form-group {{ form.sku.vars.errors|length ? 'has-error' }}">
+                {{ form_label(form.sku) }}
+                <div class="col-md-10 col-sm-9 col-xs-7">
+                    {{ form_widget(form.sku)}}
+                    {% if not form.sku.vars.valid %}
+                        <label id="{{ form.sku.vars.id }}-error" class="validation-error-label" for="{{ form.sku.vars.id }}">
+                            {{ form.sku.vars.errors[0].message }}
+                        </label>
+                    {% endif %}
+                </div>
+            </div>
+            {% if form.tag is defined %}
+                <div class="form-group {{ form.tag.vars.errors|length ? 'has-error' }}">
+                    {{ form_label(form.tag) }}
+                    <div class="col-md-10 col-sm-9 col-xs-7">
+                        {% if form.tag.vars.attr['data-tags']|length %}
+                        <div class="input-group">
+                            {{ form_widget(form.tag) }}
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-default" id="load-tags">Load exist filters</button>
+                            </div>
+                        </div>
+                        {% else %}
+                            {{ form_widget(form.tag) }}
+                        {% endif %}
+                        {% if not form.tag.vars.valid %}
+                            <label id="{{ form.tag.vars.id }}-error" class="validation-error-label" for="{{ form.tag.vars.id }}">
+                                {{ form.tag.vars.errors[0].message }}
+                            </label>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if form.image is defined %}
+                <div class="form-group {{ form.image.vars.errors|length ? 'has-error' }}">
+                    {{ form_label(form.image) }}
+                    <div class="col-md-10 col-sm-9 col-xs-7">
+                        {{ form_widget(form.image)}}
+                        <input type="file"
+                               id="imagePreload"
+                               data-image-url="{{ form.vars.value.image ? asset(vich_uploader_asset(form.vars.value.image)) }}"
+                               data-name="{{ form.vars.value.image ? form.vars.value.image.name }}"
+                        >
+                        <button type="button"
+                                data-path="{{ path('image_browse', {
+                                    'formSelection': true,
+                                    'imageSelectId': 'product_image',
+                                    'imagePreloadId': 'imagePreload',
+                                    'originalUrl': app.request.requestUri
+                                }) }}"
+                                onclick="openImageGallery(this.getAttribute('data-path'))"
+                                class="btn btn-action">
+                            <i class="icon-file-plus"></i> {{ 'button.browse'|trans({}, 'labels') }}
+                        </button>
+                        <span class="help-block">{{ 'customer.upload.supported_formats'|trans({}, 'labels') }}: JPG, JPEN, PNG <br>
+                            {{ 'website.media.recommended_dimension'|trans({}, 'labels') }}: 280 x 175 px
+                        </span>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="form-actions text-right">
+                {% if form.vars.value.id is not null %}
+                    <button type="submit" class="btn btn-success" id="btn-submit">{{ 'button.save'|trans({}, 'labels') }}</button>
+                    <button type="button"
+                            data-toggle="modal"
+                            href="#delete-modal"
+                            data-delete-path="{{ path('customer_product_delete', {id: form.vars.value.id }) }}"
+                            class="btn btn-danger btn-icon">
+                        <i class="icon-trash"></i>
+                    </button>
+                {% else %}
+                    <button type="submit" class="btn btn-action">{{ 'button.add'|trans({}, 'labels') }}</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{{ form_end(form) }}
+
+{{ include ("modal/modal-with-message.html.twig", {'id': 'delete-modal'}) }}
+
+<script type="text/javascript" src="{{ asset('js/plugins/forms/tags/tagsinput.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/plugins/forms/tags/tokenfield.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/plugins/uploaders/fileinput/fileinput.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/pages/member/product/product.js') }}?v=2"></script>
+<script>
+    {% if form.tag is defined %}
+        var $productTag = $('#product_tag');
+
+        // Prevent duplicate values and initialize
+        $productTag.tokenfield({
+            'delimiter': [',', '.', ' '],
+            'createTokensOnBlur': true
+        });
+
+        {% if form.tag.vars.attr['data-tags']|length %}
+            var clientTags = '{{ form.tag.vars.attr['data-tags'] }}',
+                tags = clientTags.split(',');
+
+            $('#load-tags').on('click', function() {
+                $productTag.tokenfield('setTokens', tags);
+            });
+        {% endif %}
+    {% endif %}
+</script>
+<script src="{{ asset('js/plugins/uploaders/fileinput/fileinput.min.js') }}"></script>
+<script src="{{ asset('js/pages/media/image_field.js') }}"></script>
+<script>
+    let $imagePreload = $('#imagePreload');
+    initImageField($imagePreload);
+</script>
+<style>
+    .tokenfield, .token-input {
+        text-transform: uppercase;
+    }
+
+    #product_image label {
+        display: none;
+    }
+
+    .file-actions {
+        display: none;
+    }
+</style>

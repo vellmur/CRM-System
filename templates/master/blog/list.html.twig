@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-actions text-right">
+                <a href="{{ path('master_post_create') }}" class="btn btn-success">Add</a>
+            </div>
+        </div>
+    </div>
+    <br/>
+
+    {% if posts|length %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading heading-style">
+                        <h4 class="panel-title">Posts</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table-responsive tab-spaceless">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Created at</th>
+                                    <th>Edit</th>
+                                    <th>Delete</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    {% for post in posts %}
+                                        <tr>
+                                            <td>{{ post.title }}</td>
+                                            <td>{{ post.createdAt|date('Y-m-d H:i:s') }}</td>
+                                            <td>
+                                                <a href="{{ path('master_post_edit', {'id': post.id}) }}" class="btn btn-icon btn-action"><i class="icon-compose"></i></a>
+                                            </td>
+                                            <td>
+                                                <button type="button" data-path ="{{ path('master_post_delete', {id: post.id}) }}" data-toggle="modal" href="#small_modal" class="btn btn-danger btn-icon btn-delete"> <i class="icon-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{ include ("modal/delete-modal.html.twig") }}
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,103 @@
+@media
+only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px)  {
+
+    /* Force table to not be like tables anymore */
+    .table-vertical, .table-vertical :not(.picker) > tbody, .table-vertical :not(.picker) > thead, .table-vertical :not(.picker) > td, .table-vertical :not(.picker) > tr
+    {
+        display: block;
+    }
+
+    /* Hide table headers (but not display: none;, for accessibility) */
+    .table-vertical thead tr  {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    .table-vertical tbody tr {
+        margin: 0 0 30px 0;
+        border: 1px solid #ddd;
+    }
+
+    .vertical {
+        border: none;
+    }
+
+    .table-vertical td {
+        /* Behave  like a "row" */
+        border: none !important;
+        border-bottom: 1px solid #eee;
+        position: relative;
+        margin: 0 !important;
+
+    }
+
+    .table-vertical td:before {
+        /* Now like a table header */
+        /* Top/left values mimic padding */
+        padding-right: 20px;
+        white-space: nowrap;
+        font-weight: 700;
+        width: 50% !important;
+        height: 40px;
+        display: block;
+        float: left;
+        clear: both;
+        padding-top: 7px;
+    }
+
+    .lock-buttons {
+        width: 100%;
+        float: right;
+    }
+
+    .lock-block {
+        min-height: 80px;
+    }
+
+    .table-vertical td input,
+    .table-vertical td select,
+    .table-vertical td .select,
+    .table-vertical td .select2,
+    .table-vertical td textarea {
+        width: 45% !important;
+    }
+
+    .table-vertical .table-data span {
+        display: block;
+        margin-top: 7px;
+    }
+
+    .table-vertical .select2 {
+        display: inline-block;
+    }
+    .picker__table {
+        display: table !important;
+    }
+
+    .picker__table thead {
+        display: table-header-group !important;
+    }
+
+    .picker__table tbody
+    {
+        display: table-row-group !important;
+    }
+
+    .picker__table tr {
+        display: table-row !important;
+        border: 0 !important;
+        margin: 0 !important;
+    }
+
+    .picker__table td {
+        display: table-cell !important;
+    }
+
+}
+
+.lock-block .form-control, .lock-block .select {
+    border: none;
+    margin-top: 5px;
+}

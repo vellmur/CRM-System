@@ -1,0 +1,40 @@
+{% extends "front-layout.html.twig" %}
+
+{% block body %}
+    {% block fos_user_content %}
+        <div class="login-form">
+            {{ form_start(form, {'action': path('app_resetting_reset', {'token': token})}) }}
+                <div class="well">
+                    <div class="text-center">
+                        <h5 class="content-group">{{ 'resetting.enter_new_password'|trans({}, 'messages') }}</h5>
+                    </div>
+                    <div class="form-group {{ form.plainPassword.first.vars.errors|length ? 'has-error' }}">
+                        {{ form_widget(form.plainPassword.first) }}
+                        {% if form.plainPassword.first.vars.errors|length %}
+                            <span class="help-block text-danger">
+                                <i class="icon-cancel-circle2 position-left"></i>
+                                {{ form.plainPassword.first.vars.errors[0].message }}
+                            </span>
+                        {% endif %}
+                    </div>
+                    <div class="form-group {{ form.plainPassword.second.vars.errors|length ? 'has-error' }}">
+                        {{ form_widget(form.plainPassword.second) }}
+                        {% if form.plainPassword.second.vars.errors|length %}
+                            <span class="help-block text-danger">
+                                <i class="icon-cancel-circle2 position-left"></i>
+                                {{ form.plainPassword.second.vars.errors[0].message }}
+                            </span>
+                        {% endif %}
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 text-center">
+                            <input type="submit"
+                                   class="btn-website btn-main"
+                                   value="{{ 'resetting.reset_password'|trans({}, 'messages') }}" />
+                        </div>
+                    </div>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    {% endblock %}
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'emails/base.html.twig' %}
+
+{% block body %}
+    <h4>Notify about {{ widget }} widget error!</h4>
+
+    <p><b>Error message:</b> {{ error }}</p>
+
+    <p>Data:</p>
+
+    {% for label, filter in data %}
+        <span style="margin-top: 20px;">"{{ label|capitalize }}" =></span>
+        {% if filter is iterable %}
+            <br/>
+            {% for key, value in filter %}
+                <span style="margin-left:20px;">"{{ key }}" => "{{ value }}"</span><br/>
+            {% endfor %}
+        {% else %}
+            "{{ filter }}" <br/>
+        {% endif %}
+    {% endfor %}
+{% endblock %}

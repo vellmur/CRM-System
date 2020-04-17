@@ -1,0 +1,15 @@
+body,html {
+    margin:0;height:100%;
+}
+
+.gjs-mdl-dialog {
+    max-width: 550px;
+}
+
+.gjs-am-file-uploader {
+    display: none;
+}
+
+.gjs-am-assets-cont {
+    width: 100%;
+}

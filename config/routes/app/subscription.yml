@@ -1,0 +1,4 @@
+subscription_index:
+  path:     /
+  defaults: { _controller: App\Controller\User\SubscriptionController::index }
+  methods:  [GET, POST]

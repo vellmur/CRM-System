@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ form_start(supportForm, {'attr': {'class': 'form-horizontal jquery-validation', 'form-validate': 'false'} }) }}
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group {{ supportForm.subject.vars.errors|length ? 'has-error' }}">
+                    {{ form_label(supportForm.subject) }}
+                    <div class="col-md-10 col-sm-9 col-xs-7">
+                        {{ form_widget(supportForm.subject) }}
+                        {{ form_errors(supportForm.subject) }}
+                    </div>
+                </div>
+                <div class="form-group {{ supportForm.message.vars.errors|length ? 'has-error' }}">
+                    {{ form_label(supportForm.message) }}
+                    <div class="col-md-10 col-sm-9 col-xs-7">
+                        {{ form_widget(supportForm.message) }}
+                        {{ form_errors(supportForm.message) }}
+                    </div>
+                </div>
+                <div class="form-actions text-right">
+                    <button type="submit" class="btn btn-action">{{ 'button.send'|trans({}, 'labels') }}</button>
+                </div>
+            </div>
+        </div>
+    {{ form_end(supportForm) }}
+{% endblock body %}

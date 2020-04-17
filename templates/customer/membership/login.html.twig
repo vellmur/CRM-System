@@ -1,0 +1,100 @@
+{% extends "front-layout.html.twig" %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <!-- Login wrapper -->
+            <div class="page-form">
+                <div class="panel panel-default">
+                    <div class="panel-head">
+                        <h6><i class="icon-user"></i> {{ 'membership.membership'|trans({}, 'labels') }}</h6>
+                    </div>
+                    <div class="panel-body">
+                        <select class="language-dropdown selectpicker" data-width="fit" onchange="handleSelect(this)">
+                            <option value="{{ path('membership') }}?_locale=en" data-content='<span class="flag-icon flag-icon-us"></span> English' {{ app.request.session.get('_locale') == 'en' ? 'selected' }}>English</option>
+                            <option value="{{ path('membership') }}?_locale=ru" data-content='<span class="flag-icon flag-icon-ru"></span> Русский' {{ app.request.session.get('_locale') == 'ru' ? 'selected' }}>Русский</option>
+                            <option value="{{ path('membership') }}?_locale=ua" data-content='<span class="flag-icon flag-icon-ua"></span> Українська' {{ app.request.session.get('_locale') == 'ua' ? 'selected' }}>Українська</option>
+                        </select>
+                        <p>{{ 'membership.login_description'|trans({}, 'labels') }}</p>
+                        {{ form_start(form) }}
+                        <div class="form-group {{ form.email.vars.errors|length ? 'has-error' }}">
+                            {{ form_label(form.email) }}
+                            <span data-placement="top" title="{{ 'membership.send_access_tip'|trans({}, 'labels') }}" class="tip">
+                                <i class="icon-info"></i>
+                            </span>
+                            {{ form_widget(form.email) }}
+                            {{ form_errors(form.email) }}
+                        </div>
+                        {% if form.client is defined %}
+                            <div class="form-group {{ form.client.vars.errors|length ? 'has-error' }}" id="client">
+                                {{ form_label(form.client) }}
+                                {{ form_widget(form.client) }}
+                                {{ form_errors(form.client) }}
+                            </div>
+                        {% endif %}
+                        <div class="row form-actions">
+                            <div class="col-xs-12">
+                                <button type="submit" name="_submit" id="_submit" class="btn btn-action pull-right">{{ 'button.send'|trans({}, 'labels') }}</button>
+                            </div>
+                        </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+            <!-- /login wrapper -->
+        </div>
+    </div>
+{% endblock body %}
+
+{% block scripts %}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.1.0/css/flag-icon.min.css" rel="stylesheet">
+    <style>
+        .flag-icon {
+            margin-right: 3px;
+        }
+
+        .language-dropdown {
+            margin-bottom: 15px;
+        }
+    </style>
+    <script>
+        var $email = $('#membership_login_email');
+        $email[0].focus();
+
+        // Check if member data exists by typed email
+        $email.donetyping(function () {
+            var $form = $(this).closest('form');
+
+            // Remove current errors
+            $email.parent().removeClass('has-error');
+            $email.parent().find('ul').remove();
+
+            $.ajax({
+                url: '{{ path('membership') }}',
+                type: "POST",
+                data: $form.serialize(),
+                success: function (response) {
+                    // Replace client select field
+                    var replaceTo = $(response).find('#membership_login_client').selectpicker(),
+                        $clientField = $('#client');
+
+                    if ($clientField.length) {
+                        $clientField.replaceWith(replaceTo.closest('.form-group'));
+                    } else {
+                        $email.parent().after(replaceTo.closest('.form-group'));
+                    }
+                },
+                error: function (response) {
+                    console.log(response)
+                },
+                complete: function () {
+                    $('body').css('cursor', 'default');
+                }
+            });
+        });
+
+        function handleSelect(elm) {
+            window.location = elm.value;
+        }
+    </script>
+{% endblock %}

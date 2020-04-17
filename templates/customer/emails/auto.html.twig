@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ form_start(form, {'attr': {'class': 'form-horizontal'} }) }}
+    <!-- Page tabs -->
+    <div class="tabbable page-tabs">
+        <ul class="nav nav-tabs left-tabs">
+            {% for key, type in defaultEmails|keys %}
+                <li {{ loop.first ? 'class="active"' }}><a href="#{{ type }}-tab" data-toggle="tab"> {{ key + 1 }}. {{ ('emails.types.' ~ type)|trans({}, 'labels') }}</a></li>
+            {% endfor %}
+        </ul>
+        <div class="tab-content">
+            {% for key, type in defaultEmails|keys %}
+                <div class="tab-pane fade in {{ loop.first ? 'active' }}" id="{{ type }}-tab">
+                    <div class="block">
+                        <div class="form-group row">
+                            {{ form_label(form.autoEmails[key].subject) }}
+                            <div class="col-md-11{% if form.autoEmails[key].subject.vars.errors | length > 0 %} has-error {% endif %}">
+                                {% if not form.autoEmails[key].subject.vars.valid %}
+                                    {{ form_widget(form.autoEmails[key].subject, {
+                                        id: type ~ 'Subject',
+                                        'attr': {
+                                            'data-placement': 'top',
+                                            'title': form.autoEmails[key].subject.vars.errors[0].message,
+                                            'class': 'form-control tip tip-open'
+                                        }
+                                    }) }}
+                                {% else %}
+                                    {{ form_widget(form.autoEmails[key].subject, {id: type ~ 'Subject'}) }}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-12{% if form.autoEmails[key].text.vars.errors|length > 0 %} has-error {% endif %}">
+                                {% if not form.autoEmails[key].text.vars.valid %}
+                                    {{ form_widget(form.autoEmails[key].text, {
+                                        id: type,
+                                        'attr': {
+                                            'data-placement': 'top',
+                                            'title': form.autoEmails[key].text.vars.errors[0].message,
+                                            'class': 'form-control tip tip-open'
+                                        }
+                                    }) }}
+                                {% else %}
+                                    {{ form_widget(form.autoEmails[key].text, {id: type}) }}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <!-- Default message -->
+                        <div id="activationDefault" class="hidden">
+                            <div id="defaultSubject">
+                                {{ defaultEmails[type]['subject']|raw }}
+                            </div>
+                            <div id="defaultBody">
+                                {{ defaultEmails[type]['body']|raw }}
+                            </div>
+                        </div>
+                        <!-- end Default message -->
+                        <div class="text-right">
+                            <button type="submit" class="btn btn-success">{{ 'button.save'|trans({}, 'labels') }}</button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            <!-- First tab -->
+        </div>
+        <!-- /page tabs -->
+    </div>
+    {{ form_end(form) }}
+
+    {{ include ("modal/macros-modal.html.twig", {'macros' : macros}) }}
+    {{ include ("modal/modal-with-message.html.twig", {'id' : 'default-email-modal', 'message' : 'Are you sure that you to reset this email?'}) }}
+{% endblock body %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{{ asset('js/plugins/ckeditor/ckeditor.js') }}"></script>
+    <script>
+        var options = {
+            language: 'en',
+            'skin' : 'moono-lisa',
+            'height' : 300,
+            'extraPlugins' : 'macro,autodefault,autogrow',
+            'customConfig': ''
+        };
+
+        {% for type in defaultEmails|keys %}
+            CKEDITOR.replace({{ type }}, options);
+        {% endfor %}
+    </script>
+{% endblock %}

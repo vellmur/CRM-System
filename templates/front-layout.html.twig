@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+    <meta name="google-site-verification" content="T6axsgGzL09p--ZdK_oYVPu6769x32Oc9-nBcOQ7ojw"/>
+
+    <title>Black Dirt Software{% if member is defined %} {{ ' - ' ~ member.client.name }} {% endif %}</title>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-59758532-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-59758532-2');
+    </script>
+
+    <!-- Favicons --->
+    <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('favicon-32x32.png') }}" sizes="32x32">
+    <link rel="icon" type="image/png" href="{{ asset('favicon-16x16.png') }}" sizes="16x16">
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <link rel="mask-icon" href="{{ asset('safari-pinned-tab.svg') }}" color="#6ca564">
+    <meta name="msapplication-TileColor" content="#00aba9">
+    <meta name="msapplication-TileImage" content="{{ asset('mstile-144x144.png') }}">
+    <meta name="theme-color" content="#ffffff">
+    <!-- End favicons -->
+
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet" type="text/css">
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
+    <link href="{{ asset('css/icons/icomoon/styles.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('css/core.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('css/components.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('css/colors.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('home/css/fonts.css')}}" rel="stylesheet" type="text/css">
+
+    {% block styles %}{% endblock %}
+</head>
+
+<body class="full-width">
+    <!-- Navbar -->
+    <div class="navbar navbar-inverse navbar-custom" role="navigation">
+        <div class="navbar-header-logo center-logo">
+            <div class="navbar-logo">
+                <a  class="navbar-logo" href="/">Black Dirt Software{% if member is defined %} {{ ' - ' ~ member.client.name }} {% endif %}</a>
+            </div>
+        </div>
+    </div>
+    <!-- /navbar -->
+
+    <!-- Page container -->
+    <div class="page-container">
+        <!-- Page content -->
+        <div class="page-content">
+            <div class="content-wrapper">
+                {% block body %}{% endblock %}
+            </div>
+        </div>
+        <!-- /page content -->
+    </div>
+    <!-- /page container -->
+
+    {% if 'register' not in app.request.requestUri and 'login' not in app.request.requestUri and 'resetting' not in app.request.requestUri %}
+        <!-- Footer -->
+        <div class="navbar navbar-default navbar-fixed-bottom footer">
+            <ul class="nav navbar-nav visible-xs-block">
+                <li><a class="text-center collapsed" data-toggle="collapse" data-target="#footer"><i class="icon-circle-up2"></i></a></li>
+            </ul>
+
+            <div class="navbar-collapse collapse" id="footer">
+                <div class="navbar-text">
+                    &copy; 2016 - 2019. <a href="#" class="navbar-link">Black Dirt Software</a>
+                </div>
+                <div class="navbar-right">
+                    <ul class="nav navbar-nav">
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Terms</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- /footer -->
+    {% endif %}
+
+    <!-- Core JS files -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="{{ asset('js/core/libraries/bootstrap.min.js') }}"></script>
+    <!-- /core JS files -->
+
+    <!-- Theme JS files -->
+    <script type="text/javascript" src="{{ asset('js/plugins/pickers/pickadate/picker.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/plugins/pickers/pickadate/picker.date.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/plugins/pickers/pickadate/legacy.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/plugins/forms/styling/uniform.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/plugins/forms/inputs/jquery.maskedinput.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/core/app.js') }}"></script>
+    <!-- /theme JS files -->
+
+    <script type="text/javascript" src="{{ asset('js/plugins/forms/selects/bootstrap_select.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/plugins/forms/validation/validate.min.js') }}"></script>
+
+    {% if app.request.locale != 'en' %}
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/localization/messages_ru.js"></script>
+    {% endif %}
+
+    <script type="text/javascript" src="{{ asset('js/validation/jquery-validation.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/functions.js') }}"></script>
+    <script>
+        {% if date_format is defined %}
+            var dateFormat = '{{ date_format }}'.toLowerCase();
+            enableDatepickers(dateFormat);
+        {% endif %}
+    </script>
+
+    <script type="text/javascript" src="{{ asset('js/ajax.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

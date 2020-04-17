@@ -1,0 +1,12 @@
+{% extends 'parts/menu/knp_menu.html.twig' %}
+
+{% block label %}
+    {%- set label = item.label -%}
+    {%- if options.allow_safe_labels and item.extra('safe_label', false) %}{{ label|raw }}{% else %}{{ label }}{% endif -%}
+{% endblock %}
+
+{% block icon %}
+    {{ item.attribute('icon') }}
+{% endblock %}
+
+

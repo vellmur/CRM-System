@@ -1,0 +1,99 @@
+<?php
+
+namespace App\Form\EventListener;
+
+use App\Form\Type\PhoneType;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Validator\Constraints\Length;
+use App\Data\CountryInfo;
+use Symfony\Contracts\Translation\TranslatorInterface;
+
+class PhoneSubscriber implements EventSubscriberInterface
+{
+    private $factory;
+
+    private $countriesInfo;
+
+    private $translator;
+
+    public function __construct(FormFactoryInterface $factory, TranslatorInterface $translator)
+    {
+        $this->factory = $factory;
+        $this->countriesInfo = new CountryInfo();
+        $this->translator = $translator;
+    }
+
+    public static function getSubscribedEvents()
+    {
+        return [
+            FormEvents::PRE_SET_DATA => 'preSet',
+            FormEvents::PRE_SUBMIT => 'preSubmit'
+        ];
+    }
+
+    /**
+     * @param FormEvent $event
+     */
+    public function preSet(FormEvent $event)
+    {
+        $form = $event->getForm();
+        $options = $form->getConfig()->getOptions();
+
+        if (isset($options['attr']['data-mask'])) {
+            return;
+        }
+
+        $countryCode = $options['country_code'] ? $options['country_code'] : 'US';
+        $phoneFormat = $this->countriesInfo->getPhoneFormat($countryCode);
+        $phoneLengthError = $this->translator->trans('validation.form.phone_length', [
+            '%num%' => $phoneFormat['length']
+        ], 'validators');
+
+        if ($phoneFormat) {
+            $options['attr']['data-mask'] = $phoneFormat['mask'];
+            $options['attr']['data-rule-exactLength'] = $phoneFormat['validationLength'];
+            $options['attr']['data-length-message'] = $phoneLengthError;
+
+            $options['constraints'] = [
+                new Length([
+                    'min' => $phoneFormat['unmaskedLength'],
+                    'max' => $phoneFormat['unmaskedLength'],
+                    'exactMessage' => $phoneLengthError
+                ])
+            ];
+
+            $form->getParent()->add('phone', PhoneType::class, $options);
+        }
+    }
+
+    /**
+     * @param FormEvent $event
+     */
+    public function preSubmit(FormEvent $event)
+    {
+        $form = $event->getForm();
+        $phone = $event->getData();
+
+        $options = $form->getConfig()->getOptions();
+
+        $countryCode = $options['country_code'] ? $options['country_code'] : 'US';
+        $unmaskedPhone = $this->countriesInfo->getUnmaskedPhone($phone, $countryCode);
+
+        if ($unmaskedPhone) {
+            $event->setData($unmaskedPhone);
+        } else {
+            // If phone value contain only phone code, don't validate field (because field is empty)
+            $phoneCode = $this->countriesInfo->getPhoneFormat($countryCode)['code'];
+
+            // Replace phone field
+            if (strlen(($phone)) == strlen($phoneCode)) {
+                $options = $form->getConfig()->getOptions();
+                $options['validation_groups'] = false;
+                $form->getParent()->add('phone', PhoneType::class, $options);
+            }
+        }
+    }
+}

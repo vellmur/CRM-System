@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <!-- Table view -->
+    <div class="panel panel-default">
+        <div class="panel-heading heading-style">
+            <h5 class="panel-title">{{ 'navigation.emails.logs'|trans({}, 'labels') }}</h5>
+        </div>
+        <div class="datatable-media">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr class="row-style">
+                    <th>{{ 'table.date'|trans({}, 'labels') }}</th>
+                    <th>{{ 'emails.type'|trans({}, 'labels') }}</th>
+                    <th>{{ 'emails.subject'|trans({}, 'labels') }}</th>
+                    <th class="text-center">{{ 'emails.recipients_num'|trans({}, 'labels') }}</th>
+                    <th class="text-center">{{ 'emails.status.delivered'|trans({}, 'labels') }}</th>
+                    <th class="text-center">{{ 'emails.status.opened'|trans({}, 'labels') }}</th>
+                    <th class="text-center">{{ 'emails.status.clicked'|trans({}, 'labels') }}</th>
+                    <th class="text-center">{{ 'emails.status.failed'|trans({}, 'labels') }}</th>
+                    <th class="text-center">{{ 'emails.status.bounced'|trans({}, 'labels') }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for key, log in logs %}
+                    {% set email = log.email %}
+                    <tr {{ key is not divisible by (2) ? 'class="row-style"' }}>
+                        <td>
+                            <a class="website-link" href="{{ path('member.email.details', {id: email.id}) }}">
+                                {{ email.createdAt|date(app.user.getTwigFormatDate()) }} <br/>
+                                {{ email.createdAt|date('H:m:s') }}
+                            </a>
+                        </td>
+                        <td>
+                            {% if email.automatedEmail == null %}
+                                {{ 'emails.types.manual'|trans({}, 'labels') }}
+                            {% else %}
+                                {{ 'emails.types.automated'|trans({}, 'labels') }}
+                            {% endif %}
+                        </td>
+                        <td>{{ email.subject }}</td>
+                        <td class="text-center">{{ log.total }}</td>
+                        <td class="text-center">{{ log.delivered }}</td>
+                        <td class="text-center">{{ log.opened }}</td>
+                        <td class="text-center">{{ log.clicked }}</td>
+                        <td class="text-center">{{ log.email.isInProcess ? 0 : log.total - log.delivered }}</td>
+                        <td class="text-center">{{ log.bounced }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="navigation text-right">
+                {{ knp_pagination_render(logs, 'parts/pagination.html.twig') }}
+            </div>
+        </div>
+        <!-- /table view -->
+    </div>
+{% endblock body %}

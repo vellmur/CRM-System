@@ -1,0 +1,14 @@
+emails.open.tracking:
+    path:     /emails/tracking/open/{recipientId}/{recipientType}/{imageName}
+    defaults: { _controller: App\Controller\EmailController::opensTracking, imageName: customerimagename.png }
+    methods:  GET
+
+referred_customer_create:
+    path:  /create-customer-account/{recipientId}
+    defaults: { _controller: App\Controller\MembershipController::referredCustomerCreate }
+    methods: GET
+
+widget_test:
+    path: /widget-test/test
+    defaults: { _controller: App\Controller\MembershipController::widgetTest, token: 1b47eddvibgkc0cs8o0okc4cc4gw0o }
+    methods: GET

@@ -1,0 +1,16 @@
+{% extends 'emails/base.html.twig' %}
+
+{% block body %}
+    <h4>Members feedback report</h4>
+
+    <p>Recipients: {{ recipients.total }}</p>
+    <p>Delivered: {{ recipients.delivered }}</p>
+    <p>Opened: {{ recipients.opened }}</p>
+    <p>Clicked: {{ recipients.clicked }}</p>
+    <p>Failed: {{ recipients.total - recipients.delivered }}</p>
+    <hr/>
+    <p>Feedback num: {{ feedback.feedbackNum }}</p>
+    <p>Satisfied: {{ feedback.satisfied }}</p>
+    <p>Not satisfied: {{ feedback.notSatisfied }}</p>
+    <p>Not sure: {{ recipients.total - feedback.feedbackNum }}</p>
+{% endblock %}

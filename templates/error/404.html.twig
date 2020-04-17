@@ -1,0 +1,18 @@
+{% extends "front-layout.html.twig" %}
+
+{% block body %}
+    <div class="text-center content-group">
+        <h1 class="error-title">404</h1>
+        <h5>{{ 'error.404.message'|trans({}, 'messages') }}</h5>
+
+        <div class="error-content">
+            <div class="row">
+                <div class="col-md-12">
+                    <a href="{{ path('home_index') }}" class="btn btn-action">
+                        {{ 'error.404.button'|trans({}, 'messages') }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

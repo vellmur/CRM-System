@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="form-group form-group-material">
+                        <label for="search_filter">{{ 'product.filter'|trans({}, 'labels') }}:</label>
+                        <select class="select" id="search_products_filter" data-width="100%">
+                            <option value="all">{{ 'label.all'|trans({}, 'labels') }}</option>
+                            <option value="1">{{ 'customer.customer'|trans({}, 'labels') }}</option>
+                            <option value="2">{{ 'product.vendor_eatery'|trans({}, 'labels') }}</option>
+                            <option value="3">{{ 'product.vendor_market'|trans({}, 'labels') }}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-7">
+                    <label for="search_text">{{ 'customer.search.search'|trans({}, 'labels') }}:</label>
+                    <input type="text"
+                           class="form-control text-uppercase"
+                           data-action="{{ path('customer_products_search')}}"
+                           data-block="content_list"
+                           value="{{ app.request.get('searchText') }}"
+                           data-counter="content_counter"
+                           name="search_text"
+                           id="search_products"
+                           placeholder="{{ 'product.search_by'|trans({}, 'labels') }}">
+                </div>
+                <div class="col-sm-3 vertical-table-text">
+                    <p class="vertical-text">{{ 'crops.records_found'|trans({}, 'labels') }}:
+                        <span id="content_counter">{{ products.getTotalItemCount }}</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="datatable-ajax-source">
+            <div class="table-responsive" id="content_list">
+                {{ include ("customer/product/table.html.twig") }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        /*-----------------Ajax search in master/clients page and Customer summary page ---------------------*/
+
+        $('#search_products, #search_products_filter').on('keyup change', function ()
+        {
+            if ($(this).attr('id') === 'search_products') {
+                searchField = $(this);
+                category = $('#search_products_filter');
+            } else {
+                var searchField = $('#search_products'),
+                    category = $(this);
+
+                // Save members filter by to a cookie
+                setCookie('productFilterBy', category.val(), 7);
+            }
+
+            var url = searchField.attr('data-action'),
+                searchText = searchField.val(),
+                block = $('#' + searchField.attr('data-block')),
+                counter = $('#' + searchField.attr('data-counter'));
+
+            url +=  '/' + category.val();
+
+            if (searchText.length > 0) url += '/' + searchText;
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                success: function (response) {
+                    response = jQuery.parseJSON(response);
+
+                    var data = $(response.template);
+
+                    block.html(data);
+                    counter.html(response.counter);
+                },
+                error: function (response) {
+                    counter.html(0);
+                }
+            });
+        });
+
+        var currentFilter = '{{ app.request.get('searchBy') }}';
+
+        // If cookie have saved member search filter, enable it
+        if (getCookie('productFilterBy').length > 0) {
+            var filter = $('#search_products_filter');
+            filter.val(getCookie('productFilterBy'));
+            if (filter.val() !== currentFilter) {
+                filter.trigger('change');
+            }
+        }
+    </script>
+{% endblock %}

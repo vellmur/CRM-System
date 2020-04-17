@@ -1,0 +1,24 @@
+vendor_list:
+    path:     /vendor-search
+    defaults: { _controller: App\Controller\Customer\VendorController::index }
+    methods:  GET
+
+vendor_edit:
+    path:     /list/{id}/edit
+    defaults: { _controller: App\Controller\Customer\VendorController::edit }
+    methods:  [GET, POST]
+
+vendor_add:
+    path:     /vendor-add
+    defaults: { _controller: App\Controller\Customer\VendorController::add }
+    methods:  [GET, POST]
+
+vendor_delete:
+    path:     /{id}/delete
+    defaults: { _controller: App\Controller\Customer\VendorController::delete }
+    methods:  DELETE
+
+vendor_search:
+    path:     /search
+    defaults: { _controller: App\Controller\Customer\VendorController::search }
+    methods:  POST

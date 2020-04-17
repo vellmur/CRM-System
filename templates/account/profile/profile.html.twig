@@ -1,0 +1,268 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ form_start(form) }}
+        <div class="panel panel-default">
+            <div class="panel-head">
+                <h6><i class="icon-user"></i> {{ 'account.profile.profile'|trans({}, 'labels') }}</h6>
+                <div class="page-guide">
+                    <p>{{ 'page_tip.profile'|trans({}, 'messages') }}</p>
+                </div>
+            </div>
+            <div class="panel-body">
+                <!-- Profile information. For farm Owner show all client and user fields -->
+                {% if is_granted('ROLE_OWNER') %}
+                    <div class="col-md-6">
+                        <div class="form-group {% if form.client.name.vars.errors|length %} has-error {% endif %}">
+                            <label>{{ 'account.settings.client_name'|trans({}, 'labels') }}</label>
+                            {% if not form.client.name.vars.valid %}
+                                {{ form_widget(form.client.name, {'attr': {
+                                    'data-placement': 'top',
+                                    'title': form.client.name.vars.errors[0].message,
+                                    'class': 'form-control tip tip-open'}
+                                }) }}
+                            {% else %}
+                                {{ form_widget(form.client.name)}}
+                            {% endif %}
+                        </div>
+                        <div class="form-group {% if form.client.email.vars.errors|length %} has-error {% endif %}">
+                            <label>{{ 'account.settings.email'|trans({}, 'labels') }}</label>
+                            {% if not form.client.email.vars.valid %}
+                                {{ form_widget(form.client.email, {'attr': {
+                                    'data-placement': 'top',
+                                    'title': form.client.email.vars.errors[0].message,
+                                    'class': 'form-control tip tip-open',
+                                    'placeholder': 'account.settings.email'|trans({}, 'labels')}
+                                }) }}
+                            {% else %}
+                                {{ form_widget(form.client.email, {'attr': {
+                                    'class': 'form-control',
+                                    'placeholder':
+                                    'account.settings.email'|trans({}, 'labels')}
+                                })}}
+                            {% endif %}
+                        </div>
+                        <div class="form-group {% if form.client.currency.vars.errors|length %} has-error {% endif %}">
+                            <label>{{ 'account.settings.currency'|trans({}, 'labels') }}</label>
+                            {% if not form.client.currency.vars.valid %}
+                                {{ form_widget(form.client.currency, {'attr': {
+                                    'data-placement': 'top',
+                                    'title': form.client.currency.vars.errors[0].message,
+                                    'class': 'select tip tip-open'}
+                                }) }}
+                            {% else %}
+                                {{ form_widget(form.client.currency)}}
+                            {% endif %}
+                        </div>
+                        <div class="form-group {% if form.client.weightFormat.vars.errors|length %} has-error {% endif %}">
+                            <label>{{ 'account.settings.weight_format'|trans({}, 'labels') }}</label>
+                            {% if not form.client.weightFormat.vars.valid %}
+                                {{ form_widget(form.client.weightFormat, {'attr': {
+                                    'data-placement': 'top',
+                                    'title': form.client.weightFormat.vars.errors[0].message,
+                                    'class': 'select tip tip-open'}
+                                }) }}
+                            {% else %}
+                                {{ form_widget(form.client.weightFormat)}}
+                            {% endif %}
+                        </div>
+                        <div class="form-group {% if form.dateFormat.vars.errors|length %} has-error {% endif %}">
+                            <label>{{ 'account.settings.date_format' | trans({}, 'labels') }}</label>
+                            {% if not form.dateFormat.vars.valid %}
+                                {{ form_widget(form.dateFormat, {'attr': {
+                                    'data-placement': 'top',
+                                    'title': form.dateFormat.vars.errors[0].message,
+                                    'class': 'select tip tip-open'}
+                                }) }}
+                            {% else %}
+                                {{ form_widget(form.dateFormat)}}
+                            {% endif %}
+                        </div>
+                        <div class="form-group {% if form.locale.vars.errors|length %} has-error {% endif %}">
+                            <label>{{ 'account.settings.language'|trans({}, 'labels') }}</label>
+                            {% if not form.locale.vars.valid %}
+                                {{ form_widget(form.locale, {'attr': {
+                                    'data-placement': 'top',
+                                    'title': form.locale.vars.errors[0].message,
+                                    'class': 'select tip tip-open'}
+                                }) }}
+                            {% else %}
+                                {{ form_widget(form.locale)}}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group {% if form.client.country.vars.errors|length %} has-error {% endif %}">
+                            <label>{{ 'account.settings.country'|trans({}, 'labels') }}</label>
+                            {% if not form.client.country.vars.valid %}
+                                {{ form_widget(form.client.country, {'attr': {
+                                    'data-placement': 'top',
+                                    'title': form.client.country.vars.errors[0].message,
+                                    'class': 'select tip tip-open',
+                                    'placeholder': 'account.settings.country'|trans({}, 'labels')}
+                                }) }}
+                            {% else %}
+                                {{ form_widget(form.client.country) }}
+                            {% endif %}
+                        </div>
+                        <div class="form-group {% if form.client.timezone.vars.errors|length %} has-error {% endif %}">
+                            <label>{{ 'account.settings.timezone'|trans({}, 'labels') }}</label>
+                            {% if not form.client.timezone.vars.valid %}
+                                {{ form_widget(form.client.timezone, {'attr': {
+                                    'data-placement': 'top',
+                                    'title': form.client.timezone.vars.errors[0].message,
+                                    'class': 'select tip tip-open'}
+                                }) }}
+                            {% else %}
+                                {{ form_widget(form.client.timezone)}}
+                            {% endif %}
+                        </div>
+                        <div class="form-group {% if form.client.postalCode.vars.errors|length %} has-error {% endif %}">
+                            <label>{{ 'account.settings.postal_code'|trans({}, 'labels') }}</label>
+                            {% if not form.client.postalCode.vars.valid %}
+                                {{ form_widget(form.client.postalCode, {'attr': {
+                                    'data-placement': 'top',
+                                    'title': form.client.postalCode.vars.errors[0].message,
+                                    'class': 'form-control tip tip-open'}
+                                }) }}
+                            {% else %}
+                                {{ form_widget(form.client.postalCode, { 'attr': {'class': 'form-control'} })}}
+                            {% endif %}
+                        </div>
+                        <div class="form-group {% if form.client.region.vars.errors|length %} has-error {% endif %}">
+                            <label>{{ 'account.settings.region'|trans({}, 'labels') }}</label>
+                            {% if not form.client.region.vars.valid %}
+                                {{ form_widget(form.client.region, {'attr': {
+                                    'data-placement': 'top',
+                                    'title': form.client.region.vars.errors[0].message,
+                                    'class': 'select tip tip-open',
+                                    'placeholder': 'account.settings.region_placeholder'|trans({}, 'labels')}
+                                }) }}
+                            {% else %}
+                                {{ form_widget(form.client.region) }}
+                            {% endif %}
+                        </div>
+                        <div class="form-group {% if form.client.city.vars.errors|length %} has-error {% endif %}">
+                            <label>{{ 'account.settings.city'|trans({}, 'labels') }}</label>
+                            {% if not form.client.city.vars.valid %}
+                                {{ form_widget(form.client.city, {'attr' : {
+                                    'data-placement': 'top',
+                                    'title': form.client.city.vars.errors[0].message,
+                                    'class': 'select tip tip-open',
+                                    'placeholder': 'account.settings.city_placeholder'|trans({}, 'labels')}
+                                }) }}
+                            {% else %}
+                                {{ form_widget(form.client.city) }}
+                            {% endif %}
+                        </div>
+                    </div>
+                {% else %}
+                    <!-- For Employee show only fields related to User entity -->
+                    <div class="col-md-6">
+                        <div class="form-group {% if form.dateFormat.vars.errors|length %} has-error {% endif %}">
+                            <label>{{ 'account.settings.date_format' | trans({}, 'labels') }}</label>
+                            {% if not form.dateFormat.vars.valid %}
+                                {{ form_widget(form.dateFormat, {'attr': {
+                                    'data-placement': 'top',
+                                    'title': form.dateFormat.vars.errors[0].message,
+                                    'class': 'select tip tip-open'}
+                                }) }}
+                            {% else %}
+                                {{ form_widget(form.dateFormat)}}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group {% if form.locale.vars.errors|length %} has-error {% endif %}">
+                            <label>{{ 'account.settings.language'|trans({}, 'labels') }}</label>
+                            {% if not form.locale.vars.valid %}
+                                {{ form_widget(form.locale, {'attr': {
+                                    'data-placement': 'top',
+                                    'title': form.locale.vars.errors[0].message,
+                                    'class': 'select tip tip-open'}
+                                }) }}
+                            {% else %}
+                                {{ form_widget(form.locale)}}
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+                <div class="form-actions text-right col-md-12">
+                    <button type="submit" class="btn btn-success">{{ 'button.save'|trans({}, 'labels') }}</button>
+                </div>
+            </div>
+        </div>
+    {{ form_end(form) }}
+{% endblock body %}
+
+{% block scripts %}
+
+    <script>
+        var $fieldsToReplace = [
+            'user_form_client_region',
+            'user_form_client_city',
+            'user_form_client_postalCode',
+            'user_form_client_timezone'
+        ];
+
+       // When country/region gets selected in profile page
+       $(document).on('change', "#user_form_client_country, #user_form_client_region", function() {
+           addLocations($(this), $fieldsToReplace);
+       });
+
+        // When country/region gets selected in profile page
+       $(document).on('keyup', '#user_form_client_postalCode', function() {
+           var $this = $(this);
+
+           byTimeout(function() {
+               addLocations($this, $fieldsToReplace);
+           }, 1000);
+       });
+
+        // Function for update location values (regions, cities) for dynamical addresses fields
+       function addLocations($elem, replace)
+       {
+           var $form = $elem.closest('form');
+
+            // If client searching location by postal code, length of string must be more than 0 and less than 10
+           if ($elem.attr('id').endsWith('_postalCode')) {
+               var length = $elem.val().length;
+
+               if (length === 0) {
+                   $form.find('select[id$="region"]').val('');
+                   $form.find('select[id$="city"]').val('');
+               } else if (length > 10) {
+                   $elem.val($elem.val().slice(0, -1));
+                   return;
+               }
+           }
+
+           $('body').css('cursor', 'wait');
+
+           $.ajax({
+               url : $form.attr('action'),
+               type: $form.attr('method'),
+               data : $form.serialize(),
+               success: function(html) {
+                   for (var i = 0; i < replace.length; i++) {
+                       if (replace[i] !== $elem.attr('id')) {
+                           var replaceFrom = $('#' + replace[i]),
+                               replaceTo = $(html).find('#' + replace[i]);
+
+                            // Enable styles for select fields
+                           if (replaceTo.hasClass('select')) replaceTo.selectpicker();
+                           replaceFrom.closest('.form-group').replaceWith(replaceTo.closest('.form-group'));
+                       }
+                   }
+               },
+               error: function (response) {
+                   console.log(response)
+               },
+               complete: function () {
+                   $('body').css('cursor', 'default');
+               }
+           });
+       }
+    </script>
+{% endblock %}

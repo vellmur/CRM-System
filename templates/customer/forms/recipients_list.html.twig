@@ -1,0 +1,26 @@
+{% for key, customer in customers %}
+    <tr {{ key is not divisible by (2) ? "class='row-style'" }}>
+        <td>{{ customer.fullname }}</td>
+        <td>{{ customer.email }}</td>
+        <td>{{ customer.shares|length ? customer.shares[0].shareName }}</td>
+        <td>
+            <label class="checkbox-info" for="email_recipients_{{ key }}">
+                <input type="checkbox" data-name="{{ customer.fullname }}" id="email_recipients_{{ key }}"
+                       name="email[recipients][]" value="{{ customer.id }}" class="styled"
+                       {{ recipients is defined and (customer.id in recipients) ? "checked" }}>
+            </label>
+        </td>
+    </tr>
+    {% if customer.shares|length > 1 %}
+        {% for key, share in customer.shares %}
+            {% if key > 0 %}
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>{{ share.shareName }}</td>
+                    <td></td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endfor %}

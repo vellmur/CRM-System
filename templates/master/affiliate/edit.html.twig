@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% if form is not null %}
+        {{ form_start(form, { 'attr': {'role' : 'form', 'class' : 'form-horizontal'} }) }}
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group {% if form.name.vars.errors | length > 0 %} has-error {% endif %}">
+                    {{ form_label(form.name) }}
+                    <div class="col-md-10 col-sm-9 col-xs-7">
+                        {% if not form.name.vars.valid %}
+                            {{ form_widget(form.name, {'attr' : {'data-placement' : 'top', 'title' : form.name.vars.errors[0].message, 'class' : 'form-control tip tip-open'}}) }}
+                        {% else %}
+                            {{ form_widget(form.name)}}
+                        {% endif %}
+                    </div>
+                </div>
+                <div {% if form.email.vars.errors | length > 0 %} class="form-group has-error" {% else %} class="form-group" {% endif %}>
+                    {{ form_label(form.email) }}
+                    <div class="col-md-10 col-sm-9 col-xs-7">
+                        {{ form_widget(form.email) }}
+                        {{ form_errors(form.email) }}
+                    </div>
+                </div>
+                <div class="form-actions text-right">
+                    <button type="submit" class="btn btn-action">{{ 'button.save'|trans({}, 'labels') }}</button>
+                </div>
+            </div>
+        </div>
+        {{ form_end(form) }}
+    {% endif %}
+{% endblock body %}
+

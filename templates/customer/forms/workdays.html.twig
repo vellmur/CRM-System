@@ -1,0 +1,43 @@
+{{ form_label(workdays) }}
+<div class="col-md-10 col-sm-9 col-xs-7">
+    {% for workday in workdays %}
+        <div class="row" style="margin-bottom: 10px;">
+            {{ form_widget(workday.weekday) }}
+            <div class="col-md-2">
+                <div class="checkbox">
+                    <label>
+                        {{ form_widget(workday.isActive) }}
+                        {{ workday.vars.value.weekdayName|lower|trans([], 'choices')}}
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-10 {{ workday.vars.value.isActive == false ? 'hidden' }}"
+                 id="worktime_{{ workday.vars.value.id }}">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        {{ form_widget(workday.startTime) }}
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="input-group">
+                            {{ form_widget(workday.duration) }}
+                            <div class="input-group-addon">
+                                <span> {{ 'customer.location.hours'|trans({}, 'labels')|upper }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    {% set endTime = workday.startTime.vars.value|get_end_time(workday.duration.vars.value) %}
+                    <div class="form-group">
+                        <input type="text" id="location_{{ workday.vars.value.id }}_endTime"
+                               class="form-control custom-read-only"
+                               value="{{ endTime ? endTime|date('h:i A') : ''}}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% do form.workdays.setRendered %}

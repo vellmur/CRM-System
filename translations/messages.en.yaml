@@ -1,0 +1,153 @@
+login:
+    log_into: Log into
+    username: Username or Email
+    login: Log in
+    password: Password
+    forgot_password: Forgot password?
+    create_account: Create account
+    have_no_account: Don't have an account?
+register:
+    create_account: Create account
+    username: Username
+    your_language: Your language
+    your_email: Your email
+    create_password: Create password
+    repeat_password: Repeat password
+    passwords_dont_match: The entered passwords don't match.
+    farm_name: Farm name
+    have_account: Have an account
+    terms: By creating an account, you agree to our Terms of Service and have read and understood the Privacy Policy
+    account_created: Your account has been created
+    check_your_inbox: Check your inbox for a verification email.
+    if_no_email: If you do not receive your email
+    check_spam: please check your Spam folder
+    email_in_spam: just in case the confirmation email got delivered there instead of your inbox.
+    if_so: If so
+    mark_not_spam: select the confirmation message and mark it Not Spam
+    receive_in_future: which should allow future messages to get through.
+    email_confirmed: Congrats %username%, your account is now activated.
+    now_can_login: Now you can login
+resetting:
+    enter_new_password: Enter new password
+    password: Type your new password
+    repeat_password: Repeat your new password
+    forgot_password: Forgot password
+    reset_password: Reset password
+    email_sent: An email has been sent
+    check_your_inbox: Check your inbox for your email. If you do not receive your email, please check your spam folder.
+    resetting_timeout: 'Note: You can only request a new password once in a %hours% hour period'
+    password_updated: Congrats %username%, your password was updated.
+    email_link: To reset your password, please click on this link
+    successful_saving: Successfull saving!
+help:
+    help: Help
+    support:
+        title: Support
+        message: Message
+        subject: Subject
+        enter_message: Enter your message
+        subjects:
+            technical: Technical support
+            payment: Payment support
+            recommendations: Suggestions and recommendations
+        sent: We have received your message
+        wait_for_answer: We will do our best to answer you quickly
+setup_instructions:
+    setup: Setup
+    plants: Before you can do anything here, first go to %link_start%SETUP>PLANTS%link_end% and tell us what you grow.
+    gardens: Then go to %link_start%SETUP>GARDENS%link_end% and tell us about your gardens.
+    crops: Finally, go to %link_start%MANAGE CROPS>PLANTS IN GARDEN%link_end% to tell us how your garden is set up.
+    video: Watch %link_start% [this video] %link_end% to see how to setup your site.
+page_tip:
+    profile: Set up your preferences to customize how Black Dirt Software works for you.
+    users: Black Dirt Software allows you unlimited users (without charging extra) so you can better track who is doing what on your farm.
+    plants: Here you can add or remove the different plants you grow. (Page automatically saves each time you check or uncheck a box.)
+    gardens: Once we know what you grow, we need to know where you grow it. We recommend using numbers for your gardens, but you can name them however you like.
+    notes: Use our notes tool to track the weekly tasks involved in running an efficient farm. Use our prepopulated list or click to customize.
+    crops: If you accidentally end the wrong garden, or if you want to put two plants in the same garden, or if you just want to edit a crop, this is the place to do it.
+    dashboard: Here you can see, at-a-glance and in real-time, how your farm is growing.
+    tray_starts: Enter your tray starts and we’ll help you track your trays.
+    plants_in_garden: Use this section to tell Black Dirt when and where you put your seeds (or transplants) in the ground.
+        If you want to put a second plant in an already occupied garden, you can do that in %link%SETUP>Crops.%endlink%
+    harvest_date: When a Plant is assigned to a garden with a Plant date, then the plant will appear on the Harvest date list.
+        Record the harvest date here, and we’ll create a record of your planting cycles for better harvesting.
+    end_of_garden: When a plant is assigned to a garden with a Plant Date, then the plant will appear on the End of garden list.
+        When a garden is done, record it here. (If you end a garden accidentally, go to %link%REPORTS>Garden History%endlink%, click edit, and correct the mistake.)
+    seeds:
+        vendor: Enter your seed vendors here.
+        order: Select the vendor, order number and date, then ADD your Seed Order. Once it’s added to the table below, select the PLUS button to add your seeds.
+        seeds: Tell us which plants you ordered seeds for, how many you bought, then click ADD. Do this for all the seeds on this order.
+    report:
+        plant: See everything that’s growing and sort it by plant.
+        garden: See what you have in each of your gardens and how long it’s been planted.
+        history: Use the filters up top to choose your garden. Each history will show you by year what you grew in that garden.
+            If you’ve incorrectly entered something, use the edit tool to correct your mistake.
+        now_growing: See everything that’s growing and sort it by plant.
+        what_we_grew: See what you grew by year.
+        where_to_plant: Use the filter at the top to select which seeds you’re going to plant.
+            Black Dirt will then compare your open gardens with your garden history to make sure you don’t plant the same type of seed in the same garden within the same 3 years.
+    merchant: Enter your merchant account information so your customers can start buying your produce.
+subscription:
+    crops: No payment required because we want all small farms to be successful. When you do pay, we use the money to further develop Black Dirt Software.
+    customers: Unlock the ability to manage your customer database, automate emails, process orders and payments, and let your customers manage their own profile.
+    company: Our most powerful platform is the Company module. It includes the marketing, sales and business tools your farm needs to be profitable.
+    pay_what_you_can: Pay what you can
+    coming_soon: Coming soon
+    thanks_for_support: Thank you for supporting Black Dirt.
+    card_description: We accept credit cards because it’s easy for you.
+        But we also hate giving away the farm to a banker, which is why we prefer Venmo.
+    venmo_thanks: Thank you for choosing to pay with Venmo. It allows us to keep 100% of your donation.
+    cart: Cart
+    total: Total
+    payment_confirmed: Confirmation Message!
+    confirmation_message: Thank you! We’re glad you’re finding Black Dirt useful on your farm and appreciate your support.
+payment:
+    description:
+        first_level: $%amount% This is approximately the fee for one farm account on our server.
+        second_level: $%amount% This covers the cost for maintaining our servers.
+        third_level: $%amount% This covers the cost for Black Dirt Software support.
+        fourth_level: $%amount% This covers the cost for new features for one year.
+    description_bitcoin:  |
+        Don't have Bitcoin?
+        %link_start%Click here%link_end% to get Bitcoin.
+    description_card: |
+        Why is this payment method $100 more than paying with Bitcoin?
+        Because paying with credit card requires us to pay much more in admin costs.
+    credit_card: Credit card
+    validation:
+        empty_module: You need to select one of the modules.
+        empty_method: You need to select one of the methods.
+        empty_amount: Payment amount can`t be 0.
+notes:
+    default: Change this note to the action you preform during this week.
+customer:
+    upload:
+        instructions:
+            instructions: Instructions
+            1: Your file must have a top row header with the following fields
+            2: First name, Last name, Email, Phone, Additional information, Address, Postal code, Province/State, City.
+            3: The order of the data is not important but the header fields must be exactly as we have them listed.
+            4: The upload will not import duplicates. Duplicate checking is based on the email.
+website:
+    domain_tip: This is the domain name of your website. After you will add the name, website link shown in the format
+    website_name_tip: This is the name of your website. This text will be shown on the main Website page.
+modals:
+    delete:
+        title: Delete
+        message: Do you really want to delete it?
+error:
+    403:
+        title: Upgrade Your Farm
+        message: Ready to unlock the most powerful customer management system in farming?
+            Upgrade for the ability to manage your customer database, automate emails, and process orders and payments,
+            while allowing customers to manage their own accounts with little to no effort on your part.
+        button: Go to payment
+    404:
+        title: 404 - Page not found
+        message: '- Oops, an error has occurred. Page not found! -'
+        button: Return back to site
+    500:
+        title: 500 - Undefined error
+        message: '- Oops, an error has occurred. Something went wrong! -'
+        button: Return back to site
+        show_exception: Show exception

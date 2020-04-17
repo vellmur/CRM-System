@@ -1,0 +1,37 @@
+access:
+    access_period: You have %num% days left in your service period.
+    access_expired: Your service period for this module has expired.
+    owner_access: Only owner have access to this functionality!
+login:
+    not_found: Username or email could not be found.
+    confirmation_required: You need to confirm your email first.
+    didnt_receive: Didn't receive the confirmation email?
+    contact_us: Contact us here
+sign_up:
+    form:
+        email:
+            not_exists: This email does`nt exist.
+            not_valid: Please enter a valid email address.
+        username:
+            min_message: "Your username must have at least {{ limit }} characters."
+            max_message: "Your username can have maximum {{ limit }} characters."
+        password:
+            min_message: "Your password must have at least {{ limit }} characters."
+            max_message: "Your password can have maximum {{ limit }} characters."
+validation:
+    form:
+        required: This field is a required.
+        minlength: "This # can not be less than {{ limit }}."
+        maxlength: "This # can not exceed {{ limit }}."
+        exactly_length: "This value should have exactly {{ limit }} character."
+        unique: This value must be unique.
+        date: This field must be a date.
+        wrong_password: Your password is wrong!
+        password_mismatch: The entered passwords don't match.
+        email_unique: This email is already taken.
+        not_valid_email: Please enter a valid email address.
+        merchant_unique: This merchant is already exists.
+        phone_length: Phone must contain %number% digits.
+renewal:
+    product_required: A product is required to continue.
+    location_required: A location and a pickup day is required to continue.

@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% if referrals | length > 0 %}
+        <div class="panel panel-default">
+            <div class="datatable-ajax-source">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr role="row">
+                            <th>Client name</th>
+                            <th>Amount</th>
+                            <th>Referral</th>
+                            <th>Date</th>
+                            <th>Is Paid</th>
+                        </tr>
+                        </thead>
+                        <tbody id="users_list">
+                        {% for r in referrals %}
+                            <tr>
+                                <td>{{ r.referral.client.name }}</td>
+                                {% if r.amount is not null %}
+                                    <td>${{ r.amount }}</td>
+                                    <td>${{ r.amount * 0.3 }}</td>
+                                    <td>{{ r.createdAt | userDateFormat('dd-MM-yyyy') }}</td>
+                                    <td class="form-group">
+                                        <input type="checkbox" data-path="{{ path('master_referral_isPaid', {id : r.referral.id }) }}" name="referral-paid" id="{{ r.referral.id }}" class="switch" data-on-label="Yes" data-off-label="No" value="{{ r.referral.isPaid }}" {% if r.referral.isPaid == 1 %} {{ "checked='true'" }} {% endif %}"/>
+                                    </td>
+                                {% else %}
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock body %}
+

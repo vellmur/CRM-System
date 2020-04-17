@@ -1,0 +1,46 @@
+{% extends "home/template.html.twig" %}
+
+{% block title %}Blog{% endblock %}
+
+{% block top_banner %}
+    <div class="banner-thumbnail-wrapper collection-type-index header-beginning" data-content-field="main-image">
+        <div class="color-overlay"></div>
+        <figure id="thumbnail" class="loading content-fill" style="overflow: hidden;">
+            <img data-src="{{ asset('home/images/min/LaNayFerme_032615_stephenson-114.jpg') }}"
+                 data-image-dimensions="2500x1663"
+                 data-image-focal-point="0.5,0.5"
+                 data-position-mode="standard"
+                 data-image-resolution="2500w"
+                 data-parent-ratio="4.3"
+                 alt="LaNayFerme_032615_stephenson-114.jpg"
+                 src="{{ asset('home/images/min/LaNayFerme_032615_stephenson-114.jpg') }}">
+        </figure>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="blog-list">
+        {% for post in posts %}
+            <article>
+                <header class="entry-header">
+                    <h2 class="entry-title">
+                        <a href="{{ path('home_post', {'slug': post.slug}) }}" class="u-url" rel="bookmark">{{ post.title }}</a>
+                    </h2>
+                    <div class="meta-below-title">
+                        <div class="entry-byline">
+                            <span>Black Dirt Software</span>
+                        </div>
+                        <div class="entry-dateline">
+                            <span>{{ post.createdAt|date('F d, Y') }}</span>
+                        </div>
+                    </div>
+                </header>
+                <div class="post-content">
+                    <div class="row">
+                        {{ post.text|raw }}
+                    </div>
+                </div>
+            </article>
+        {% endfor %}
+    </div>
+{% endblock %}

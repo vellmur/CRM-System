@@ -1,0 +1,343 @@
+{% extends "front-layout.html.twig" %}
+
+{% block body %}
+    {% set domain = app.request.schemeAndHttpHost ~ app.request.baseUrl %}
+    <!-- Page tabs -->
+    <div class="tabbable page-tabs membership-panel tab-spaceless">
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a href="#profile" data-toggle="tab">
+                    <span class="icon-user-tie"></span>
+                    {{ 'membership.profile'|trans({}, 'labels') }}
+                </a>
+            </li>
+            <li>
+                <a href="#order" data-toggle="tab">
+                    <span class="icon-cart5"></span>
+                    {{ 'customer.orders.order'|trans({}, 'labels') }}
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active fade in" id="profile">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="panel panel-default form-horizontal">
+                            <div class="panel-heading theme-style">
+                                <h6 class="panel-title"> {{ 'customer.orders.vendor'|trans({}, 'labels') }}</h6>
+                            </div>
+                            <div class="panel-body form-body">
+                                {% set vendor = form.vars.value.vendor %}
+                                <div class="form-group">
+                                    <label class="col-md-3 col-sm-3 col-xs-5 control-label" for="name">
+                                        {{ 'customer.vendor.name'|trans({}, 'labels') }}
+                                    </label>
+                                    <div class="col-md-9 col-sm-9 col-xs-7">
+                                        <input type="text" class="form-control custom-read-only" id="name" value="{{ vendor.name }}" readonly>
+                                    </div>
+                                </div>
+                                <h6><i class="icon-truck"></i> {{ 'customer.address.types.delivery'|trans({}, 'labels') }}</h6><hr>
+                                <div class="address">
+                                    <div class="form-group">
+                                        <label class="col-md-3 col-sm-3 col-xs-5 control-label" for="street">
+                                            {{ 'customer.address.street'|trans({}, 'labels') }}
+                                        </label>
+                                        <div class="col-md-9 col-sm-9 col-xs-7">
+                                            <input type="text"
+                                                   class="form-control custom-read-only"
+                                                   id="street"
+                                                   value="{{ vendor.address.street }}"
+                                                   readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 col-sm-3 col-xs-5 control-label" for="apartment">
+                                            {{ 'customer.address.apartment'|trans({}, 'labels') }}
+                                        </label>
+                                        <div class="col-md-9 col-sm-9 col-xs-7">
+                                            <input type="text"
+                                                   class="form-control custom-read-only"
+                                                   id="apartment"
+                                                   value="{{ vendor.address.apartment }}"
+                                                   readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 col-sm-3 col-xs-5 control-label" for="postalCode">
+                                            {{ 'customer.address.postal_code'|trans({}, 'labels') }}
+                                        </label>
+                                        <div class="col-md-9 col-sm-9 col-xs-7">
+                                            <input type="text"
+                                                   class="form-control custom-read-only"
+                                                   id="postalCode"
+                                                   value="{{ vendor.address.postalCode }}"
+                                                   readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 col-sm-3 col-xs-5 control-label" for="region">
+                                            {{ 'customer.address.region'|trans({}, 'labels') }}
+                                        </label>
+                                        <div class="col-md-9 col-sm-9 col-xs-7">
+                                            <input type="text"
+                                                   class="form-control custom-read-only"
+                                                   id="region"
+                                                   value="{{ vendor.address.region }}"
+                                                   readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3 col-sm-3 col-xs-5 control-label" for="city">
+                                            {{ 'customer.address.city'|trans({}, 'labels') }}
+                                        </label>
+                                        <div class="col-md-9 col-sm-9 col-xs-7">
+                                            <input type="text"
+                                                   class="form-control custom-read-only"
+                                                   id="city"
+                                                   value="{{ vendor.address.city }}"
+                                                   readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        {{ form_start(form, {'attr': {'class': 'form-horizontal jquery-validation'}}) }}
+                            <div class="panel panel-default">
+                                <div class="panel-heading theme-style">
+                                    <h6 class="panel-title"> {{ 'customer.search.contact'|trans({}, 'labels') }}</h6>
+                                </div>
+                                <div class="panel-body form-body form-horizontal">
+                                    <div class="form-group {{ form.name.vars.errors|length ? 'has-error' }}">
+                                        {{ form_label(form.name) }}
+                                        <div class="col-md-10 col-sm-9 col-xs-7">
+                                            {{ form_widget(form.name)}}
+                                            {% if not form.name.vars.valid %}
+                                                <label id="{{ form.name.vars.id }}-error"
+                                                       class="validation-error-label"
+                                                       for="{{ form.name.vars.id }}">
+                                                    {{ form.name.vars.errors[0].message }}
+                                                </label>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="form-group {{ form.email.vars.errors|length ? 'has-error' }}">
+                                        {{ form_label(form.email) }}
+                                        <div class="col-md-10 col-sm-9 col-xs-7">
+                                            {{ form_widget(form.email)}}
+                                            {% if not form.email.vars.valid %}
+                                                <label id="{{ form.email.vars.id }}-error"
+                                                       class="validation-error-label"
+                                                       for="{{ form.email.vars.id }}">
+                                                    {{ form.email.vars.errors[0].message }}
+                                                </label>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="form-group {{ form.phone.vars.errors|length ? 'has-error' }}">
+                                        {{ form_label(form.phone) }}
+                                        <div class="col-md-10 col-sm-9 col-xs-7">
+                                            {{ form_widget(form.phone)}}
+                                            {% if not form.phone.vars.valid %}
+                                                <label id="{{ form.phone.vars.id }}-error"
+                                                       class="validation-error-label"
+                                                       for="{{ form.phone.vars.id }}">
+                                                    {{ form.phone.vars.errors[0].message }}
+                                                </label>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="control-label"> {{ 'membership.automated_emails'|trans({}, 'labels') }}</label>
+                                            <div class="checkbox">
+                                                <label class="checkbox-inline checkbox-info" for="contact_notifyEnabled">
+                                                    <input type="checkbox"
+                                                           id="contact_notifyEnabled"
+                                                           name="contact[notifyEnabled]"
+                                                           class="styled"
+                                                           value="{{ form.notifyEnabled.vars.value }}"
+                                                           {{ form.vars.data.notifyEnabled ? 'checked="checked"' }}
+                                                    >
+                                                    {{ 'membership.notifies.weekly'|trans({}, 'labels') }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row form-actions">
+                                        <div class="col-xs-12">
+                                            <button type="submit" class="btn btn-success pull-right">
+                                                {{ 'button.save'|trans({}, 'labels') }}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% do form.notifyEnabled.setRendered %}
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+            <!-- /first tab -->
+
+            <!-- Second tab -->
+            <div class="tab-pane" id="order">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="panel panel-default">
+                        <div class="panel-heading theme-style">
+                            <h6 class="panel-title">{{ 'customer.orders.order'|trans({}, 'labels') }}</h6>
+                        </div>
+                        <div class="panel-body">
+                            <!-- If vendor is active -> Show orders forms -->
+                            {% if form.vars.value.vendor.isActive %}
+                                {{ form_start(orderForm, {'attr': {'class': 'form-horizontal'} }) }}
+                                    <div class="panel panel-default">
+                                        <div class="panel-body parent">
+                                            <div class="form-group">
+                                                {{ form_label(orderForm.vendor) }}
+                                                <div class="col-md-10 col-sm-9 col-xs-7">
+                                                    {{ form_widget(orderForm.vendor, {
+                                                        'attr': {
+                                                            'class': 'select custom-read-only', 'readonly': 'true'
+                                                        }
+                                                    }) }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group {{ orderForm.orderDate.vars.errors | length ? "has-error" }}">
+                                                {{ form_label(orderForm.orderDate) }}
+                                                <div class="col-md-10 col-sm-9 col-xs-7">
+                                                    {% if not orderForm.orderDate.vars.valid %}
+                                                        {{ form_widget(orderForm.orderDate, {
+                                                            'attr': {
+                                                                'data-placement': 'top',
+                                                                'title': orderForm.orderDate.vars.errors[0].message,
+                                                                'class': 'form-control tip tip-open'
+                                                            }
+                                                        }) }}
+                                                    {% else %}
+                                                        {{ form_widget(orderForm.orderDate)}}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="form-actions text-right">
+                                                <button type="submit" class="btn btn-action">
+                                                    {{ 'button.add'|trans({}, 'labels') }}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {{ form_end(orderForm) }}
+
+                                {% if orders|length > 0 %}
+                                    <div class="panel panel-default">
+                                        <div class="table-vertical">
+                                            <table class="table">
+                                                <thead>
+                                                <tr class="heading-style">
+                                                    <th>{{ 'customer.vendor.vendor'|trans({}, 'labels') }}</th>
+                                                    <th>{{ 'customer.share.order_date'|trans({}, 'labels') }}</th>
+                                                    <th>{{ 'table.add_items'|trans({}, 'labels') }}</th>
+                                                    <th>{{ 'table.delete'|trans({}, 'labels') }}</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% for key, order in orders %}
+                                                    <tr class="parent{% if key is not divisible by (2) %} row-style {% endif %}">
+                                                        <td class="form-group">{{ order.vendor.name }}</td>
+                                                        <td class="form-group">
+                                                            {{ order.orderDate|date(app.user.getTwigFormatDate()) }}
+                                                        </td>
+                                                        <td class="form-group">
+                                                            <button type="button"
+                                                                    data-toggle="collapse"
+                                                                    href="#products-{{ order.id }}"
+                                                                    data-shareId="{{ order.id }}"
+                                                                    class="btn btn-action btn-icon btn-products">
+                                                                <i class="icon-plus2"></i>
+                                                            </button>
+                                                        </td>
+                                                        <td class="form-group">
+                                                            <button type="button"
+                                                                    data-path ="{{ path('member_order_delete', {
+                                                                        orderId: order.id,
+                                                                        role: 'vendor'
+                                                                    }) }}"
+                                                                    data-toggle="modal"
+                                                                    href="#small_modal"
+                                                                    class="btn btn-danger btn-icon btn-delete"> <i class="icon-trash"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="child">
+                                                        <td colspan="5">
+                                                            <div id="products-{{ order.id }}" class="panel-collapse collapse in">
+                                                                <div class="panel-body">
+                                                                    <!-- Include add product form -->
+                                                                    {% include 'customer/order/templates/order_product_form.html.twig' with {
+                                                                        'productForm': productsForms[order.id][0], role: 'vendor', 'orderId': order.id
+                                                                    } %}
+
+                                                                    <!-- Include update products table list -->
+                                                                    {% include 'customer/order/templates/order_products_table.html.twig' with {
+                                                                        'forms' : productsForms[order.id]
+                                                                    } %}
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% else %}
+                                <p>{{ 'customer.vendor.vendor_activated'|trans({}, 'labels') }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {{ include ("modal/delete-modal.html.twig") }}
+            </div>
+        </div>
+    </div>
+    <!-- /page tabs -->
+{% endblock body %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{{ asset('js/collections.js') }}"></script>
+
+    <!-- Google maps files -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFudPQ3bgPztQLPBngp9B425BBl9q5Duo&libraries=places"></script>
+    <script src="{{ asset('js/plugins/googleMapsSearch.js') }}"></script>
+    <!-- /End of google maps files -->
+
+    <!-- Added JS files -->
+    <script type="text/javascript" src="{{ asset('js/validation/validation.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/functions.js') }}"></script>
+    <!--
+
+    <script>
+        var $addressFields = $('input[name$="street]"]');
+
+        if ($addressFields[0]) {
+            // Enable google address search autocomplete
+            var country = '{{ form.vars.value.vendor.client.country }}';
+            initAutocomplete($addressFields, country);
+        }
+
+        $('.styled').uniform({radioClass: 'choice'});
+
+        // Enable tab from link
+        var hash = $.trim( window.location.hash );
+        if (hash) $('.nav-tabs a[href$="' + hash + '"]').trigger('click');
+
+        $('#_submit').on('click', function () {
+            if (hash) {
+                window.location.hash = '';
+            }
+        });
+    </script>
+{% endblock %}

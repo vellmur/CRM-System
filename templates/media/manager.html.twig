@@ -1,0 +1,33 @@
+<div class="panel panel-default">
+    <div class="panel-head">
+        <h6><i class="icon-file-picture"></i> {{ 'website.media.media_gallery'|trans({}, 'labels') }}</h6>
+    </div>
+    <div class="panel-body">
+        <form method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-actions text-right">
+                        <input type="file" id="imageManager" name="images[]" multiple="multiple">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript" src="{{ asset('js/plugins/uploaders/fileinput/fileinput.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/pages/media/manager.js') }}?v=1"></script>
+<script>
+    let managerId = 'imageManager',
+        uploadPath = '{{ path('manager_images_upload', app.request.query.all) }}',
+        imagesListId = 'image-list',
+        managerLabels = {
+            addBtn: "{{ 'button.add'|trans({}, 'labels') }}",
+            removeBtn: "{{ 'button.remove'|trans({}, 'labels') }}",
+            uploadBtn: "{{ 'button.upload'|trans({}, 'labels') }}",
+            dropTitle: "{{ 'website.media.drag_and_drop_title'|trans({}, 'labels') }}",
+            cancelBtn: "{{ 'button.cancel'|trans({}, 'labels') }}"
+        };
+
+    initManager(managerId, uploadPath, imagesListId, managerLabels);
+</script>

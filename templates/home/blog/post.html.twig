@@ -1,0 +1,50 @@
+{% extends "home/template.html.twig" %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block top_banner %}
+    {% if post.thumb is not null %}
+        <div class="banner-thumbnail-wrapper collection-type-index header-beginning" data-content-field="main-image">
+            <div class="color-overlay"></div>
+            <figure id="thumbnail" class="loading content-fill" style="overflow: hidden;">
+                <img data-src="{{ asset(vich_uploader_asset(post.thumb)) }}"
+                     data-image-dimensions="2500x1663"
+                     data-image-focal-point="0.5,0.5"
+                     data-position-mode="standard"
+                     data-image-resolution="2500w"
+                     data-parent-ratio="4.3"
+                     alt="{{ post.slug }}"
+                     src="{{ asset(vich_uploader_asset(post.thumb)) }}">
+            </figure>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <article>
+        <header class="entry-header">
+            <h1>{{ post.title }}</h1>
+            <div class="meta-below-title">
+                <div class="entry-byline">
+                    <span>Black Dirt Software</span>
+                </div>
+                <div class="entry-dateline">
+                    <span>{{ post.createdAt|date('F d, Y') }}</span>
+                </div>
+            </div>
+        </header>
+        <div class="post-content">
+            <div class="row">
+                {{ post.text|raw }}
+            </div>
+        </div>
+    </article>
+    <style>
+        .post-content img {
+            display: block;
+            border: 0;
+            line-height: 0;
+            text-align: center;
+        }
+    </style>
+{% endblock %}

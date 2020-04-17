@@ -1,0 +1,14 @@
+member_location:
+    path:     /customer-locations
+    defaults: { _controller: App\Controller\Customer\LocationController::addLocation }
+    methods:  [GET, POST]
+
+ajax_member_location_update:
+    path:     /update/{id}
+    defaults: { _controller: App\Controller\Customer\LocationController::updateLocation }
+    methods:  POST
+
+ajax_location_delete:
+    path:     /delete/{id}
+    defaults: { _controller: App\Controller\Customer\LocationController::deleteLocation }
+    methods:  DELETE

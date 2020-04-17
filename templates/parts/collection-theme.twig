@@ -1,0 +1,15 @@
+{% block _form_collections_row %}
+    {% if prototype is defined %}
+        {%- set attr = attr | merge({'data-prototype': form_row(prototype) }) -%}
+    {% endif %}
+    <div class="collection_item">
+        {% for child in form %}
+            <div class="form-group">{{ form_label(child) }}
+                <div class="col-md-10 col-sm-9 col-xs-7">
+                    {{ form_widget(child) }}
+                </div>
+            </div>
+        {% endfor %}
+       <button class="btn btn-danger btn-icon delete-collection" href="#"><i class="icon-trash"></i></button>
+    </div>
+{% endblock %}

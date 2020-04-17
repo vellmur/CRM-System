@@ -1,0 +1,22 @@
+<!-- Small modal -->
+<div id="send-testimonial" class="modal fade">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <button type="button" id='delete_modal_close' class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"><i class="icon-envelope"></i> Send email</h4>
+            </div>
+
+            <div class="modal-body with-padding">
+                <p>Are you sure that you want to send the email?</p>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-link" data-dismiss="modal">{{ 'button.close' | trans({}, 'labels') }}</button>
+                <button class="btn btn-action" id="button-send-email">{{ 'button.yes'|trans({}, 'labels') }}</button>
+                <div class="data-area" id="data-area"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /small modal -->

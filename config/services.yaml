@@ -1,27 +1,109 @@
-# This file is the entry point to configure your own services.
-# Files in the packages/ subdirectory configure your dependencies.
-
-# Put parameters here that don't need to change on each machine where the app is deployed
-# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    domain: '%env(DOMAIN)%'
+    container.dumper.inline_factories: true
+    container.dumper.inline_class_loader: true
+    google_recaptcha_site_key: '%env(GOOGLE_RECAPTCHA_SITE_KEY)%'
+    app.path.images: /uploads/images
 
 services:
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: false       # Allows optimizing the container by removing unused services; this also means
+          # fetching services directly from the container via $container->get() won't work.
+        # The best practice is to be explicit about your dependencies anyway.
 
-    # makes classes in src/ available to be used as services
-    # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/*'
-        exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+        exclude: '../src/{Entity,Tests,Application,Kernel.php}'
 
-    # controllers are imported separately to make sure services can be injected
-    # as action arguments even if you don't extend any base controller class
-    App\Controller\:
-        resource: '../src/Controller'
-        tags: ['controller.service_arguments']
+    # Managers
+    App\Manager\MemberEmailManager:
+        arguments:
+            $host: '%env(DOMAIN)%'
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    App\Manager\EmailManager:
+        arguments:
+            $httpProtocol: '%env(HTTP_PROTOCOL)%'
+            $domain: '%env(DOMAIN)%'
+
+    App\Manager\ImageManager:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
+    # End of managers
+
+    App\Service\MailService:
+        arguments:
+            $mailerUser: '%env(MAILER_USER)%'
+            $domain: '%env(DOMAIN)%'
+
+    App\Service\LocationService:
+        arguments:
+            $geonamesLogin: '%env(GEONAMES_LOGIN)%'
+
+    App\Service\Translation\DbLoader:
+        arguments:
+            $translationEntity: App\Entity\Translation\TranslationKey
+        tags:
+            - { name: translation.loader, alias: db }
+
+    App\Service\Translation\TranslationService:
+        arguments:
+            $rootDir: '%kernel.project_dir%'
+
+    app.menu_builder:
+        class: App\Menu\Builder
+        arguments: ["@knp_menu.factory"]
+        tags:
+            - { name: knp_menu.menu_builder, method: mainMenu, alias: main }
+
+    App\Namer\ImageDirectoryNamer:
+        public: true
+
+    Symfony\Component\DomCrawler\Crawler: ~
+
+    Cocur\Slugify\Slugify: ~
+
+    Detection\MobileDetect: ~
+
+    Wa72\HtmlPageDom\HtmlPage: ~
+
+    Symfony\Component\Process\Process: ~
+
+    App\Command\CheckBouncedEmailsCommand:
+        arguments:
+            $server: '%env(MAILER_HOST)%'
+            $user: '%env(MAILER_USER)%'
+            $pass: '%env(MAILER_PASSWORD)%'
+
+    App\Command\ClearCacheCommand:
+        arguments:
+            $domain: '%env(DOMAIN)%'
+            $protocol: '%env(HTTP_PROTOCOL)%'
+            $rootDir: '%kernel.project_dir%'
+            $env: '%kernel.environment%'
+
+    # End of Services
+
+    Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
+        arguments:
+            - 'mysql:host=%env(DATABASE_HOST)%;dbname=%env(DATABASE_NAME)%'
+            - { db_username: '%env(DATABASE_USER)%', db_password: '%env(DATABASE_PASSWORD)%' }
+
+    Symfony\Bridge\Doctrine\Security\RememberMe\DoctrineTokenProvider: ~
+
+    App\EventListener\ErrorListener:
+        arguments:
+            $env: "%kernel.environment%"
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
+
+    App\EventListener\ViewListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.request }
+
+    App\EventListener\RegistrationListener:
+        tags:
+            - { 'name': 'kernel.event_listener', 'event': 'App\Event\RegistrationSuccessEvent', 'method': 'onRegistrationSuccess' }

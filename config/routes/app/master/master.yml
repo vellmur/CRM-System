@@ -1,0 +1,176 @@
+master_dashboard:
+    path:     /dashboard
+    defaults: { _controller: App\Controller\Master\MasterController::dashboard }
+    methods:  GET
+
+master_clients:
+    path:     /clients
+    defaults: { _controller: App\Controller\Master\MasterController::clients }
+    methods:  GET
+
+master_client_delete:
+    path:     /delete/{id}
+    defaults: { _controller: App\Controller\Master\MasterController::deleteClient }
+    methods:  DELETE
+
+master_clients_search:
+    path:     /clients/search
+    defaults: { _controller: App\Controller\Master\MasterController::searchClients }
+    methods:  POST
+
+master_clients_filter:
+    path:     /clients/filter
+    defaults: { _controller: App\Controller\Master\MasterController::filterClients }
+    methods:  POST
+
+master_client_edit:
+    path:     /clients/{id}/edit
+    defaults: { _controller: App\Controller\Master\MasterController::editClient }
+    methods: [GET, POST]
+
+master_client_access_update:
+    path:     /clients/update/{id}
+    defaults: { _controller: App\Controller\Master\MasterController::ajaxAccessUpdate }
+    methods:  POST
+
+master_affiliates:
+    path:     /affiliates
+    defaults: { _controller: App\Controller\Master\MasterController::affiliates }
+    methods:  [GET, POST]
+
+master_affiliate_edit:
+    path:    /affiliates/{id}/update
+    defaults: { _controller: App\Controller\Master\MasterController::editAffiliate }
+    methods: [GET, POST]
+
+master_affiliate_referrals:
+    path:     /affiliates/{id}/referrals/{status}
+    defaults: { _controller: App\Controller\Master\MasterController::affiliateReferrals }
+    methods:  GET
+
+master_referral_isPaid:
+    path:     /affiliates/referrals/{id}/update
+    defaults: {_controller: App\Controller\Master\MasterController::referralUpdate }
+    methods:  POST
+
+master_blog:
+    path:     /blog/
+    defaults: {_controller: App\Controller\Master\BlogController::list }
+    methods:  GET
+
+master_post_create:
+    path:     /blog/posts/create
+    defaults: {_controller: App\Controller\Master\BlogController::create }
+    methods:  [GET, POST]
+
+master_post_edit:
+    path:     /blog/post/{id}/edit
+    defaults: {_controller: App\Controller\Master\BlogController::edit }
+    methods:  [GET, POST]
+
+master_post_delete:
+    path:     /blog/post/{id}/delete
+    defaults: { _controller: App\Controller\Master\BlogController::delete }
+    methods:  DELETE
+
+master_statistics:
+    path:     /statistics/{module}/{client}
+    defaults: { _controller: App\Controller\Master\MasterController::statistics, module: null, client: null }
+    methods:  GET
+
+master.email.compose:
+    path:     /emails/compose/{id}
+    defaults: { _controller: App\Controller\Master\MailController::compose, id: null }
+    methods:  [GET, POST]
+
+master_email_sending:
+    path:     /emails/sending/{id}
+    defaults: { _controller: App\Controller\Master\MailController::sending }
+    methods:  GET
+
+master_email_sending_check:
+    path:     /emails/sending-check/{id}
+    defaults: { _controller: App\Controller\Master\MailController::checkSending }
+    methods:  GET
+
+master.email.log:
+    path:    /emails/log
+    defaults: { _controller: App\Controller\Master\MailController::log }
+    methods: GET
+
+master.email.details:
+    path:     /emails/log/{id}/details
+    defaults: { _controller: App\Controller\Master\MailController::details }
+    methods:  GET
+
+master.email.drafts:
+    path:     /emails/drafts
+    defaults: { _controller: App\Controller\Master\MailController::drafts }
+    methods:  GET
+
+master.email.save_draft:
+    path:     /emails/draft/save/{id}
+    defaults: { _controller: App\Controller\Master\MailController::saveDraft, id: null}
+    methods:  POST
+    options:
+          expose: true
+
+master.email.delete:
+    path:     /emails/delete/{id}
+    defaults: { _controller: App\Controller\Master\MailController::delete }
+    methods:  DELETE
+
+master.email.auto:
+    path:     /emails/automated
+    defaults: { _controller: App\Controller\Master\MailController::automatedEmails }
+    methods:  [GET, POST]
+
+master.email.recipients.search:
+    path:     /emails/recipiens_search
+    defaults: { _controller: App\Controller\Master\MailController::searchRecipients }
+    methods:  POST
+
+master.email.sending_error:
+    path:     /emails/sending-error/{id}
+    defaults: { _controller: App\Controller\Master\MailController::sendingError }
+    methods:  GET
+
+master_image_manager:
+    path:     /image/manager
+    defaults: { _controller: App\Controller\Master\MasterController::imageManager }
+    methods:  GET
+
+master_translation:
+    path:     /translation
+    defaults: { _controller: App\Controller\Translation\TranslationController::list }
+    methods:  [GET, POST]
+
+master_translation_keys:
+    path:     /translation/keys/list
+    defaults: { _controller: App\Controller\Translation\TranslationController::keys }
+    methods:  GET
+
+master_translation_edit_keys:
+    path:     /translation/keys/edit/{domain}/
+    defaults: { _controller: App\Controller\Translation\TranslationController::editKeys }
+    methods:  [GET, POST]
+
+master_translation_update_key:
+    path:   /translation/keys/update/{id}/
+    defaults: { _controller: App\Controller\Translation\TranslationController::updateKey }
+    methods:  POST
+
+master_translation_delete_key:
+    path:   /translation/keys/delete/{id}/
+    defaults: { _controller: App\Controller\Translation\TranslationController::deleteKey }
+    methods:  DELETE
+
+master_translation_share:
+    path:   /translation/share/{locale}/{domain}/
+    defaults: { _controller: App\Controller\Translation\TranslationController::shareTranslation }
+    methods:  POST
+
+master_translation_translate:
+    path:      /translation/translate/{locale}/{domain}/
+    defaults: { _controller: App\Controller\Translation\TranslationController::translate }
+    methods:  [GET, POST]

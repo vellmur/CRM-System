@@ -1,0 +1,198 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ form_start(form, {'attr': {'class': 'form-horizontal', 'role' : 'form'} }) }}
+    <div class="panel panel-default">
+        <div class="panel-head">
+            <h6><i class="icon-cart5"></i> Vendor products </h6>
+        </div>
+        <div class="panel-body">
+            <div class="form-group {% if form.plant.vars.errors | length > 0 %} has-error {% endif %}">
+                {{ form_label(form.plant) }}
+                <div class="col-md-10 col-sm-9 col-xs-7">
+                    {% if not form.plant.vars.valid %}
+                        {{ form_widget(form.plant, {'attr' : {'data-placement' : 'top', 'title' : form.plant.vars.errors[0].message, 'class' : 'select tip tip-open'}}) }}
+                    {% else %}
+                        {{ form_widget(form.plant)}}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="form-group {% if form.name.vars.errors | length > 0 %} has-error {% endif %}">
+                {{ form_label(form.name) }}
+                <div class="col-md-10 col-sm-9 col-xs-7">
+                    {% if not form.name.vars.valid %}
+                        {{ form_widget(form.name, {'attr' : {'data-placement' : 'top', 'title' : form.name.vars.errors[0].message, 'class' : 'form-control tip tip-open'}}) }}
+                    {% else %}
+                        {{ form_widget(form.name)}}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="form-group {% if form.description.vars.errors | length > 0 %} has-error {% endif %}">
+                {{ form_label(form.description) }}
+                <div class="col-md-10 col-sm-9 col-xs-7">
+                    {% if not form.description.vars.valid %}
+                        {{ form_widget(form.description, {'attr' : {'data-placement' : 'top', 'title' : form.description.vars.errors[0].message, 'class' : 'form-control tip tip-open'}}) }}
+                    {% else %}
+                        {{ form_widget(form.description)}}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="form-group {% if form.weight.vars.errors | length > 0 %} has-error {% endif %}">
+                {{ form_label(form.weight) }}
+                <div class="col-md-10 col-sm-9 col-xs-7">
+                    {% if not form.weight.vars.valid %}
+                        {{ form_widget(form.weight, {'attr' : {'data-placement' : 'top', 'title' : form.weight.vars.errors[0].message, 'class' : 'form-control tip tip-open'}}) }}
+                    {% else %}
+                        {{ form_widget(form.weight)}}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="form-group {% if form.price.vars.errors | length > 0 %} has-error {% endif %}">
+                {{ form_label(form.price) }}
+                <div class="col-md-10 col-sm-9 col-xs-7">
+                    {% if not form.price.vars.valid %}
+                        {{ form_widget(form.price, {'attr' : {'data-placement' : 'top', 'title' : form.price.vars.errors[0].message, 'class' : 'form-control tip tip-open'}}) }}
+                    {% else %}
+                        {{ form_widget(form.price)}}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="form-group {% if form.category.vars.errors | length > 0 %} has-error {% endif %}">
+                {{ form_label(form.category) }}
+                <div class="col-md-10 col-sm-9 col-xs-7">
+                    {% if not form.category.vars.valid %}
+                        {{ form_widget(form.category, {'attr' : {'data-placement' : 'top', 'title' : form.category.vars.errors[0].message, 'class' : 'select tip tip-open'}}) }}
+                    {% else %}
+                        {{ form_widget(form.category)}}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="form-group {% if form.isActive.vars.errors | length > 0 %} has-error {% endif %}">
+                {{ form_label(form.isActive) }}
+                <div class="col-md-10 col-sm-9 col-xs-7">
+                    <div class="checkbox checkbox-switchery table-switch">
+                        {{ form_widget(form.isActive)}}
+                    </div>
+                </div>
+            </div>
+            <div class="form-actions text-right">
+                <button type="submit" class="btn btn-action">{{ 'button.add'|trans({}, 'labels') }}</button>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+
+    {% if forms | length > 0 %}
+        {%  for key, form in forms %}
+            <div class="panel panel-default{% if key is divisible by (2) %} row-style{% endif %}">
+                {{ form_start(form, {'action': path('customer_product_update', {id : form.vars.value.id}), 'attr': {'class': 'form-horizontal', 'role' : 'form'} }) }}
+                <div class="panel-body">
+                    <div class="form-group {% if form.plant.vars.errors | length > 0 %} has-error {% endif %}">
+                        {{ form_label(form.plant) }}
+                        <div class="col-md-10 col-sm-9 col-xs-7">
+                            {% if not form.plant.vars.valid %}
+                                {{ form_widget(form.plant, {'attr' : {'data-placement' : 'top', 'title' : form.plant.vars.errors[0].message, 'class' : 'select tip tip-open'}}) }}
+                            {% else %}
+                                {{ form_widget(form.plant)}}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="form-group {% if form.name.vars.errors | length > 0 %} has-error {% endif %}">
+                        {{ form_label(form.name) }}
+                        <div class="col-md-10 col-sm-9 col-xs-7">
+                            {% if not form.name.vars.valid %}
+                                {{ form_widget(form.name, {'attr' : {'data-placement' : 'top', 'title' : form.name.vars.errors[0].message, 'class' : 'form-control tip tip-open'}}) }}
+                            {% else %}
+                                {{ form_widget(form.name)}}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="form-group {% if form.description.vars.errors | length > 0 %} has-error {% endif %}">
+                        {{ form_label(form.description) }}
+                        <div class="col-md-10 col-sm-9 col-xs-7">
+                            {% if not form.description.vars.valid %}
+                                {{ form_widget(form.description, {'attr' : {'data-placement' : 'top', 'title' : form.description.vars.errors[0].message, 'class' : 'form-control tip tip-open'}}) }}
+                            {% else %}
+                                {{ form_widget(form.description)}}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="form-group {% if form.weight.vars.errors | length > 0 %} has-error {% endif %}">
+                        {{ form_label(form.weight) }}
+                        <div class="col-md-10 col-sm-9 col-xs-7">
+                            {% if not form.weight.vars.valid %}
+                                {{ form_widget(form.weight, {'attr' : {'data-placement' : 'top', 'title' : form.weight.vars.errors[0].message, 'class' : 'form-control tip tip-open'}}) }}
+                            {% else %}
+                                {{ form_widget(form.weight)}}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="form-group {% if form.price.vars.errors | length > 0 %} has-error {% endif %}">
+                        {{ form_label(form.price) }}
+                        <div class="col-md-10 col-sm-9 col-xs-7">
+                            {% if not form.price.vars.valid %}
+                                {{ form_widget(form.price, {'attr' : {'data-placement' : 'top', 'title' : form.price.vars.errors[0].message, 'class' : 'form-control tip tip-open'}}) }}
+                            {% else %}
+                                {{ form_widget(form.price)}}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="form-group {% if form.category.vars.errors | length > 0 %} has-error {% endif %}">
+                        {{ form_label(form.category) }}
+                        <div class="col-md-10 col-sm-9 col-xs-7">
+                            {% if not form.category.vars.valid %}
+                                {{ form_widget(form.category, {'attr' : {'data-placement' : 'top', 'title' : form.category.vars.errors[0].message, 'class' : 'select tip tip-open'}}) }}
+                            {% else %}
+                                {{ form_widget(form.category)}}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="form-group {% if form.isActive.vars.errors | length > 0 %} has-error {% endif %}">
+                        {{ form_label(form.isActive) }}
+                        <div class="col-md-10 col-sm-9 col-xs-7">
+                            {% if not form.isActive.vars.valid %}
+                                {{ form_widget(form.isActive, {'attr' : {'data-placement' : 'top', 'title' : form.isActive.vars.errors[0].message, 'class' : 'form-control tip tip-open'}}) }}
+                            {% else %}
+                                {{ form_widget(form.isActive)}}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-sm-3 col-xs-5 control-label">{{ 'table.save'|trans({}, 'labels') }}</label>
+                        <div class="col-md-10 col-sm-9 col-xs-7">
+                            <span id="form-status"><button type="submit" class="btn btn-success btn-icon btn-save"><i class="icon-floppy-disk"></i></button></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 col-sm-3 col-xs-5 control-label">{{ 'table.delete'|trans({}, 'labels') }}</label>
+                        <div class="col-md-10 col-sm-9 col-xs-7">
+                            <button type="button" data-path="{{ path('customer_product_delete', {id : form.vars.value.id}) }}" data-toggle="modal" href="#small_modal" class="btn btn-danger btn-icon btn-delete"> <i class="icon-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {{ include ("modal/delete-modal.html.twig") }}
+{% endblock body %}
+
+{% block scripts %}
+    <link href="{{ asset('css/table_vertical.css') }}" rel="stylesheet" type="text/css">
+    <style>
+        @media
+        only screen and (max-width: 760px),
+        (min-device-width: 768px) and (max-device-width: 1024px)  {
+            .table-vertical td:nth-of-type(1):before { content: "Plant"; }
+            .table-vertical td:nth-of-type(2):before { content: "Name"; }
+            .table-vertical td:nth-of-type(3):before { content: "Description"; }
+            .table-vertical td:nth-of-type(4):before { content: "Price"; }
+            .table-vertical td:nth-of-type(5):before { content: "Category"; }
+            .table-vertical td:nth-of-type(6):before { content: "Weight"; }
+            .table-vertical td:nth-of-type(7):before{ content: "{{ 'table.active'|trans({}, 'labels') }}"; }
+            .table-vertical td:nth-of-type(8):before{ content: "{{ 'table.save'|trans({}, 'labels') }}"; }
+            .table-vertical td:nth-of-type(9):before{ content: "{{ 'table.delete'|trans({}, 'labels') }}"; }
+        }
+    </style>
+{% endblock scripts %}

@@ -1,0 +1,185 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+        <div class="form-steps">
+            <h6 class="hidden"></h6>
+            <fieldset class="step" id="modules">
+                <div class="panel panel-default">
+                    <div class="panel-head">
+                        <h6><i class="icon-pencil5"></i> {{ 'account.subscription'|trans({}, 'labels') }}</h6>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr class="heading-style">
+                                    <th>{{ 'account.payment.module'| trans({}, 'labels') }}</th>
+                                    <th>{{ 'account.payment.price'| trans({}, 'labels') }}</th>
+                                    <th>{{ 'account.payment.description'| trans({}, 'labels') }}</th>
+                                    <th>{{ 'account.payment.pay'| trans({}, 'labels') }}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>{{ 'account.payment.crops'| trans({}, 'labels') }}</td>
+                                    <td style="min-width: 150px;">{{ 'subscription.pay_what_you_can'| trans({}, 'messages') }}</td>
+                                    <td>{{ 'subscription.crops'| trans({}, 'messages') }}</td>
+                                    <td>
+                                        <a class="btn btn-action btn-step-next"
+                                           data-module-name="{{ 'account.payment.crops'| trans({}, 'labels') }}" data-module-id="1">
+                                            {{ 'button.pay'| trans({}, 'labels') }}
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>{{ 'account.payment.customers'| trans({}, 'labels') }}</td>
+                                    <td>{{ 'subscription.coming_soon'| trans({}, 'messages') }}</td>
+                                    <td>
+                                        {{ 'subscription.customers'| trans({}, 'messages') }}
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>{{ 'account.payment.company'| trans({}, 'labels') }}</td>
+                                    <td>{{ 'subscription.coming_soon'| trans({}, 'messages') }}</td>
+                                    <td>{{ 'subscription.company'| trans({}, 'messages') }}</td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <h6></h6>
+            <fieldset class="step" id="methods">
+                <div class="panel panel-default">
+                    <div class="panel-head">
+                        <h6><i class="icon-vcard"></i> {{ 'account.payment.payment'| trans({}, 'labels') }}</h6>
+                        <div class="page-guide">
+                            <p>{{ 'subscription.thanks_for_support'| trans({}, 'messages') }}</p>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div id="payment-body">
+                            <div class="row">
+                                <div class="col-md-12 donations-options">
+                                    {% for key, child in form.donations.children %}
+                                        <div class="row">
+                                            {{ form_widget(child) }}
+                                            <span class="radio-link">{{ form_label(child) }}</span>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 payment-methods">
+                                    <div class="panel-group" id="paymentAccordion">
+                                        {% for key, child in form.method.children %}
+                                            <div class="panel">
+                                                <div class="panel-heading">
+                                                    {{ form_widget(child) }}
+                                                    <span class="radio-link">{{ form_label(child) }}</span>
+                                                    <a class="radio-accordion collapsed" data-toggle="collapse" data-key="{{ key }}"
+                                                       data-parent="#paymentAccordion" href="#method_{{ key }}" style="display: none;"></a>
+                                                </div>
+                                                <div id="method_{{ key }}" class="panel-collapse collapse">
+                                                    <div class="panel-body">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                {% if key == 0 %}
+                                                                    <p>{{ 'subscription.card_description'| trans({}, 'messages') }}</p>
+                                                                    <div id="payment-method-1">
+                                                                        <div class="row">
+                                                                            <div class="col-md-12">
+                                                                                <div class="form-group has-feedback has-feedback-right">
+                                                                                    {{ form_widget(form.card.name, {'id' : 'cardName'}) }}
+                                                                                    <div class="form-control-feedback">
+                                                                                        <i class="icon-user"></i>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col-md-12">
+                                                                                <div class="form-group has-feedback has-feedback-right">
+                                                                                    {{ form_widget(form.card.number, {'id' : 'cardNumber'}) }}
+                                                                                    <div class="form-control-feedback">
+                                                                                        <i class="icon-vcard"></i>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col-md-4 col-xs-4">
+                                                                                <div class="form-group has-feedback has-feedback-right">
+                                                                                    {{ form_widget(form.card.expiredAt, {'id' : 'cardExp'}) }}
+                                                                                    <div class="form-control-feedback">
+                                                                                        <i class="icon-calendar2"></i>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-4 col-xs-4">
+                                                                                <div class="form-group has-feedback has-feedback-right">
+                                                                                    {{ form_widget(form.card.cvc, {'id' : 'csc'}) }}
+                                                                                    <div class="form-control-feedback">
+                                                                                        <i class="icon-lock2"></i>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                {% else %}
+                                                                    <p>{{ 'subscription.venmo_thanks'| trans({}, 'messages') }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="summary-block">
+                                        <div class="summary-title">{{ 'subscription.cart'| trans({}, 'messages') }}</div>
+                                        <div class="summary-items">
+                                            <div class="row summary-item">
+                                                <div class="summary-item-name" id="summary-module"></div>
+                                                <div class="summary-item-price" id="summary-price"></div>
+                                            </div>
+                                            <div class="row summary-item">
+                                                <div class="summary-item-name">{{ 'subscription.total'| trans({}, 'messages') }}</div>
+                                                <div class="summary-item-price" id="summary-total">$0</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div id="form-errors"></div>
+                                    <div class="form-actions text-right">
+                                        <input type="submit" id="subscription_purchase" class="btn btn-action"
+                                               value="{{ 'button.purchase'| trans({}, 'labels') }}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        {{ form_widget(form.module) }}
+        {{ form_widget(form.amount) }}
+    {{ form_end(form) }}
+    <input type="hidden" id="payment_confirmed" value="{{ 'subscription.payment_confirmed'| trans({}, 'messages') }}">
+    <input type="hidden" id="confirmation_message" value="{{ 'subscription.confirmation_message'| trans({}, 'messages') }}">
+{% endblock body %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{{ asset('js/plugins/forms/wizards/steps.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/pages/subscription.js') }}?v=1"></script>
+    <link href="{{ asset('css/pages/subscription.css') }}" rel="stylesheet" type="text/css">
+{% endblock %}

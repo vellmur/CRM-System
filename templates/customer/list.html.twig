@@ -1,0 +1,235 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% if sharesStats|length or ordersStats|length %}
+        <div class="panel panel-default">
+            <div class="datatable-ajax-source">
+                <div class="table-responsive">
+                    <table class="table">
+                        {% if sharesStats|length %}
+                            <thead>
+                            <tr role="row" class="heading-style">
+                                <th>{{ 'customer.search.share'|trans({}, 'labels') }}</th>
+                                <th>{{ 'customer.search.total'|trans({}, 'labels') }}</th>
+                                <th>{{ 'customer.search.pending'|trans({}, 'labels') }}</th>
+                                <th>{{ 'customer.search.active'|trans({}, 'labels') }}</th>
+                                <th>{{ 'customer.search.renewal_overdue'|trans({}, 'labels') }}</th>
+                                <th>{{ 'customer.search.lapsed'|trans({}, 'labels') }}</th>
+                                <th>{{ 'customer.search.new_in_last'|trans({'%days%' : '7'}, 'labels') }}</th>
+                                <th>{{ 'customer.search.new_in_last'|trans({'%days%' : '30'}, 'labels') }}</th>
+                            </tr>
+                            </thead>
+                            <tbody id="summary-search-path" data-path="{{ path('member_summary_search') }}">
+                            {% for share in sharesStats %}
+                                {% set shareName = loop.last ? 'customer.search.total'|trans({}, 'labels') : share.name %}
+                                <tr role="row" class="odd">
+                                    <td {{ loop.last ? 'class="bold-text"' }}>{{ shareName }}</td>
+                                    <td>
+                                        {% if share.total != 0 %}
+                                            <span data-item="{{ shareName }}" data-status="total" class="summary-search">
+                                                {{ share.total }}
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if share.amount[1] is defined and share.amount[1] != 0 %}
+                                            <span data-item="{{ shareName }}" data-status="pending" class="summary-search">
+                                                {{ share.amount[1] }}
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if share.amount[2] is defined and share.amount[2] != 0 %}
+                                            <span data-item="{{ shareName }}" data-status="active" class="summary-search">
+                                                {{ share.amount[2] }}
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if share.renewal is defined and share.renewal != 0 %}
+                                            <span data-item="{{ shareName }}" data-status="renewal" class="summary-search">
+                                                {{ share.renewal }}
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if share.amount[3] is defined and share.amount[3] != 0 %}
+                                            <span data-item="{{ shareName }}" data-status="lapsed" class="summary-search">
+                                                {{ share.amount[3] }}
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if share.weekNum != 0 %}
+                                            <span data-item="{{ shareName }}" data-status="week" class="summary-search">
+                                                {{ share.weekNum }}
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if share.monthNum != 0 %}
+                                            <span data-item="{{ shareName }}" data-status="month" class="summary-search">
+                                                {{ share.monthNum }}
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        {% else %}
+                            <thead>
+                            <tr role="row" class="heading-style">
+                                <th>{{ 'customer.search.open_orders'|trans({}, 'labels') }}</th>
+                                <th>{{ 'customer.search.todays_orders'|trans({}, 'labels') }}</th>
+                                <th>{{ 'customer.search.future_orders'|trans({}, 'labels') }}</th>
+                            </tr>
+                            </thead>
+                            <tbody id="summary-search-path" data-path="{{ path('customer_orders_search') }}">
+                                <tr role="row">
+                                    <td><span data-status="open" class="summary-search">{{ ordersStats.open }}</span></td>
+                                    <td><span data-status="today" class="summary-search">{{ ordersStats.today }}</span></td>
+                                    <td><span data-status="future" class="summary-search">{{ ordersStats.future }}</span></td>
+                                </tr>
+                            </tbody>
+                        {% endif %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="form-group form-group-material">
+                        <label for="search_filter">{{ 'customer.search.filter'|trans({}, 'labels') }}:</label>
+                        <select class="select" id="search_filter" data-width="100%">
+                            <option value="all" {{ app.request.cookies.get('customersFilterBy') == 'all' ? "selected" }}>
+                                {{ 'label.all'|trans({}, 'labels') }}
+                            </option>
+                            <option value="contacts" {{ app.request.cookies.get('customersFilterBy') == 'contacts' ? "selected" }}>
+                                {{ 'customer.search.contacts'|trans({}, 'labels') }}
+                            </option>
+                            <option value="leads" {{ app.request.cookies.get('customersFilterBy') == 'leads' ? "selected" }}>
+                                {{ 'customer.search.leads'|trans({}, 'labels') }}
+                            </option>
+                            <option value="members" {{ app.request.cookies.get('customersFilterBy') == 'members' ? "selected" }}>
+                                {{ 'customer.search.members'|trans({}, 'labels') }}
+                            </option>
+                            <option value="patrons" {{ app.request.cookies.get('customersFilterBy') == 'patrons' ? "selected" }}>
+                                {{ 'customer.search.patrons'|trans({}, 'labels') }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-7">
+                    <label for="search_text">{{ 'customer.search.search'|trans({}, 'labels') }}:</label>
+                    <input type="text"
+                           class="form-control text-uppercase"
+                           data-action="{{ path('customer_list')}}"
+                           data-block="content_list"
+                           value="{{ app.request.get('searchText') }}"
+                           data-counter="content_counter"
+                           name="search_text"
+                           id="search_text"
+                           placeholder="{{ 'customer.search.search_by_placeholder'|trans({}, 'labels') }}"
+                           autocomplete="off">
+                </div>
+                <div class="col-sm-3 vertical-table-text">
+                    <p class="vertical-text">{{ 'customer.search.records_found'|trans({}, 'labels') }}:
+                        <span id="content_counter">{{ members.getTotalItemCount }}</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="datatable-ajax-source">
+            <div class="table-responsive" id="content_list">
+                {{ include ("customer/forms/table.html.twig") }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $('#search_text, #search_filter').on('keyup change', function ()
+        {
+            var $this = $(this),
+                $searchBy = $('#search_filter'),
+                $searchField = $('#search_text');
+
+            if ($this.attr('id') === 'search_text') {
+                searchField = $this;
+                searchBy = $searchBy;
+            } else {
+                var searchField = $searchField,
+                    searchBy = $this;
+            }
+
+            // Save customers filter by to a cookie
+            setCookie('customersFilterBy', searchBy.val(), 7);
+
+            var url = searchField.attr('data-action'),
+                block = $('#' + searchField.attr('data-block')),
+                counter = $('#' + searchField.attr('data-counter'));
+
+            url += '?searchBy=' + (searchBy.length ? searchBy.val() : 'all');
+
+            if (searchField.length && searchField.val().length > 0) url += '&search=' + searchField.val();
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                success: function (response) {
+                    block.html(response.template);
+                    counter.html(response.counter);
+                },
+                error: function (response) {
+                    counter.html(0);
+                }
+            });
+        });
+
+        $('.summary-search').on('click', function ()
+        {
+            var $this = $(this),
+                url = $('#summary-search-path').data('path'),
+                block = $('#content_list'),
+                counter = $('#content_counter');
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: { searchItem: $this.data('item'), searchStatus: $this.data('status') },
+                success: function (response) {
+                    console.log(response);
+                    var data = jQuery.parseJSON(response);
+
+                    block.html(data.template);
+                    counter.html(data.counter);
+                },
+                error: function (response) {
+                    console.log(response);
+                    counter.html(0);
+                }
+            });
+        });
+
+        var currentFilterValue = '{{ app.request.get('searchBy') }}',
+            cookieFilterValue = getCookie('customersFilterBy');
+
+        if (cookieFilterValue !== 'undefined') {
+            if (cookieFilterValue.length > 0 && currentFilterValue !== cookieFilterValue) {
+                var $filter = $('#search_filter');
+                $filter.val(cookieFilterValue);
+                $filter.trigger('change');
+            }
+        } else {
+            setCookie('customersFilterBy', 'all');
+        }
+    </script>
+{% endblock %}

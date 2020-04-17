@@ -1,0 +1,364 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% if app.user.team.client.levelName == 'Farmer' %}
+    {{ form_start(form, {'attr': {'class': 'form-horizontal'} }) }}
+        <div class="panel panel-default">
+            <div class="panel-head">
+                <h6><i class="icon-user-plus"></i> {{ 'account.users.users'|trans({}, 'labels') }}</h6>
+                <div class="page-guide">
+                    <p>{{ 'page_tip.users'|trans({}, 'messages') }}</p>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="form-group {{ form.username.vars.errors|length ? 'has-error' }}">
+                    {{ form_label(form.username) }}
+                    <div class="col-md-10 col-sm-9 col-xs-7">
+                        {% if not form.username.vars.valid %}
+                            {{ form_widget(form.username, {'attr' : {
+                                'data-placement': 'top',
+                                'title': form.username.vars.errors[0].message,
+                                'class': 'form-control tip tip-open',
+                                'autofocus': null}
+                            }) }}
+                        {% else %}
+                            {{ form_widget(form.username, {'attr' : {'autofocus': null}})}}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group {{ form.email.vars.errors|length ? 'has-error' }}">
+                    {{ form_label(form.email) }}
+                    <div class="col-md-10 col-sm-9 col-xs-7">
+                        {% if not form.email.vars.valid %}
+                            {{ form_widget(form.email, {'attr': {
+                                'data-placement': 'top',
+                                'title': form.email.vars.errors[0].message,
+                                'class': 'form-control tip tip-open'}
+                            }) }}
+                        {% else %}
+                            {{ form_widget(form.email)}}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group {{ form.plainPassword.first.vars.errors|length or form.plainPassword.second.vars.errors|length ? 'has-error' }}">
+                    {{ form_label(form.plainPassword.first) }}
+                    <div class="col-md-10 col-sm-9 col-xs-7">
+                        {% if not form.plainPassword.first.vars.valid %}
+                            {{ form_widget(form.plainPassword.first, {'attr': {
+                                'data-placement': 'top',
+                                'title': form.plainPassword.first.vars.errors[0].message,
+                                'class': 'form-control tip tip-open'}
+                            }) }}
+                        {% else %}
+                            {{ form_widget(form.plainPassword.first)}}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group {{ form.plainPassword.first.vars.errors|length or form.plainPassword.second.vars.errors|length ? 'has-error' }}">
+                    {{ form_label(form.plainPassword.second) }}
+                    <div class="col-md-10 col-sm-9 col-xs-7">
+                        {% if not form.plainPassword.second.vars.valid %}
+                            {{ form_widget(form.plainPassword.second, {'attr': {
+                                'data-placement': 'top',
+                                'title': form.plainPassword.second.vars.errors[0].message,
+                                'class': 'form-control tip tip-open'}
+                            }) }}
+                        {% else %}
+                            {{ form_widget(form.plainPassword.second)}}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group {{ form.locale.vars.errors|length ? 'has-error' }}">
+                    {{ form_label(form.locale) }}
+                    <div class="col-md-10 col-sm-9 col-xs-7">
+                        {% if not form.locale.vars.valid %}
+                            {{ form_widget(form.locale, {'attr': {
+                                'data-placement': 'top',
+                                'title': form.locale.vars.errors[0].message,
+                                'class': 'select tip tip-open'}
+                            }) }}
+                        {% else %}
+                            {{ form_widget(form.locale)}}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group {{ form.dateFormat.vars.errors|length ? 'has-error' }}">
+                    {{ form_label(form.dateFormat) }}
+                    <div class="col-md-10 col-sm-9 col-xs-7">
+                        {% if not form.dateFormat.vars.valid %}
+                            {{ form_widget(form.dateFormat, {'attr': {
+                                'data-placement': 'top',
+                                'title': form.dateFormat.vars.errors[0].message,
+                                'class': 'select tip tip-open'}
+                            }) }}
+                        {% else %}
+                            {{ form_widget(form.dateFormat)}}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-group {{ form.role.vars.errors|length ? 'has-error' }}">
+                    {{ form_label(form.role) }}
+                    <div class="col-md-10 col-sm-9 col-xs-7">
+                        {% if not form.role.vars.valid %}
+                            {{ form_widget(form.role, {'attr': {
+                                'data-placement': 'top',
+                                'title': form.role.vars.errors[0].message,
+                                'class': 'select tip tip-open'}
+                            }) }}
+                        {% else %}
+                            {{ form_widget(form.role)}}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="form-actions text-right">
+                    <button type="submit" class="btn btn-action">{{ 'button.add'|trans({}, 'labels') }}</button>
+                </div>
+            </div>
+        </div>
+        {{ form_widget(form._token) }}
+    {{ form_end(form, {'render_rest': false}) }}
+    {% endif %}
+
+    {% if forms|length > 0 %}
+        <div class="panel panel-default vertical">
+            <div>
+                <table class="table table-vertical">
+                    <thead>
+                        <tr class="heading-style">
+                            <th>{{ 'account.users.username'|trans({}, 'labels') }}</th>
+                            <th>{{ 'account.users.email'|trans({}, 'labels') }}</th>
+                            <th>{{ 'account.users.change_password'|trans({}, 'labels') }}</th>
+                            <th>{{ 'account.users.language'|trans({}, 'labels') }}</th>
+                            <th>{{ 'account.users.date_format'|trans({}, 'labels') }}</th>
+                            <th>{{ 'account.users.role'|trans({}, 'labels') }}</th>
+                            <th>{{ 'table.active'|trans({}, 'labels') }}</th>
+                            <th>{{ 'table.save'|trans({}, 'labels') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {%  for key, form in forms %}
+                        <tr {% if key is not divisible by (2) %} class="row-style" {% endif %}>
+                            {{ form_start(form, { 'attr': {'action': path('ajax_user_update', {id: form.vars.value.id}), 'class': 'ajaxUpdate'} }) }}
+                                <td class="form-group">{{ form_widget(form.username) }}</td>
+                                <td class="form-group">{{ form_widget(form.email) }}</td>
+                                <td class="form-group">
+                                    <a role="button"
+                                       id="{{ form.vars.value.username }}"
+                                       onclick="changePassword({{ form.vars.value.id }}, this.id)"
+                                       data-toggle="modal"
+                                       href="#form_modal"
+                                       class="btn btn-default btn-icon"
+                                       data-original-title="Delete">
+                                        <i class="icon-lock2"></i>
+                                    </a>
+                                </td>
+                                <td class="form-group">{{ form_widget(form.locale) }}</td>
+                                <td class="form-group">{{ form_widget(form.dateFormat) }}</td>
+                                <td class="form-group">{{ form_widget(form.role) }}</td>
+                                <td class="form-group">
+                                    <div class="checkbox checkbox-switchery table-switch">
+                                     {{ form_widget(form.enabled) }}
+                                    </div>
+                                </td>
+                                <td class="form-group">
+                                    <span id="form-status">
+                                        <button type="submit" class="btn btn-success btn-icon btn-save">
+                                            <i class="icon-floppy-disk"></i>
+                                        </button>
+                                    </span>
+                                </td>
+                            {{ form_end(form) }}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+    <!-- Form modal -->
+    <div id="form_modal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">
+                        <i class="icon-paragraph-justify2"></i>
+                        {{ 'account.users.change_password'|trans({}, 'labels') }} : <span id="user_name"></span>
+                    </h4>
+                </div>
+                {{ form_start(passwordForm, {'attr': {
+                    'action': path('ajax_user_password_change'),
+                    'id': 'changePasswordForm',
+                    'method': 'post',
+                    'class': 'form-horizontal',
+                    'form-validate': 'false' }
+                }) }}
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                                <input type="hidden" id="userId" name="user_id" value=""/>
+                                <div class="form-group">
+                                    {{ form_label(passwordForm.current_password) }}
+                                    <div class="col-md-10 col-sm-9 col-xs-7">
+                                        {{ form_widget(passwordForm.current_password, {'attr' : {'id' : 'prev_password' }}) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    {{ form_label(passwordForm.plainPassword.first) }}
+                                    <div class="col-md-10 col-sm-9 col-xs-7">
+                                        {{ form_widget(passwordForm.plainPassword.first, {'attr' : {'id' : 'password'}}) }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    {{ form_label(passwordForm.plainPassword.second) }}
+                                    <div class="col-md-10 col-sm-9 col-xs-7">
+                                        {{ form_widget(passwordForm.plainPassword.second, {'attr' : {'id' : 'repeat_password'}}) }}
+                                    </div>
+                                </div>
+                            <div class="form-actions text-right">
+                                <button type="submit" class="btn btn-action">{{ 'button.save'|trans({}, 'labels') }}</button>
+                            </div>
+                        </div>
+                    </div>
+                {{ form_end(passwordForm) }}
+            </div>
+        </div>
+    </div>
+    <!-- /form modal -->
+    <!-- Small modal -->
+    <div id="success_modal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">
+                        <i class="icon-accessibility"></i>
+                        {{ 'account.users.successful_saving'|trans({}, 'labels') }}
+                    </h4>
+                </div>
+
+                <div class="modal-body with-padding">
+                    <p id="success_message"></p>
+                </div>
+
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /small modal -->
+    {{ include ("modal/delete-modal.html.twig") }}
+
+{% endblock body %}
+
+{% block scripts %}
+    <link href="{{ asset('css/table_vertical.css') }}" rel="stylesheet" type="text/css">
+    <style>
+        @media
+        only screen and (max-width: 760px),
+        (min-device-width: 768px) and (max-device-width: 1024px) {
+            .table-vertical td:nth-of-type(1):before {
+                content: "{{  'account.users.role'|trans({}, 'labels') }}";
+            }
+
+            .table-vertical td:nth-of-type(2):before {
+                content: "{{ 'account.users.language'|trans({}, 'labels') }}";
+            }
+
+            .table-vertical td:nth-of-type(3):before {
+                content: "{{ 'account.users.date_format'|trans({}, 'labels') }}";
+            }
+
+            .table-vertical td:nth-of-type(4):before {
+                content: "{{ 'account.users.username'|trans({}, 'labels') }}";
+            }
+
+            .table-vertical td:nth-of-type(5):before {
+                content: "{{ 'account.users.email'|trans({}, 'labels') }}";
+            }
+
+            .table-vertical td:nth-of-type(6):before {
+                content: "{{ 'account.users.change_password'|trans({}, 'labels') }}";
+            }
+
+            .table-vertical td:nth-of-type(7):before {
+                content: "{{ 'table.active'|trans({}, 'labels') }}";
+            }
+
+            .table-vertical td:nth-of-type(8):before {
+                content: "{{ 'table.save'|trans({}, 'labels') }}";
+            }
+        }
+    </style>
+
+    <script>
+        /* Change users passwords */
+        $("form[id='changePasswordForm']").on('submit', function (e)
+        {
+            e.preventDefault();
+
+            var form = $(this),
+                inputs = form.find('input');
+
+            form.find('.form-group').removeClass('has-error');
+            inputs.tooltip('destroy');
+
+            if (!validate(inputs)) {
+                throw "Error on validating inputs";
+            }
+
+            $.ajax({
+                url: form.attr("action"),
+                type: form.attr("method"),
+                data: form.serialize(),
+                success: function (response) {
+                    $('#form_modal').modal('toggle');
+                    $('#success_message').text(response);
+                    $('#success_modal').modal('show');
+                    inputs.val('')
+                    inputs.parent().removeClass('has-error');
+                },
+                error: function (response) {
+                    var formErrors = jQuery.parseJSON(response.responseJSON).error.children,
+                        errNum = 0;
+
+                    //For each input win form
+                    $.each(formErrors, function(name, input) {
+                        // If form has errors
+                        if (!$.isEmptyObject(input)) {
+                            // Create input id
+                            var inputId = form.attr("name") + "_" + name,
+                                msg = '';
+
+                            // If field it is password and it is have errors
+                            if (name == 'plainPassword' && !$.isEmptyObject(input.children.first)) {
+                                // Add error to repeat password field, create new password field id and get error
+                                form.find('#' + inputId + '_second').parent().addClass('has-error');
+                                inputId += '_first';
+                                msg =  input.children.first.errors[0];
+                            } else if (name == 'plainPassword' && $.isEmptyObject(input.children.first)) {
+                                // If field is password and it havent errors skip it
+                                return true;
+                            } else {
+                                msg = input.errors[0];
+                            }
+
+                            var field = form.find('#' + inputId);
+
+                            field.tooltip({
+                                trigger: 'manual',
+                                placement: 'top',
+                                title: msg}).attr('data-original-title', msg).tooltip('fixTitle').tooltip('show');
+                            field.parent().addClass('has-error');
+                        } else {
+                            errNum += 1;
+                        }
+                    });
+                    // That means that updating have undefined error
+                    if (errNum == Object.keys(formErrors).length) {
+                        alert(errors['undefinedErrors'][locale]);
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}

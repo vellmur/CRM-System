@@ -1,0 +1,33 @@
+<table class="table">
+    <thead>
+    <tr role="row" class="heading-style">
+        <th>{{ 'customer.customer'|trans({}, 'labels') }}</th>
+        <th>{{ 'table.amount'|trans({}, 'labels') }}</th>
+        <th>{{ 'invoice.date_created'|trans({}, 'labels') }}</th>
+        <th>{{ 'invoice.invoice'|trans({}, 'labels') }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for key, invoice in invoices %}
+        <tr role="row" class="odd">
+            <td>
+                <a class="website-link" href="{{ path('membership_profile', {'token' : invoice.member.token}) }}" target="_blank">
+                    {{ invoice.member.fullname }}
+                </a>
+            </td>
+            <td>${{ invoice.amount }}</td>
+            <td>{{ invoice.createdAt|date(app.user.getTwigFormatDate() ~ ' H:i:s') }}</td>
+            <td>
+                <a type="button"
+                   href="{{ path('membership_invoice_view', {'id': invoice.id, 'token': invoice.member.token}) }}"
+                   class="btn btn-icon btn-action"
+                   target="_blank">
+                    <i class="icon-file-text"></i>
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{{ include ("modal/delete-modal.html.twig") }}
