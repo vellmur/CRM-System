@@ -3,7 +3,7 @@
 namespace App\Manager;
 
 use App\Entity\Client\Client;
-use App\Entity\ModuleAccess;
+use App\Entity\Client\ModuleAccess;
 use Doctrine\ORM\EntityManagerInterface;
 
 class CommandManager
@@ -30,16 +30,6 @@ class CommandManager
     }
 
     /**
-     * @return ModuleAccess[]|\object[]
-     */
-    public function getCropModules()
-    {
-        $modules = $this->em->getRepository(ModuleAccess::class)->findBy(['module' => 1]);
-
-        return $modules;
-    }
-
-    /**
      * @param ModuleAccess $access
      */
     public function extendModuleExpiration(ModuleAccess $access)
@@ -54,15 +44,4 @@ class CommandManager
     {
         $this->em->flush();
     }
-
-    /**
-     * @return Client[]|array|\object[]
-     */
-    public function getTestClientProfile()
-    {
-        $client = $this->em->getRepository(Client::class)->findBy(['email' => 'valentinemurnik@gmail.com']);
-
-        return $client;
-    }
-
 }

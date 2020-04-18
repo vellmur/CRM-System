@@ -2,8 +2,6 @@
 
 namespace App\Manager;
 
-use App\Entity\Customer\Email\EmailRecipient;
-use App\Entity\Master\Email\Recipient;
 use App\Entity\User\PageView;
 use App\Repository\PageViewRepository;
 use Doctrine\ORM\EntityManagerInterface;

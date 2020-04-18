@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="well block">
+        <div class="tabbable">
+            <ul class="nav nav-pills">
+                {% for day in weeksNav %}
+                    <li {% if day == app.request.get('day') %} class="active" {% endif %} >
+                        <a href="{{ path('report_share_day', {'day': day}) }}">{{ day|lower|trans({}, 'choices') }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    {% if shares|length > 0 %}
+        <div class="panel panel-default">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr class="heading-style">
+                        <th>{{ 'report.count'|trans({}, 'labels') }}</th>
+                        <th>{{ 'table.name'|trans({}, 'labels') }}</th>
+                        <th>{{ 'customer.address.types.delivery'|trans({}, 'labels') }}</th>
+                        <th>{{ 'customer.share.share'|trans({}, 'labels') }}</th>
+                        <th>{{ 'customer.share.share_location'|trans({}, 'labels') }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for key, share in shares %}
+                            <tr {% if key is not divisible by (2) %} class="row-style" {% endif %}>
+                                <td class="table-data">{{ key + 1 }}</td>
+                                <td class="table-data">
+                                    <a href="{{ path('member_edit', {'id' : share.member.id }) }}">
+                                        {{ share.member.fullname }}
+                                    </a>
+                                </td>
+                                <td class="table-data">
+                                    {% if share.member.addressByType('delivery') %}
+                                        {{ share.member.addressByType('delivery')|address_format|raw }}
+                                    {% endif %}
+                                </td>
+                                <td class="table-data">{{ share.share.name }}</td>
+                                <td class="table-data">{{ share.location.name }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+{% endblock body %}

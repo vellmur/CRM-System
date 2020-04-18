@@ -189,23 +189,9 @@ class UserController extends AbstractController
             'settings' => $client->getModulesSettings(),
             'paymentSettings' => $client->getPaymentSettings()
         ]);
-
-        $settingsForm->get('deliveryPrice')->setData($client->getDeliveryPrice());
-        $settingsForm->get('orderTime')->setData($client->getOrderTime());
-        $settingsForm->get('orderDisableTime')->setData($client->isSameDayOrdersAllowed());
         $settingsForm->handleRequest($request);
 
         if ($settingsForm->isSubmitted() && $settingsForm->isValid()) {
-            if ($settingsForm->getData()['deliveryPrice']) {
-                $client->setDeliveryPrice($settingsForm->getData()['deliveryPrice']);
-            }
-
-            if ($settingsForm->getData()['orderTime']) {
-                $client->setOrderTime($settingsForm->getData()['orderTime']);
-            }
-
-            $client->setSameDayOrders($settingsForm->getData()['orderDisableTime']);
-
             $this->manager->flush();
 
             return $this->redirectToRoute('profile_settings');

@@ -82,7 +82,7 @@ class DeviceManager
      * @param UserInterface $user
      * @throws \Doctrine\ORM\ORMException
      */
-    public function setDeviceUser(Device $device, UserInterface $user)
+    public function saveDeviceUser(Device $device, UserInterface $user)
     {
         $user = $this->em->getReference(User::class, $user->getId());
         $device->setUser($user);

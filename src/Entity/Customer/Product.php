@@ -161,23 +161,6 @@ class Product
     {
         $this->id = $id;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getPlant()
-    {
-        return $this->plant;
-    }
-
-    /**
-     * @param mixed $plant
-     */
-    public function setPlant($plant)
-    {
-        $this->plant = $plant;
-    }
-
     
     /**
      * @return mixed

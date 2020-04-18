@@ -177,7 +177,7 @@ class RenewSubscriber implements EventSubscriberInterface
         foreach ($products as $key => $product) {
             $options['choices'][$key] = $product->getId();
 
-            $productName = !$product->getName() && $product->getPlant() ? $product->getPlant()->getFullname() : $product->getName();
+            $productName = $product->getName();
             $productDescription = $product->getDescription() ? $product->getDescription() : $productName;
             $productPrice = $product->isPos() && $product->getDeliveryPrice() ? $product->getDeliveryPrice() : $product->getPrice();
             $pricePer = $product->isPos() ? ($product->isPayByItem() ? 'per_item' : 'per_' . $client->getWeightName()) : 'each';

@@ -2,6 +2,8 @@
 
 namespace App\Menu;
 
+use App\Entity\Client\Client;
+use App\Service\ModuleChecker;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Security;
@@ -17,23 +19,28 @@ class MenuBuilder
 
     private $request;
 
+    private $moduleChecker;
+
     /**
-     * Builder constructor.
+     * MenuBuilder constructor.
      * @param FactoryInterface $factory
      * @param TranslatorInterface $translator
      * @param Security $security
      * @param RequestStack $request
+     * @param ModuleChecker $moduleChecker
      */
     public function __construct(
         FactoryInterface $factory,
         TranslatorInterface $translator,
         Security $security,
-        RequestStack $request
+        RequestStack $request,
+        ModuleChecker $moduleChecker
     ) {
         $this->factory = $factory;
         $this->trans = $translator;
         $this->security = $security;
         $this->request = $request->getCurrentRequest();
+        $this->moduleChecker = $moduleChecker;
     }
 
     /**
@@ -44,6 +51,7 @@ class MenuBuilder
     {
         $domain = 'labels';
         $menu = $this->factory->createItem('root');
+        $client = $this->security->getUser()->getClient();
 
         // Master menu
         if ($this->security->isGranted('ROLE_ADMIN')) {
@@ -75,7 +83,7 @@ class MenuBuilder
             $menu->addChild($customersHeader)->setAttribute('icon', 'icon-menu')->setAttribute('class', 'navigation-header');
 
             // Module Customers
-            $this->addManageCustomersMenu($menu, $domain);
+            $this->addManageCustomersMenu($menu, $domain, $client);
             $this->addEmailsMenu($menu, $domain);
             $this->addOrdersMenu($menu, $domain);
             $this->addPosMenu($menu, $domain);
@@ -93,6 +101,7 @@ class MenuBuilder
     {
         $domain = 'labels';
         $menu = $this->factory->createItem('root');
+
         $this->addOwnerAccountMenu($menu, $domain);
         $this->addEmployeeMenu($menu, $domain);
         $customersHeader = $this->trans->trans('navigation.module_customers', [], $domain);
@@ -166,8 +175,9 @@ class MenuBuilder
     /**
      * @param $menu
      * @param $domain
+     * @param Client|null $client
      */
-    private function addManageCustomersMenu(&$menu, $domain)
+    private function addManageCustomersMenu(&$menu, $domain, ?Client $client = null)
     {
         $customers = $this->trans->trans('navigation.customers.manage_customers', [], $domain);
         $menu->addChild($customers)->setAttribute('icon', 'icon-people')->setAttribute('class', 'has-ul');;
@@ -184,8 +194,10 @@ class MenuBuilder
             ]
         ])->setAttribute('icon', 'icon-search4');
 
-        $menu[$customers]->addChild($this->trans->trans('navigation.customers.shares', [], $domain), ['route' => 'member_share'])->setAttribute('icon', 'icon-bag');
-        $menu[$customers]->addChild($this->trans->trans('navigation.customers.suspend', [], $domain), ['route' => 'app_shares_weeks'])->setAttribute('icon', 'icon-pause');
+        if ($client && $this->moduleChecker->isSharesEnabled($client)) {
+            $menu[$customers]->addChild($this->trans->trans('navigation.customers.shares', [], $domain), ['route' => 'member_share'])->setAttribute('icon', 'icon-bag');
+            $menu[$customers]->addChild($this->trans->trans('navigation.customers.suspend', [], $domain), ['route' => 'app_shares_weeks'])->setAttribute('icon', 'icon-pause');
+        }
 
         $menu[$customers]->addChild($this->trans->trans('navigation.customers.upload', [], $domain), ['route' => 'members_parse'])->setAttribute('icon', 'icon-file-excel');
     }

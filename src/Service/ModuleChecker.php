@@ -9,6 +9,15 @@ class ModuleChecker
 {
     /**
      * @param $url
+     * @return bool
+     */
+    public function isWebsiteVisit($url)
+    {
+        return strstr($url, '/home/') || $url == '/register' || $url == '/login' || $url == strstr($url, '/resetting/');
+    }
+
+    /**
+     * @param $url
      * @return null|string
      */
     public function getModuleNameByUrl($url)
@@ -52,23 +61,6 @@ class ModuleChecker
      * @param Client $client
      * @return bool
      */
-    public function isCropsEnabled(Client $client)
-    {
-        if ($client->getModulesSettings()) {
-            foreach ($client->getModulesSettings() as $setting) {
-                if ($setting->getName() == 'crops_enabled' && !$setting->isEnabled()) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * @param Client $client
-     * @return bool
-     */
     public function isSharesEnabled(Client $client)
     {
         if ($client->getModulesSettings()) {
@@ -90,7 +82,6 @@ class ModuleChecker
     {
         $disabledFeatures = [];
 
-        if (!$this->isCropsEnabled($client)) $disabledFeatures[] = 'crops';
         if (!$this->isSharesEnabled($client)) $disabledFeatures[] = 'shares';
 
         return $disabledFeatures;
@@ -116,14 +107,8 @@ class ModuleChecker
     public function isModuleActive(Client $client, $moduleName)
     {
         $moduleName = strtolower($moduleName);
-
-        // Module crops is free for now so it works anyway
-        if ($moduleName != 'crops') {
-            $module = $this->getClientModuleByName($client, $moduleName);
-            return $module && $module->getStatusName() != 'LAPSED';
-        }
-
-        return true;
+        $module = $this->getClientModuleByName($client, $moduleName);
+        return $module && $module->getStatusName() != 'LAPSED';
     }
 
     /**

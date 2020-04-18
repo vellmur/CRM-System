@@ -65,12 +65,6 @@ class UserManager
     {
         $setting = new ModuleSetting();
         $setting->setModule(1);
-        $setting->setName('crops_enabled');
-        $setting->setEnabled(true);
-        $client->addModuleSettings($setting);
-
-        $setting = new ModuleSetting();
-        $setting->setModule(2);
         $setting->setName('shares_enabled');
         $setting->setEnabled(true);
         $client->addModuleSettings($setting);

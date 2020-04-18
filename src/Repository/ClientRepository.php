@@ -130,7 +130,7 @@ class ClientRepository extends ServiceEntityRepository
 
         $expr = $qb->expr();
 
-        $qb->select('c, team, user, accesses, affiliate, site, textEditor, crops')
+        $qb->select('c, team, user, accesses, affiliate')
             ->where($expr->like($expr->lower('c.name'),':search'))
             ->orWhere($expr->like($expr->lower('c.email'), ':search'))
             ->orWhere($expr->like($expr->lower('user.username'),':search'))
@@ -139,9 +139,6 @@ class ClientRepository extends ServiceEntityRepository
             ->innerJoin('team.user', 'user')
             ->innerJoin('c.accesses', 'accesses')
             ->leftJoin('c.affiliate', 'affiliate')
-            ->leftJoin('c.textEditor', 'textEditor')
-            ->leftJoin('c.site', 'site')
-            ->leftJoin('c.crops', 'crops')
             ->setParameter('search', "%$search%")
             ->orderBy('c.createdAt', 'DESC');
 
@@ -193,14 +190,11 @@ class ClientRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('c');
 
-        $qb->select('c, team, user, accesses, affiliate, site, textEditor, crops')
+        $qb->select('c, team, user, accesses, affiliate')
             ->innerJoin('c.team', 'team')
             ->innerJoin('team.user', 'user')
             ->innerJoin('c.accesses', 'accesses')
             ->leftJoin('c.affiliate', 'affiliate')
-            ->leftJoin('c.textEditor', 'textEditor')
-            ->leftJoin('c.site', 'site')
-            ->leftJoin('c.crops', 'crops')
             ->where('accesses.status = :status')
             ->setParameter('status', $statusId);
 
@@ -235,14 +229,11 @@ class ClientRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('c');
 
         $qb
-            ->select('c, team, user, accesses, affiliate, site, textEditor, crops')
+            ->select('c, team, user, accesses, affiliate')
             ->innerJoin('c.team', 'team')
             ->innerJoin('team.user', 'user')
             ->innerJoin('c.accesses', 'accesses')
             ->leftJoin('c.affiliate', 'affiliate')
-            ->leftJoin('c.textEditor', 'textEditor')
-            ->leftJoin('c.site', 'site')
-            ->leftJoin('c.crops', 'crops')
             ->where('user.enabled = :isEnabled')
             ->orderBy('c.createdAt', 'DESC')
             ->setParameter('isEnabled', $isConfirmed)
@@ -264,14 +255,11 @@ class ClientRepository extends ServiceEntityRepository
         $now = new \DateTime();
 
         $qb = $this->createQueryBuilder('c')
-            ->select('c, team, user, accesses, affiliate, site, textEditor, crops')
+            ->select('c, team, user, accesses, affiliate')
             ->innerJoin('c.team', 'team')
             ->innerJoin('team.user', 'user')
             ->innerJoin('c.accesses', 'accesses')
             ->leftJoin('c.affiliate', 'affiliate')
-            ->leftJoin('c.textEditor', 'textEditor')
-            ->leftJoin('c.site', 'site')
-            ->leftJoin('c.crops', 'crops')
             ->where('DATE_DIFF(:now, c.createdAt) <= :daysNum')
             ->orderBy('c.createdAt', 'DESC')
             ->setParameter('now', $now)

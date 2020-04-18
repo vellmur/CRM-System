@@ -34,17 +34,6 @@ class SubscriptionUpdateCommand extends Command
 
         $updatedNum = 0;
 
-        try {
-            foreach ($this->manager->getCropModules() as $access) {
-                $this->manager->extendModuleExpiration($access);
-                $updatedNum++;
-            }
-
-            $this->manager->update();
-        } catch (Exception $e) {
-            $output->write('Error: ' . $e->getMessage());
-        }
-
         $output->writeln([
             'Successful checking',
             '============',

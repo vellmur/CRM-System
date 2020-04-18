@@ -3,10 +3,8 @@
 namespace App\Manager;
 
 use App\Data\CountryInfo;
-use App\Entity\Customer\AvailablePlant;
 use App\Entity\Customer\Email\AutoEmail;
 use App\Entity\Customer\Invoice;
-use App\Entity\Customer\MemberEmailNotify;
 use App\Entity\Customer\CustomerShare;
 use App\Entity\Customer\Pickup;
 use App\Entity\Customer\Product;
@@ -918,9 +916,7 @@ class MemberManager
         $availableProducts = [];
 
         foreach ($products as $product) {
-            if ($product->getPlant()) {
-                $availableProducts[] = $product;
-            }
+            $availableProducts[] = $product;
         }
 
         return $availableProducts;
@@ -934,15 +930,6 @@ class MemberManager
     public function getProducts(Client $client, $category = null)
     {
         return $this->em->getRepository(Product::class)->getClientProducts($client, $category);
-    }
-
-    /**
-     * @param Client $client
-     * @return array
-     */
-    public function getAvailablePlantsIds(Client $client)
-    {
-        return $this->em->getRepository(AvailablePlant::class)->getAvailablePlantsIds($client);
     }
 
     /**

@@ -10,7 +10,6 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 class POSRepository extends ServiceEntityRepository
 {
     /**
-     * PlantRepository constructor.
      * @param ManagerRegistry $registry
      */
     public function __construct(ManagerRegistry $registry)

@@ -323,7 +323,6 @@ class CustomerShareRepository extends ServiceEntityRepository
                 ->innerJoin('share.customerOrders', 'memberOrder')
                 ->innerJoin('memberOrder.shareProducts', 'shareProducts')
                 ->innerJoin('shareProducts.product', 'product')
-                ->innerJoin('product.plant', 'plant')
                 ->leftJoin('shareProducts.customShares', 'customShares')
                 ->where('s.customer = :customer')
                 ->andWhere('pickups.date >= :now')

@@ -5,7 +5,7 @@ namespace App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="user__page_promotion")
+ * @ORM\Table(name="device__promotion_visit")
  * @ORM\Entity(repositoryClass="App\Repository\PageViewRepository")
  */
 class PromotionView

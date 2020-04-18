@@ -35,11 +35,7 @@ class ShareProductsRepository extends ServiceEntityRepository
         }
 
         $q->innerJoin('o.product', 'product')
-            ->innerJoin('product.plant', 'p')
-            ->innerJoin('p.plant', 'plant')
             ->orderBy('product.name')
-            ->addOrderBy('plant.name')
-            ->addOrderBy('plant.subName')
             ->setParameter('order', $share);
 
         return $q->getQuery()->getResult();

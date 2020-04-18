@@ -208,10 +208,10 @@ class ModuleAccess
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return mixed
      */
-    public static function getModuleId($name)
+    public static function getModuleId(string $name)
     {
         return array_flip(self::MODULES)[strtolower($name)];
     }

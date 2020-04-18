@@ -73,47 +73,6 @@ class SubscriptionController extends AbstractController
     }
 
     /**
-     * @param Request $request
-     * @return Response
-     */
-    public function merchant(Request $request)
-    {
-        $client = $this->getUser()->getClient();
-
-        $merchant = new Merchant();
-        $merchant->setClient($client);
-
-        $env = $this->getServerEnv($request->getHost());
-
-        $form = $this->createForm( MerchantType::class, $merchant, [
-            'env' => $env
-        ]);
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->manager->createMerchant($merchant);
-
-            return $this->redirect($this->generateUrl('profile_merchant'));
-        }
-
-        $merchants = $this->manager->getMerchants($client);
-
-        $forms = [];
-
-        foreach ($merchants as $merchant) {
-            array_push($forms, $this->createForm('App\Form\User\Payments\MerchantType', $merchant,[
-                'env' => $env
-            ])->createView());
-        }
-
-        return $this->render('company/merchant.html.twig', [
-            'form' => $form->createView(),
-            'forms' => $forms
-        ]);
-    }
-
-    /**
      * @param $host
      * @return string
      */

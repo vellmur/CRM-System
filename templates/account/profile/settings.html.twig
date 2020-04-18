@@ -9,9 +9,7 @@
             {{ form_start(settingsForm, {'attr': {'class': 'form-horizontal'}}) }}
                 <div class="tabbable page-tabs">
                     <ul class="nav nav-tabs left-tabs">
-                        <li class="active"><a href="#tab-1" data-toggle="tab"> 1. {{ 'account.settings.crop_module'|trans({}, 'labels') }}</a></li>
-                        <li><a href="#tab-2" data-toggle="tab"> 2. {{ 'account.settings.customer_module'|trans({}, 'labels') }}</a></li>
-                        <li><a href="#tab-3" data-toggle="tab"> 3. {{ 'account.settings.company_module'|trans({}, 'labels') }}</a></li>
+                        <li class="active"><a href="#tab-1" data-toggle="tab"> 1. {{ 'account.settings.customer_module'|trans({}, 'labels') }}</a></li>
                     </ul>
                     <div class="tab-content">
                         {% for key, form in settingsForm.settings %}
@@ -32,82 +30,6 @@
                                 </div>
                             {% endif %}
                         {% endfor %}
-                        <div class="tab-pane" id="tab-3">
-                            <div class="block">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <p>{{ 'account.settings.payment_methods'|trans({}, 'labels') }}</p>
-                                        <table class="table table-bordered">
-                                            <thead>
-                                            <tr>
-                                                <td>{{ 'account.settings.method'|trans({}, 'labels') }}</td>
-                                                <td>{{ 'account.settings.description'|trans({}, 'labels') }}</td>
-                                                <td>{{ 'table.active'|trans({}, 'labels') }}</td>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                                {% for key, paymentSetting in settingsForm.paymentSettings %}
-                                                    <tr>
-                                                        <td>{{ ('membership.renew.payment_methods.' ~ paymentSetting.vars.value.methodName)|trans({}, 'labels') }}</td>
-                                                        <td>{{ form_widget(paymentSetting.description) }}</td>
-                                                        <td>{{ form_widget(paymentSetting.isActive) }}</td>
-                                                    </tr>
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <div class="col-md-7">
-                                                {{ form_label(settingsForm.deliveryPrice) }}
-                                                {{ form_widget(settingsForm.deliveryPrice) }}
-                                                {% if not settingsForm.deliveryPrice.vars.valid %}
-                                                    <label id="{{ settingsForm.deliveryPrice.vars.id }}-error" class="validation-error-label" for="{{ settingsForm.deliveryPrice.vars.id }}">
-                                                        {{ settingsForm.deliveryPrice.vars.errors[0].message }}
-                                                    </label>
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-md-7">
-                                                {{ form_label(settingsForm.orderTime) }}
-                                                {{ form_widget(settingsForm.orderTime) }}
-                                                {% if not settingsForm.orderTime.vars.valid %}
-                                                    <label id="{{ settingsForm.orderTime.vars.id }}-error" class="validation-error-label" for="{{ settingsForm.orderTime.vars.id }}">
-                                                        {{ settingsForm.orderTime.vars.errors[0].message }}
-                                                    </label>
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-md-7">
-                                                {{ form_label(settingsForm.orderDisableTime) }}
-                                                <div class="col-md-12">
-                                                    {% for key, child in settingsForm.orderDisableTime.children %}
-                                                        <div class="row">
-                                                            {{ form_widget(child) }}
-                                                            <span class="radio-link">{{ form_label(child) }}</span>
-                                                        </div>
-                                                    {% endfor %}
-                                                </div>
-                                                {% if not settingsForm.orderDisableTime.vars.valid %}
-                                                    <label id="{{ settingsForm.orderDisableTime.vars.id }}-error" class="validation-error-label" for="{{ settingsForm.orderDisableTime.vars.id }}">
-                                                        {{ settingsForm.orderDisableTime.vars.errors[0].message }}
-                                                    </label>
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="text-right">
-                                            <button type="submit" class="btn btn-success">{{ 'button.save'|trans({}, 'labels') }}</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             {{ form_end(settingsForm) }}

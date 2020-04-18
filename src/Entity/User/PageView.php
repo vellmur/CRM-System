@@ -5,7 +5,7 @@ namespace App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="user__page_views")
+ * @ORM\Table(name="device__page_views")
  * @ORM\Entity(repositoryClass="App\Repository\PageViewRepository")
  */
 class PageView
@@ -41,9 +41,9 @@ class PageView
     /**
      * @var string
      *
-     * @ORM\Column(name="link", type="string", length=255, nullable=false)
+     * @ORM\Column(name="url", type="string", length=255, nullable=false)
      */
-    private $link;
+    private $url;
 
     /**
      * @var string
@@ -115,17 +115,17 @@ class PageView
     /**
      * @return string
      */
-    public function getLink(): string
+    public function getUrl(): string
     {
-        return $this->link;
+        return $this->url;
     }
 
     /**
-     * @param string $link
+     * @param string $url
      */
-    public function setLink(string $link)
+    public function setUrl(string $url)
     {
-        $this->link = $link;
+        $this->url = $url;
     }
 
     /**

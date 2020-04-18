@@ -3,9 +3,6 @@
 namespace App\Manager;
 
 use App\Entity\Client\Client;
-use App\Entity\ClientPlants;
-use App\Entity\Crop;
-use App\Entity\Customer\AvailablePlant;
 use App\Entity\Customer\CustomShare;
 use App\Entity\Customer\Invoice;
 use App\Entity\Customer\Customer;
@@ -316,17 +313,6 @@ class ShareManager
     }
 
     /**
-     * @param Client $client
-     * @return mixed
-     */
-    public function getSharePlants(Client $client)
-    {
-        $sharePlants = $this->em->getRepository(Crop::class)->getSharePlants($client);
-
-        return $sharePlants;
-    }
-
-    /**
      * @param $id
      * @param $role
      * @return \App\Entity\Customer\CustomerOrders|VendorOrder|null|object
@@ -362,59 +348,6 @@ class ShareManager
     }
 
     /**
-     * @param Client $client
-     * @return mixed
-     */
-    public function getAvailablePlants(Client $client)
-    {
-        $shares = $this->em->getRepository(AvailablePlant::class)->getAvailablePlants($client);
-
-        foreach ($shares as $key => $share) {
-            $plantName = $share['subName'] == '' ? $share['name'] : $share['name'] . ', ' . $share['subName'];
-            $shares[$key]['fullname'] = $plantName;
-        }
-
-        return $shares;
-    }
-
-    public function getAvailablePlantsIds(Client $client)
-    {
-        return $this->em->getRepository(AvailablePlant::class)->getAvailablePlantsIds($client);
-    }
-
-
-    /**
-     * @param Client $client
-     * @param $isAvailable
-     * @param $id
-     */
-    public function updateAvailablePlant(Client $client, $id, $isAvailable)
-    {
-        $plant = $this->em->find(ClientPlants::class, $id);
-
-        if ($isAvailable == 1) {
-            $availablePlant = new AvailablePlant();
-            $availablePlant->setClient($client);
-            $availablePlant->setPlant($plant);
-            $this->em->persist($availablePlant);
-        } else {
-            $availablePlant = $this->em->getRepository(AvailablePlant::class)->findOneBy(['client' => $client, 'plant' => $plant]);
-            if ($availablePlant) $this->em->remove($availablePlant);
-        }
-
-        $this->em->flush();
-    }
-
-    /**
-     * @param $client
-     * @return mixed
-     */
-    public function getClientPlantsOrderByName($client)
-    {
-        return $this->em->getRepository(ClientPlants::class)->getClientPlantsOrderByName($client);
-    }
-
-    /**
      * @param $id
      */
     public function removeCustomShare($id)
@@ -423,76 +356,6 @@ class ShareManager
 
         $this->em->remove($customShare);
         $this->em->flush();
-    }
-
-    /**
-     * Harvest list shows 7 closest pickups dates or vendor orders and counts total weight of each plant, for harvest.
-     *
-     * Returns harvest list report for two entities Customer Order and Vendor Order.
-     * Go through each customer pickup and count total weight of all products in a share.
-     * Then go through each vendor order day and put new or add new weight to plants in report.
-     *
-     * Returns array: [Date => [Plant names => Total weights]] for each pickup date and customer order date,
-     * only 7 items sorted by key (pickup and orders dates).
-     *
-     * @param Client $client
-     * @return array
-     */
-    public function getHarvestList(Client $client)
-    {
-        // First we beginning to get report list from customer orders
-        $harvestPickups = $this->em->getRepository(Pickup::class)->getHarvestPickups($client);
-
-        $reports = [];
-
-        // Create associative array - Pickup date => Sum of product weights
-        foreach ($harvestPickups as $pickup) {
-            // Create date key if not exists
-            $pickupDate = $pickup->getDate()->format('Y-m-d');
-            if (!array_key_exists($pickupDate, $reports)) { $reports[$pickupDate] = []; }
-
-            /** @var CustomerOrders $memberOrder */
-            $memberOrder = $pickup->getShare()->getShare()->getCustomerOrders()[0];
-
-            // Go through each order product and count total weight
-            foreach ($memberOrder->getShareProducts() as $shareProduct) {
-                // Create [date][product plant] key if not exists
-                $plantName = $shareProduct->getProduct()->getPlant()->getFullname();
-                if (!array_key_exists($plantName, $reports[$pickupDate])) { $reports[$pickupDate][$plantName] = 0; }
-
-                // Count total weight for date and plant
-                $reports[$pickupDate][$plantName] += $shareProduct->getWeight();
-            }
-
-            // Report need to show only next 7 pickup days
-            if (count($reports) == 7) break;
-        }
-
-        // Add to customer orders report -> vendor orders report
-        $vendorsOrders = $this->em->getRepository(VendorOrder::class)->getVendorOrders($client);
-
-        foreach ($vendorsOrders as $order) {
-            $orderDate = $order->getOrderDate()->format('Y-m-d');
-            if (!array_key_exists($orderDate, $reports)) { $reports[$orderDate] = []; }
-
-            foreach ($order->getShareProducts() as $shareProduct) {
-                $plantName = $shareProduct->getProduct()->getPlant()->getFullname();
-                if (!array_key_exists($plantName, $reports[$orderDate])) { $reports[$orderDate][$plantName] = 0; }
-
-                // Count total weight for date and plant
-                $reports[$orderDate][$plantName] += $shareProduct->getWeight();
-            }
-        }
-
-        // Sort report by dates
-        ksort($reports);
-
-        // Only 7 dates must be max in report
-        if (count($reports) > 7) {
-            $reports = array_slice($reports, 0, 7);
-        }
-
-        return $reports;
     }
 
     /**

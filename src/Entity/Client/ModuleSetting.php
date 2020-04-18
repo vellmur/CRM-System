@@ -5,7 +5,7 @@ namespace App\Entity\Client;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="user__settings")
+ * @ORM\Table(name="client__settings")
  * @ORM\Entity()
  */
 class ModuleSetting

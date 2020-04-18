@@ -3,7 +3,6 @@
 namespace App\Manager;
 
 use App\Entity\Client\Client;
-use App\Entity\ClientPlants;
 use App\Entity\Customer\Customer;
 use App\Entity\Customer\POS;
 use App\Entity\Customer\Product;

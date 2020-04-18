@@ -2,9 +2,7 @@
 
 namespace App\Form\EventListener;
 
-use App\Entity\ClientPlants;
 use App\Manager\ProductManager;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormEvent;
@@ -63,7 +61,6 @@ class ProductSubscriber implements EventSubscriberInterface
 
         if ($data) {
             if ($data->getCategory() == 1 && $data->isPos()) {
-                $form->remove('plant');
                 $form->remove('weight');
                 $this->addPayBy($event->getForm());
 
@@ -89,11 +86,8 @@ class ProductSubscriber implements EventSubscriberInterface
 
         if ($data) {
             if (isset($data['category']) && $data['category'] == 1 && isset($data['isPos']) && $data['isPos'] == true) {
-                $form->remove('plant');
                 $form->remove('weight');
                 $this->addPayBy($event->getForm());
-
-                unset($data['plant']);
                 unset($data['weight']);
             } else {
                 $this->addWeight($event->getForm());

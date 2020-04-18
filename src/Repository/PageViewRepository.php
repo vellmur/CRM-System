@@ -20,29 +20,29 @@ class PageViewRepository extends ServiceEntityRepository
 
     /**
      * @param $deviceId
-     * @param $link
+     * @param $url
      * @param $moduleId
      * @param $pageName
      * @return string
      * @throws \Exception
      */
-    public function saveView($deviceId, $link, $moduleId, $pageName)
+    public function saveView($deviceId, $url, $moduleId, $pageName)
     {
         $con = $this->getEntityManager()->getConnection();
         $qb = $con->createQueryBuilder();
 
         $datetime = new \DateTime();
 
-        $qb->insert('user__page_views')
+        $qb->insert('device__page_views')
             ->values([
                 'device_id' => '?',
-                'link' => '?',
+                'url' => '?',
                 'module_id' => '?',
                 'page' => '?',
                 'created_at' => '?'
             ])
             ->setParameter(0, $deviceId)
-            ->setParameter(1, $link)
+            ->setParameter(1, strtok($url, '?'))
             ->setParameter(2, $moduleId)
             ->setParameter(3, $pageName)
             ->setParameter(4, $datetime->format('Y-m-d'));
@@ -65,9 +65,9 @@ class PageViewRepository extends ServiceEntityRepository
 
         $datetime = new \DateTime();
 
-        $qb->insert('user__page_promotion')
+        $qb->insert('device__promotion_visit')
             ->values([
-                'view_id' => '?',
+                'page_id' => '?',
                 'name' => '?',
                 'created_at' => '?'
             ])
@@ -93,19 +93,17 @@ class PageViewRepository extends ServiceEntityRepository
             YEAR(v.createdAt) as year, 
             MONTH(v.createdAt) as month, 
             DAY(v.createdAt) as day, 
-            v.link as link,
+            v.url as url,
             v.page as page'
             )
-            ->orderBy('v.link')
-            ->groupBy('page, link, year, month, day');
+            ->orderBy('v.url')
+            ->groupBy('page, url, year, month, day');
 
         if ($chart && $chart !== 'all') {
             if ($chart == 'website' || $chart == 'promotion') {
                 $qb->andWhere('v.module is NULL');
-
-                if ($chart == 'promotion') $qb->andWhere('v.isPromo = 1');
             } else {
-                $modules = ['crops' => 1, 'customers' => 2, 'company' => 3];
+                $modules = ['customers' => 1];
                 $qb->andWhere('v.module = :module')->setParameter('module', $modules[$chart]);
             }
         }
@@ -121,7 +119,8 @@ class PageViewRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return mixed
+     * @return array|mixed
+     * @throws \Exception
      */
     public function countLandingViews()
     {
@@ -137,8 +136,8 @@ class PageViewRepository extends ServiceEntityRepository
                 SUM(case when v.createdAt >= :week then 1 else 0 end) as week,
                 SUM(case when v.createdAt >= :month then 1 else 0 end) as month'
             )
-            ->where('v.module is NULL and v.link = :link')
-            ->setParameter('link', '/')
+            ->where('v.module is NULL and v.url = :url')
+            ->setParameter('url', '/')
             ->setParameter('today', $today->format('Y-m-d'))
             ->setParameter('week', $week->format('Y-m-d'))
             ->setParameter('month', $month->format('Y-m-d'));
@@ -148,6 +147,9 @@ class PageViewRepository extends ServiceEntityRepository
         return $result ? $result[0] : $result;
     }
 
+    /**
+     * @return mixed
+     */
     public function getPages()
     {
         $qb = $this->createQueryBuilder('p')

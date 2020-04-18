@@ -9,7 +9,7 @@ class AccessUpdater
 {
     private $em;
 
-    CONST TRIAL_DAYS = 14;
+    CONST TRIAL_DAYS = 365;
 
     /**
      * @param EntityManagerInterface $em

@@ -120,7 +120,6 @@ class CustomerEmail extends BaseEmailLog implements ClientEmailInterface
                 'ShareStatus' => 'Status',
                 'ShareDay' => 'Share day',
                 'ShareLocation' => 'Share location',
-                'AvailablePlants' => 'Available plants'
             ],
             'BillingAddressData' => [
                 'BilType' => 'Address Type',

@@ -167,18 +167,6 @@ class EmailManager
                 }
 
                 break;
-            case 'SetupPlantsLink':
-                $path = $this->urlGenerator->generate('plant_index');
-                $value = '<a href="' . $this->host . $path . '" target="_blank">SETUP>Plants</a>';
-                break;
-            case 'SetupGardensLink':
-                $path = $this->urlGenerator->generate('garden_index');
-                $value = '<a href="' . $this->host . $path . '" target="_blank">SETUP>Gardens</a>';
-                break;
-            case 'SetupCropsLink':
-                $path = $this->urlGenerator->generate('crops_garden');
-                $value = '<a href="' . $this->host . $path . '" target="_blank">MANAGE CROPS>Plants In Garden</a>';
-                break;
         }
 
         return $value;
@@ -328,11 +316,6 @@ class EmailManager
             'ClientData' => [
                 'ClientName' => 'Name',
                 'ConfirmationLink' => 'Confirmation link'
-            ],
-            'Pages' => [
-                'SetupPlantsLink' => 'Setup plants',
-                'SetupGardensLink' => 'Setup gardens',
-                'SetupCropsLink' => 'Setup crops'
             ]
         ];
 

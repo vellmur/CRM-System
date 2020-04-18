@@ -46,11 +46,8 @@ final class ViewListener extends AppListener
             // Do not save page views for master visits
             if (!$token instanceof SwitchUserToken) {
                 $sessDeviceId = $this->session->get('deviceId');
-                $deviceId = $this->pageViewSaver->savePageView($user, $request->getRequestUri(), $sessDeviceId);
-
-                if ($deviceId !== null && $sessDeviceId == null) {
-                    $this->session->set('deviceId', $deviceId);
-                }
+                $deviceId = $this->pageViewSaver->saveDeviceView($user, $request->getRequestUri(), $sessDeviceId);
+                $this->session->set('deviceId', $deviceId);
             }
         } catch (\Exception $exception) {
 

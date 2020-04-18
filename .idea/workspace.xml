@@ -2,34 +2,47 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="84a5af43-8ac8-4125-9302-4fb0ea992ab0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Entity/User/PromotionView.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/EventListener/NotificationListener.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/EventListener/VisitFromEmailListener.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Manager/PageViewManager.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/customer/report/share_day.html.twig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/services.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/services.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/Customer/CustomerController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/Customer/CustomerController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Command/SubscriptionUpdateCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Command/SubscriptionUpdateCommand.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/Customer/MembershipController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/Customer/MembershipController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/Customer/ReportController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/Customer/ReportController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/Master/MasterController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/Master/MasterController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Controller/User/SubscriptionController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/User/SubscriptionController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/User/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/User/UserController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Client/ModuleAccess.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Client/ModuleAccess.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Client/ModuleSetting.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Client/ModuleSetting.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Customer/Email/CustomerEmail.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Customer/Email/CustomerEmail.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Customer/Product.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Customer/Product.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Entity/User/PageView.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/User/PageView.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/User/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/User/User.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/User/PromotionView.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/User/PromotionView.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/EventListener/AppListener.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/EventListener/AppListener.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/EventListener/ErrorListener.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/EventListener/ErrorListener.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/EventListener/SecurityListener.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/EventListener/SecurityListener.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/EventListener/ViewListener.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/EventListener/ViewListener.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Form/Client/ClientType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/Client/ClientType.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Form/EventListener/SubscriptionSubscriber.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/EventListener/SubscriptionSubscriber.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Form/Security/ResettingType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/Security/ResettingType.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Form/User/UserFormType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/User/UserFormType.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/EventListener/ProductSubscriber.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/EventListener/ProductSubscriber.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/EventListener/RenewSubscriber.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/EventListener/RenewSubscriber.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Form/User/Collection/SettingsCollection.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/User/Collection/SettingsCollection.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Manager/CommandManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Manager/CommandManager.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Manager/DeviceManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Manager/DeviceManager.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Manager/EmailManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Manager/EmailManager.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Menu/Builder.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Menu/MenuBuilder.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Manager/MemberEmailManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Manager/MemberEmailManager.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Manager/MemberManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Manager/MemberManager.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Manager/PageViewManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Manager/PageViewManager.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Manager/ProductManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Manager/ProductManager.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Manager/RegistrationManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Manager/RegistrationManager.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Manager/ShareManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Manager/ShareManager.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Manager/UserManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Manager/UserManager.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Menu/MenuBuilder.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Menu/MenuBuilder.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Repository/ClientRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/ClientRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/CustomerShareRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/CustomerShareRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/POSRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/POSRepository.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Repository/PageViewRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/PageViewRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Service/EnvironmentService.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/EnvironmentService.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/ShareProductsRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/ShareProductsRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Security/AccessUpdater.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Security/AccessUpdater.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Service/ModuleChecker.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/ModuleChecker.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Service/PageViewSaver.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/PageViewSaver.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/account/subscription/subscription.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/account/subscription/subscription.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/customer/add.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/customer/add.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/customer/edit.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/customer/edit.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Twig/AppExtension.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Twig/AppExtension.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/account/profile/settings.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/account/profile/settings.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/parts/setup_instructions.html.twig" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -184,16 +197,16 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/Form" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/templates/customer/report" />
     <property name="settings.editor.selected.configurable" value="web-ide.project.structure" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/templates/customer/report" />
       <recent name="$PROJECT_DIR$/src/Form" />
       <recent name="$PROJECT_DIR$/src/Manager" />
       <recent name="$PROJECT_DIR$/config/packages" />
       <recent name="$PROJECT_DIR$/src/Controller/Customer" />
-      <recent name="$PROJECT_DIR$/src" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/Form/User" />
@@ -240,17 +253,21 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="221" y="89" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1587056152724" />
+    <state x="100" y="100" width="1240" height="700" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1587214202166">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="100" y="100" width="1240" height="700" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1440.900@0.0.1440.900" timestamp="1587214202166" />
     <state x="397" y="266" key="com.intellij.ide.util.TipDialog" timestamp="1587118075054">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state x="397" y="266" key="com.intellij.ide.util.TipDialog/0.23.1440.877@0.23.1440.877" timestamp="1587118075054" />
-    <state x="378" y="207" width="731" height="486" key="find.popup" timestamp="1587201834399">
+    <state x="378" y="207" width="731" height="486" key="find.popup" timestamp="1587215590098">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="378" y="207" width="731" height="486" key="find.popup/0.0.1440.900@0.0.1440.900" timestamp="1587201834399" />
-    <state x="385" y="210" key="run.anything.popup" timestamp="1587131190090">
+    <state x="378" y="207" width="731" height="486" key="find.popup/0.0.1440.900@0.0.1440.900" timestamp="1587215590098" />
+    <state x="385" y="210" key="run.anything.popup" timestamp="1587215541453">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="385" y="210" key="run.anything.popup/0.0.1440.900@0.0.1440.900" timestamp="1587131190090" />
+    <state x="385" y="210" key="run.anything.popup/0.0.1440.900@0.0.1440.900" timestamp="1587215541453" />
   </component>
 </project>

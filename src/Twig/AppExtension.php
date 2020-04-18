@@ -103,9 +103,7 @@ class AppExtension extends AbstractExtension
     public function nameOfModule($id)
     {
         $modules = [
-            '1' => 'Crops',
-            '2' => 'Customers',
-            '3' => 'Company'
+            '1' => 'Customers',
         ];
 
         return $modules[$id];

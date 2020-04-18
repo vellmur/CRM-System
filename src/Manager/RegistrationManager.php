@@ -175,15 +175,8 @@ class RegistrationManager
             $access->setClient($client);
             $access->setModule($id);
             $access->setUpdatedAt($today);
-
-            // For now we are not giving access to any module except crops
-            if ($name == 'crops') {
-                $access->setExpiredAt($trialExtendsAt);
-                $access->setStatusByName('ACTIVE');
-            } else {
-                $access->setExpiredAt($today);
-                $access->setStatusByName('LAPSED');
-            }
+            $access->setExpiredAt($today);
+            $access->setStatusByName('LAPSED');
 
             $this->em->persist($access);
         }

@@ -323,22 +323,6 @@ class MembershipController extends AbstractController
     }
 
     /**
-     * @param StatisticsManager $statisticsManager
-     * @param $chart
-     * @return Response
-     */
-    public function marketStatistics(StatisticsManager $statisticsManager, $chart)
-    {
-        $client = $this->getUser()->getClient();
-        $stats = $statisticsManager->getRenewalChartData($client, $chart);
-
-        return $this->render('company/statistics.html.twig', [
-            'items' => $chart !== 'completed' ? array_keys($stats) : [],
-            'stats' => $stats
-        ]);
-    }
-
-    /**
      * @param Request $request
      * @param SerializerInterface $serializer
      * @param $token

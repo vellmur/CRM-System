@@ -9,15 +9,6 @@ abstract class AppListener
 {
     /**
      * @param Request $request
-     * @return bool
-     */
-    protected function isClientWebsite(Request $request)
-    {
-        return $request->attributes->get('subDomain') != null;
-    }
-
-    /**
-     * @param Request $request
      * @return mixed
      */
     protected function isAssetsRequest(Request $request)
@@ -35,7 +26,7 @@ abstract class AppListener
     {
         $request = $event->getRequest();
 
-        return !$event->isMasterRequest() || $this->isClientWebsite($request) || $this->isAssetsRequest($request);
+        return !$event->isMasterRequest() || $this->isAssetsRequest($request);
     }
 
     /**

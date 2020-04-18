@@ -43,7 +43,7 @@ class ReportController extends AbstractController
 
         $weekNav = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-        return $this->render('crop/report/share_day.html.twig', [
+        return $this->render('customer/report/share_day.html.twig', [
             'weeksNav' => $weekNav,
             'shares' => $shares
         ]);

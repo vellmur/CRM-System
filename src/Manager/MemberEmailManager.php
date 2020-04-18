@@ -3,10 +3,8 @@
 namespace App\Manager;
 
 use App\Entity\Customer\Email\AutoEmail;
-use App\Entity\Customer\AvailablePlant;
 use App\Entity\Customer\Email\EmailRecipient;
-use App\Entity\Customer\Feedback;
-use App\Entity\Customer\MemberEmailNotify;
+use App\Entity\Customer\Email\Feedback;
 use App\Entity\Customer\CustomerShare;
 use App\Entity\Customer\Customer;
 use App\Entity\Customer\Share;
@@ -258,30 +256,6 @@ class MemberEmailManager
         }
 
         return $defaultEmails;
-    }
-
-    /**
-     * @param Client $client
-     * @return mixed
-     */
-    public function getAvailablePlants(Client $client)
-    {
-        $shares = $this->em->getRepository(AvailablePlant::class)->getAvailablePlants($client);
-
-        $list = '';
-
-        if ($shares && count($shares) > 0) {
-            $list = '<p>';
-
-            foreach ($shares as $key => $share) {
-                $plantName = $share['subName'] == '' ? $share['name'] : $share['name'] . ', ' . $share['subName'];
-                $list .= $plantName . '<br/>';
-            }
-
-            $list .= '</p>';
-        }
-
-        return $list;
     }
 
     /**
@@ -677,9 +651,6 @@ class MemberEmailManager
                 break;
             case 'DeliveryDay':
                 $value = $member->getWeekDay();
-                break;
-            case 'AvailablePlants':
-                $value = $this->getAvailablePlants($member->getClient());
                 break;
             case 'ProfileLink':
                 $value = '<a href="' . $this->getProfileLink($recipient) . '">View profile</a>';

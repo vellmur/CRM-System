@@ -42,68 +42,63 @@ class PageViewSaver
      * @return int|null
      * @throws \Exception
      */
-    public function savePageView(?UserInterface $user, $url, $deviceId = null)
+    public function saveDeviceView(?UserInterface $user, $url, $deviceId = null)
     {
-        try {
-            if ($this->notSaveAblePage($url)) {
-                return null;
+        $moduleId = null;
+
+        if ($this->moduleChecker->isWebsiteVisit($url)) {
+            $pageName = $this->getPageNameFromUrl($url);
+        } else {
+            $pageName = $this->getMenuItemName($url);
+            $moduleName = $this->moduleChecker->getModuleNameByUrl($url);
+            $moduleId = $moduleName ? ModuleAccess::getModuleId($moduleName) : null;
+        }
+
+        if ($pageName && $device = $this->getOrCreateUserDevice($deviceId)) {
+            $viewId = $this->manager->saveView($device->getId(), $url, $moduleId, $pageName);
+
+            if ($promotionName = $this->getPromotionName($url)) {
+                $this->manager->savePromotionView($viewId, $promotionName);
             }
 
-            if ($pageName = $this->getPageName($url)) {
-                $device = $this->getOrCreateUserDevice($deviceId);
-
-                if ($device !== null) {
-                    if ($user !== null && $device->getUser() === null) {
-                        $this->deviceManager->setDeviceUser($device, $user);
-                    }
-
-                    $moduleName = $this->moduleChecker->getModuleNameByUrl($url);
-                    $moduleId = $moduleName ? ModuleAccess::getModuleId($moduleName) : null;
-                    $viewId = $this->manager->saveView($device->getId(), $url, $moduleId, $pageName);
-
-                    if ($promotionName = $this->getPromotionName($url)) {
-                        $this->manager->savePromotionView($viewId, $promotionName);
-                    }
-
-                    return $device->getId();
-                }
+            if ($user && $device->getUser() == null) {
+                $this->deviceManager->saveDeviceUser($device, $user);
             }
-        } catch (\Exception $e) {
-            throw $e;
+
+            return $device->getId();
         }
 
         return $deviceId;
     }
 
     /**
-     * @param $link
-     * @return bool
+     * @param $url
+     * @return mixed|string|string[]
      */
-    private function notSaveAblePage($link)
+    private function getPageNameFromUrl($url)
     {
-        $skipSaveView = ['widget-load', 'api', 'logout', '_profiler', '_wdt', 'routing', 'master'];
-
-        return $this->strposa($link, $skipSaveView);
-    }
-
-    /**
-     * @param $link
-     * @return mixed|string|null
-     */
-    private function getPageName($link)
-    {
-        if ($link == '/') {
+        if ($url == '/') {
             return 'landing';
         }
 
-        return $this->getMenuItemName($link);
+        $slugs = explode('/', strtok($url,'?'));
+        $itemName = strlen($slugs[count($slugs) - 1]) > 0 ? $slugs[count($slugs) - 1] : $slugs[count($slugs) - 2];
+
+        // If item name contain numbers (token, id, etc...), set name to previous slug
+        if (preg_match('#[0-9]#', $itemName)) {
+            $itemName = $slugs[count($slugs) - 2];
+        }
+
+        if (strstr($itemName, '-')) $itemName = str_replace('-', ' ', $itemName);
+
+        return $itemName;
     }
 
     /**
      * @param string $link
      * @return mixed|null
      */
-    public function getPromotionName(string $link)
+    private function getPromotionName(string $link)
     {
         if (!strstr($link, 'promo_link')) {
             return null;
@@ -155,22 +150,5 @@ class PageViewSaver
         }
 
         return $device;
-    }
-
-
-    /**
-     * @param $haystack
-     * @param $needle
-     * @param int $offset
-     * @return bool
-     */
-    private function strposa($haystack, $needle, $offset = 0)
-    {
-        if (!is_array($needle)) $needle = [$needle];
-
-        foreach($needle as $query) {
-            if (strpos($haystack, strtolower($query), $offset) !== false) return true; // stop on first true result
-        }
-        return false;
     }
 }
