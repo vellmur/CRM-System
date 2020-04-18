@@ -132,9 +132,6 @@ function ajaxUpdate($button)
             if (form.attr('data-remove') === 'true' && !empty.length) {
                 form.parent().remove();
             } else {
-                // if page is tray starts (function used in garden plants page(at bottom) twig template)
-                if (form.attr('data-stage') === 'tray') calculateTraysLeft(form, parent);
-
                 // Enable the button button
                 if (buttonLabel.length > 0) {
                     var newButton = '<button type="submit" class="btn btn-success btn-save">' + buttonLabel + '</button>';
@@ -200,37 +197,6 @@ function ajaxUpdate($button)
             }
         }
     });
-}
-
-function calculateTraysLeft(form, parent)
-{
-    var formName = form.attr('name');
-
-    var traysField = '#' + formName + '_traysNum';
-    var traysNum = parent.find(traysField);
-    var allTraysNum = parent.find(traysField + ' option:last').val();
-
-    // if client plant not all trays of some plant in one time
-    if (traysNum.val() !== allTraysNum)
-    {
-        // Else change max options num to all trays - planted trays num
-        var traysLeft = allTraysNum - parseInt(traysNum.val());
-
-        for (var i = allTraysNum; i > traysLeft; i--) {
-            parent.find(traysField + " option[value='" + i + "']").remove();
-        }
-
-        // clear plant date and garden set max value of select to left number of trays for this plant
-        var gardenField = parent.find('#' + formName + '_garden');
-        // remove garden that is used from all dropdowns in a page
-        $('#' + formName + "_garden option[value='" + gardenField.val() + "']").remove();
-        gardenField.val('');
-        parent.find('input[name="' + formName + '[plantDate]"]').val('');
-        traysNum.val(traysLeft);
-
-        $(traysField).selectpicker('refresh');
-        $(gardenField).selectpicker('refresh');
-    }
 }
 
 /*---------- Change referral paid status (if master paid affiliate for referral, change to true) --------*/
