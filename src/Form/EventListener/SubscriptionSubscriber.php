@@ -2,7 +2,7 @@
 
 namespace App\Form\EventListener;
 
-use App\Form\CardPaymentType;
+use App\Form\Client\CardPaymentType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormEvent;

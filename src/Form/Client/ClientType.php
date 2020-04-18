@@ -46,7 +46,7 @@ class ClientType extends AbstractType
                 'required' => false,
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'register.farm_name'
+                    'placeholder' => 'register.company_name'
                 ]
             ])
             ->add('email', TextType::class, [

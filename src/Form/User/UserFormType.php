@@ -4,7 +4,7 @@ namespace App\Form\User;
 
 use App\Entity\Translation\TranslationLocale;
 use App\Entity\User\User;
-use App\Form\ClientType;
+use App\Form\Client\ClientType;
 use App\Form\EventListener\ProfileSubscriber;
 use App\Repository\Translation\TranslationLocaleRepository;
 use App\Service\CountryList;

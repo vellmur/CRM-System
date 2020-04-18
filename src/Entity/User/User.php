@@ -2,6 +2,8 @@
 
 namespace App\Entity\User;
 
+use App\Entity\Client\Client;
+use App\Entity\Client\Team;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -435,7 +437,7 @@ class User implements UserInterface
     }
 
     /**
-     * @return ArrayCollection
+     * @return Team
      */
     public function getTeam()
     {

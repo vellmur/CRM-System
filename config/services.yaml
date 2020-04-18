@@ -54,7 +54,7 @@ services:
             $rootDir: '%kernel.project_dir%'
 
     app.menu_builder:
-        class: App\Menu\Builder
+        class: App\Menu\MenuBuilder
         arguments: ["@knp_menu.factory"]
         tags:
             - { name: knp_menu.menu_builder, method: mainMenu, alias: main }
@@ -94,6 +94,10 @@ services:
 
     Symfony\Bridge\Doctrine\Security\RememberMe\DoctrineTokenProvider: ~
 
+    App\EventListener\SecurityListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.request }
+
     App\EventListener\ErrorListener:
         arguments:
             $env: "%kernel.environment%"
@@ -101,6 +105,14 @@ services:
             - { name: kernel.event_listener, event: kernel.exception }
 
     App\EventListener\ViewListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.request }
+
+    App\EventListener\NotificationListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.request }
+
+    App\EventListener\VisitFromEmailListener:
         tags:
             - { name: kernel.event_listener, event: kernel.request }
 

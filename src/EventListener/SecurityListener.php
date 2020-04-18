@@ -46,7 +46,7 @@ final class SecurityListener extends AppListener
     {
         $request = $event->getRequest();
 
-        if ($this->isNotSoftwareUserEvent($event)) {
+        if ($this->isSystemEvent($event) === true) {
             return;
         }
 
@@ -65,7 +65,7 @@ final class SecurityListener extends AppListener
                 }
             }
         } catch (\Exception $exception) {
-            if ($exception instanceof AccessDeniedException || $this->isDevelopment($request->getHost())) throw $exception;
+            if ($exception instanceof AccessDeniedException || $this->isDevelopmentEnvironment()) throw $exception;
         }
     }
 }

@@ -120,7 +120,7 @@ class EnvironmentService
         $ip = $this->getRealIpAddress();
 
         // Do not return a device for testing environment
-        if ($ip == null || strstr('127.0.0.1', $ip) || $browser['version'] == null || $browser['version'] == null
+        if ($ip == null || $browser['version'] == null || $browser['version'] == null
             || strstr('test', $browser['platform']) || strstr('test', $browser['name'])
         ) {
             return false;

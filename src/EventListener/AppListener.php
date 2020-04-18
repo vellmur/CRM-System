@@ -11,15 +11,6 @@ abstract class AppListener
      * @param Request $request
      * @return bool
      */
-    protected function isProfilerRequest(Request $request)
-    {
-        return $request->attributes->get('_route') == '_wdt' || $request->attributes->get('_route') == '_profiler';
-    }
-
-    /**
-     * @param Request $request
-     * @return bool
-     */
     protected function isClientWebsite(Request $request)
     {
         return $request->attributes->get('subDomain') != null;
@@ -31,29 +22,26 @@ abstract class AppListener
      */
     protected function isAssetsRequest(Request $request)
     {
-        return $request->attributes->get('_format') || strstr($request->getRequestUri(), '/js/') || strstr($request->getRequestUri(), '/css/');
+        return $request->attributes->get('_format')
+            || strstr($request->getRequestUri(), '/js/')
+            || strstr($request->getRequestUri(), '/css/');
     }
 
     /**
      * @param RequestEvent $event
      * @return bool
      */
-    protected function isNotSoftwareUserEvent(RequestEvent $event)
+    protected function isSystemEvent(RequestEvent $event)
     {
         $request = $event->getRequest();
 
-        $result = !$event->isMasterRequest() || $this->isProfilerRequest($request) || $this->isClientWebsite($request) || $this->isAssetsRequest($request);
-
-        return $result;
+        return !$event->isMasterRequest() || $this->isClientWebsite($request) || $this->isAssetsRequest($request);
     }
 
     /**
-     * @param $domain
      * @return bool
      */
-    protected function isDevelopment($domain) {
-        return strstr($domain, 'testserver')
-            || strstr($domain, '127.0.0.1')
-            || strstr($domain, 'customer.local');
+    protected function isDevelopmentEnvironment() {
+        return $_ENV['APP_ENV'] === 'dev';
     }
 }

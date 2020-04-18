@@ -2,13 +2,12 @@
 
 namespace App\Menu;
 
-use App\Entity\Client\Client;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class Builder
+class MenuBuilder
 {
     private $factory;
 
@@ -65,8 +64,6 @@ class Builder
         // User menu
         if ($this->security->isGranted('ROLE_OWNER') || $this->security->isGranted('ROLE_EMPLOYEE'))
         {
-            $client = $this->security->getUser()->getClient();
-
             if ($this->security->isGranted('ROLE_OWNER')) {
                 $this->addOwnerAccountMenu($menu, $domain);
             } elseif ($this->security->isGranted('ROLE_EMPLOYEE')) {
@@ -78,13 +75,34 @@ class Builder
             $menu->addChild($customersHeader)->setAttribute('icon', 'icon-menu')->setAttribute('class', 'navigation-header');
 
             // Module Customers
-            $this->addManageCustomersMenu($client, $menu, $domain);
+            $this->addManageCustomersMenu($menu, $domain);
             $this->addEmailsMenu($menu, $domain);
-            $this->addOrdersMenu($client,$menu, $domain);
+            $this->addOrdersMenu($menu, $domain);
             $this->addPosMenu($menu, $domain);
             $this->addProductsMenu($menu, $domain);
             $this->addVendorsMenu($menu, $domain);
         }
+
+        return $menu;
+    }
+
+    /**
+     * @return \Knp\Menu\ItemInterface
+     */
+    public function getAllMenusItems()
+    {
+        $domain = 'labels';
+        $menu = $this->factory->createItem('root');
+        $this->addOwnerAccountMenu($menu, $domain);
+        $this->addEmployeeMenu($menu, $domain);
+        $customersHeader = $this->trans->trans('navigation.module_customers', [], $domain);
+        $menu->addChild($customersHeader)->setAttribute('icon', 'icon-menu')->setAttribute('class', 'navigation-header');
+        $this->addManageCustomersMenu($menu, $domain);
+        $this->addEmailsMenu($menu, $domain);
+        $this->addOrdersMenu($menu, $domain);
+        $this->addPosMenu($menu, $domain);
+        $this->addProductsMenu($menu, $domain);
+        $this->addVendorsMenu($menu, $domain);
 
         return $menu;
     }
@@ -142,15 +160,14 @@ class Builder
     {
         $account = $this->trans->trans('navigation.account.employee', [], $domain);
         $menu->addChild($account)->setAttribute('icon', 'icon-vcard')->setAttribute('class', 'has-ul');;
-        $menu[$account]->addChild($this->trans->trans('navigation.account.profile', [], $domain), ['route' => 'employee_profile_edit'])->setAttribute('icon', 'icon-user');
+        $menu[$account]->addChild($this->trans->trans('navigation.account.profile', [], $domain), ['route' => 'employee.profile.edit'])->setAttribute('icon', 'icon-user');
     }
 
     /**
-     * @param Client $client
      * @param $menu
      * @param $domain
      */
-    private function addManageCustomersMenu(Client $client, &$menu, $domain)
+    private function addManageCustomersMenu(&$menu, $domain)
     {
         $customers = $this->trans->trans('navigation.customers.manage_customers', [], $domain);
         $menu->addChild($customers)->setAttribute('icon', 'icon-people')->setAttribute('class', 'has-ul');;
@@ -188,11 +205,10 @@ class Builder
     }
 
     /**
-     * @param Client $client
      * @param $menu
      * @param $domain
      */
-    private function addOrdersMenu(Client $client, &$menu, $domain)
+    private function addOrdersMenu(&$menu, $domain)
     {
         $orders = $this->trans->trans('navigation.orders.orders', [], $domain);
         $menu->addChild($orders)->setAttribute('icon', 'icon-cart')->setAttribute('class', 'has-ul');;

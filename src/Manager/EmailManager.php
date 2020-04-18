@@ -421,32 +421,20 @@ class EmailManager
     }
 
     /**
-     * @return Client[]|array|\object[]
+     * @param string $id
+     * @param string $type
      */
-    public function getNewConfirmedClients()
+    public function saveClickedEmail(string $id, string $type)
     {
-        $clients = $this->em->getRepository(Client::class)->getNewConfirmedClients();
+        $recipient = $type == 'client' ? $this->em->find(Recipient::class, $id)
+            : $this->em->find(EmailRecipient::class, $id);
 
-        return $clients;
-    }
+        if ($recipient && !$recipient->isClicked()) {
+            $recipient->setIsOpened(true);
+            $recipient->setIsClicked(true);
+            $recipient->setIsBounced(false);
 
-    /**
-     * @return Client[]|array|\object[]
-     */
-    public function getPendingClients()
-    {
-        $clients = $this->em->getRepository(Client::class)->getPendingClients();
-
-        return $clients;
-    }
-
-    /**
-     * @return Client[]|array|\object[]
-     */
-    public function getSetupAbortedClients()
-    {
-        $clients = $this->em->getRepository(Client::class)->getSetupAbortedClients();
-
-        return $clients;
+            $this->em->flush();
+        }
     }
 }

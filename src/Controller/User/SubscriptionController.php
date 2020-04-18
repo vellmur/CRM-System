@@ -3,7 +3,7 @@
 namespace App\Controller\User;
 
 use App\Entity\Client\Merchant;
-use App\Form\SubscriptionType;
+use App\Form\Client\SubscriptionType;
 use App\Form\User\Payments\MerchantType;
 use App\Manager\User\SubscriptionManager;
 use JMS\Serializer\SerializerInterface;
@@ -38,7 +38,7 @@ class SubscriptionController extends AbstractController
 
         if ($form->isSubmitted()) {
             if ($form->isSubmitted() && $form->isValid()) {
-                die(var_dump($request->request->all()));
+
             } else {
                 return new JsonResponse(['errors' => $this->getErrorsFromForm($form)], 500);
             }

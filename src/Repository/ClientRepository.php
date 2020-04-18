@@ -281,59 +281,6 @@ class ClientRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return mixed
-     */
-    public function getNewConfirmedClients()
-    {
-        $now = new \DateTime();
-
-        $qb = $this->createQueryBuilder('c')
-            ->select('c, team, user')
-            ->innerJoin('c.team', 'team')
-            ->innerJoin('team.user', 'user')
-            ->where('c.createdAt = :now and user.enabled = 1')
-            ->setParameter('now', $now->format('Y-m-d'));
-
-        return $qb->getQuery()->getResult();
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPendingClients()
-    {
-        $now = new \DateTime();
-        $now->modify('-1 day');
-
-        $qb = $this->createQueryBuilder('c')
-            ->select('c, team, user')
-            ->innerJoin('c.team', 'team')
-            ->innerJoin('team.user', 'user')
-            ->where('c.createdAt = :now and user.enabled = 0')
-            ->setParameter('now', $now->format('Y-m-d'));
-
-        return $qb->getQuery()->getResult();
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSetupAbortedClients()
-    {
-        $now = new \DateTime();
-        $now->modify('-5 days');
-
-        $qb = $this->createQueryBuilder('c')
-            ->select('c, team, user')
-            ->innerJoin('c.team', 'team')
-            ->innerJoin('team.user', 'user')
-            ->where('c.createdAt = :now AND user.enabled = 1 AND (c.plants is empty or c.gardens is empty or c.crops is empty)')
-            ->setParameter('now', $now->format('Y-m-d'));
-
-        return $qb->getQuery()->getResult();
-    }
-
-    /**
      * Patron - it is a customer who had at least one share with a "PATRONS" type or one pos order with past dates
      *
      * @return mixed

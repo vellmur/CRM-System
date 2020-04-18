@@ -22,29 +22,17 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td>{{ 'account.payment.crops'| trans({}, 'labels') }}</td>
-                                    <td style="min-width: 150px;">{{ 'subscription.pay_what_you_can'| trans({}, 'messages') }}</td>
-                                    <td>{{ 'subscription.crops'| trans({}, 'messages') }}</td>
-                                    <td>
-                                        <a class="btn btn-action btn-step-next"
-                                           data-module-name="{{ 'account.payment.crops'| trans({}, 'labels') }}" data-module-id="1">
-                                            {{ 'button.pay'| trans({}, 'labels') }}
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
                                     <td>{{ 'account.payment.customers'| trans({}, 'labels') }}</td>
                                     <td>{{ 'subscription.coming_soon'| trans({}, 'messages') }}</td>
                                     <td>
                                         {{ 'subscription.customers'| trans({}, 'messages') }}
                                     </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>{{ 'account.payment.company'| trans({}, 'labels') }}</td>
-                                    <td>{{ 'subscription.coming_soon'| trans({}, 'messages') }}</td>
-                                    <td>{{ 'subscription.company'| trans({}, 'messages') }}</td>
-                                    <td></td>
+                                    <td>
+                                        <a class="btn btn-action btn-step-next"
+                                           data-module-name="{{ 'account.payment.customers'| trans({}, 'labels') }}" data-module-id="1">
+                                            {{ 'button.pay'| trans({}, 'labels') }}
+                                        </a>
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>

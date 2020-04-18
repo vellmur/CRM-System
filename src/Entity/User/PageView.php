@@ -53,10 +53,9 @@ class PageView
     private $page;
 
     /**
-     * @var boolean
-     * @ORM\Column(name="is_promo", type="boolean", nullable=false)
+     * @ORM\OneToMany(targetEntity="App\Entity\User\PromotionView", mappedBy="page", cascade={"all"}, orphanRemoval=true)
      */
-    private $isPromo = 0;
+    private $promotions;
 
     /**
      * @var \DateTime
@@ -143,22 +142,6 @@ class PageView
     public function setPage(string $page)
     {
         $this->page = $page;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isPromo(): bool
-    {
-        return $this->isPromo;
-    }
-
-    /**
-     * @param bool $isPromo
-     */
-    public function setIsPromo(bool $isPromo)
-    {
-        $this->isPromo = $isPromo;
     }
 
     /**

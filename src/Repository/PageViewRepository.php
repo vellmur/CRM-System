@@ -23,6 +23,7 @@ class PageViewRepository extends ServiceEntityRepository
      * @param $link
      * @param $moduleId
      * @param $pageName
+     * @return string
      * @throws \Exception
      */
     public function saveView($deviceId, $link, $moduleId, $pageName)
@@ -32,23 +33,51 @@ class PageViewRepository extends ServiceEntityRepository
 
         $datetime = new \DateTime();
 
-        $qb->insert('page_views')
+        $qb->insert('user__page_views')
             ->values([
                 'device_id' => '?',
                 'link' => '?',
                 'module_id' => '?',
                 'page' => '?',
-                'is_promo' => '?',
                 'created_at' => '?'
             ])
             ->setParameter(0, $deviceId)
             ->setParameter(1, $link)
             ->setParameter(2, $moduleId)
             ->setParameter(3, $pageName)
-            ->setParameter(4, strstr($link, 'promo_link') ? 1 : 0)
-            ->setParameter(5, $datetime->format('Y-m-d'));
+            ->setParameter(4, $datetime->format('Y-m-d'));
 
         $qb->execute();
+
+        return $con->lastInsertId();
+    }
+
+    /**
+     * @param int $viewId
+     * @param string $promotionName
+     * @return string
+     * @throws \Exception
+     */
+    public function savePromotionView(int $viewId, string $promotionName)
+    {
+        $con = $this->getEntityManager()->getConnection();
+        $qb = $con->createQueryBuilder();
+
+        $datetime = new \DateTime();
+
+        $qb->insert('user__page_promotion')
+            ->values([
+                'view_id' => '?',
+                'name' => '?',
+                'created_at' => '?'
+            ])
+            ->setParameter(0, $viewId)
+            ->setParameter(1, $promotionName)
+            ->setParameter(2, $datetime->format('Y-m-d'));
+
+        $qb->execute();
+
+        return $con->lastInsertId();
     }
 
     /**

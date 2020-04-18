@@ -18,16 +18,9 @@ class ModuleChecker
         if ($this->isModuleVisit($url)) {
             switch (true)
             {
-                case (strstr($url, '/module/crops/')):
-                    $name = 'crops';
-                    break;
-                case (stristr($url, '/module/customers/')):
-                case (stristr($url, '/module/membership/')):
+                case (strstr($url, '/module/customers/')):
+                case (strstr($url, '/module/membership/')):
                     $name = 'customers';
-                    break;
-                case (stristr($url, '/module/company/')):
-                case (stristr($url, '/widget-load/')):
-                    $name = 'company';
                     break;
                 default:
                     $name = null;

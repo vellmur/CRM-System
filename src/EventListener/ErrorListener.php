@@ -38,9 +38,7 @@ class ErrorListener extends AppListener
      */
     public function onKernelException(ExceptionEvent $event)
     {
-        $request = $event->getRequest();
-
-        if (!$event->isMasterRequest() || $this->isProfilerRequest($request) || $this->isAssetsRequest($request)) {
+        if ($this->isSystemEvent($event) === true) {
             return;
         }
 
