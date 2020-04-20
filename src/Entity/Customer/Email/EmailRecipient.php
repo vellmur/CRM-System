@@ -3,7 +3,6 @@
 namespace App\Entity\Customer\Email;
 
 use App\Entity\Customer\Customer;
-use App\Entity\Customer\Feedback;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Email\BaseRecipient;
 

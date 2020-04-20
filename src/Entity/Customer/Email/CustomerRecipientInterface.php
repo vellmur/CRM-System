@@ -3,7 +3,6 @@
 namespace App\Entity\Customer\Email;
 
 use App\Entity\Customer\Customer;
-use App\Entity\Customer\Feedback;
 
 interface CustomerRecipientInterface
 {
