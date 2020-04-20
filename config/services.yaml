@@ -16,7 +16,7 @@ services:
 
     App\:
         resource: '../src/*'
-        exclude: '../src/{Entity,Tests,Application,Kernel.php}'
+        exclude: '../src/{Entity,Tests,Application,Migrations,Kernel.php}'
 
     # Managers
     App\Manager\MemberEmailManager:
