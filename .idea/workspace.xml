@@ -2,47 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="84a5af43-8ac8-4125-9302-4fb0ea992ab0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/templates/customer/report/share_day.html.twig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Command/SubscriptionUpdateCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Command/SubscriptionUpdateCommand.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/Customer/MembershipController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/Customer/MembershipController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/Customer/ReportController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/Customer/ReportController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/Master/MasterController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/Master/MasterController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/User/SubscriptionController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/User/SubscriptionController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/User/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/User/UserController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/Client/ModuleAccess.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Client/ModuleAccess.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/Client/ModuleSetting.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Client/ModuleSetting.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/Customer/Email/CustomerEmail.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Customer/Email/CustomerEmail.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/Customer/Product.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Customer/Product.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/User/PageView.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/User/PageView.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/User/PromotionView.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/User/PromotionView.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/EventListener/AppListener.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/EventListener/AppListener.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/EventListener/ViewListener.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/EventListener/ViewListener.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Form/EventListener/ProductSubscriber.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/EventListener/ProductSubscriber.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Form/EventListener/RenewSubscriber.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/EventListener/RenewSubscriber.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Form/User/Collection/SettingsCollection.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/User/Collection/SettingsCollection.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Manager/CommandManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Manager/CommandManager.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Manager/DeviceManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Manager/DeviceManager.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Manager/EmailManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Manager/EmailManager.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Manager/MemberEmailManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Manager/MemberEmailManager.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Manager/MemberManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Manager/MemberManager.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Manager/PageViewManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Manager/PageViewManager.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Manager/ProductManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Manager/ProductManager.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Manager/RegistrationManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Manager/RegistrationManager.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Manager/ShareManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Manager/ShareManager.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Manager/UserManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Manager/UserManager.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Menu/MenuBuilder.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Menu/MenuBuilder.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/ClientRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/ClientRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/CustomerShareRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/CustomerShareRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/POSRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/POSRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/PageViewRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/PageViewRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/ShareProductsRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/ShareProductsRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Security/AccessUpdater.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Security/AccessUpdater.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Service/ModuleChecker.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/ModuleChecker.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Service/PageViewSaver.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/PageViewSaver.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Twig/AppExtension.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Twig/AppExtension.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/account/profile/settings.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/account/profile/settings.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/parts/setup_instructions.html.twig" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/ajax.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/ajax.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/pages/company/market_statistics.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/pages/company/site/builder.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/pages/crops/crop.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/pages/crops/seeds.js" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

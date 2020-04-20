@@ -1,7 +1,6 @@
 /**
  * Created by Valentine on 30.06.2016.
  */
-
 /*------------------------------WORKING WITH AJAX TABLES ------------------------------------*/
 var errors = {
     'undefinedErrors' : {
