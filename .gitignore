@@ -1,12 +1,11 @@
-
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
-/public/bundles/
 /var/
 /vendor/
+tests/_output/*
 ###< symfony/framework-bundle ###
 
 ###> symfony/phpunit-bridge ###
@@ -17,4 +16,13 @@
 
 ###> liip/imagine-bundle ###
 /public/media/cache/
+/public/uploads/
+/public/bundles/
 ###< liip/imagine-bundle ###
+
+###> env/files ###
+/build/
+.idea
+.git
+error_log
+###< env/files ###
