@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
+ * 
  * @ORM\Table(name="user__device")
  * @ORM\Entity(repositoryClass="App\Repository\DeviceRepository")
  */
