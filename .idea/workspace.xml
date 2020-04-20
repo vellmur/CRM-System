@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="84a5af43-8ac8-4125-9302-4fb0ea992ab0" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/js/ajax.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/ajax.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/js/pages/company/market_statistics.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/js/pages/company/site/builder.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/js/pages/crops/crop.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/js/pages/crops/seeds.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,7 +33,6 @@
       <path value="$PROJECT_DIR$/vendor/symfony/http-kernel" />
       <path value="$PROJECT_DIR$/vendor/symfony/security-bundle" />
       <path value="$PROJECT_DIR$/vendor/symfony/string" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php73" />
       <path value="$PROJECT_DIR$/vendor/symfony/console" />
       <path value="$PROJECT_DIR$/vendor/symfony/translation-contracts" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-idn" />
