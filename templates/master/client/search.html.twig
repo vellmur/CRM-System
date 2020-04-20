@@ -2,11 +2,14 @@
     <tr role="row" class="odd {{ key is not divisible by (2) ? 'row-style' }}">
         <td><a class="website-link" href="{{ path('master_client_edit', {'id': client.id }) }}">{{ client.name }}</a></td>
         <td>{{ client.levelName }}</td>
-        <td>{{ client.owner.isActive ? 'Yes' : 'No' }}</td>
+        <td>{{ client.owner.enabled ? 'Yes' : 'No' }}</td>
         <td>{{ client.createdAt|date('Y-m-d') }}</td>
         <td>
             {% if client.id in lapsedClients %}
-                <button data-path="{{ path('master_client_delete', {id: client.id}) }}" data-toggle="modal" href="#small_modal" class="btn btn-danger btn-icon btn-delete">
+                <button data-path="{{ path('master_client_delete', {id: client.id}) }}"
+                        data-toggle="modal"
+                        href="#small_modal"
+                        class="btn btn-danger btn-icon btn-delete">
                     <i class="icon-trash"></i>
                 </button>
             {% endif %}
