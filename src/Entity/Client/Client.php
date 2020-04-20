@@ -790,36 +790,6 @@ class Client
         return $this;
     }
 
-
-    /**
-     * @param Transaction $transaction
-     * @return $this
-     */
-    public function addTransaction(Transaction $transaction)
-    {
-        $this->transactions[] = $transaction;
-
-        return $this;
-    }
-
-    /**
-     * @param Transaction $transaction
-     */
-    public function removeTransaction(Transaction $transaction)
-    {
-        $this->transactions->removeElement($transaction);
-    }
-
-    /**
-     * Get transactions
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getTransactions()
-    {
-        return $this->transactions;
-    }
-
     /**
      * @param Customer $customer
      * @return $this
