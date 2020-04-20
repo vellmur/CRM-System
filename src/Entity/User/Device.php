@@ -3,6 +3,7 @@
 namespace App\Entity\User;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="user__device")
@@ -34,7 +35,8 @@ class Device
     /**
      * @var string
      *
-     * @ORM\Column(name="ip", type="string", length=15, nullable=false, options={"unsigned"=true})
+     * @ORM\Column(name="ip", type="string", length=15, nullable=false)
+     * @Assert\Ip
      */
     private $ip;
 

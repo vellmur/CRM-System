@@ -25,4 +25,6 @@ tests/_output/*
 .idea
 .git
 error_log
+.DS_Store
+.idea/
 ###< env/files ###
