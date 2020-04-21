@@ -2,8 +2,8 @@
 
 namespace App\Event;
 
-use App\Entity\User\User;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class RegistrationSuccessEvent extends Event
@@ -14,12 +14,12 @@ class RegistrationSuccessEvent extends Event
 
     private $response;
 
-    public function __construct(User $user) {
+    public function __construct(UserInterface $user) {
         $this->user = $user;
     }
 
     /**
-     * @return User
+     * @return UserInterface
      */
     public function getUser() {
         return $this->user;

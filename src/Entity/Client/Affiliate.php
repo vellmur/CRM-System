@@ -8,8 +8,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Affiliate
- *
  * @ORM\Table(name="client__affiliate", uniqueConstraints={@ORM\UniqueConstraint(name="affiliate_unique", columns={"name", "email"})})
  * @ORM\Entity(repositoryClass="App\Repository\AffiliateRepository")
  * @UniqueEntity(fields={"email"}, errorPath="email", message="validation.form.unique")
@@ -20,7 +18,6 @@ class Affiliate
     public function __construct()
     {
         $this->createdAt = new \DateTime();
-        $this->referralCode = substr(base_convert(sha1(uniqid(mt_rand())), 16, 36), 0, 20);
     }
 
     /**
@@ -54,7 +51,7 @@ class Affiliate
 
     /**
      * @var string
-     * @ORM\Column(name="referral_code", type="string", length=20, nullable=false)
+     * @ORM\Column(name="referral_code", type="string", length=20, nullable=false, unique=true)
      */
     private $referralCode;
 

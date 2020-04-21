@@ -52,35 +52,47 @@ class RegistrationController extends AbstractController
 
         $user = new User();
         $form = $this->createForm(RegistrationType::class, $user, [
-            'validation_groups' => ['register_validation', 'Default']
-        ]);
-        $form->handleRequest($request);
+            'validation_groups' => ['register_validation', 'Default'],
+            'locales' => $this->manager->getLocales()
+        ])->handleRequest($request);
 
-        // Update locale
-        if ($user->getLocale()) {
-            $request->getSession()->set('_locale', $user->getLocale());
-            $request->setLocale($user->getLocale());
-        }
+        if ($form->isSubmitted()) {
+            if ($user->getLocale()) {
+                $this->checkAndUpdateUserLocale($request, $user->getLocale());
+            }
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $client = $request->request->get('registration')['client']['name'];
-            $refCode = $request->getSession()->get('ref');
+            if ($form->isValid()) {
+                $clientName = $form->get('client')->get('name')->getData();
+                $result = $this->manager->register($user, $clientName);
 
-            $result = $this->manager->signUpUser($user, $client, $refCode);
+                if ($result instanceof FormError) {
+                    $form->addError($result);
+                } else {
+                    if ($refCode = $request->getSession()->get('ref')) {
+                        $this->manager->createReferral($user->getClient(), $refCode);
+                    }
 
-            if ($result instanceof FormError) {
-                $form->addError($result);
-            } else {
-                $event = new RegistrationSuccessEvent($user);
-                $this->dispatcher->dispatch($event);
+                    $event = new RegistrationSuccessEvent($user);
+                    $this->dispatcher->dispatch($event);
 
-                return $event->getResponse();
+                    return $event->getResponse();
+                }
             }
         }
 
         return $this->render('auth/registration/register.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param string $locale
+     */
+    private function checkAndUpdateUserLocale(Request &$request, string $locale) : void
+    {
+        $request->getSession()->set('_locale', $locale);
+        $request->setLocale($locale);
     }
 
     /**

@@ -5,7 +5,6 @@ namespace App\Entity\User;
 use App\Entity\Client\Client;
 use App\Entity\Client\Team;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -14,8 +13,6 @@ use Doctrine\Common\Collections\Collection;
 use DateTime;
 
 /**
- * User
- *
  * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @UniqueEntity(fields="email", message="validation.form.unique")

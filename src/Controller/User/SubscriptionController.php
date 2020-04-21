@@ -2,11 +2,8 @@
 
 namespace App\Controller\User;
 
-use App\Entity\Client\Merchant;
 use App\Form\Client\SubscriptionType;
-use App\Form\User\Payments\MerchantType;
 use App\Manager\User\SubscriptionManager;
-use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -70,63 +67,5 @@ class SubscriptionController extends AbstractController
         }
 
         return $errors;
-    }
-
-    /**
-     * @param $host
-     * @return string
-     */
-    function getServerEnv($host)
-    {
-        $env = stristr($host, 'testserver') || stristr($host, '127.0.0.1') ? 'dev' : 'prod';
-
-        return $env;
-    }
-
-    /**
-     * @param Request $request
-     * @param SerializerInterface $serializer
-     * @param Merchant $merchant
-     * @return JsonResponse|Response
-     */
-    public function update(Request $request, SerializerInterface $serializer, Merchant $merchant)
-    {
-        if ($request->isXMLHttpRequest()) {
-            $form = $this->createForm(MerchantType::class, $merchant, [
-                'env' => $this->getServerEnv($request->getHost())
-            ]);
-
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted() && $form->isValid()) {
-                $this->manager->updateMerchant();
-
-                return new JsonResponse(['code' => 202, 'status' => 'success'], 202);
-            } else {
-                return new JsonResponse($serializer->serialize(['error' => $form], 'json'), 500);
-            }
-        }
-
-        return new Response('Request not valid', 400);
-    }
-
-    /**
-     * @param Request $request
-     * @param SerializerInterface $serializer
-     * @param Merchant $merchant
-     * @return JsonResponse|Response
-     */
-    public function delete(Request $request, SerializerInterface $serializer, Merchant $merchant)
-    {
-        if ($request->isXMLHttpRequest()) {
-            try {
-                $this->manager->removeMerchant($merchant);
-                return new JsonResponse(['code' => 202, 'status' => 'success'], 202);
-            } catch (\Exception $e) {
-                return new JsonResponse($serializer->serialize(['error' => $e], 'json'), 500);
-            }
-        }
-
-        return new Response('Request not valid', 400);
     }
 }

@@ -7,6 +7,7 @@ use App\Entity\Customer\Location;
 use App\Entity\Customer\Customer;
 use App\Entity\Customer\Share;
 use App\Entity\Customer\Tag;
+use App\Entity\User\User;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -14,8 +15,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Client
- *
  * @ORM\Table(name="client")
  * @ORM\Entity(repositoryClass="App\Repository\ClientRepository")
  * @UniqueEntity(fields={"name"}, errorPath="name", message="validation.form.unique", groups={"register_validation", "profile_validation"})
@@ -68,12 +67,6 @@ class Client
 
     /**
      * @var integer
-     * @ORM\Column(name="level", type="integer", length=1, nullable=false)
-     */
-    private $level = 1;
-
-    /**
-     * @var integer
      * @ORM\Column(name="weight_format", type="integer", length=1, nullable=false)
      */
     private $weightFormat = 2;
@@ -114,27 +107,6 @@ class Client
     protected $timezone;
 
     /**
-     * @var float
-     *
-     * @ORM\Column(name="delivery_price", type="decimal", precision=7, scale=2)
-     */
-    private $deliveryPrice = 0;
-
-    /**
-     * @var string
-     * @ORM\Column(name="order_time", length=5, type="string", length=255, nullable=true)
-     */
-    private $orderTime;
-
-    /**
-     * Does orders on delivery allowed on the same day, or only on the day before
-     *
-     * @var boolean
-     * @ORM\Column(name="same_day_orders", type="boolean", nullable=false)
-     */
-    private $sameDayOrders = true;
-
-    /**
      * @ORM\Column(name="token", type="string", length=30)
      */
     private $token;
@@ -147,12 +119,12 @@ class Client
     private $createdAt;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\Location", mappedBy="client", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Customer\Location", mappedBy="client", cascade={"all"})
      */
     private $locations;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Client\ModuleAccess", mappedBy="client", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Client\ModuleAccess", mappedBy="client", cascade={"all"})
      */
     private $accesses;
 
@@ -182,7 +154,7 @@ class Client
     private $shares;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Client\Affiliate", mappedBy="client", cascade={"remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Client\Affiliate", mappedBy="client", cascade={"all"})
      */
     private $affiliate;
 
@@ -212,11 +184,6 @@ class Client
     private $suspendedWeeks;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Client\Merchant", mappedBy="client", cascade={"all"})
-     */
-    private $merchants;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Customer\RenewalView", mappedBy="client", cascade={"all"}, orphanRemoval=true)
      */
     private $renewalViews;
@@ -240,11 +207,6 @@ class Client
      * @ORM\OneToMany(targetEntity="App\Entity\Client\ModuleSetting", mappedBy="client", cascade={"persist", "remove"})
      */
     private $modulesSettings;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Client\PaymentSettings", mappedBy="client", cascade={"persist", "remove"})
-     */
-    private $paymentSettings;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Customer\POS", mappedBy="client", cascade={"persist", "remove"})
@@ -318,18 +280,24 @@ class Client
     }
 
     /**
+     * @param Affiliate $affiliate
+     */
+    public function setAffiliate(Affiliate $affiliate)
+    {
+        $this->affiliate = $affiliate;
+    }
+
+    /**
      * @return mixed
      */
     public function getContactEmail()
     {
-        $email = $this->getEmail() ? $this->getEmail() : $this->getTeam()[0]->getUser()->getEmail();
-
-        return $email;
+        return $this->getEmail() ? $this->getEmail() : $this->getOwner()->getEmail();
     }
 
     public function getDateFormat()
     {
-        return $this->getTeam()[0]->getUser()->getTwigFormatDate();
+        return $this->getOwner()->getTwigFormatDate();
     }
 
     /**
@@ -337,9 +305,7 @@ class Client
      */
     public function getTwigFormatDate()
     {
-        $format = $this->getTeam()[0]->getUser()->getTwigFormatDate();
-
-        return $format;
+        return $this->getOwner()->getTwigFormatDate();
     }
 
     /**
@@ -347,7 +313,7 @@ class Client
      */
     public function getOwner()
     {
-        return $this->getTeam() ? $this->getTeam()[0]->getUser() : null;;
+        return $this->getTeam()[0]->getUser();
     }
 
     /**
@@ -355,9 +321,7 @@ class Client
      */
     public function getOwnerDateFormat()
     {
-        $format = $this->getTeam()[0]->getUser()->getDateFormatName();
-
-        return $format;
+        return $this->getOwner()->getDateFormatName();
     }
 
     /**
@@ -564,80 +528,6 @@ class Client
     }
 
     /**
-     * @return mixed
-     */
-    public function getDeliveryPrice()
-    {
-        return $this->deliveryPrice;
-    }
-
-    /**
-     * @param mixed $deliveryPrice
-     */
-    public function setDeliveryPrice($deliveryPrice)
-    {
-        $this->deliveryPrice = $deliveryPrice;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOrderTime()
-    {
-        return $this->orderTime ? $this->orderTime : '20:00';
-    }
-
-    /**
-     * @param mixed $orderTime
-     */
-    public function setOrderTime($orderTime)
-    {
-        $this->orderTime = $orderTime;
-    }
-
-    /**
-     * @return array
-     */
-    public function getOrderHourAndMinute()
-    {
-        $orderTime = explode(':', $this->getOrderTime());
-
-        return $orderTime;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOrderHour()
-    {
-        return $this->getOrderHourAndMinute()[0];
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOrderMinute()
-    {
-        return $this->getOrderHourAndMinute()[1];
-    }
-
-    /**
-     * @return mixed
-     */
-    public function isSameDayOrdersAllowed()
-    {
-        return $this->sameDayOrders;
-    }
-
-    /**
-     * @param mixed $sameDayOrders
-     */
-    public function setSameDayOrders($sameDayOrders)
-    {
-        $this->sameDayOrders = $sameDayOrders;
-    }
-
-    /**
      * @param $createdAt
      * @return $this
      */
@@ -675,38 +565,6 @@ class Client
     }
 
     /**
-     * @param $level
-     * @return $this
-     */
-    public function setLevel($level)
-    {
-        $this->level = $level;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLevel()
-    {
-        return $this->level;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLevelName()
-    {
-        $names = [
-            1 => 'Farmer',
-            2 => 'Gardener'
-        ];
-
-        return $names[$this->getLevel()];
-    }
-    
-    /**
      * @return mixed
      */
     public function getReferralLink()
@@ -720,18 +578,6 @@ class Client
     public function getMembershipLink()
     {
         return 'http://' . $_SERVER['HTTP_HOST'] . '/membership/member/sign-up/' . $this->getToken();
-    }
-
-    /**
-     * @param Team $team
-     * @return $this
-     */
-    public function addTeam(Team $team)
-    {
-        $this->team->add($team);
-        $team->setClient($this);
-
-        return $this;
     }
 
     /**
@@ -753,19 +599,15 @@ class Client
     }
 
     /**
-     * @return mixed
+     * @param Team $team
+     * @return $this
      */
-    public function getSubscriptions()
+    public function addTeam(Team $team)
     {
-        return $this->subscriptions;
-    }
+        $team->setClient($this);
+        $this->team[] = $team;
 
-    /**
-     * @param mixed $subscriptions
-     */
-    public function setSubscriptions($subscriptions)
-    {
-        $this->subscriptions = $subscriptions;
+        return $this;
     }
 
     /**
@@ -915,34 +757,6 @@ class Client
     {
         $moduleSetting->setClient($this);
         $this->modulesSettings[] = $moduleSetting;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPaymentSettings()
-    {
-        return $this->paymentSettings;
-    }
-
-    /**
-     * @param mixed $paymentSettings
-     */
-    public function setPaymentSettings($paymentSettings)
-    {
-        $this->paymentSettings = $paymentSettings;
-    }
-
-    /**
-     * @param PaymentSettings $paymentSettings
-     * @return $this
-     */
-    public function addPaymentSettings(PaymentSettings $paymentSettings)
-    {
-        $paymentSettings->setClient($this);
-        $this->paymentSettings[] = $paymentSettings;
 
         return $this;
     }

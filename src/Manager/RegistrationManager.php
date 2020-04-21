@@ -9,8 +9,10 @@ use App\Entity\Customer\Location;
 use App\Entity\Client\ModuleAccess;
 use App\Entity\Client\Referral;
 use App\Entity\Client\Team;
+use App\Entity\Translation\TranslationLocale;
 use App\Entity\User\User;
 use App\Security\AccessUpdater;
+use App\Service\CountryList;
 use App\Service\MailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormError;
@@ -33,13 +35,17 @@ class RegistrationManager
 
     private $mailService;
 
+    private $countryList;
+
+
     public function __construct(
         EntityManagerInterface $em,
         UserPasswordEncoderInterface $passwordEncoder,
         TokenGeneratorInterface $token,
         Environment $twig,
         TranslatorInterface $translator,
-        MailService $mailService
+        MailService $mailService,
+        CountryList $countryList
     ) {
         $this->em = $em;
         $this->passwordEncoder = $passwordEncoder;
@@ -47,33 +53,44 @@ class RegistrationManager
         $this->twig = $twig;
         $this->translator = $translator;
         $this->mailService = $mailService;
+        $this->countryList = $countryList;
     }
 
     /**
      * @param User $user
-     * @param $clientName
-     * @param $refCode
+     * @param string $clientName
      * @return User|FormError
      * @throws \Doctrine\DBAL\ConnectionException
      */
-    public function signUpUser(User $user, $clientName, $refCode)
+    public function register(User &$user, string $clientName)
     {
         $this->em->getConnection()->beginTransaction();
 
         try {
-            $client = $this->createClient($user, $clientName);
+            $user->setRoles(['ROLE_OWNER']);
+            $user->setPassword($this->passwordEncoder->encodePassword($user, $user->getPlainPassword()));
+            $user->setConfirmationToken($this->token->generateToken());
+
+            // Create new client and team
+            $client = $this->createClient($clientName, $user->getEmail());
+            $team = $this->createTeam($client, $user);
+
+            // Create first location for pickups of client products (Home Delivery)
+            $homeDeliveryLabel = $this->translator->trans('membership.renew.location.home_delivery', [], 'labels');
+            $homeDeliveryLocation = $this->createLocation($homeDeliveryLabel, 'Delivery');
+            $client->addLocation($homeDeliveryLocation);
+
+            // Save client as new affiliate
+            $affiliate = new Affiliate();
+            $affiliate->setReferralCode(substr($this->token->generateToken(),0,20));
+            $client->setAffiliate($affiliate);
+
             $this->createAccess($client);
-            $this->createAffiliate($client);
-
-            if ($refCode) {
-                $affiliate = $this->em->getRepository(Affiliate::class)->findOneBy(['referralCode' => $refCode]);
-                if ($affiliate) $this->createReferral($client, $affiliate);
-            }
-
-            $this->createUser($user,'ROLE_OWNER');
-            $this->createTeam($client, $user);
             $this->createAutomatedEmails($client, $user->getLocale()->getCode());
 
+            $this->em->persist($user);
+            $this->em->persist($client);
+            $this->em->persist($team);
             $this->em->flush();
 
             $this->mailService->sendEmailConfirmation($user);
@@ -93,18 +110,40 @@ class RegistrationManager
 
     /**
      * @param Client $client
+     * @param string $refCode
+     */
+    public function createReferral(Client $client, string $refCode)
+    {
+        $affiliate = $this->em->getRepository(Affiliate::class)->findOneBy([
+            'referralCode' => $refCode
+        ]);
+
+        if ($affiliate) {
+            $referral = new Referral();
+            $referral->setClient($client);
+            $referral->setAffiliate($affiliate);
+
+            $this->em->persist($referral);
+            $this->em->flush();
+        }
+    }
+
+    /**
+     * @param Client $client
      * @param User $user
-     * @param $role
+     * @param string $roles
      * @throws \Doctrine\DBAL\ConnectionException
      */
-    public function newUser(Client $client, User $user, $role)
+    public function addUserToClientTeam(Client $client, User $user, string $roles)
     {
         $this->em->getConnection()->beginTransaction();
 
         try {
-            $this->createUser($user, $role);
-            $this->createTeam($client, $user);
+            $user->setRoles(is_array($roles) ? $roles : [$roles]);
+            $user->setPassword($this->passwordEncoder->encodePassword($user, $user->getPlainPassword()));
+            $team = new Team($client, $user);
 
+            $this->em->persist($team);
             $this->em->flush();
             $this->em->getConnection()->commit();
             $this->em->clear();
@@ -117,46 +156,47 @@ class RegistrationManager
     }
 
     /**
-     * @param User $owner
-     * @param $name
+     * @param string $name
+     * @param string $email
      * @return Client
      */
-    public function createClient(User $owner, $name)
+    private function createClient(string $name, string $email) : Client
     {
         $client = new Client();
         $client->setName($name);
-        $client->setEmail($owner->getEmail());
-
-        // Add basic delivery location
-        $homeDeliveryName = $this->translator->trans('membership.renew.location.home_delivery', [], 'labels');
-        $location = new Location();
-        $location->setName(mb_strtoupper($homeDeliveryName));
-        $location->setTypeByName('Delivery');
-        $location->addWorkDays();
-
-        $this->em->persist($location);
-        $client->addLocation($location);
-
-        $this->em->persist($client);
+        $client->setEmail($email);
 
         return $client;
     }
 
     /**
-     * @param User $user
-     * @param $roles
+     * @param string $name
+     * @param string $typeName
+     * @return Location
      */
-    public function createUser(User $user, $roles)
+    private function createLocation(string $name, string $typeName)
     {
-        $roles = is_array($roles) ? $roles : [$roles];
-        $user->setRoles($roles);
-        $user->setPassword($this->passwordEncoder->encodePassword($user, $user->getPlainPassword()));
+        // Add basic delivery location
+        $location = new Location();
+        $location->setName(mb_strtoupper($name));
+        $location->setTypeByName($typeName);
+        $location->addWorkDays();
 
-        if (in_array('ROLE_OWNER', $roles)) {
-            $user->setConfirmationToken($this->token->generateToken());
-        }
+        return $location;
+    }
 
-        $this->em->persist($user);
+    /**
+     * @param Client $client
+     * @param User $user
+     * @return Team
+     */
+    private function createTeam(Client &$client, User &$user)
+    {
+        $team = new Team($client, $user);
+        $user->setTeam($team);
+        $client->addTeam($team);
+
+        return $team;
     }
 
     /**
@@ -176,25 +216,8 @@ class RegistrationManager
             $access->setModule($id);
             $access->setUpdatedAt($today);
             $access->setExpiredAt($today);
-            $access->setStatusByName('LAPSED');
-
-            $this->em->persist($access);
+            $access->setStatusByName('ACTIVE');
         }
-    }
-
-    /**
-     * @param Client $client
-     * @param User $user
-     */
-    public function createTeam(Client $client, User $user)
-    {
-        $team = new Team();
-        $team->setUser($user);
-
-        $user->setTeam($team);
-        $client->addTeam($team);
-
-        $this->em->persist($team);
     }
 
     /**
@@ -219,30 +242,6 @@ class RegistrationManager
 
             $this->em->flush();
         }
-    }
-
-    /**
-     * @param Client $client
-     */
-    public function createAffiliate(Client $client)
-    {
-        $affiliate = new Affiliate();
-        $affiliate->setClient($client);
-
-        $this->em->persist($affiliate);
-    }
-
-    /**
-     * @param Client $client
-     * @param $affiliate
-     */
-    public function createReferral(Client $client, $affiliate)
-    {
-        $referral = new Referral();
-        $referral->setClient($client);
-        $referral->setAffiliate($affiliate);
-
-        $this->em->persist($referral);
     }
 
     /**
@@ -281,5 +280,20 @@ class RegistrationManager
     public function save()
     {
         $this->em->flush();
+    }
+
+    /**
+     * @return array
+     */
+    public function getLocales()
+    {
+        $dbLocales = $this->em->getRepository(TranslationLocale::class)->getAllLocales();
+        $locales = [];
+
+        foreach ($dbLocales as $locale) {
+            $locales[$this->countryList->getLanguageByLocale($locale)] = $locale;
+        }
+
+        return $locales;
     }
 }

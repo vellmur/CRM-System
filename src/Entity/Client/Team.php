@@ -2,6 +2,7 @@
 
 namespace App\Entity\Client;
 
+use App\Entity\User\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -33,6 +34,12 @@ class Team
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      */
     private $user;
+
+    public function __construct(Client $client, User $user)
+    {
+        $this->client = $client;
+        $this->user = $user;
+    }
 
     /**
      * Get id

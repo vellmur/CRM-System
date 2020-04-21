@@ -28,3 +28,8 @@ error_log
 .DS_Store
 .idea/
 ###< env/files ###
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###

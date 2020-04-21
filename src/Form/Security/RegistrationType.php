@@ -4,32 +4,22 @@ namespace App\Form\Security;
 
 use App\Entity\Translation\TranslationLocale;
 use App\Entity\User\User;
-use App\Form\Client\ClientType;
+use App\Form\Client\ClientNameType;
 use App\Repository\Translation\TranslationLocaleRepository;
 use App\Service\CountryList;
 use EWZ\Bundle\RecaptchaBundle\Form\Type\EWZRecaptchaType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Valid;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RegistrationType extends AbstractType
 {
-    private $translator;
-
-    private $countryList;
-
-    public function __construct(TranslatorInterface $translator, CountryList $countryList)
-    {
-        $this->translator = $translator;
-        $this->countryList = $countryList;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -50,7 +40,7 @@ class RegistrationType extends AbstractType
             ->add('plainPassword', RepeatedType::class, [
                 'required' => false,
                 'type' => PasswordType::class,
-                'invalid_message' => $this->translator->trans('register.passwords_dont_match', [], 'messages'),
+                'invalid_message' => 'register.passwords_dont_match',
                 'first_options' => [
                     'attr' => [
                         'class' => 'form-control',
@@ -64,22 +54,16 @@ class RegistrationType extends AbstractType
                     ]
                 ]
             ])
-            ->add('locale', EntityType::class , [
+            ->add('locale', ChoiceType::class , [
                 'required' => false,
-                'class' => TranslationLocale::class,
-                'query_builder' => function (TranslationLocaleRepository $repository) {
-                    return $repository->createQueryBuilder('t');
-                },
-                'choice_label' => function (TranslationLocale $locale) {
-                    return $this->countryList->getLanguageByLocale($locale->getCode());
-                },
+                'choices' => $options['locales'],
                 'label' => 'register.your_language',
                 'attr' => [
                     'class' => 'select'
                 ],
                 'placeholder' => 'register.your_language'
             ])
-            ->add('client', ClientType::class, [
+            ->add('client', ClientNameType::class, [
                 'mapped' => false,
                 'validation_groups' => 'register_validation',
                 'constraints' => [
@@ -95,10 +79,6 @@ class RegistrationType extends AbstractType
                     ]
                 ]
             ]);
-
-        $builder->get('client')->remove('weightFormat');
-        $builder->get('client')->remove('email');
-        $builder->get('client')->remove('country');
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -106,7 +86,8 @@ class RegistrationType extends AbstractType
         $resolver->setDefaults([
             'data_class' => User::class,
             'translation_domain' => 'messages',
-            'validation_groups' => 'register_validation'
+            'validation_groups' => 'register_validation',
+            'locales' => []
         ]);
     }
 }

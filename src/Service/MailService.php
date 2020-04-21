@@ -14,6 +14,7 @@ use App\Manager\EmailManager;
 use App\Manager\MemberEmailManager;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 use Wa72\HtmlPageDom\HtmlPage;
@@ -58,7 +59,7 @@ class MailService
     }
 
     /**
-     * @param User $user
+     * @param UserInterface $user
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
