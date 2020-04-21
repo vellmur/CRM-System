@@ -30,15 +30,12 @@ class TranslationLocaleRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return array
+     * @return mixed
      */
     public function getAllLocales()
     {
-        $locales = $this->createQueryBuilder('locale')
-            ->select('locale.code')
-            ->getQuery()
-            ->getArrayResult();
+        $locales = $this->createQueryBuilder('locale')->getQuery()->getResult();
 
-        return count($locales) ? $locales[0] : [];
+        return $locales;
     }
 }

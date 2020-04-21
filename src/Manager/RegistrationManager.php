@@ -287,13 +287,6 @@ class RegistrationManager
      */
     public function getLocales()
     {
-        $dbLocales = $this->em->getRepository(TranslationLocale::class)->getAllLocales();
-        $locales = [];
-
-        foreach ($dbLocales as $locale) {
-            $locales[$this->countryList->getLanguageByLocale($locale)] = $locale;
-        }
-
-        return $locales;
+        return $this->em->getRepository(TranslationLocale::class)->getAllLocales();
     }
 }

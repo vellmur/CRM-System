@@ -4,6 +4,7 @@ namespace App\Entity\User;
 
 use App\Entity\Client\Client;
 use App\Entity\Client\Team;
+use App\Entity\Translation\TranslationLocale;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -144,9 +145,10 @@ class User implements UserInterface
     public $recaptcha;
 
     /**
+     * @param int $id
      * @return $this
      */
-    public function setId($id)
+    public function setId(int $id)
     {
         $this->id = $id;
 
@@ -174,7 +176,7 @@ class User implements UserInterface
      * @param string $username
      * @return $this
      */
-    public function setUsername($username)
+    public function setUsername(?string $username)
     {
         $this->username = $username;
 
@@ -218,7 +220,7 @@ class User implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function setPlainPassword($plainPassword)
+    public function setPlainPassword(?string $plainPassword)
     {
         $this->plainPassword = $plainPassword;
 
@@ -277,7 +279,7 @@ class User implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function setConfirmationToken($confirmationToken)
+    public function setConfirmationToken(string $confirmationToken)
     {
         $this->confirmationToken = $confirmationToken;
 
@@ -313,7 +315,7 @@ class User implements UserInterface
      * @param $dateFormat
      * @return $this
      */
-    public function setDateFormat($dateFormat)
+    public function setDateFormat(string $dateFormat)
     {
         $this->dateFormat = $dateFormat;
 
@@ -321,7 +323,7 @@ class User implements UserInterface
     }
 
     // get name of date format
-    public function getDateFormatName()
+    public function getDateFormatName() : array
     {
         $dateFormats = ['dd-MM-yyyy', 'MM-dd-yyyy', 'yyyy-MM-dd', 'dd-MMM-yyyy'];
 
@@ -329,7 +331,7 @@ class User implements UserInterface
     }
 
     // Date format for twig option - format
-    public function getTwigFormatDate()
+    public function getTwigFormatDate() : array
     {
         $dateFormats = ['d-m-Y', 'm-d-Y', 'Y-m-d', 'd-M-Y'];
 
@@ -347,8 +349,9 @@ class User implements UserInterface
     /**
      * @param mixed $locale
      */
-    public function setLocale($locale): void
+    public function setLocale(TranslationLocale $locale): void
     {
+
         $this->locale = $locale;
     }
 
@@ -363,11 +366,11 @@ class User implements UserInterface
     /**
      * Set createdAt
      *
-     * @param DateTime $createdAt
+     * @param $createdAt
      *
      * @return User
      */
-    public function setCreatedAt($createdAt)
+    public function setCreatedAt(DateTime $createdAt)
     {
         $this->createdAt = $createdAt;
 
@@ -385,10 +388,10 @@ class User implements UserInterface
     }
 
     /**
-     * @param $enabled
+     * @param bool $enabled
      * @return $this
      */
-    public function setEnabled($enabled)
+    public function setEnabled(bool $enabled)
     {
         $this->enabled = $enabled;
 
@@ -404,10 +407,10 @@ class User implements UserInterface
     }
 
     /**
-     * @param $isActive
+     * @param bool $isActive
      * @return $this
      */
-    public function setIsActive($isActive)
+    public function setIsActive(bool $isActive)
     {
         $this->isActive = $isActive;
 
@@ -426,7 +429,7 @@ class User implements UserInterface
      * @param $team
      * @return $this
      */
-    public function setTeam($team)
+    public function setTeam(Team $team)
     {
         $this->team = $team;
 
@@ -436,7 +439,7 @@ class User implements UserInterface
     /**
      * @return Team
      */
-    public function getTeam()
+    public function getTeam() : Team
     {
         return $this->team;
     }
@@ -462,7 +465,7 @@ class User implements UserInterface
     /**
      * @return Client|bool
      */
-    public function getClient()
+    public function getClient() : Client
     {
         return $this->getTeam() ? $this->getTeam()->getClient() : null;
     }
