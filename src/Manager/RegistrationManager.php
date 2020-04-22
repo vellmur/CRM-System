@@ -15,7 +15,6 @@ use App\Security\AccessUpdater;
 use App\Service\CountryList;
 use App\Service\MailService;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -36,7 +35,6 @@ class RegistrationManager
     private $mailService;
 
     private $countryList;
-
 
     public function __construct(
         EntityManagerInterface $em,
@@ -59,10 +57,12 @@ class RegistrationManager
     /**
      * @param User $user
      * @param string $clientName
-     * @return User|FormError
+     * @param string|null $refCode
+     * @return User
      * @throws \Doctrine\DBAL\ConnectionException
+     * @throws \Throwable
      */
-    public function register(User &$user, string $clientName)
+    public function register(User &$user, string $clientName, ?string $refCode = null)
     {
         $this->em->getConnection()->beginTransaction();
 
@@ -85,12 +85,18 @@ class RegistrationManager
             $affiliate->setReferralCode(substr($this->token->generateToken(),0,20));
             $client->setAffiliate($affiliate);
 
-            $this->createAccess($client);
+            $accesses = $this->createAccess($client);
+            $client->setAccesses($accesses);
             $this->createAutomatedEmails($client, $user->getLocale()->getCode());
 
             $this->em->persist($user);
             $this->em->persist($client);
             $this->em->persist($team);
+
+            if ($refCode && $referral = $this->createReferral($client, $refCode)) {
+                $this->em->persist($referral);
+            }
+
             $this->em->flush();
 
             $this->mailService->sendEmailConfirmation($user);
@@ -102,15 +108,14 @@ class RegistrationManager
             $this->em->getConnection()->rollBack();
             $this->em->clear();
 
-            return new FormError(
-                'Error while trying to save user: ' . $e->getMessage() . ' on line - ' . $e->getLine() .  '.In file ' . $e->getFile()
-            );
+            throw $e;
         }
     }
 
     /**
      * @param Client $client
      * @param string $refCode
+     * @return Referral|null
      */
     public function createReferral(Client $client, string $refCode)
     {
@@ -118,14 +123,15 @@ class RegistrationManager
             'referralCode' => $refCode
         ]);
 
-        if ($affiliate) {
-            $referral = new Referral();
-            $referral->setClient($client);
-            $referral->setAffiliate($affiliate);
-
-            $this->em->persist($referral);
-            $this->em->flush();
+        if (!$affiliate) {
+            return null;
         }
+
+        $referral = new Referral();
+        $referral->setClient($client);
+        $referral->setAffiliate($affiliate);
+
+        return $referral;
     }
 
     /**
@@ -201,23 +207,29 @@ class RegistrationManager
 
     /**
      * @param Client $client
+     * @return array
      * @throws \Exception
      */
     private function createAccess(Client $client)
     {
-        // Set access to expired date after sign-up
         $today = new \DateTime();
         $trialExtendsAt = new \DateTime();
         $trialExtendsAt->modify('+' . AccessUpdater::TRIAL_DAYS . ' days');
+
+        $accesses = [];
 
         foreach (ModuleAccess::MODULES as $id => $name) {
             $access = new ModuleAccess();
             $access->setClient($client);
             $access->setModule($id);
             $access->setUpdatedAt($today);
-            $access->setExpiredAt($today);
+            $access->setExpiredAt($trialExtendsAt);
             $access->setStatusByName('ACTIVE');
+
+            $accesses[] = $access;
         }
+
+        return $accesses;
     }
 
     /**

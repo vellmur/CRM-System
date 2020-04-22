@@ -28,5 +28,4 @@ error_log
 codeception.yml
 c3.php
 bin/.phpunit/
-phpunit.xml.dist
 ###< phpunit/phpunit ###

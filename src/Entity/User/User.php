@@ -11,7 +11,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use EWZ\Bundle\RecaptchaBundle\Validator\Constraints as Recaptcha;
 use DateTime;
-use Symfony\Component\Validator\Validation;
 
 /**
  * @ORM\Table(name="user")

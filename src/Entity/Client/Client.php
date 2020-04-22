@@ -700,6 +700,11 @@ class Client
         return $this->accesses;
     }
 
+    public function setAccesses(?array $accesses = [])
+    {
+        $this->accesses = $accesses;
+    }
+
     public function getAffiliate()
     {
         return $this->affiliate;

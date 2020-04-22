@@ -42,7 +42,6 @@ class RegistrationController extends AbstractController
      * @param Request $request
      * @param AuthorizedRedirect $redirect
      * @return mixed|RedirectResponse|Response
-     * @throws \Doctrine\DBAL\ConnectionException
      */
     public function register(Request $request, AuthorizedRedirect $redirect)
     {
@@ -56,43 +55,31 @@ class RegistrationController extends AbstractController
             'locales' => $this->manager->getLocales()
         ])->handleRequest($request);
 
-        if ($form->isSubmitted()) {
-            if ($user->getLocale()) {
-                $this->checkAndUpdateUserLocale($request, $user->getLocale());
-            }
-
-            if ($form->isValid()) {
-                $clientName = $form->get('client')->get('name')->getData();
-                $result = $this->manager->register($user, $clientName);
-
-                if ($result instanceof FormError) {
-                    $form->addError($result);
-                } else {
-                    if ($refCode = $request->getSession()->get('ref')) {
-                        $this->manager->createReferral($user->getClient(), $refCode);
-                    }
-
-                    $event = new RegistrationSuccessEvent($user);
-                    $this->dispatcher->dispatch($event);
-
-                    return $event->getResponse();
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                if ($locale = $user->getLocale()) {
+                    $request->getSession()->set('_locale', $locale);
+                    $request->setLocale($locale);
                 }
+
+                $clientName = $form->get('client')->get('name')->getData();
+                $this->manager->register($user, $clientName, $request->getSession()->get('ref'));
+
+                $event = new RegistrationSuccessEvent($user);
+                $this->dispatcher->dispatch($event);
+
+                return $event->getResponse();
+            } catch (\Throwable $e) {
+                $errorMsg = 'Error while trying to save user: '
+                    . $e->getMessage() . ' on file and line ' . $e->getFile() .  ' (line: ' . $e->getLine() . ').';
+
+                $form->addError(new FormError($errorMsg));
             }
         }
 
         return $this->render('auth/registration/register.html.twig', [
             'form' => $form->createView()
         ]);
-    }
-
-    /**
-     * @param Request $request
-     * @param string $locale
-     */
-    private function checkAndUpdateUserLocale(Request &$request, string $locale) : void
-    {
-        $request->getSession()->set('_locale', $locale);
-        $request->setLocale($locale);
     }
 
     /**

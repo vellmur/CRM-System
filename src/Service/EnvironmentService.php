@@ -116,6 +116,10 @@ class EnvironmentService
      */
     public function getEnvironment()
     {
+        if (!isset($_SERVER['HTTP_USER_AGENT'])) {
+            return false;
+        }
+
         $browser = $this->getBrowser();
         $ip = $this->getRealIpAddress();
 

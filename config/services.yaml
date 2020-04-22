@@ -23,6 +23,10 @@ services:
         arguments:
             $host: '%env(DOMAIN)%'
 
+    app.manager.registration:
+        class: App\Manager\RegistrationManager
+        public: true
+
     App\Manager\EmailManager:
         arguments:
             $httpProtocol: '%env(HTTP_PROTOCOL)%'

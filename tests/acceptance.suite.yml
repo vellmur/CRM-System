@@ -7,6 +7,23 @@
 actor: AcceptanceTester
 modules:
     enabled:
-        - PhpBrowser:
-            url: customer.local
+        - WebDriver
         - \App\Tests\Helper\Acceptance
+        - Db
+    config:
+        WebDriver:
+            url: http://customer.local
+            browser: 'chrome'
+        Db:
+            dsn: 'mysql:host=127.0.0.1:8889;dbname=customer'
+            user: root
+            password: root
+            cleanup: true
+            populate: true
+            dump: 'tests/_data/customer-dump.sql'
+
+# add Codeception\Step\Retry trait to AcceptanceTester to enable retries
+step_decorators:
+    - Codeception\Step\ConditionalAssertion
+    - Codeception\Step\TryTo
+    - Codeception\Step\Retry
