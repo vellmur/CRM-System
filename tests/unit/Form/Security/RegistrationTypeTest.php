@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\Form\Security;
+namespace App\Tests\Form\Security;
 
 use App\Entity\Translation\TranslationLocale;
 use App\Entity\User\User;

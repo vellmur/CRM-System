@@ -455,14 +455,6 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection
-     */
-    public function getClientAccess()
-    {
-        return $this->getTeam()->getClient()->getAccesses();
-    }
-
-    /**
      * @return Client|bool
      */
     public function getClient() : Client
