@@ -10,8 +10,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use EWZ\Bundle\RecaptchaBundle\Validator\Constraints as Recaptcha;
-use Doctrine\Common\Collections\Collection;
 use DateTime;
+use Symfony\Component\Validator\Validation;
 
 /**
  * @ORM\Table(name="user")
@@ -145,6 +145,23 @@ class User implements UserInterface
     public $recaptcha;
 
     /**
+     * @var array
+     */
+    const DATE_FORMATS = [
+        1 => 'dd-MM-yyyy',
+        2 => 'MM-dd-yyyy',
+        3 => 'yyyy-MM-dd',
+        4 => 'dd-MMM-yyyy'
+    ];
+
+    const TWIG_DATE_FORMATS = [
+        1 => 'd-m-Y',
+        2 => 'm-d-Y',
+        3 => 'Y-m-d',
+        4 => 'd-M-Y'
+    ];
+
+    /**
      * @param int $id
      * @return $this
      */
@@ -262,10 +279,25 @@ class User implements UserInterface
         return $this->passwordRequestedAt;
     }
 
+    /**
+     * @param $ttl
+     * @return bool
+     */
     public function isPasswordRequestNonExpired($ttl)
     {
         return $this->getPasswordRequestedAt() instanceof \DateTime &&
             $this->getPasswordRequestedAt()->getTimestamp() + $ttl > time();
+    }
+
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
+    public function getSalt()
+    {
+        // not needed when using the "bcrypt" algorithm in security.yaml
     }
 
     /**
@@ -287,23 +319,6 @@ class User implements UserInterface
     }
 
     /**
-     * @see UserInterface
-     */
-    public function getSalt()
-    {
-        // not needed when using the "bcrypt" algorithm in security.yaml
-    }
-
-    /**
-     * @see UserInterface
-     */
-    public function eraseCredentials()
-    {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
-    }
-
-    /**
      * @return mixed
      */
     public function getDateFormat()
@@ -317,25 +332,26 @@ class User implements UserInterface
      */
     public function setDateFormat(string $dateFormat)
     {
-        $this->dateFormat = $dateFormat;
+        $this->dateFormat = in_array($dateFormat, self::DATE_FORMATS)
+            ? array_flip(self::DATE_FORMATS)[$dateFormat] : null;
 
         return $this;
     }
 
-    // get name of date format
-    public function getDateFormatName() : array
+    /**
+     * @return array|null
+     */
+    public function getDateFormatName(): ?string
     {
-        $dateFormats = ['dd-MM-yyyy', 'MM-dd-yyyy', 'yyyy-MM-dd', 'dd-MMM-yyyy'];
-
-        return $dateFormats[$this->dateFormat];
+        return $this->dateFormat ? self::DATE_FORMATS[$this->dateFormat] : null;
     }
 
-    // Date format for twig option - format
-    public function getTwigFormatDate() : array
+    /**
+     * @return mixed|null
+     */
+    public function getTwigFormatDate(): ?string
     {
-        $dateFormats = ['d-m-Y', 'm-d-Y', 'Y-m-d', 'd-M-Y'];
-
-        return $dateFormats[$this->dateFormat];
+        return $this->dateFormat ? self::TWIG_DATE_FORMATS[$this->dateFormat] : null;
     }
 
     /**
@@ -356,9 +372,9 @@ class User implements UserInterface
     }
 
     /**
-     * @return mixed|null
+     * @return string|null
      */
-    public function getTimeZone()
+    public function getTimeZone(): ?string
     {
         return $this->getTeam() && $this->getClient()->getTimezone() ? $this->getClient()->getTimezone() : null;
     }
@@ -437,27 +453,17 @@ class User implements UserInterface
     }
 
     /**
-     * @return Team
+     * @return Team|null
      */
-    public function getTeam() : Team
+    public function getTeam() : ?Team
     {
         return $this->team;
     }
 
     /**
-     * Remove team
-     *
-     * @param Team $team
+     * @return Client|null
      */
-    public function removeTeam(Team $team)
-    {
-        $this->team->removeElement($team);
-    }
-
-    /**
-     * @return Client|bool
-     */
-    public function getClient() : Client
+    public function getClient() : ?Client
     {
         return $this->getTeam() ? $this->getTeam()->getClient() : null;
     }
