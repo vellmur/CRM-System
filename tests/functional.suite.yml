@@ -14,4 +14,12 @@ modules:
         - Doctrine2:
             depends: Symfony
             cleanup: true
+        - Db
         - \App\Tests\Helper\Functional
+    config:
+        Db:
+            dsn: 'mysql:host=127.0.0.1:8889;dbname=customer_test'
+            user: root
+            password: root
+            cleanup: true
+            dump: 'tests/_data/customer_test.sql'

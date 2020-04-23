@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost:8889
--- Время создания: Апр 21 2020 г., 11:10
+-- Время создания: Апр 23 2020 г., 11:08
 -- Версия сервера: 5.7.26
 -- Версия PHP: 7.3.9
 
@@ -17,10 +17,10 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- База данных: `customer`
+-- База данных: `customer_test`
 --
-CREATE DATABASE IF NOT EXISTS `customer` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `customer`;
+CREATE DATABASE IF NOT EXISTS `customer_test` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `customer_test`;
 
 -- --------------------------------------------------------
 
@@ -43,13 +43,6 @@ CREATE TABLE `client` (
   `created_at` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Дамп данных таблицы `client`
---
-
-INSERT INTO `client` (`id`, `name`, `email`, `weight_format`, `currency`, `country`, `postal_code`, `region`, `city`, `timezone`, `token`, `created_at`) VALUES
-(1, 'Black Dirt Software', 'valentinemurnik@gmail.com', 2, 4, NULL, NULL, NULL, NULL, NULL, 'fqi4fl0bexkcs08g48sk4wskso8444', '2020-04-20');
-
 -- --------------------------------------------------------
 
 --
@@ -65,13 +58,6 @@ CREATE TABLE `client__affiliate` (
   `created_at` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Дамп данных таблицы `client__affiliate`
---
-
-INSERT INTO `client__affiliate` (`id`, `client_id`, `name`, `email`, `referral_code`, `created_at`) VALUES
-(1, 1, NULL, NULL, 'qx0hiorxz2occoosc4kw', '2020-04-20');
-
 -- --------------------------------------------------------
 
 --
@@ -86,13 +72,6 @@ CREATE TABLE `client__module_access` (
   `updated_at` datetime NOT NULL,
   `status` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Дамп данных таблицы `client__module_access`
---
-
-INSERT INTO `client__module_access` (`id`, `client_id`, `module_id`, `expired_at`, `updated_at`, `status`) VALUES
-(1, 1, 1, '2020-04-20 15:11:48', '2020-04-20 15:11:48', 4);
 
 -- --------------------------------------------------------
 
@@ -174,13 +153,6 @@ CREATE TABLE `client__team` (
   `client_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Дамп данных таблицы `client__team`
---
-
-INSERT INTO `client__team` (`id`, `client_id`, `user_id`) VALUES
-(1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -278,13 +250,6 @@ CREATE TABLE `customer__location` (
   `created_at` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Дамп данных таблицы `customer__location`
---
-
-INSERT INTO `customer__location` (`id`, `client_id`, `name`, `street`, `apartment`, `city`, `region`, `postalCode`, `description`, `type`, `is_active`, `created_at`) VALUES
-(1, 1, 'HOME DELIVERY', NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, '2020-04-20');
-
 -- --------------------------------------------------------
 
 --
@@ -299,19 +264,6 @@ CREATE TABLE `customer__location_workdays` (
   `duration` int(11) DEFAULT NULL,
   `is_active` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Дамп данных таблицы `customer__location_workdays`
---
-
-INSERT INTO `customer__location_workdays` (`id`, `location_id`, `weekday`, `start_time`, `duration`, `is_active`) VALUES
-(1, 1, 1, NULL, NULL, 0),
-(2, 1, 2, NULL, NULL, 0),
-(3, 1, 3, NULL, NULL, 0),
-(4, 1, 4, NULL, NULL, 0),
-(5, 1, 5, NULL, NULL, 0),
-(6, 1, 6, NULL, NULL, 0),
-(7, 1, 7, NULL, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -499,51 +451,6 @@ CREATE TABLE `device__page_views` (
   `created_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Дамп данных таблицы `device__page_views`
---
-
-INSERT INTO `device__page_views` (`id`, `device_id`, `module_id`, `url`, `page`, `created_at`) VALUES
-(1, 1, NULL, '/register', 'register', '2020-04-20 00:00:00'),
-(2, 1, NULL, '/register', 'register', '2020-04-20 00:00:00'),
-(3, 1, NULL, '/register', 'register', '2020-04-20 00:00:00'),
-(4, 1, NULL, '/register', 'register', '2020-04-20 00:00:00'),
-(5, 1, NULL, '/register', 'register', '2020-04-20 00:00:00'),
-(6, 1, NULL, '/register', 'register', '2020-04-20 00:00:00'),
-(7, 1, NULL, '/register', 'register', '2020-04-20 00:00:00'),
-(8, 1, NULL, '/register', 'register', '2020-04-20 00:00:00'),
-(9, 1, NULL, '/register', 'register', '2020-04-20 00:00:00'),
-(10, 1, NULL, '/register', 'register', '2020-04-20 00:00:00'),
-(11, 1, NULL, '/register', 'register', '2020-04-20 00:00:00'),
-(12, 1, NULL, '/register', 'register', '2020-04-20 00:00:00'),
-(13, 1, NULL, '/register', 'register', '2020-04-20 00:00:00'),
-(14, 1, NULL, '/register', 'register', '2020-04-20 00:00:00'),
-(15, 1, NULL, '/register', 'register', '2020-04-20 00:00:00'),
-(16, 1, NULL, '/register', 'register', '2020-04-20 00:00:00'),
-(17, 1, NULL, '/register', 'register', '2020-04-20 00:00:00'),
-(18, 1, NULL, '/register', 'register', '2020-04-20 00:00:00'),
-(19, 1, NULL, '/register', 'register', '2020-04-20 00:00:00'),
-(20, 1, NULL, '/register', 'register', '2020-04-20 00:00:00'),
-(21, 1, NULL, '/login', 'login', '2020-04-20 00:00:00'),
-(22, 1, NULL, '/login', 'login', '2020-04-20 00:00:00'),
-(23, 1, NULL, '/login', 'login', '2020-04-20 00:00:00'),
-(24, 1, NULL, '/register', 'register', '2020-04-20 00:00:00'),
-(25, 1, NULL, '/login', 'login', '2020-04-20 00:00:00'),
-(26, 1, NULL, '/register', 'register', '2020-04-21 00:00:00'),
-(27, 1, NULL, '/register', 'register', '2020-04-21 00:00:00'),
-(28, 1, NULL, '/register', 'register', '2020-04-21 00:00:00'),
-(29, 1, NULL, '/register', 'register', '2020-04-21 00:00:00'),
-(30, 1, NULL, '/register', 'register', '2020-04-21 00:00:00'),
-(31, 1, NULL, '/register', 'register', '2020-04-21 00:00:00'),
-(32, 1, NULL, '/register', 'register', '2020-04-21 00:00:00'),
-(33, 1, NULL, '/register', 'register', '2020-04-21 00:00:00'),
-(34, 1, NULL, '/register', 'register', '2020-04-21 00:00:00'),
-(35, 1, NULL, '/register', 'register', '2020-04-21 00:00:00'),
-(36, 1, NULL, '/register', 'register', '2020-04-21 00:00:00'),
-(37, 1, NULL, '/register', 'register', '2020-04-21 00:00:00'),
-(38, 1, NULL, '/register', 'register', '2020-04-21 00:00:00'),
-(39, 1, NULL, '/register', 'register', '2020-04-21 00:00:00');
-
 -- --------------------------------------------------------
 
 --
@@ -570,18 +477,6 @@ CREATE TABLE `email__auto` (
   `text` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `type` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Дамп данных таблицы `email__auto`
---
-
-INSERT INTO `email__auto` (`id`, `client_id`, `subject`, `text`, `type`) VALUES
-(1, 1, 'Membership Activated', '<h4>{Firstname} {Lastname}</h4>\n\n<h4>\n    Your membership with {ClientName} has been activated\n</h4>\n\n<p>Click here to view your profile: {ProfileLink}</p>', 1),
-(2, 1, 'Membership Weekly Reminder', '<h4>{Firstname} {Lastname}</h4>\n\n<h4>Your membership weekly email reminder</h4>\n\n<p>Click here to view your profile: {ProfileLink}</p>\n<p>Click here to skip a week: {SkipWeek}</p>\n<p>Click here to customize your share: {CustomizeShare}</p>', 2),
-(3, 1, 'Feedback notification', '<h4>Are you satisfied with your recent order?</h4>\n\n<p>{FeedbackLinks}</p>', 3),
-(4, 1, 'Membership Renewal', '<h4>{Firstname} {Lastname} your renewal date is&nbsp;{ShareRenewal}</h4>\n\n<h4>Your membership renewal notification</h4>\n\n<p>Click here to renew your membership: {RenewLink}</p>', 4),
-(5, 1, 'Membership Lapsed', '<h4>{Firstname} {Lastname}</h4>\n\n<h4>Your membership has lapsed</h4>\n\n<p>Click here to renew your membership: {RenewLink}</p>', 5),
-(6, 1, 'Delivery day notification', '<h1>{Firstname} {Lastname} your delivery day is {DeliveryDay}.</h1>\n\n<h2>Your membership delivery day notification.</h2>\n\n<p>Click here to view your profile: {ProfileLink}</p>', 6);
 
 -- --------------------------------------------------------
 
@@ -666,13 +561,6 @@ CREATE TABLE `master__email` (
   `created_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Дамп данных таблицы `master__email`
---
-
-INSERT INTO `master__email` (`id`, `automated_id`, `subject`, `text`, `is_draft`, `in_process`, `created_at`) VALUES
-(1, 1, 'Please confirm your email', '<p>Hi,&nbsp;Black Dirt Software.</p>\r\n\r\n<p>To finish creating your account, please click on this <a href=\"http://customer.local/confirm/4sXbEetzvoXfZqu_sL8Bmv5cmQIYqikhhv9wjCe9jRQ\" target=\"_blank\">Confirmation link</a>.</p>\r\n\r\n<p>Happy planting,</p>\r\n\r\n<p>&mdash;The Black Dirt Team</p>', 0, 0, '2020-04-20 15:11:49');
-
 -- --------------------------------------------------------
 
 --
@@ -685,16 +573,6 @@ CREATE TABLE `master__email_automated` (
   `text` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `type` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Дамп данных таблицы `master__email_automated`
---
-
-INSERT INTO `master__email_automated` (`id`, `subject`, `text`, `type`) VALUES
-(1, 'Please confirm your email', '<p>Hi,&nbsp;{ClientName}.</p>\r\n\r\n<p>To finish creating your account, please click on this {ConfirmationLink}.</p>\r\n\r\n<p>Happy planting,</p>\r\n\r\n<p>&mdash;The Black Dirt Team</p>', 1),
-(2, 'Welcome to Black Dirt Software', '<div><span style=\"font-size:16px\">Thanks for creating an account.</span></div>\r\n\r\n<p><span style=\"font-size:16px\">Black Dirt Software helps farmers make big business of small farming. And we&rsquo;re excited to help you. So let&rsquo;s jump in and get our hands dirty.</span></p>\r\n\r\n<p><span style=\"font-size:16px\">If you have not confirmed your site yet, you can do so at {ConfirmationLink}</span></p>\r\n\r\n<p><span style=\"font-size:16px\">SETUP<br />\r\nPlanting your farm in Black Dirt is simple.</span></p>\r\n\r\n<ul>\r\n	<li><span style=\"font-size:16px\">First, go to </span> {SetupPlantsLink} <span style=\"font-size:16px\">and tell us what you grow.</span></li>\r\n	<li><span style=\"font-size:16px\">Then, go to&nbsp;</span> {SetupGardensLink} <span style=\"font-size:16px\">and tell us how your farm&rsquo;s set up.</span></li>\r\n	<li><span style=\"font-size:16px\">Finally, go to </span> {SetupCropsLink}<span style=\"font-size:16px\">&nbsp;to tell us which plants are in which gardens.</span></li>\r\n</ul>\r\n\r\n<p><span style=\"font-size:16px\">* Or, if you want a more detailed explanation on how to get set up, watch our video tutorial&nbsp;<a href=\"https://www.youtube.com/watch?v=vf0UUkTho9E\">here</a>.</span></p>\r\n\r\n<p><span style=\"font-size:16px\">LET&rsquo;S CONNECT<br />\r\nFinally, we hope you&rsquo;ll follow us on <a href=\"https://www.facebook.com/blackdirtsoftware/\">Facebook</a>, <a href=\"https://www.instagram.com/blackdirttechnology/\">Instagram</a> and <a href=\"https://www.youtube.com/channel/UCSLnfmRao-nLHKC1PAtY3jw\">Youtube</a>.</span></p>\r\n\r\n<p><span style=\"font-size:16px\">Thank you,</span></p>\r\n\r\n<p><span style=\"font-size:16px\">&mdash;The Black Dirt Team</span></p>', 2),
-(3, 'Oops! Let’s try again…', '<p>You created a Black Dirt account but failed to confirm your email address.</p>\r\n\r\n<p>If you accidentally missed the confirmation email, you can click this [ {ConfirmationLink} ]&nbsp;to complete the process.</p>\r\n\r\n<p>Once you&rsquo;ve confirmed your email address, use this <a href=\"https://youtu.be/vf0UUkTho9E\" target=\"_blank\">video</a> tutorial to get set up.</p>\r\n\r\n<p>Thanks for planting your farm in Black Dirt!</p>\r\n\r\n<p>&mdash;The Black Dirt Team</p>', 3),
-(4, 'You’re Almost Set Up!', '<p>We noticed you created an account, but didn&rsquo;t finish one, or all&nbsp;3, of the steps for setting up your farm:<br />\r\n{SetupPlantsLink}<br />\r\n{SetupGardensLink}<br />\r\n{SetupCropsLink}</p>\r\n\r\n<p>Here&rsquo;s a <a href=\"https://youtu.be/vf0UUkTho9E\" target=\"_blank\">video</a> tutorial that will help you finish your setup.</p>\r\n\r\n<p>Once you&rsquo;re done, your dashboard will be functional, and our software will start helping you manage your crops.</p>\r\n\r\n<p>Click on the video link above and plant your farm in Black Dirt.</p>\r\n\r\n<p>&mdash;The Black Dirt Team</p>', 4);
 
 -- --------------------------------------------------------
 
@@ -712,13 +590,6 @@ CREATE TABLE `master__email_recipient` (
   `is_clicked` tinyint(1) NOT NULL,
   `is_bounced` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Дамп данных таблицы `master__email_recipient`
---
-
-INSERT INTO `master__email_recipient` (`id`, `email_id`, `client_id`, `email_address`, `is_delivered`, `is_opened`, `is_clicked`, `is_bounced`) VALUES
-(1, 1, 1, 'valentinemurnik@gmail.com', 1, 1, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -768,8 +639,7 @@ CREATE TABLE `migration_versions` (
 --
 
 INSERT INTO `migration_versions` (`version`, `executed_at`) VALUES
-('20200420134219', '2020-04-20 13:42:30'),
-('20200421110849', '2020-04-21 11:08:56');
+('20200423110741', '2020-04-23 11:08:05');
 
 -- --------------------------------------------------------
 
@@ -988,13 +858,6 @@ CREATE TABLE `translation__locale` (
   `code` varchar(2) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Дамп данных таблицы `translation__locale`
---
-
-INSERT INTO `translation__locale` (`id`, `code`) VALUES
-(1, 'en');
-
 -- --------------------------------------------------------
 
 --
@@ -1030,13 +893,6 @@ CREATE TABLE `user` (
   `created_at` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Дамп данных таблицы `user`
---
-
-INSERT INTO `user` (`id`, `locale_id`, `username`, `email`, `date_format`, `roles`, `password`, `confirmation_token`, `password_requested_at`, `enabled`, `is_active`, `created_at`) VALUES
-(1, 1, 'master-black_dirt_software', 'valentinemurnik@gmail.com', 3, '[\"ROLE_ADMIN\"]', '$argon2id$v=19$m=65536,t=4,p=1$NWzKRmB2Es0pugRDZB4jRg$tWJFeozytKC5pvbkXnXcrwOZUSfKAxHe+DyRbkgqvW4', NULL, NULL, 1, 1, '2020-04-20');
-
 -- --------------------------------------------------------
 
 --
@@ -1055,13 +911,6 @@ CREATE TABLE `user__device` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Дамп данных таблицы `user__device`
---
-
-INSERT INTO `user__device` (`id`, `user_id`, `ip`, `is_computer`, `os`, `browser`, `browser_version`, `created_at`) VALUES
-(1, NULL, '127.0.0.1', 1, 'mac', 'Apple Safari', '13.0.5', '2020-04-20 14:23:46');
-
---
 -- Индексы сохранённых таблиц
 --
 
@@ -1077,6 +926,7 @@ ALTER TABLE `client`
 --
 ALTER TABLE `client__affiliate`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `UNIQ_84B239936447454A` (`referral_code`),
   ADD UNIQUE KEY `UNIQ_84B2399319EB6921` (`client_id`),
   ADD UNIQUE KEY `affiliate_unique` (`name`,`email`);
 
@@ -1524,19 +1374,19 @@ ALTER TABLE `user__device`
 -- AUTO_INCREMENT для таблицы `client`
 --
 ALTER TABLE `client`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT для таблицы `client__affiliate`
 --
 ALTER TABLE `client__affiliate`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT для таблицы `client__module_access`
 --
 ALTER TABLE `client__module_access`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT для таблицы `client__posts`
@@ -1572,7 +1422,7 @@ ALTER TABLE `client__tags`
 -- AUTO_INCREMENT для таблицы `client__team`
 --
 ALTER TABLE `client__team`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT для таблицы `customer`
@@ -1602,13 +1452,13 @@ ALTER TABLE `customer__invoice_product`
 -- AUTO_INCREMENT для таблицы `customer__location`
 --
 ALTER TABLE `customer__location`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT для таблицы `customer__location_workdays`
 --
 ALTER TABLE `customer__location_workdays`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT для таблицы `customer__notifies`
@@ -1686,7 +1536,7 @@ ALTER TABLE `customer__vendor_orders`
 -- AUTO_INCREMENT для таблицы `device__page_views`
 --
 ALTER TABLE `device__page_views`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT для таблицы `device__promotion_visit`
@@ -1698,7 +1548,7 @@ ALTER TABLE `device__promotion_visit`
 -- AUTO_INCREMENT для таблицы `email__auto`
 --
 ALTER TABLE `email__auto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT для таблицы `email__feedback`
@@ -1728,19 +1578,19 @@ ALTER TABLE `email__testimonial_recipient`
 -- AUTO_INCREMENT для таблицы `master__email`
 --
 ALTER TABLE `master__email`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT для таблицы `master__email_automated`
 --
 ALTER TABLE `master__email_automated`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT для таблицы `master__email_recipient`
 --
 ALTER TABLE `master__email_recipient`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT для таблицы `master__posts`
@@ -1842,7 +1692,7 @@ ALTER TABLE `translation__key`
 -- AUTO_INCREMENT для таблицы `translation__locale`
 --
 ALTER TABLE `translation__locale`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT для таблицы `translation__shared`
@@ -1854,13 +1704,13 @@ ALTER TABLE `translation__shared`
 -- AUTO_INCREMENT для таблицы `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT для таблицы `user__device`
 --
 ALTER TABLE `user__device`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц

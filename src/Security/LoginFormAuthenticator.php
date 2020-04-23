@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 use Symfony\Component\Security\Core\Security;
@@ -96,6 +97,8 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 
         if (!($user instanceof UserInterface)) {
             throw new CustomUserMessageAuthenticationException($this->translator->trans('login.not_found', [], 'validators'));
+        } elseif (!$this->passwordEncoder->isPasswordValid($user, $credentials['password'])) {
+            throw new BadCredentialsException();
         } elseif (!$user->isEnabled()) {
             throw new CustomUserMessageAuthenticationException(
                 $this->translator->trans('login.confirmation_required', [], 'validators') . '<br/>'
