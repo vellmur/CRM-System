@@ -1,14 +1,14 @@
 <?php
 namespace App\Tests\Helper;
 
-use App\Entity\Translation\TranslationLocale;
 use App\Entity\User\User;
 use App\Manager\RegistrationManager;
 use Codeception\Exception\ModuleException;
+use Codeception\Module;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
-class Functional extends \Codeception\Module
+class Functional extends Module
 {
     /**
      * Create user or administrator and set auth cookie to client
@@ -30,27 +30,32 @@ class Functional extends \Codeception\Module
             $this->fail('Unable to get module \'Doctrine2\'');
         }
 
-        /** @var RegistrationManager $manager */
-        $manager = $symfony->grabService('app.manager.registration');
-
-        $user = new User();
-
-        try {
-            $locale = $doctrine->_getEntityManager()->getRepository(TranslationLocale::class)->findOneBy(['code' => 'en']);
-            $user->setUsername('testuser');
-            $user->setEmail('testemail@example.com');
-            $user->setPlainPassword('user_passWord');
-            $user->setLocale($locale);
-
-            $manager->register($user, 'Test Client');
-        } catch (\Throwable $exception) {
-            $this->fail('Unable to create user for test: "' . $exception->getMessage() . '".');
-        }
+        $userEmail = 'testemail@example.com';
 
         /** @var User $user */
         $user = $doctrine->grabEntityFromRepository(User::class, [
-            'id' => $user->getId(),
+            'email' => $userEmail
         ]);
+
+        if (!$user) {
+            /** @var RegistrationManager $manager */
+            $manager = $symfony->grabService('app.manager.registration');
+
+            $user = new User();
+
+            try {
+                $locale = $manager->getLocales()[0];
+
+                $user->setUsername('testuser');
+                $user->setEmail($userEmail);
+                $user->setPlainPassword('user_passWord');
+                $user->setLocale($locale);
+
+                $manager->register($user, 'Test Client');
+            } catch (\Throwable $exception) {
+                $this->fail('Unable to create user for test: "' . $exception->getMessage() . '".');
+            }
+        }
 
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
         $symfony->grabService('security.token_storage')->setToken($token);

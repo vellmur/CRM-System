@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20200420134219 extends AbstractMigration
+final class Version20200423080354 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -38,15 +38,13 @@ final class Version20200420134219 extends AbstractMigration
         $this->addSql('CREATE TABLE client__settings (id INT AUTO_INCREMENT NOT NULL, client_id INT NOT NULL, module INT NOT NULL, name VARCHAR(255) NOT NULL, enabled TINYINT(1) NOT NULL, INDEX IDX_20A535AA19EB6921 (client_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE client__team (id INT AUTO_INCREMENT NOT NULL, client_id INT NOT NULL, user_id INT NOT NULL, INDEX IDX_3AA84AB319EB6921 (client_id), UNIQUE INDEX UNIQ_3AA84AB3A76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE client__subscription (id INT AUTO_INCREMENT NOT NULL, client_id INT NOT NULL, amount NUMERIC(8, 2) NOT NULL, INDEX IDX_8E2B3C4E19EB6921 (client_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE client__payment_settings (id INT AUTO_INCREMENT NOT NULL, client_id INT DEFAULT NULL, method INT NOT NULL, is_active TINYINT(1) NOT NULL, description TEXT DEFAULT NULL, INDEX IDX_2609750819EB6921 (client_id), UNIQUE INDEX member_unique (client_id, method), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE client__posts (id INT AUTO_INCREMENT NOT NULL, client_id INT NOT NULL, thumb_id INT DEFAULT NULL, title VARCHAR(255) NOT NULL, text LONGTEXT NOT NULL, slug VARCHAR(255) NOT NULL, is_active TINYINT(1) NOT NULL, created_at DATETIME DEFAULT NULL, UNIQUE INDEX UNIQ_57C31DD52B36786B (title), INDEX IDX_57C31DD519EB6921 (client_id), INDEX IDX_57C31DD5C7034EA5 (thumb_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE client__referral (id INT AUTO_INCREMENT NOT NULL, client_id INT DEFAULT NULL, affiliate_id INT NOT NULL, is_paid TINYINT(1) NOT NULL, created_at DATE NOT NULL, UNIQUE INDEX UNIQ_B6E7086F19EB6921 (client_id), INDEX IDX_B6E7086F9F12C49A (affiliate_id), UNIQUE INDEX referral_unique (client_id, affiliate_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE notification__notify (id INT AUTO_INCREMENT NOT NULL, notification_id INT DEFAULT NULL, user_id INT DEFAULT NULL, seen TINYINT(1) NOT NULL, INDEX IDX_CD5680FCEF1A9D84 (notification_id), INDEX IDX_CD5680FCA76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE notification (id INT AUTO_INCREMENT NOT NULL, subject VARCHAR(4000) NOT NULL, message VARCHAR(4000) DEFAULT NULL, link VARCHAR(4000) DEFAULT NULL, module_id INT NOT NULL, created_at DATETIME NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE client__module_access (id INT AUTO_INCREMENT NOT NULL, client_id INT NOT NULL, module_id INT NOT NULL, expired_at DATETIME NOT NULL, updated_at DATETIME NOT NULL, status INT NOT NULL, INDEX IDX_22F969DA19EB6921 (client_id), UNIQUE INDEX access_unique (client_id, module_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE client__merchant (id INT AUTO_INCREMENT NOT NULL, client_id INT NOT NULL, merchant VARCHAR(1) NOT NULL, merchant_key VARCHAR(255) NOT NULL, merchant_pin VARCHAR(4) DEFAULT NULL, currency VARCHAR(3) NOT NULL, is_sandbox TINYINT(1) NOT NULL, INDEX IDX_B14BB08E19EB6921 (client_id), UNIQUE INDEX merchant_unique (client_id, merchant), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE client__affiliate (id INT AUTO_INCREMENT NOT NULL, client_id INT DEFAULT NULL, name VARCHAR(255) DEFAULT NULL, email VARCHAR(25) DEFAULT NULL, referral_code VARCHAR(20) NOT NULL, created_at DATE NOT NULL, UNIQUE INDEX UNIQ_84B2399319EB6921 (client_id), UNIQUE INDEX affiliate_unique (name, email), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE client (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, email VARCHAR(50) DEFAULT NULL, level INT NOT NULL, weight_format INT NOT NULL, currency INT NOT NULL, country VARCHAR(2) DEFAULT NULL, postal_code VARCHAR(10) DEFAULT NULL, region INT DEFAULT NULL, city INT DEFAULT NULL, timezone VARCHAR(30) DEFAULT NULL, delivery_price NUMERIC(7, 2) NOT NULL, order_time VARCHAR(255) DEFAULT NULL, same_day_orders TINYINT(1) NOT NULL, token VARCHAR(30) NOT NULL, created_at DATE NOT NULL, UNIQUE INDEX UNIQ_C74404555E237E06 (name), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE client__affiliate (id INT AUTO_INCREMENT NOT NULL, client_id INT DEFAULT NULL, name VARCHAR(255) DEFAULT NULL, email VARCHAR(25) DEFAULT NULL, referral_code VARCHAR(20) NOT NULL, created_at DATE NOT NULL, UNIQUE INDEX UNIQ_84B239936447454A (referral_code), UNIQUE INDEX UNIQ_84B2399319EB6921 (client_id), UNIQUE INDEX affiliate_unique (name, email), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE client (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, email VARCHAR(50) DEFAULT NULL, weight_format INT NOT NULL, currency INT NOT NULL, country VARCHAR(2) DEFAULT NULL, postal_code VARCHAR(10) DEFAULT NULL, region INT DEFAULT NULL, city INT DEFAULT NULL, timezone VARCHAR(30) DEFAULT NULL, token VARCHAR(30) NOT NULL, created_at DATE NOT NULL, UNIQUE INDEX UNIQ_C74404555E237E06 (name), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE customer__vendor_orders (id INT AUTO_INCREMENT NOT NULL, client_id INT DEFAULT NULL, vendor_id INT DEFAULT NULL, order_date DATE NOT NULL, INDEX IDX_A5D88E9819EB6921 (client_id), INDEX IDX_A5D88E98F603EE73 (vendor_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE customer__payment_method (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, label VARCHAR(255) NOT NULL, gardener_price INT NOT NULL, farmer_price INT NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE share__suspended_weeks (id INT AUTO_INCREMENT NOT NULL, client_id INT DEFAULT NULL, week INT NOT NULL, year INT NOT NULL, INDEX IDX_5A20DD0519EB6921 (client_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
@@ -98,7 +96,6 @@ final class Version20200420134219 extends AbstractMigration
         $this->addSql('ALTER TABLE client__team ADD CONSTRAINT FK_3AA84AB319EB6921 FOREIGN KEY (client_id) REFERENCES client (id)');
         $this->addSql('ALTER TABLE client__team ADD CONSTRAINT FK_3AA84AB3A76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
         $this->addSql('ALTER TABLE client__subscription ADD CONSTRAINT FK_8E2B3C4E19EB6921 FOREIGN KEY (client_id) REFERENCES client (id)');
-        $this->addSql('ALTER TABLE client__payment_settings ADD CONSTRAINT FK_2609750819EB6921 FOREIGN KEY (client_id) REFERENCES client (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE client__posts ADD CONSTRAINT FK_57C31DD519EB6921 FOREIGN KEY (client_id) REFERENCES client (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE client__posts ADD CONSTRAINT FK_57C31DD5C7034EA5 FOREIGN KEY (thumb_id) REFERENCES media__image (id) ON DELETE SET NULL');
         $this->addSql('ALTER TABLE client__referral ADD CONSTRAINT FK_B6E7086F19EB6921 FOREIGN KEY (client_id) REFERENCES client (id)');
@@ -106,7 +103,6 @@ final class Version20200420134219 extends AbstractMigration
         $this->addSql('ALTER TABLE notification__notify ADD CONSTRAINT FK_CD5680FCEF1A9D84 FOREIGN KEY (notification_id) REFERENCES notification (id)');
         $this->addSql('ALTER TABLE notification__notify ADD CONSTRAINT FK_CD5680FCA76ED395 FOREIGN KEY (user_id) REFERENCES user (id)');
         $this->addSql('ALTER TABLE client__module_access ADD CONSTRAINT FK_22F969DA19EB6921 FOREIGN KEY (client_id) REFERENCES client (id)');
-        $this->addSql('ALTER TABLE client__merchant ADD CONSTRAINT FK_B14BB08E19EB6921 FOREIGN KEY (client_id) REFERENCES client (id)');
         $this->addSql('ALTER TABLE client__affiliate ADD CONSTRAINT FK_84B2399319EB6921 FOREIGN KEY (client_id) REFERENCES client (id)');
         $this->addSql('ALTER TABLE customer__vendor_orders ADD CONSTRAINT FK_A5D88E9819EB6921 FOREIGN KEY (client_id) REFERENCES client (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE customer__vendor_orders ADD CONSTRAINT FK_A5D88E98F603EE73 FOREIGN KEY (vendor_id) REFERENCES customer__vendor (id) ON DELETE CASCADE');
@@ -191,11 +187,9 @@ final class Version20200420134219 extends AbstractMigration
         $this->addSql('ALTER TABLE client__settings DROP FOREIGN KEY FK_20A535AA19EB6921');
         $this->addSql('ALTER TABLE client__team DROP FOREIGN KEY FK_3AA84AB319EB6921');
         $this->addSql('ALTER TABLE client__subscription DROP FOREIGN KEY FK_8E2B3C4E19EB6921');
-        $this->addSql('ALTER TABLE client__payment_settings DROP FOREIGN KEY FK_2609750819EB6921');
         $this->addSql('ALTER TABLE client__posts DROP FOREIGN KEY FK_57C31DD519EB6921');
         $this->addSql('ALTER TABLE client__referral DROP FOREIGN KEY FK_B6E7086F19EB6921');
         $this->addSql('ALTER TABLE client__module_access DROP FOREIGN KEY FK_22F969DA19EB6921');
-        $this->addSql('ALTER TABLE client__merchant DROP FOREIGN KEY FK_B14BB08E19EB6921');
         $this->addSql('ALTER TABLE client__affiliate DROP FOREIGN KEY FK_84B2399319EB6921');
         $this->addSql('ALTER TABLE customer__vendor_orders DROP FOREIGN KEY FK_A5D88E9819EB6921');
         $this->addSql('ALTER TABLE share__suspended_weeks DROP FOREIGN KEY FK_5A20DD0519EB6921');
@@ -272,13 +266,11 @@ final class Version20200420134219 extends AbstractMigration
         $this->addSql('DROP TABLE client__settings');
         $this->addSql('DROP TABLE client__team');
         $this->addSql('DROP TABLE client__subscription');
-        $this->addSql('DROP TABLE client__payment_settings');
         $this->addSql('DROP TABLE client__posts');
         $this->addSql('DROP TABLE client__referral');
         $this->addSql('DROP TABLE notification__notify');
         $this->addSql('DROP TABLE notification');
         $this->addSql('DROP TABLE client__module_access');
-        $this->addSql('DROP TABLE client__merchant');
         $this->addSql('DROP TABLE client__affiliate');
         $this->addSql('DROP TABLE client');
         $this->addSql('DROP TABLE customer__vendor_orders');

@@ -301,13 +301,13 @@ class RegistrationManager
     {
         $allLocales = $this->em->getRepository(TranslationLocale::class)->getAllLocales();
 
-        if (count($allLocales) == 0) {
+        if (!$allLocales) {
             $defaultLocale = new TranslationLocale();
             $defaultLocale->setCode('en');
 
             $this->em->persist($defaultLocale);
             $this->em->flush();
-            
+
             $allLocales = [$defaultLocale];
         }
 

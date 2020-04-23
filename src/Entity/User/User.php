@@ -365,7 +365,6 @@ class User implements UserInterface
      */
     public function setLocale(TranslationLocale $locale): void
     {
-
         $this->locale = $locale;
     }
 
