@@ -299,6 +299,18 @@ class RegistrationManager
      */
     public function getLocales()
     {
-        return $this->em->getRepository(TranslationLocale::class)->getAllLocales();
+        $allLocales = $this->em->getRepository(TranslationLocale::class)->getAllLocales();
+
+        if (count($allLocales) == 0) {
+            $defaultLocale = new TranslationLocale();
+            $defaultLocale->setCode('en');
+
+            $this->em->persist($defaultLocale);
+            $this->em->flush();
+            
+            $allLocales = [$defaultLocale];
+        }
+
+        return $allLocales;
     }
 }
