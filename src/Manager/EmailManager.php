@@ -4,12 +4,15 @@ namespace App\Manager;
 
 use App\Entity\Client\Client;
 use App\Entity\Customer\Email\EmailRecipient;
+use App\Entity\Email\AutomatedEmailInterface;
+use App\Entity\Email\RecipientInterface;
 use App\Entity\Master\Email\AutomatedEmail;
 use App\Entity\Master\Email\Email;
 use App\Entity\Master\Email\Recipient;
 use App\Entity\User\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Twig\Environment;
 
 class EmailManager
 {
@@ -17,43 +20,41 @@ class EmailManager
 
     private $urlGenerator;
 
+    private $twig;
+
     private $host;
 
-    public $automatedTypes = [
-        1 => 'confirmation',
-        2 => 'welcome',
-        3 => 'failed',
-        4 => 'aborted'
-    ];
-
     /**
+     * EmailManager constructor.
      * @param EntityManagerInterface $em
      * @param UrlGeneratorInterface $urlGenerator
+     * @param Environment $twig
      * @param $httpProtocol
      * @param $domain
      */
-    public function __construct(EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator, $httpProtocol, $domain)
+    public function __construct(EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator, Environment $twig, $httpProtocol, $domain)
     {
         $this->em = $em;
         $this->urlGenerator = $urlGenerator;
+        $this->twig = $twig;
         $this->host = $httpProtocol . '://' . $domain;
     }
 
     /**
-     * @param $id
-     * @return Email|null|object
+     * @param int $id
+     * @return object|null
      */
-    public function getEmail($id)
+    public function getEmail(int $id)
     {
         return $this->em->getRepository(Email::class)->find($id);
     }
 
     /**
-     * @param Recipient|EmailRecipient|$recipient
-     * @param $isDelivered
-     * @return mixed
+     * @param RecipientInterface $recipient
+     * @param bool $isDelivered
+     * @return RecipientInterface
      */
-    public function updateDelivery($recipient, $isDelivered)
+    public function updateDelivery(RecipientInterface $recipient, bool $isDelivered)
     {
         $recipient->setIsDelivered($isDelivered);
         $this->em->flush();
@@ -86,11 +87,11 @@ class EmailManager
 
     /**
      * @param Email $email
-     * @param $clients
+     * @param array $clients
      * @param bool $isDraft
      * @return Email
      */
-    public function saveEmail(Email $email, $clients, $isDraft = true)
+    public function saveEmail(Email $email, array $clients = [], bool $isDraft = true)
     {
         // Remove recipients that now not in a list and remove already added recipients from the list
         foreach ($email->getRecipients() as $key => $recipient) {
@@ -101,15 +102,11 @@ class EmailManager
             }
         }
 
-        // Add new recipient
         foreach ($clients as $clientId) {
+            /** @var Client $client */
             $client = $this->em->find(Client::class, $clientId);
+            $recipient = $this->addEmailRecipient($email, $client);
 
-            $recipient = new Recipient();
-            $recipient->setClient($client);
-            $recipient->setEmailLog($email);
-            $recipient->setEmailAddress($client->getContactEmail());
-            $email->addRecipient($recipient);
             $this->em->persist($recipient);
         }
 
@@ -123,10 +120,10 @@ class EmailManager
 
     /**
      * @param Recipient $recipient
-     * @param $message
+     * @param string $message
      * @return string|string[]
      */
-    public function setMacrosFields(Recipient $recipient, $message)
+    public function setMacrosFields(Recipient $recipient, string $message)
     {
         foreach ($this->getMacrosList() as $macros) {
             foreach ($macros as $key => $macro) {
@@ -142,10 +139,10 @@ class EmailManager
 
     /**
      * @param Recipient $recipient
-     * @param $macros
+     * @param string $macros
      * @return string
      */
-    private function setMacrosField(Recipient $recipient, $macros)
+    private function setMacrosField(Recipient $recipient, string $macros)
     {
         $client = $recipient->getClient();
         $user = $client->getOwner();
@@ -177,9 +174,7 @@ class EmailManager
      */
     public function getSoftwareClients()
     {
-        $clients = $this->em->getRepository(Client::class)->getSoftwareClients();
-
-        return $clients;
+        return $this->em->getRepository(Client::class)->getSoftwareClients();
     }
 
     /**
@@ -188,9 +183,7 @@ class EmailManager
      */
     public function searchClients($text)
     {
-        $clients = $this->em->getRepository(Client::class)->searchClientsByAllFields($text);
-
-        return $clients;
+        return $this->em->getRepository(Client::class)->searchClientsByAllFields($text);
     }
 
     /**
@@ -198,9 +191,7 @@ class EmailManager
      */
     public function getLogsQuery()
     {
-        $logs = $this->em->getRepository(Email::class)->getEmailsLogQuery();
-
-        return $logs;
+        return $this->em->getRepository(Email::class)->getEmailsLogQuery();
     }
 
     /**
@@ -256,9 +247,7 @@ class EmailManager
      */
     public function getDrafts()
     {
-        $drafts = $this->em->getRepository(Email::class)->findBy(['isDraft' => 1]);
-
-        return $drafts;
+        return $this->em->getRepository(Email::class)->findBy(['isDraft' => 1]);
     }
 
     /**
@@ -294,9 +283,7 @@ class EmailManager
      */
     public function getAutomatedEmails()
     {
-        $emails = $this->em->getRepository(AutomatedEmail::class)->findAll();
-
-        return $emails;
+        return $this->em->getRepository(AutomatedEmail::class)->findAll();
     }
 
     /**
@@ -304,7 +291,7 @@ class EmailManager
      */
     public function getAutomatedTypes()
     {
-        return $this->automatedTypes;
+        return AutomatedEmail::AUTOMATED_TYPES;
     }
 
     /**
@@ -312,51 +299,28 @@ class EmailManager
      */
     public static function getMacrosList()
     {
-        $macros = [
+        return [
             'ClientData' => [
                 'ClientName' => 'Name',
                 'ConfirmationLink' => 'Confirmation link'
             ]
         ];
-
-        return $macros;
-    }
-
-    /**
-     * @param $type
-     * @return Email|null|object
-     */
-    public function getAutomatedEmail($type)
-    {
-        $id = array_flip($this->automatedTypes)[$type];
-
-        $email = $this->em->getRepository(Email::class)->find($id);
-
-        return $email;
-    }
-
-    public function getTestUser()
-    {
-        return $this->em->getRepository(User::class)->findOneBy(['email' => 'valentinemurnik@gmail.com']);
     }
 
     /**
      * @param User $user
      * @return Email
+     * @throws \Exception
      */
     public function createUserConfirmationEmail(User $user)
     {
-        $email = $this->createAutomatedEmail('confirmation');
+        $email = $this->getAutomatedEmailOfType('confirmation');
+        $recipient = $this->addEmailRecipient($email, $user->getClient());
 
-        $recipient = new Recipient();
-        $recipient->setClient($user->getClient());
-        $recipient->setEmailAddress($user->getClient()->getContactEmail());
         $this->em->persist($recipient);
 
         $body = $this->setMacrosFields($recipient, $email->getText());
         $email->setText($body);
-
-        $email->addRecipient($recipient);
 
         $this->em->flush();
 
@@ -364,20 +328,17 @@ class EmailManager
     }
 
     /**
-     * @param $type
+     * @param string $typeName
      * @return Email
+     * @throws \Doctrine\DBAL\ConnectionException|\Exception
      */
-    public function createAutomatedEmail($type)
+    public function getAutomatedEmailOfType(string $typeName)
     {
-        $typeId = array_flip($this->automatedTypes)[$type];
-        $automatedEmail = $this->em->getRepository(AutomatedEmail::class)->find($typeId);
+        $this->emailsExistsOrCreated();
+        $typeId = $this->getTypeByName($typeName);
+        $automatedEmail = $this->getAutomatedEmailByType($typeId, $typeName);
 
-        $email = new Email();
-        $email->setAutomatedEmail($automatedEmail);
-        $email->setSubject($automatedEmail->getSubject());
-        $email->setText($automatedEmail->getText());
-        $email->setIsDraft(false);
-
+        $email = $this->createEmailFromAutomated($automatedEmail);
         $this->em->persist($email);
         $this->em->flush();
 
@@ -385,20 +346,143 @@ class EmailManager
     }
 
     /**
+     * @param AutomatedEmailInterface $automatedEmail
+     * @return Email
+     */
+    private function createEmailFromAutomated(AutomatedEmailInterface $automatedEmail)
+    {
+        $email = new Email();
+        $email->setAutomatedEmail($automatedEmail);
+        $email->setSubject($automatedEmail->getSubject());
+        $email->setText($automatedEmail->getText());
+        $email->setIsDraft(false);
+
+        return $email;
+    }
+
+    /**
+     * @param int $typeId
+     * @param string $typeName
+     * @return AutomatedEmailInterface
+     * @throws \Exception
+     */
+    private function getAutomatedEmailByType(int $typeId, string $typeName)
+    {
+        /** @var AutomatedEmailInterface $automatedEmail */
+        $automatedEmail = $this->em->getRepository(AutomatedEmail::class)->findOneBy(['type' => $typeId]);
+
+        if (!$automatedEmail) {
+            throw new \Exception('The automated email with type "' . $typeName
+                . '" was not found in the db. Email was not sent.');
+        }
+
+        return $automatedEmail;
+    }
+
+    /**
+     * @throws \Doctrine\DBAL\ConnectionException
+     */
+    private function emailsExistsOrCreated()
+    {
+        if (count($this->em->getRepository(AutomatedEmail::class)->findAll()) == 0) {
+            $this->em->getConnection()->beginTransaction();
+
+            try {
+                foreach (AutomatedEmail::AUTOMATED_TYPES as $typeId => $typeName) {
+                    $this->em->persist($this->createDefaultAutomatedEmail($typeId, $typeName));
+                }
+
+                $this->em->flush();
+                $this->em->getConnection()->commit();
+            } catch (\Exception $e) {
+                $this->em->getConnection()->rollBack();
+                $this->em->clear();
+
+                throw new \Exception('The automated emails were not created (' . $e->getMessage() . ').');
+            }
+        }
+    }
+
+    /**
+     * @param int $typeId
+     * @param string $typeName
+     * @return AutomatedEmail
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
+    private function createDefaultAutomatedEmail(int $typeId, string $typeName)
+    {
+        $automatedEmail = new AutomatedEmail();
+        $automatedEmail->setType($typeId);
+        $automatedEmail->setSubject($this->getAutomatedSubjectByType($typeName));
+        $automatedEmail->setText($this->getAutomatedBody($typeName));
+
+        return $automatedEmail;
+    }
+
+    /**
+     * @param string $typeName
+     * @return string
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
+    private function getAutomatedBody(string $typeName)
+    {
+        return $this->twig->render('master/email/automated/' . $typeName . '.html.twig');
+    }
+
+    /**
+     * @param string $typeName
+     * @return mixed
+     * @throws \Exception
+     */
+    private function getAutomatedSubjectByType(string $typeName)
+    {
+        $subjects = [
+            'confirmation' => 'Please confirm your email',
+            'welcome' => 'Welcome to Black Dirt Software',
+            'aborted' => 'Oops! Let’s try again…',
+            'failed' => 'You’re Almost Set Up!'
+        ];
+
+        if (!isset($subjects[$typeName])) {
+            throw new \Exception('Subject for email type "' . $typeName . '" wasn`t found.');
+        }
+
+        return  $subjects[$typeName];
+    }
+
+
+    /**
+     * @param string $name
+     * @return mixed
+     * @throws \Exception
+     */
+    private function getTypeByName(string $name)
+    {
+        $automatedTypes = array_flip(AutomatedEmail::AUTOMATED_TYPES);
+
+        if (!isset($automatedTypes[$name])) {
+            throw new \Exception('Email type doesnt exists.');
+        }
+
+        return $automatedTypes[$name];
+    }
+
+    /**
      * @param Email $email
      * @param Client $client
      * @return Recipient
      */
-    public function addEmailRecipient(Email $email, Client $client)
+    public function addEmailRecipient(Email &$email, Client $client)
     {
         $recipient = new Recipient();
         $recipient->setClient($client);
         $recipient->setEmailAddress($client->getContactEmail());
 
-        $this->em->persist($recipient);
-
         $email->addRecipient($recipient);
-        $this->em->flush();
 
         return $recipient;
     }

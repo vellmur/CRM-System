@@ -15,4 +15,11 @@ class AutomatedEmail extends AutomatedEmailBase
      * @ORM\OneToMany(targetEntity="App\Entity\Master\Email\Email", mappedBy="automatedEmail")
      */
     private $emailLog;
+
+    const AUTOMATED_TYPES = [
+        1 => 'confirmation',
+        2 => 'welcome',
+        3 => 'failed',
+        4 => 'aborted'
+    ];
 }
