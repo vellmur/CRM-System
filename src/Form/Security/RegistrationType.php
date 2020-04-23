@@ -7,6 +7,7 @@ use App\Entity\User\User;
 use App\Form\Client\ClientNameType;
 use App\Service\CountryList;
 use EWZ\Bundle\RecaptchaBundle\Form\Type\EWZRecaptchaType;
+use EWZ\Bundle\RecaptchaBundle\Validator\Constraints\IsTrue;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -86,7 +87,9 @@ class RegistrationType extends AbstractType
                         'type'  => 'image',
                         'size'  => 'normal'
                     ]
-                ]
+                ],
+                'mapped'    => false,
+                'constraints' => $_ENV['APP_ENV'] == 'prod' ?  [new IsTrue()] : []
             ]);
     }
 

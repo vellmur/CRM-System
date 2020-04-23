@@ -139,11 +139,6 @@ class User implements UserInterface
     private $notifications;
 
     /**
-     * @Recaptcha\IsTrue(groups={"register_validation"})
-     */
-    public $recaptcha;
-
-    /**
      * @var array
      */
     const DATE_FORMATS = [

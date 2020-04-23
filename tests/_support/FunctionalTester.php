@@ -51,10 +51,6 @@ class FunctionalTester extends Actor
         $this->getScenario()->runStep(new Condition('amOnPage', func_get_args()));
     }
 
-    /**
-     * @param string $page
-     * @return mixed|null
-     */
     public function amOnPage(string $page)
     {
         $page = $this->url . $page;

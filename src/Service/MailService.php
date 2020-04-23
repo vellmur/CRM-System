@@ -79,7 +79,7 @@ class MailService
         $notifyEmails = ['valentinemurnik@gmail.com'];
 
         if (!$this->isDevelopment()) {
-            array_push($notifyEmails, 'cf@blackdirt.org', 'matt@blackdirt.org');
+            array_push($notifyEmails, 'cf@blackdirt.org');
         }
 
         $this->sendMail(self::SENDER_NAME, $notifyEmails, 'emails/new_client.html.twig', $subject, [

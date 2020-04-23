@@ -21,10 +21,10 @@
                             <i class="icon-user text-muted"></i>
                         </div>
                         {% if form.username.vars.errors|length %}
-                            <span class="help-block text-danger">
+                            <label class="help-block text-danger" for="{{ form.username.vars.id }}">
                                 <i class="icon-cancel-circle2 position-left"></i>
                                 {{ form.username.vars.errors[0].message }}
-                            </span>
+                            </label>
                         {% endif %}
                     </div>
                     <div class="row">
@@ -32,10 +32,10 @@
                             <div class="form-group has-feedback">
                                 {{ form_widget(form.locale) }}
                                 {% if form.locale.vars.errors|length %}
-                                    <span class="help-block text-danger">
-                                        <i class="icon-cancel-circle2 position-left"></i>
-                                        {{ form.locale.vars.errors[0].message }}
-                                    </span>
+                                    <label class="help-block text-danger" for="{{ form.locale.vars.id }}">
+                                            <i class="icon-cancel-circle2 position-left"></i>
+                                            {{ form.locale.vars.errors[0].message }}
+                                    </label>
                                 {% endif %}
                             </div>
                         </div>
@@ -48,10 +48,10 @@
                                     <i class="icon-mention text-muted"></i>
                                 </div>
                                 {% if form.email.vars.errors|length %}
-                                    <span class="help-block text-danger">
+                                    <label class="help-block text-danger" for="{{ form.email.vars.id }}">
                                         <i class="icon-cancel-circle2 position-left"></i>
                                         {{ form.email.vars.errors[0].message }}
-                                    </span>
+                                    </label>
                                 {% endif %}
                             </div>
                         </div>
@@ -64,10 +64,10 @@
                                     <i class="icon-user-check text-muted"></i>
                                 </div>
                                 {% if form.client.name.vars.errors|length %}
-                                    <span class="help-block text-danger">
+                                    <label class="help-block text-danger" for="{{ form.client.name.vars.id }}">
                                         <i class="icon-cancel-circle2 position-left"></i>
                                         {{ form.client.name.vars.errors[0].message }}
-                                    </span>
+                                    </label>
                                 {% endif %}
                             </div>
                         </div>
@@ -80,10 +80,10 @@
                                     <i class="icon-user-lock text-muted"></i>
                                 </div>
                                 {% if form.plainPassword.first.vars.errors|length %}
-                                    <span class="help-block text-danger">
+                                    <label class="help-block text-danger" for="{{ form.plainPassword.first.vars.id }}">
                                         <i class="icon-cancel-circle2 position-left"></i>
                                         {{ form.plainPassword.first.vars.errors[0].message }}
-                                    </span>
+                                    </label>
                                 {% endif %}
                             </div>
                         </div>
@@ -96,10 +96,10 @@
                                     <i class="icon-user-lock text-muted"></i>
                                 </div>
                                 {% if form.plainPassword.first.vars.errors|length %}
-                                    <span class="help-block text-danger">
+                                    <label class="help-block text-danger" for="{{ form.plainPassword.second.vars.id }}">
                                         <i class="icon-cancel-circle2 position-left"></i>
                                         {{ form.plainPassword.first.vars.errors[0].message }}
-                                    </span>
+                                    </label>
                                 {% endif %}
                             </div>
                         </div>
