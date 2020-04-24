@@ -14,7 +14,6 @@ use App\Manager\EmailManager;
 use App\Manager\MemberEmailManager;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 use Wa72\HtmlPageDom\HtmlPage;
@@ -61,10 +60,11 @@ class Sender
     }
 
     /**
-     * @param UserInterface $user
+     * @param User $user
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
+     * @throws \Exception
      */
     public function sendEmailConfirmation(User $user)
     {
@@ -195,7 +195,7 @@ class Sender
                     ->setTo($recipient->getCustomer()->getEmail());
             } else {
                 $message->setFrom([$this->mailerUser => self::SENDER_NAME])
-                    ->setTo($recipient->getClient()->getEmail())
+                    ->setTo($recipient->getEmailAddress())
                     ->setSubject($recipient->getEmailLog()->getSubject() . ' (' . $recipient->getId() . ')');
             }
 
@@ -377,7 +377,7 @@ class Sender
 
         $message = $this->mailer->createMessage()
             ->setSubject('Customer ' . $shareBeforeSkipping['action'] . ' a week')
-            ->setFrom([$this->mailerUser => 'BlackDirtSoftware'])
+            ->setFrom([$this->mailerUser => 'Black Dirt Software'])
             ->setTo($to)
             ->setBody($this->templating->render('emails/member/skip_week.html.twig', $data), 'text/html');
 
@@ -409,27 +409,6 @@ class Sender
             ->setFrom([$this->mailerUser => 'BlackDirtSoftware'])
             ->setTo($to)
             ->setBody($this->templating->render('emails/member/customize_notify.html.twig', $data), 'text/html');
-
-        $this->mailer->send($message);
-    }
-
-    /**
-     * @param Customer $customer
-     * @param $sharesChanges
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
-     */
-    public function sendMemberChanges(Customer $customer, $sharesChanges)
-    {
-        $message = $this->mailer->createMessage()
-            ->setSubject('Customer (' . $customer->getFullname() . ') profile was updated')
-            ->setFrom([$this->mailerUser => 'BlackDirtSoftware'])
-            ->setTo('kinroom@blackdirt.org')
-            ->setBody($this->templating->render('emails/member/member_changes.html.twig', [
-                'member' => $customer,
-                'sharesChanges' => $sharesChanges
-            ]), 'text/html');
 
         $this->mailer->send($message);
     }
@@ -470,7 +449,6 @@ class Sender
      * @param \Swift_Message $message
      * @param RecipientInterface $recipient
      * @return bool
-     * @throws \Exception
      */
     public function sendTrackedMail(\Swift_Message $message, RecipientInterface $recipient)
     {
@@ -496,7 +474,6 @@ class Sender
      * @param int $recipientId
      * @param string $recipientType
      * @return string|HtmlPageCrawler
-     * @throws \Exception
      */
     public function addTracking(string $body, int $recipientId, string $recipientType)
     {
@@ -583,7 +560,6 @@ class Sender
      * @param int $recipientId
      * @param string $recipientType
      * @return string|string[]
-     * @throws \Exception
      */
     public function addOpeningTracking(string $html, int $recipientId, string $recipientType)
     {

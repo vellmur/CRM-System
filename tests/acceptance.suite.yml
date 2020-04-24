@@ -19,8 +19,7 @@ modules:
             user: root
             password: root
             cleanup: true
-            populate: true
-            dump: 'tests/_data/customer-dump.sql'
+            dump: 'tests/_data/customer_test.sql'
 
 # add Codeception\Step\Retry trait to AcceptanceTester to enable retries
 step_decorators:
