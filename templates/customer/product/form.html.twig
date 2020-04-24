@@ -22,19 +22,6 @@
                     {{ form_widget(form.isPos)}}
                 </div>
             </div>
-            {% if form.plant is defined %}
-                <div class="form-group {{ form.plant.vars.errors|length ? 'has-error' }}">
-                    {{ form_label(form.plant) }}
-                    <div class="col-md-10 col-sm-9 col-xs-7">
-                        {{ form_widget(form.plant)}}
-                        {% if not form.plant.vars.valid %}
-                            <label id="{{ form.plant.vars.id }}-error" class="validation-error-label" for="{{ form.plant.vars.id }}">
-                                {{ form.plant.vars.errors[0].message }}
-                            </label>
-                        {% endif %}
-                    </div>
-                </div>
-            {% endif %}
             <div class="form-group {{ form.name.vars.errors|length ? 'has-error' }}">
                 {{ form_label(form.name) }}
                 <div class="col-md-10 col-sm-9 col-xs-7">

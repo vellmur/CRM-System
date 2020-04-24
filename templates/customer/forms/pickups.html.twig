@@ -10,7 +10,7 @@
         <tbody class="pickups-list">
         {% for key, pickup in pickups %}
             <tr id="pickup-{{ pickup.id }}">
-                <td class="pickup-date">{{ pickup.date|date(pickup.share.member.client.getTwigFormatDate()) }}</td>
+                <td class="pickup-date">{{ pickup.date|date(pickup.share.customer.client.getTwigFormatDate()) }}</td>
                 <td class="timer-place">
                     {% if pickup.isSuspended == false %}
                         <!-- Show timer to disable skip a week feature for next pickup if pickup date is not today, else show timer for the next pickup -->

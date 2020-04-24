@@ -27,8 +27,8 @@ class ShareProductsRepository extends ServiceEntityRepository
         $q = $this->createQueryBuilder('o');
 
         if ($role == 'member') {
-            $q->innerJoin('o.memberOrder', 'memberOrder')
-                ->where('o.memberOrder = :order');
+            $q->innerJoin('o.customerOrder', 'customerOrder')
+                ->where('o.customerOrder = :order');
         } else {
             $q->innerJoin('o.vendorOrder', 'vendorOrder')
                 ->where('o.vendorOrder = :order');

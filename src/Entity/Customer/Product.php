@@ -19,6 +19,7 @@ class Product
     public function __construct()
     {
         $this->tags = new ArrayCollection();
+        $this->payByItem = 1;
     }
 
     public function __toString()
@@ -103,7 +104,7 @@ class Product
      * Pay by qty or by weight
      *
      * @var boolean
-     * @ORM\Column(name="pay_by_item", type="boolean")
+     * @ORM\Column(name="pay_by_item", type="boolean", options={"default": 1})
      */
     private $payByItem = 1;
 

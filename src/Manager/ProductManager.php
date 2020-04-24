@@ -34,6 +34,7 @@ class ProductManager
      */
     public function createProduct(Product $product, $tags)
     {
+        $product->setPayByItem(1);
         $this->em->persist($product);
         $this->em->flush();
 

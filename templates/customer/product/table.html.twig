@@ -2,7 +2,6 @@
     <thead>
     <tr role="row" class="heading-style">
         <th>{{ 'product.name'|trans({}, 'labels') }}</th>
-        <th>{{ 'product.product'|trans({}, 'labels') }}</th>
         <th>{{ 'product.category'|trans({}, 'labels') }}</th>
         <th>{{ 'product.description'|trans({}, 'labels') }}</th>
         <th>{{ 'product.price'|trans({}, 'labels') }}</th>
@@ -16,7 +15,6 @@
             <tr role="row" class="odd {% if key is not divisible by (2) %} row-style {% endif %}">
                 {{ form_start(form, {'attr': {'name': 'product', 'action': path('product_update', {id: form.vars.value.id}), 'class': 'ajaxUpdate'} }) }}
                     <td><a class="website-link" href="{{ path('customer_product_edit', {'id': form.vars.value.id}) }}">{{ form.vars.value.name }}</a></td>
-                    <td>{% if form.vars.value.plant is not null %}{{ form.vars.value.plant.fullName }}{% endif %}</td>
                     <td>{{ form.vars.value.category }}</td>
                     <td>{{ form_widget(form.description) }}</td>
                     <td>{{ form_widget(form.price) }}</td>
@@ -30,9 +28,6 @@
                         </span>
                     </td>
                     <td class="hidden">
-                        {% if form.vars.value.plant is not null %}
-                            {{ form_widget(form.plant, {'attr': {'class': 'hidden custom-read-only'}}) }}
-                        {% endif %}
                         {{ form_widget(form.category, {'attr': {'class': 'hidden custom-read-only'}}) }}
                         {{ form_widget(form.isPos, {'attr': {'class': 'hidden custom-read-only'}}) }}
                     </td>

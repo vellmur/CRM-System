@@ -307,9 +307,10 @@ class User implements UserInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param string|null $confirmationToken
+     * @return $this
      */
-    public function setConfirmationToken(string $confirmationToken)
+    public function setConfirmationToken(?string $confirmationToken)
     {
         $this->confirmationToken = $confirmationToken;
 

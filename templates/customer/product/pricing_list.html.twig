@@ -2,7 +2,6 @@
     <tr {% if key is not divisible by (2) %} class="row-style" {% endif %}>
         <form action="{{ path('product_price_update', {'id': product.id}) }}" name="pricing" method="post" class="ajaxUpdate"></form>
         <td class="form-group">{{ product.name }}</td>
-        <td class="form-group">{{ product.plant ? product.plant.fullname }}</td>
         <td class="form-group">{{ product.description }}</td>
         <td class="form-group">
             <input type="text" name="pricing[price]" value="{{ product.price }}" class="form-control">
