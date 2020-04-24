@@ -38,7 +38,7 @@ services:
 
     # End of managers
 
-    App\Service\MailService:
+    App\Service\Mail\Sender:
         arguments:
             $mailerUser: '%env(MAILER_USER)%'
             $domain: '%env(DOMAIN)%'
