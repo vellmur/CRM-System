@@ -9,7 +9,7 @@ use App\Entity\Email\BaseEmailLog;
 
 /**
  * @ORM\Table(name="email__log")
- * @ORM\Entity(repositoryClass="App\Repository\EmailRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\MemberEmailRepository")
  */
 class CustomerEmail extends BaseEmailLog implements ClientEmailInterface
 {

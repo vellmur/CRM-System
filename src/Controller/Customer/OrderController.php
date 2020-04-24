@@ -261,31 +261,6 @@ class OrderController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function harvestList(Request $request)
-    {
-        $client = $this->getUser()->getClient();
-
-        $this->manager->deleteOldShares($client);
-
-        $reports = $this->manager->getHarvestList($client);
-
-        // Get dates navigation from reports keys (they are equal to pickup dates)
-        $datesNav = array_keys($reports);
-
-        // Set reports to the entered date, or to the first date in reports. If reports is empty, return empty array;
-        if (!$request->query->get('date') && count($datesNav) > 0) $request->query->set('date', $datesNav[0]);
-        $reports = count($reports) ? $reports[$request->query->get('date')] : [];
-
-        return $this->render('customer/order/harvest_list.html.twig', [
-            'datesNav' => $datesNav,
-            'reports' => $reports
-        ]);
-    }
-
-    /**
-     * @param Request $request
-     * @return Response
-     */
     public function packaging(Request $request)
     {
         $client = $this->getUser()->getClient();

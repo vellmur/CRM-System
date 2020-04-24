@@ -14,6 +14,7 @@
                     <th>Type</th>
                     <th>Subject</th>
                     <th class="text-center">Number of recipients</th>
+                    <th class="text-center">Sent</th>
                     <th class="text-center">Delivered</th>
                     <th class="text-center">Opened</th>
                     <th class="text-center">Clicked</th>
@@ -34,6 +35,7 @@
                         <td>{{ email.automatedEmail ? 'Auto' : 'Manual' }}</td>
                         <td>{{ email.subject }}</td>
                         <td class="text-center">{{ log.total }}</td>
+                        <td class="text-center">{{ log.sent }}</td>
                         <td class="text-center">{{ log.delivered }}</td>
                         <td class="text-center">{{ log.opened }}</td>
                         <td class="text-center">{{ log.clicked }}</td>

@@ -226,7 +226,6 @@ class MenuBuilder
         $menu->addChild($orders)->setAttribute('icon', 'icon-cart')->setAttribute('class', 'has-ul');;
         $menu[$orders]->addChild($this->trans->trans('navigation.orders.for_members', [], $domain), ['route' => 'member_orders'])->setAttribute('icon', 'icon-user-tie');
         $menu[$orders]->addChild($this->trans->trans('navigation.orders.for_vendors', [], $domain), ['route' => 'vendor_orders'])->setAttribute('icon', 'icon-store2');
-        $menu[$orders]->addChild($this->trans->trans('navigation.orders.harvest_list', [], $domain), ['route' => 'member_harvest_list'])->setAttribute('icon', 'icon-list2');
         $menu[$orders]->addChild($this->trans->trans('navigation.orders.packaging', [], $domain), ['route' => 'member_packaging_list'])->setAttribute('icon', 'icon-bag');
     }
 

@@ -468,10 +468,11 @@ class Sender
 
     /**
      * @param \Swift_Message $message
-     * @param $recipient
+     * @param RecipientInterface $recipient
      * @return bool
+     * @throws \Exception
      */
-    public function sendTrackedMail(\Swift_Message $message, $recipient)
+    public function sendTrackedMail(\Swift_Message $message, RecipientInterface $recipient)
     {
         $recipientType = $recipient instanceof EmailRecipient ? 'customer' : 'client';
         $body = $this->addTracking($message->getBody(), $recipient->getId(), $recipientType);
@@ -479,13 +480,13 @@ class Sender
         $message->setBody($body, 'text/html');
 
         // Add bouncing tracking
-        $message->getHeaders()->addTextHeader('X-Blackdirt-Recipient-ID', $recipient->getId());
-        $message->getHeaders()->addTextHeader('X-Blackdirt-Recipient-Type', $recipientType);
+        $message->getHeaders()->addTextHeader('X-Mail-Recipient-ID', $recipient->getId());
+        $message->getHeaders()->addTextHeader('X-Mail-Recipient-Type', $recipientType);
 
-        $delivered = $this->mailer->send($message) > 0;
-        $this->manager->updateDelivery($recipient, $delivered);
+        $sent = $this->mailer->send($message) > 0;
+        $this->manager->updateDelivery($recipient, $sent);
 
-        return $delivered;
+        return $sent;
     }
 
     /**

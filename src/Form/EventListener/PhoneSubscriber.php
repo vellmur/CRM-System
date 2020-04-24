@@ -49,7 +49,7 @@ class PhoneSubscriber implements EventSubscriberInterface
         $countryCode = $options['country_code'] ? $options['country_code'] : 'US';
         $phoneFormat = $this->countriesInfo->getPhoneFormat($countryCode);
         $phoneLengthError = $this->translator->trans('validation.form.phone_length', [
-            '%num%' => $phoneFormat['length']
+            '%number%' => $phoneFormat['length']
         ], 'validators');
 
         if ($phoneFormat) {

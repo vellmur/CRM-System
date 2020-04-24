@@ -2,6 +2,7 @@
 
 namespace App\Controller\Customer;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use App\Entity\Customer\Email\CustomerEmail;
 use App\Form\Customer\AutoEmails;
 use App\Form\Customer\EmailType;
@@ -46,7 +47,7 @@ class MailController extends AbstractController
      */
     public function compose(Request $request, CustomerEmail $email = null)
     {
-        $client = $this->getUser()->getTeam()->getClient();
+        $client = $this->getUser()->getClient();
 
         if (!$email) $email = new CustomerEmail();
         $email->setClient($client);
@@ -84,13 +85,13 @@ class MailController extends AbstractController
 
     /**
      * @param PaginatorInterface $paginator
-     * @param CustomerEmail|null $email
      * @param $page
+     * @param CustomerEmail|null $email
      * @return JsonResponse
      */
-    public function loadCustomers(PaginatorInterface $paginator, CustomerEmail $email = null, $page)
+    public function loadCustomers(PaginatorInterface $paginator, $page, CustomerEmail $email = null)
     {
-        $client = $this->getUser()->getTeam()->getClient();
+        $client = $this->getUser()->getClient();
 
         $customers = $paginator->paginate($this->memberManager->searchCustomers($client), $page, 20);
 
@@ -111,12 +112,9 @@ class MailController extends AbstractController
     }
 
     /**
-     * @param CustomerEmail $email
-     * @param Sender $sender
-     * @return Response
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
+     * @ParamConverter("id", class="App\Entity\Customer\Email\CustomerEmail",
+     *     options={"mapping": {"id" = "id"}}
+     * )
      */
     public function sendingEmail(CustomerEmail $email, Sender $sender)
     {
@@ -124,15 +122,14 @@ class MailController extends AbstractController
             'php',
             'bin/console',
             'app:send-composed-email',
-            $email->getId(),
-            'customer'
+            $email->getId(), 'customer'
         ]);
 
         $process->setWorkingDirectory(getcwd() . "/../");
         $process->run();
 
         if (!$process->isSuccessful()) {
-            $mailService->sendExceptionToDeveloper($process->getErrorOutput());
+            $sender->sendExceptionToDeveloper($process->getErrorOutput());
         }
 
         return $this->render('customer/emails/sending.html.twig', [
@@ -151,7 +148,7 @@ class MailController extends AbstractController
         if ($request->isXmlHttpRequest()) {
             if (!$email) {
                 $email = new CustomerEmail();
-                $email->setClient($this->getUser()->getTeam()->getClient());
+                $email->setClient($this->getUser()->getClient());
             }
 
             $form = $this->createForm(EmailType::class, $email, [
@@ -206,7 +203,7 @@ class MailController extends AbstractController
         $errorMsg = 'BDS cant send customer email with id: ' . $customerEmail->getId()
             . '. Reason: Wait too long on response from sending progress. Maybe supervisord doesnt work.';
 
-        $mailService->sendExceptionToDeveloper($errorMsg);
+        $sender->sendExceptionToDeveloper($errorMsg);
 
         return $this->render('customer/emails/send_failed.html.twig', [
             'emailId' => $customerEmail->getId()
@@ -255,7 +252,7 @@ class MailController extends AbstractController
      */
     public function drafts()
     {
-        $client = $this->getUser()->getTeam()->getClient();
+        $client = $this->getUser()->getClient();
         $drafts = $this->manager->getDrafts($client);
 
         return $this->render('customer/emails/drafts.html.twig', [

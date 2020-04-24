@@ -63,8 +63,10 @@ class CheckBouncedEmailsCommand extends Command
                     $body = imap_body($inbox, $i);
                     $headers = $this->parse_rfc822_headers($body);
 
-                    if (isset($headers['X-Blackdirt-Recipient-ID']) && isset($headers['X-Blackdirt-Recipient-Type'])) {
-                        $recipientsIds[$headers['X-Blackdirt-Recipient-Type']][] = $headers['X-Blackdirt-Recipient-ID'];
+                    $recipientIdHeader = 'X-Mail-Recipient-ID';
+                    $recipientTypeHeader = 'X-Mail-Recipient-Type';
+                    if (isset($headers[$recipientIdHeader]) && isset($headers[$recipientTypeHeader])) {
+                        $recipientsIds[$headers[$recipientIdHeader]][] = $headers[$recipientTypeHeader];
                     }
                 }
 
@@ -85,6 +87,7 @@ class CheckBouncedEmailsCommand extends Command
 
                         if ($recipients) {
                             foreach ($recipients as $recipient) {
+                                $recipient->setIsDelivered(false);
                                 $recipient->setIsBounced(true);
 
                                 $output->writeln('Set customer email as bounced. ID: ' . $recipient->getId());
@@ -100,6 +103,7 @@ class CheckBouncedEmailsCommand extends Command
 
                         if ($recipients) {
                             foreach ($recipients as $recipient) {
+                                $recipient->setIsDelivered(false);
                                 $recipient->setIsBounced(true);
 
                                 $output->writeln('Set client email as bounced. ID: ' . $recipient->getId());

@@ -2,6 +2,7 @@
 
 namespace App\Manager;
 
+use App\Entity\Customer\CustomerEmailNotify;
 use App\Entity\Customer\Email\AutoEmail;
 use App\Entity\Customer\Email\EmailRecipient;
 use App\Entity\Customer\Email\Feedback;
@@ -12,6 +13,7 @@ use App\Entity\Customer\SuspendedWeek;
 use App\Repository\MemberEmailRepository;
 use App\Entity\Customer\Email\CustomerEmail;
 use App\Entity\Client\Client;
+use App\Service\Mail\MailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -27,6 +29,8 @@ class MemberEmailManager
 
     private $translator;
 
+    private $mailService;
+
     private $host;
 
     /**
@@ -35,19 +39,27 @@ class MemberEmailManager
      * @param MemberEmailRepository $memberEmailRepository
      * @param UrlGeneratorInterface $router
      * @param TranslatorInterface $translator
+     * @param MailService $mailService
      * @param $host
      */
-    public function __construct(EntityManagerInterface $em, MemberEmailRepository $memberEmailRepository, UrlGeneratorInterface $router,  TranslatorInterface $translator, $host)
-    {
+    public function __construct(
+        EntityManagerInterface $em,
+        MemberEmailRepository $memberEmailRepository,
+        UrlGeneratorInterface $router,
+        TranslatorInterface $translator,
+        MailService $mailService,
+        $host
+    ) {
         $this->em = $em;
         $this->repo = $memberEmailRepository;
         $this->router = $router;
         $this->host = $host;
         $this->translator = $translator;
+        $this->mailService = $mailService;
     }
 
     /**
-     * @return \App\Entity\Client[]|array
+     * @return \App\Entity\Client\Client[]|array
      */
     public function getSoftwareClients()
     {
@@ -123,9 +135,7 @@ class MemberEmailManager
      */
     public function getLogsQuery(Client $client)
     {
-        $logs = $this->repo->getEmailsLogQuery($client);
-
-        return $logs;
+        return $this->repo->getEmailsLogQuery($client);
     }
 
     /**
@@ -144,88 +154,51 @@ class MemberEmailManager
     public function getEmailStats(CustomerEmail $email)
     {
         $rep = $this->em->getRepository(EmailRecipient::class);
-        $allRecipients = $rep->getEmailRecipients($email);
+        $recipients = $rep->getEmailRecipients($email);
 
-        $recipients = [
-            'delivered' => [],
-            'opened' => [],
-            'clicked' => [],
-            'failed' => [],
-            'qty' => [
-                'delivered' => 0,
-                'opened' => 0,
-                'clicked' => 0,
-                'failed' => 0
-            ]
-        ];
+        $recipientsStats = $this->mailService->getMailRecipientsStats($recipients);
 
         // Extra stats for email feedback
-        if ($email->getAutomatedEmail() && $this->getNotifyName($email->getAutomatedEmail()->getType()) == 'feedback') {
-            $recipients['feedback'] = [
+        if ($email->getAutomatedEmail() && AutoEmail::EMAIL_TYPES[$email->getAutomatedEmail()->getType()] == 'feedback') {
+            $recipientsStats['feedback'] = [
                 'satisfied' => [],
                 'notSatisfied' => [],
                 'notSure' => []
             ];
-        }
 
-        // Sort list of recipients by email status
-        foreach ($allRecipients as $recipient) {
-            if ($recipient->isDelivered()) {
-                $recipients['delivered'][] = $recipient;
-                $recipients['qty']['delivered']++;
-            } elseif ($recipient->getEmailLog() && !$recipient->getEmailLog()->isInProcess()) {
-                $recipients['failed'][] = $recipient;
-                $recipients['qty']['failed']++;
-            }
-
-            if ($recipient->isOpened()) {
-                $recipients['opened'][] = $recipient;
-                $recipients['qty']['opened']++;
-            }
-
-            if ($recipient->isClicked()) {
-                $recipients['clicked'][] = $recipient;
-                $recipients['qty']['clicked']++;
-            }
-
-            // If email is feedback, count feedbacks
-            if (array_key_exists('feedback', $recipients)) {
+            foreach ($recipients as $recipient) {
                 if ($recipient->getFeedback()) {
                     if ($recipient->getFeedback()->isSatisfied()) {
-                        $recipients['feedback']['satisfied'][] = $recipient;
+                        $recipientsStats['feedback']['satisfied'][] = $recipient;
                     } else {
-                        $recipients['feedback']['notSatisfied'][] = $recipient;
+                        $recipientsStats['feedback']['notSatisfied'][] = $recipient;
                     }
                 } else {
-                    $recipients['feedback']['notSure'][] = $recipient;
+                    $recipientsStats['feedback']['notSure'][] = $recipient;
                 }
             }
-        }
 
-        // Add feedback chart
-        if (array_key_exists('feedback', $recipients)) {
-            $recipients['feedback']['chart'] = [
+            $recipientsStats['feedback']['chart'] = [
                 0 => [
                     0 => 'Satisfied',
-                    1 => count($recipients['feedback']['satisfied'])
+                    1 => count($recipientsStats['feedback']['satisfied'])
                 ],
                 1 => [
                     0 => 'Not satisfied',
-                    1 => count($recipients['feedback']['notSatisfied'])
+                    1 => count($recipientsStats['feedback']['notSatisfied'])
                 ],
                 2 => [
                     0 => 'Not sure',
-                    1 => count($recipients['feedback']['notSure'])
+                    1 => count($recipientsStats['feedback']['notSure'])
                 ],
             ];
 
-            array_unshift($recipients['feedback']['chart'], ['CustomerEmail', 'Feedback']);
+            array_unshift($recipientsStats['feedback']['chart'], ['CustomerEmail', 'Feedback']);
         }
 
-        $recipients['list'] = $allRecipients;
-        $recipients['total'] = count($allRecipients);
+        $recipientsStats['list'] = $recipients;
 
-        return $recipients;
+        return $recipientsStats;
     }
 
     /**
@@ -403,7 +376,8 @@ class MemberEmailManager
 
     /**
      * @param CustomerShare $share
-     * @return int|mixed
+     * @return bool
+     * @throws \Exception
      */
     public function mustReceiveFeedback(CustomerShare $share)
     {
@@ -447,16 +421,15 @@ class MemberEmailManager
 
     /**
      * @param $date
-     * @return mixed
+     * @return false|float
+     * @throws \Exception
      */
     public function countDaysLeft($date)
     {
         $startDate = strtotime(date_format($date, 'Y-m-d H:i:s'));
         $now = strtotime(date_format(new \DateTime("midnight"), 'Y-m-d H:i:s'));
 
-        $diffInDays = floor(($startDate - $now) / (60 * 60 * 24));
-
-        return $diffInDays;
+        return floor(($startDate - $now) / (60 * 60 * 24));
     }
 
     /**
@@ -526,7 +499,7 @@ class MemberEmailManager
      */
     public function notifyEnabled(Customer $customer, $typeName)
     {
-        $notify = $this->em->getRepository(MemberEmailNotify::class)->findOneBy([
+        $notify = $this->em->getRepository(CustomerEmailNotify::class)->findOneBy([
             'customer' => $customer,
             'notifyType' => $this->getNotifyId($typeName)
         ]);
@@ -549,15 +522,6 @@ class MemberEmailManager
         $types = array_flip(AutoEmail::EMAIL_TYPES);
 
         return $types[$typeName];
-    }
-
-    /**
-     * @param $id
-     * @return mixed
-     */
-    public function getNotifyName($id)
-    {
-        return AutoEmail::EMAIL_TYPES[$id];
     }
 
     /**
@@ -779,8 +743,9 @@ class MemberEmailManager
 
     /**
      * @param Client $client
-     * @param $weekDate \DateTime|null
+     * @param null $weekDate
      * @return bool
+     * @throws \Exception
      */
     public function isWeekSuspended(Client $client, $weekDate = null) : bool
     {

@@ -34,6 +34,12 @@ abstract class BaseRecipient implements RecipientInterface
 
     /**
      * @var boolean
+     * @ORM\Column(name="is_sent", type="boolean", nullable=false)
+     */
+    protected $isSent = 0;
+
+    /**
+     * @var boolean
      * @ORM\Column(name="is_delivered", type="boolean", nullable=false)
      */
     protected $isDelivered = 0;
@@ -86,6 +92,22 @@ abstract class BaseRecipient implements RecipientInterface
     public function setEmailAddress($emailAddress): void
     {
         $this->emailAddress = $emailAddress;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSent(): bool
+    {
+        return $this->isSent;
+    }
+
+    /**
+     * @param bool $isSent
+     */
+    public function setIsSent(bool $isSent): void
+    {
+        $this->isSent = $isSent;
     }
 
     /**

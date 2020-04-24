@@ -29,6 +29,7 @@ class MemberEmailRepository extends ServiceEntityRepository
 
         $qb->select('e as email, 
                 COUNT(0) as total,
+                SUM(case when recipients.isSent = 1 then 1 else 0 end) as sent,
                 SUM(case when recipients.isDelivered = 1 then 1 else 0 end) as delivered,
                 SUM(case when recipients.isOpened = 1 then 1 else 0 end) as opened,
                 SUM(case when recipients.isClicked = 1 then 1 else 0 end) as clicked,
@@ -58,6 +59,7 @@ class MemberEmailRepository extends ServiceEntityRepository
 
         $qb->select('
                 COUNT(0) as total,
+                SUM(case when recipients.isSent = 1 then 1 else 0 end) as sent,
                 SUM(case when recipients.isDelivered = 1 then 1 else 0 end) as delivered,
                 SUM(case when recipients.isOpened = 1 then 1 else 0 end) as opened,
                 SUM(case when recipients.isClicked = 1 then 1 else 0 end) as clicked

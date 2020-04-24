@@ -10,6 +10,7 @@ use App\Entity\Master\Email\AutomatedEmail;
 use App\Entity\Master\Email\Email;
 use App\Entity\Master\Email\Recipient;
 use App\Entity\User\User;
+use App\Service\Mail\MailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
@@ -22,6 +23,8 @@ class EmailManager
 
     private $twig;
 
+    private $mailService;
+
     private $host;
 
     /**
@@ -29,14 +32,22 @@ class EmailManager
      * @param EntityManagerInterface $em
      * @param UrlGeneratorInterface $urlGenerator
      * @param Environment $twig
+     * @param MailService $mailService
      * @param $httpProtocol
      * @param $domain
      */
-    public function __construct(EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator, Environment $twig, $httpProtocol, $domain)
-    {
+    public function __construct(
+        EntityManagerInterface $em,
+        UrlGeneratorInterface $urlGenerator,
+        Environment $twig,
+        MailService $mailService,
+        $httpProtocol,
+        $domain
+    ) {
         $this->em = $em;
         $this->urlGenerator = $urlGenerator;
         $this->twig = $twig;
+        $this->mailService = $mailService;
         $this->host = $httpProtocol . '://' . $domain;
     }
 
@@ -51,12 +62,13 @@ class EmailManager
 
     /**
      * @param RecipientInterface $recipient
-     * @param bool $isDelivered
+     * @param bool $isSent
      * @return RecipientInterface
      */
-    public function updateDelivery(RecipientInterface $recipient, bool $isDelivered)
+    public function updateDelivery(RecipientInterface $recipient, bool $isSent)
     {
-        $recipient->setIsDelivered($isDelivered);
+        $recipient->setIsSent($isSent);
+        $recipient->setIsDelivered(true);
         $this->em->flush();
 
         return $recipient;
@@ -200,46 +212,12 @@ class EmailManager
      */
     public function getEmailStats(Email $email)
     {
-        $allRecipients = $this->em->getRepository(Recipient::class)->getEmailRecipients($email);
+        $recipients = $this->em->getRepository(Recipient::class)->getEmailRecipients($email);
+        $recipientsStats = $this->mailService->getMailRecipientsStats($recipients);
 
-        $recipients = [
-            'delivered' => [],
-            'opened' => [],
-            'clicked' => [],
-            'failed' => [],
-            'qty' => [
-                'delivered' => 0,
-                'opened' => 0,
-                'clicked' => 0,
-                'failed' => 0
-            ]
-        ];
+        $recipientsStats['list'] = $recipients;
 
-        // Sort list of recipients by email status
-        foreach ($allRecipients as $recipient) {
-            if ($recipient->isDelivered()) {
-                $recipients['delivered'][] = $recipient;
-                $recipients['qty']['delivered']++;
-            } elseif ($recipient->getEmailLog() && !$recipient->getEmailLog()->isInProcess()) {
-                $recipients['failed'][] = $recipient;
-                $recipients['qty']['failed']++;
-            }
-
-            if ($recipient->isOpened()) {
-                $recipients['opened'][] = $recipient;
-                $recipients['qty']['opened']++;
-            }
-
-            if ($recipient->isClicked()) {
-                $recipients['clicked'][] = $recipient;
-                $recipients['qty']['clicked']++;
-            }
-        }
-
-        $recipients['list'] = $allRecipients;
-        $recipients['total'] = count($allRecipients);
-
-        return $recipients;
+        return $recipientsStats;
     }
 
     /**

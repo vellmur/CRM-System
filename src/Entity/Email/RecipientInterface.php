@@ -28,6 +28,16 @@ interface RecipientInterface
     /**
      * @return mixed
      */
+    public function isSent() : bool;
+
+    /**
+     * @param bool $isSent
+     */
+    public function setIsSent(bool $isSent) : void;
+
+    /**
+     * @return mixed
+     */
     public function isDelivered() : bool;
 
     /**

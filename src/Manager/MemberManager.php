@@ -3,6 +3,7 @@
 namespace App\Manager;
 
 use App\Data\CountryInfo;
+use App\Entity\Customer\CustomerEmailNotify;
 use App\Entity\Customer\Email\AutoEmail;
 use App\Entity\Customer\Invoice;
 use App\Entity\Customer\CustomerShare;
@@ -105,7 +106,7 @@ class MemberManager
     {
         // Add all email notifies to a customer
         foreach (AutoEmail::EMAIL_TYPES as $key => $type) {
-            $notify = new MemberEmailNotify();
+            $notify = new CustomerEmailNotify();
             $notify->setNotifyType($key);
             $this->em->persist($notify);
 

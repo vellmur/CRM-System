@@ -19,7 +19,7 @@ class RecipientRepository extends ServiceEntityRepository
 
     /**
      * @param Email $emailLog
-     * @return mixed
+     * @return \Doctrine\Common\Collections\Collection|Recipient[] $recipients
      */
     public function getEmailRecipients(Email $emailLog)
     {

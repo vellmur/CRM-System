@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     @ORM\UniqueConstraint(name="customer_unique", columns={"client_id", "email"}),
  *     @ORM\UniqueConstraint(name="customer_phone_unique", columns={"client_id", "phone"})
  * })
- * @ORM\Entity(repositoryClass="App\Repository\CustomerRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\MemberRepository")
  * @UniqueEntity(
  *     fields={"client", "email"},
  *     errorPath="email",

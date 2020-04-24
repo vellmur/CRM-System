@@ -220,7 +220,7 @@ class MailController extends AbstractController
         $sent = 0;
 
         foreach ($email->getRecipients() as $recipient) {
-            if ($recipient->isDelivered()) $sent++;
+            if ($recipient->isSent()) $sent++;
         }
 
         return new Response(floor($sent / (count($email->getRecipients())/ 100)));

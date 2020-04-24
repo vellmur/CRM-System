@@ -179,15 +179,8 @@ class UserController extends AbstractController
             $this->manager->createSettings($client);
         }
 
-        $paymentsNum = count($client->getPaymentSettings());
-
-        if (!$paymentsNum || $paymentsNum < count(PaymentSettings::getMethodsNames())) {
-            $this->manager->createPaymentSettings($client);
-        }
-
         $settingsForm = $this->createForm(SettingsCollection::class, [
-            'settings' => $client->getModulesSettings(),
-            'paymentSettings' => $client->getPaymentSettings()
+            'settings' => $client->getModulesSettings()
         ]);
         $settingsForm->handleRequest($request);
 

@@ -219,6 +219,16 @@ class Client
     private $products;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Customer\Tag", mappedBy="client", cascade={"remove"})
+     */
+    private $tags;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Client\PaymentSettings", mappedBy="client", cascade={"remove"})
+     */
+    private $paymentSettings;
+
+    /**
      * Get id
      *
      * @return int

@@ -1,7 +1,6 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {% if app.user.team.client.levelName == 'Farmer' %}
     {{ form_start(form, {'attr': {'class': 'form-horizontal'} }) }}
         <div class="panel panel-default">
             <div class="panel-head">
@@ -117,7 +116,6 @@
         </div>
         {{ form_widget(form._token) }}
     {{ form_end(form, {'render_rest': false}) }}
-    {% endif %}
 
     {% if forms|length > 0 %}
         <div class="panel panel-default vertical">
