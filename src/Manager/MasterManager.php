@@ -260,8 +260,8 @@ class MasterManager
             $page = ucfirst($item['page']);
 
             // If selected item is null, count 'All' items data (additional 'All' button for the chart)
-            $this->countChartItem($data, 'All', $item['year'], $month, $item['day'], $item['counter']);
             $this->countChartItem($data, $page, $item['year'], $month, $item['day'], $item['counter']);
+            $this->countChartItem($data, 'All', $item['year'], $month, $item['day'], $item['counter']);
         }
 
         return $data;

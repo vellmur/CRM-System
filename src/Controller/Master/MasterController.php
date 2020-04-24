@@ -287,6 +287,12 @@ class MasterController extends AbstractController
 
         sort($pages);
 
+        if (($key = array_search('All', $pages)) !== false) {
+            unset($pages[$key]);
+        }
+
+        array_unshift($pages,"All");
+
         $clients = $this->manager->getActiveClients();
 
         return $this->render('master/statistics.html.twig', [
@@ -295,6 +301,11 @@ class MasterController extends AbstractController
             'items' => $pages,
             'clients' => $clients
         ]);
+    }
+
+    function moveElement(&$array, $a, $b) {
+        $out = array_splice($array, $a, 1);
+        array_splice($array, $b, 0, $out);
     }
 
     /**
