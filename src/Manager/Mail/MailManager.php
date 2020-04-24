@@ -25,15 +25,17 @@ class MailManager
         $repository = $recipientType == 'client' ? $this->em->getRepository(Recipient::class)
             : $this->em->getRepository(EmailRecipient::class);
 
-        $recipient = $repository->findOneBy(['id' => $recipientId, 'isOpened' => false]);
+        $recipient = $repository->findOneBy(['id' => $recipientId]);
 
         if (!$recipient) {
             throw new \Exception('Recipient can`t be found.');
         }
 
-        $recipient->setIsOpened(true);
-        $recipient->setIsBounced(false);
+        if (!$recipient->isOpened()) {
+            $recipient->setIsOpened(true);
+            $recipient->setIsBounced(false);
 
-        $this->em->flush();
+            $this->em->flush();
+        }
     }
 }

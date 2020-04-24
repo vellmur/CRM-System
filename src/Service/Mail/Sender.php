@@ -491,12 +491,13 @@ class Sender
     /**
      * Add tracking of recipient actions to each email: Opening, Clicking
      *
-     * @param $body
-     * @param $recipientId
-     * @param $recipientType
-     * @return mixed|string|HtmlPageCrawler
+     * @param string $body
+     * @param int $recipientId
+     * @param string $recipientType
+     * @return string|HtmlPageCrawler
+     * @throws \Exception
      */
-    public function addTracking($body, $recipientId, $recipientType)
+    public function addTracking(string $body, int $recipientId, string $recipientType)
     {
         $html = $this->linkify($body);
         $html = $this->addOpeningTracking($html, $recipientId, $recipientType);
@@ -577,13 +578,13 @@ class Sender
     }
 
     /**
-     * @param $html
-     * @param $recipientId
-     * @param $recipientType
+     * @param string $html
+     * @param int $recipientId
+     * @param string $recipientType
      * @return string|string[]
      * @throws \Exception
      */
-    public function addOpeningTracking($html, $recipientId, $recipientType)
+    public function addOpeningTracking(string $html, int $recipientId, string $recipientType)
     {
         // Generate path to the transparent (hidden) image with unique parameters in order to track message opening
         $path = $this->router->generate('emails.open.tracking', [
@@ -620,73 +621,6 @@ class Sender
             'client' => $user->getClient()->getName(),
             'confirmationUrl' => $url
         ]);
-    }
-
-    /**
-     * @param Customer $contact
-     * @param $msg
-     * @param $error
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
-     */
-    public function sendContactErrorNotify(Customer $contact, $msg, $error)
-    {
-        // Create subject in with widget name, action and date
-        $now = new \DateTime();
-        $subject = 'Contact widget ERROR notify on ' . $now->format('Y-m-d H:i:s') . '.';
-
-        // Get error message in a string format
-        if ($error and is_array($error)) {
-            $field = array_keys($error)[0];
-            $error = '["' . $field . '"]:' . (is_int($field) ? $error[$field] : $error[$field][0]);
-        }
-
-        // Send notify
-        $this->sendMail(
-            $this->mailerUser,
-            'kinroom@blackdirt.org',
-            'emails/widget/widget_error_notify.html.twig',
-            $subject,
-            [
-                'data' => [
-                    'Customer' => [
-                        'firstname' => $contact->getFirstname(),
-                        'lastname' => $contact->getLastname(),
-                        'email' => $contact->getEmail(),
-                        'message' => $msg
-                    ]
-                ],
-                'widget' => 'Contact',
-                'error' => $error
-            ]
-        );
-    }
-
-    /**
-     * @param $data
-     * @param $error
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
-     */
-    public function sendMarketErrorNotify($data, $error)
-    {
-        // Create subject in with widget name, action and date
-        $now = new \DateTime();
-        $subject =  'Market widget notify: ' . ($error?'failure':'submission') . ' on ' . $now->format('Y-m-d') . '!';
-
-        $this->sendMail(
-            $this->mailerUser,
-            'kinroom@blackdirt.org',
-            'emails/widget/widget_error_notify.html.twig',
-            $subject,
-            [
-                'data' => $data,
-                'widget' => 'Market',
-                'error' => $error
-            ]
-        );
     }
 
     /**

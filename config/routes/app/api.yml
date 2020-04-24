@@ -1,5 +1,5 @@
 emails.open.tracking:
-    path:     /mail/openened/{recipientId}/{recipientType}/{imageName}
+    path:     /mail/opened/{recipientId}/{recipientType}/{imageName}
     defaults: { _controller: App\Controller\API\MailController::opensTracking, imageName: customerimagename.png }
     methods:  GET
 
