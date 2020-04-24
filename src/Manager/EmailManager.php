@@ -260,25 +260,6 @@ class EmailManager
     }
 
     /**
-     * @param int $recipientId
-     * @param string $recipientType
-     */
-    public function setAsOpened($recipientId, $recipientType)
-    {
-        $repository = $recipientType == 'client' ? $this->em->getRepository(Recipient::class)
-            : $this->em->getRepository(EmailRecipient::class);
-
-        $recipient = $repository->findOneBy(['id' => $recipientId, 'isOpened' => false]);
-
-        if ($recipient) {
-            $recipient->setIsOpened(true);
-            $recipient->setIsBounced(false);
-
-            $this->em->flush();
-        }
-    }
-
-    /**
      * @return AutomatedEmail[]|\object[]
      */
     public function getAutomatedEmails()

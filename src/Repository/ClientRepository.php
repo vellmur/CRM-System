@@ -82,8 +82,7 @@ class ClientRepository extends ServiceEntityRepository
     public function countLevelClients()
     {
         $qb = $this->createQueryBuilder('c')
-            ->select('COUNT(DISTINCT(c.id)) as num, c.level')
-            ->groupBy('c.level');
+            ->select('COUNT(DISTINCT(c.id)) as num');
 
         return $qb->getQuery()->getResult();
     }
@@ -95,24 +94,24 @@ class ClientRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('c')
             ->leftJoin('c.accesses', 'access')
-            ->select('COUNT(DISTINCT(c.id)) as statusNum, c.level, access.status as statusId')
-            ->groupBy('c.level, statusId');
+            ->select('COUNT(DISTINCT(c.id)) as statusNum, access.status as statusId')
+            ->groupBy('statusId');
 
         return $qb->getQuery()->getResult();
     }
 
     /**
      * @param $days
-     * @return array
+     * @return mixed
+     * @throws \Exception
      */
     public function countNewClients($days)
     {
         $now = new \DateTime();
 
         $qb = $this->createQueryBuilder('c')
-            ->select('COUNT(DISTINCT(c.id)) as num, c.level')
+            ->select('COUNT(DISTINCT(c.id)) as num')
             ->andWhere('DATE_DIFF(:now, c.createdAt) <= :daysNum')
-            ->groupBy('c.level')
             ->setParameter('now', $now)
             ->setParameter('daysNum', $days);
 

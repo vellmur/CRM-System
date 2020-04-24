@@ -30,7 +30,7 @@
                             </td>
                             <td>
                                 {% if app.user.id != team.user.id %}
-                                    <a role="button" href="{{ path('dashboard_index', {'_switch_user' : team.user.username}) }}" class="btn btn-success btn-icon"><i class="icon-enter2"></i></a>
+                                    <a role="button" href="{{ path('customer_list', {'_switch_user' : team.user.username}) }}" class="btn btn-success btn-icon"><i class="icon-enter2"></i></a>
                                 {% endif %}
                             </td>
                         </tr>

@@ -5,7 +5,7 @@ namespace App\Command;
 use App\Entity\Customer\Customer;
 use App\Manager\MasterManager;
 use App\Manager\MemberEmailManager;
-use App\Service\MailService;
+use App\Service\Mail\Sender;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -32,13 +32,13 @@ class ShareDayNotifyCommand extends Command
     public function __construct(
         MemberEmailManager $manager,
         MasterManager $masterManager,
-        MailService $mailService
+        Sender $sender
     ) {
         parent::__construct();
 
         $this->manager = $manager;
         $this->masterManager = $masterManager;
-        $this->mailer = $mailService;
+        $this->mailer = $sender;
     }
 
     protected function configure()

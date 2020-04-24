@@ -4,7 +4,7 @@ namespace App\Command;
 
 use App\Manager\EmailManager;
 use App\Manager\MemberEmailManager;
-use App\Service\MailService;
+use App\Service\Mail\Sender;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,15 +18,15 @@ class SendComposedEmailCommand extends Command
 
     private $memberEmailManager;
 
-    private $mailer;
+    private $sender;
 
-    public function __construct(EmailManager $manager, MemberEmailManager $memberEmailManager, MailService $mailService)
+    public function __construct(EmailManager $manager, MemberEmailManager $memberEmailManager, Sender $sender)
     {
         parent::__construct();
 
         $this->manager = $manager;
         $this->memberEmailManager = $memberEmailManager;
-        $this->mailer = $mailService;
+        $this->sender = $sender;
     }
 
     protected function configure()
@@ -40,7 +40,10 @@ class SendComposedEmailCommand extends Command
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return int|void
+     * @return int
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -55,7 +58,7 @@ class SendComposedEmailCommand extends Command
         foreach ($email->getRecipients() as $recipient) {
             if (!$recipient->isDelivered() && $recipient->getEmailAddress()) {
                 $message = $manager->setMacrosFields($recipient, $email->getText());
-                $this->mailer->sendComposedMail($recipient, $message);
+                $this->sender->sendComposedMail($recipient, $message);
 
                 $output->writeln('Email was sent to ' . $recipient->getEmailAddress() . '.');
             }

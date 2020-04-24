@@ -7,7 +7,7 @@ use App\Form\Customer\AutoEmails;
 use App\Form\Customer\EmailType;
 use App\Manager\MemberEmailManager;
 use App\Manager\MemberManager;
-use App\Service\MailService;
+use App\Service\Mail\Sender;
 use JMS\Serializer\SerializerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -112,13 +112,13 @@ class MailController extends AbstractController
 
     /**
      * @param CustomerEmail $email
-     * @param MailService $mailService
+     * @param Sender $sender
      * @return Response
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function sendingEmail(CustomerEmail $email, MailService $mailService)
+    public function sendingEmail(CustomerEmail $email, Sender $sender)
     {
         $process = new Process([
             'php',
@@ -195,13 +195,13 @@ class MailController extends AbstractController
 
     /**
      * @param CustomerEmail $customerEmail
-     * @param MailService $mailService
+     * @param Sender $sender
      * @return Response
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function sendingError(CustomerEmail $customerEmail, MailService $mailService)
+    public function sendingError(CustomerEmail $customerEmail, Sender $sender)
     {
         $errorMsg = 'BDS cant send customer email with id: ' . $customerEmail->getId()
             . '. Reason: Wait too long on response from sending progress. Maybe supervisord doesnt work.';

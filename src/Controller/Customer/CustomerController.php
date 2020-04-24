@@ -5,7 +5,7 @@ namespace App\Controller\Customer;
 use App\Manager\ImportManager;
 use App\Manager\MemberManager;
 use App\Manager\ShareManager;
-use App\Service\MailService;
+use App\Service\Mail\Sender;
 use App\Service\MemberService;
 use App\Service\SpreadsheetService;
 use JMS\Serializer\SerializerInterface;
@@ -21,20 +21,20 @@ class CustomerController extends AbstractController
 {
     private $manager;
 
-    private $mailer;
+    private $sender;
 
     private $serializer;
 
     /**
      * MemberController constructor.
      * @param MemberManager $manager
-     * @param MailService $mailer
+     * @param Sender $sender
      * @param SerializerInterface $serializer
      */
-    public function __construct(MemberManager $manager, MailService $mailer, SerializerInterface $serializer)
+    public function __construct(MemberManager $manager, Sender $sender, SerializerInterface $serializer)
     {
         $this->manager = $manager;
-        $this->mailer = $mailer;
+        $this->sender = $sender;
         $this->serializer = $serializer;
     }
 
@@ -67,7 +67,7 @@ class CustomerController extends AbstractController
 
             if ($activeShare && $customer->getEmail()) {
                 $email = $this->manager->getEmailManager()->createAutoLog($customer->getClient(), 'activation');
-                $this->mailer->sendAutomatedEmail($email, $customer, $activeShare);
+                $this->sender->sendAutomatedEmail($email, $customer, $activeShare);
             }
 
             return $this->redirectToRoute('member_edit', ['id' => $customer->getId()]);
@@ -102,7 +102,7 @@ class CustomerController extends AbstractController
 
                 if ($activeShare && $customer->getEmail()) {
                     $email = $this->manager->getEmailManager()->createAutoLog($customer->getClient(), 'activation');
-                    $this->mailer->sendAutomatedEmail($email, $customer, $activeShare);
+                    $this->sender->sendAutomatedEmail($email, $customer, $activeShare);
                 }
             }
 

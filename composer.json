@@ -4,8 +4,10 @@
     "require": {
         "php": "7.3",
         "ext-ctype": "*",
+        "ext-gd": "*",
         "ext-iconv": "*",
         "beberlei/doctrineextensions": "^1.2",
+        "cocur/slugify": "^4.0",
         "doctrine/doctrine-bundle": "^2.0",
         "doctrine/doctrine-migrations-bundle": "^2.1",
         "doctrine/orm": "^2.7",

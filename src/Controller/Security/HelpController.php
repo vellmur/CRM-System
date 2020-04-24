@@ -2,26 +2,34 @@
 
 namespace App\Controller\Security;
 
-use App\Service\MailService;
+use App\Service\Mail\Sender;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 
-use App\Form\SupportType;
+use App\Form\User\SupportType;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class HelpController extends AbstractController
 {
-    private $mailer;
+    private $sender;
 
     /**
      * HelpController constructor.
-     * @param MailService $mailer
+     * @param Sender $sender
      */
-    public function __construct(MailService $mailer)
+    public function __construct(Sender $sender)
     {
-        $this->mailer = $mailer;
+        $this->sender = $sender;
     }
 
+    /**
+     * @param Request $request
+     * @param TranslatorInterface $translator
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function support(Request $request, TranslatorInterface $translator)
     {
         $choices = [
@@ -44,7 +52,7 @@ class HelpController extends AbstractController
                 'message' => $request->request->get('support')['message']
             ];
             
-            $this->mailer->sendMail(
+            $this->sender->sendMail(
                 'Black Dirt Software',
                 $_ENV['SUPPORT_EMAIL'],
                 'emails/support.html.twig',

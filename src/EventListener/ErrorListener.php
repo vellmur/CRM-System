@@ -2,7 +2,7 @@
 
 namespace App\EventListener;
 
-use App\Service\MailService;
+use App\Service\Mail\Sender;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -15,18 +15,18 @@ class ErrorListener extends AppListener
 
     private $env;
 
-    private $mailService;
+    private $sender;
 
     /**
      * ErrorListener constructor.
      * @param Environment $templating
-     * @param MailService $mailService
+     * @param Sender $sender
      * @param $env
      */
-    public function __construct(Environment $templating, MailService $mailService, $env)
+    public function __construct(Environment $templating, Sender $sender, $env)
     {
         $this->templating = $templating;
-        $this->mailService = $mailService;
+        $this->sender = $sender;
         $this->env = $env;
     }
 
@@ -72,7 +72,7 @@ class ErrorListener extends AppListener
                 $response->setStatusCode(500);
                 $response->headers->set('X-Status-Code', 500);
 
-                $this->mailService->sendExceptionToDeveloper(
+                $this->sender->sendExceptionToDeveloper(
                     '<p>Error from ErrorListener in production: </p><p>' . $exception->getMessage()
                     . ' .</p><p>At file ' . $exception->getFile() . ' on line ' . $exception->getLine() . '.</p>'
                     . '<p> . Trace: ' . $exception->getTraceAsString() . '</p>'

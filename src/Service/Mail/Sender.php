@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Mail;
 
 use App\Entity\Customer\Email\AutoEmail;
 use App\Entity\Email\RecipientInterface;
@@ -20,9 +20,11 @@ use Twig\Environment;
 use Wa72\HtmlPageDom\HtmlPage;
 use Wa72\HtmlPageDom\HtmlPageCrawler;
 
-class MailService
+class Sender
 {
     const SENDER_NAME = 'Black Dirt Software';
+
+    private $mailer;
 
     private $manager;
 

@@ -7,7 +7,7 @@ use App\Form\Master\AutomatedEmails;
 use App\Form\Master\EmailType;
 use App\Manager\EmailManager;
 use App\Manager\MasterManager;
-use App\Service\MailService;
+use App\Service\Mail\Sender;
 use JMS\Serializer\SerializerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -163,13 +163,13 @@ class MailController extends AbstractController
 
     /**
      * @param Email $email
-     * @param MailService $mailService
+     * @param Sender $sender
      * @return Response
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function sending(Email $email, MailService $mailService)
+    public function sending(Email $email, Sender $sender)
     {
         $process = new Process([
             'php',
@@ -182,7 +182,7 @@ class MailController extends AbstractController
         $process->run();
 
         if (!$process->isSuccessful()) {
-            $mailService->sendExceptionToDeveloper($process->getErrorOutput());
+            $sender->sendExceptionToDeveloper($process->getErrorOutput());
         }
 
         return $this->render('master/email/sending.html.twig', [
@@ -193,18 +193,18 @@ class MailController extends AbstractController
 
     /**
      * @param Email $email
-     * @param MailService $mailService
+     * @param Sender $sender
      * @return Response
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function sendingError(Email $email, MailService $mailService)
+    public function sendingError(Email $email, Sender $sender)
     {
         $errorMsg = 'BDS cant send client email with id: ' . $email->getId()
             . '. Reason: Wait too long on response from sending progress. Maybe supervisord doesnt work.';
 
-        $mailService->sendExceptionToDeveloper($errorMsg);
+        $sender->sendExceptionToDeveloper($errorMsg);
 
         return $this->render('master/email/send_failed.html.twig', [
             'emailId' => $email->getId()
@@ -297,37 +297,5 @@ class MailController extends AbstractController
             'automatedTypes' => $this->manager->getAutomatedTypes(),
             'macros' => $this->manager->getMacrosList()
         ]);
-    }
-
-    /**
-     * Here we set emails as opened.
-     * When user opens message, he loads hidden image that is added inside email body with a link to the function with parameters.
-     * Then we set email message as opened and return transparent (hidden) image.
-     *
-     * @param int $recipientId
-     * @param string $recipientType
-     * @return Response
-     */
-    public function opensTracking($recipientId, $recipientType)
-    {
-        if (stristr($recipientType, '.png')) $recipientType = str_replace('.png', '', $recipientType);
-
-        $this->manager->setAsOpened($recipientId, $recipientType);
-
-        // Create transparent 1x1 image with needed headers and return it
-        $image = imagecreatetruecolor(1,1);
-        imagefill($image, 0, 0, 0xDDDDD);
-
-        $headers = [
-            'Content-type'=>'image/jpeg',
-            'Pragma'=>'no-cache',
-            'Cache-Control'=>'no-cache'
-        ];
-
-        ob_start();
-        imagepng($image);
-        $imageString = ob_get_clean();
-
-        return new Response( $imageString, 200, $headers );
     }
 }

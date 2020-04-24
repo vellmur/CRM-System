@@ -1,6 +1,6 @@
 emails.open.tracking:
-    path:     /emails/tracking/open/{recipientId}/{recipientType}/{imageName}
-    defaults: { _controller: App\Controller\EmailController::opensTracking, imageName: customerimagename.png }
+    path:     /mail/openened/{recipientId}/{recipientType}/{imageName}
+    defaults: { _controller: App\Controller\API\MailController::opensTracking, imageName: customerimagename.png }
     methods:  GET
 
 referred_customer_create:

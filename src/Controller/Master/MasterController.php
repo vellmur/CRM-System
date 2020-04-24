@@ -178,12 +178,10 @@ class MasterController extends AbstractController
         $newWeekNum = $this->manager->countNewByDays(7);
         $newMonthNum = $this->manager->countNewByDays(30);
 
-        $clientsInfo = $this->service->countLevelsData($levels, $levelsNum, $statusNum, $newWeekNum, $newMonthNum);
-
         return $this->render('master/client/list.html.twig', [
             'clients' => $clients,
             'lapsedClients' => $lapsedClients,
-            'clientsSummary' => $clientsInfo
+            'clientsSummary' => []
         ]);
     }
 

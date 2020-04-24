@@ -16,8 +16,7 @@ use App\Form\Customer\ShareProductType;
 use App\Form\Customer\VendorOrderType;
 use App\Manager\MembershipManager;
 use App\Manager\ShareManager;
-use App\Manager\StatisticsManager;
-use App\Service\MailService;
+use App\Service\Mail\Sender;
 use App\Service\Payment\PaymentService;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -34,10 +33,10 @@ class MembershipController extends AbstractController
 
     private $mailer;
 
-    public function __construct(MembershipManager $manager, MailService $mailService)
+    public function __construct(MembershipManager $manager, Sender $sender)
     {
         $this->manager = $manager;
-        $this->mailer = $mailService;
+        $this->mailer = $sender;
     }
 
     /**

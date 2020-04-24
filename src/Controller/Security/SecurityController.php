@@ -5,7 +5,7 @@ namespace App\Controller\Security;
 use App\Form\Security\ResettingType;
 use App\Manager\UserManager;
 use App\Service\AuthorizedRedirect;
-use App\Service\MailService;
+use App\Service\Mail\Sender;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,11 +52,11 @@ class SecurityController extends AbstractController
     /**
      * @param Request $request
      * @param TokenGeneratorInterface $token
-     * @param MailService $mailer
+     * @param Sender $sender
      * @return RedirectResponse
      * @throws \Exception
      */
-    public function sendResettingEmail(Request $request, TokenGeneratorInterface $token, MailService $mailer)
+    public function sendResettingEmail(Request $request, TokenGeneratorInterface $token, Sender $sender)
     {
         $username = $request->request->get('username');
         $user = $this->manager->findUserByUsernameOrEmail($username);
@@ -66,7 +66,7 @@ class SecurityController extends AbstractController
                 $user->setConfirmationToken($token->generateToken());
             }
 
-            $mailer->sendResettingEmailMessage($user);
+            $sender->sendResettingEmailMessage($user);
             $user->setPasswordRequestedAt(new \DateTime());
             $this->manager->flush();
         }

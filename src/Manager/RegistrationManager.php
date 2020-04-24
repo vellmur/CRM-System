@@ -13,9 +13,8 @@ use App\Entity\Translation\TranslationLocale;
 use App\Entity\User\User;
 use App\Security\AccessUpdater;
 use App\Service\CountryList;
-use App\Service\MailService;
+use App\Service\Mail\Sender;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\ORMException;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -33,7 +32,7 @@ class RegistrationManager
 
     private $translator;
 
-    private $mailService;
+    private $sender;
 
     private $countryList;
 
@@ -43,7 +42,7 @@ class RegistrationManager
         TokenGeneratorInterface $token,
         Environment $twig,
         TranslatorInterface $translator,
-        MailService $mailService,
+        Sender $sender,
         CountryList $countryList
     ) {
         $this->em = $em;
@@ -51,7 +50,7 @@ class RegistrationManager
         $this->token = $token;
         $this->twig = $twig;
         $this->translator = $translator;
-        $this->mailService = $mailService;
+        $this->sender = $sender;
         $this->countryList = $countryList;
     }
 
@@ -100,7 +99,7 @@ class RegistrationManager
 
             $this->em->flush();
 
-            $this->mailService->sendEmailConfirmation($user);
+            $this->sender->sendEmailConfirmation($user);
 
             $this->em->getConnection()->commit();
 

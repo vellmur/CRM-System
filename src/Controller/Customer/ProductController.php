@@ -6,7 +6,7 @@ use App\Entity\Customer\Product;
 use App\Form\Customer\ProductType;
 use App\Manager\MemberEmailManager;
 use App\Manager\ProductManager;
-use App\Service\MailService;
+use App\Service\Mail\Sender;
 use JMS\Serializer\SerializerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -304,10 +304,10 @@ class ProductController extends AbstractController
     /**
      * @param Request $request
      * @param MemberEmailManager $memberEmailManager
-     * @param MailService $mailer
+     * @param Sender $sender
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function pricingSend(Request $request, MemberEmailManager $memberEmailManager, MailService $mailer)
+    public function pricingSend(Request $request, MemberEmailManager $memberEmailManager, Sender $sender)
     {
         $client = $this->getUser()->getTeam()->getClient();
         $pricing = $request->request->get('pricing');

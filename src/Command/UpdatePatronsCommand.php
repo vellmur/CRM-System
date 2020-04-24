@@ -3,7 +3,7 @@
 namespace App\Command;
 
 use App\Manager\MembershipManager;
-use App\Service\MailService;
+use App\Service\Mail\Sender;
 use App\Service\TimezoneService;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Console\Command\Command;
@@ -30,13 +30,13 @@ class UpdatePatronsCommand extends Command
 
     private $serverRunTime = 3;
 
-    public function __construct(MembershipManager $manager, TimezoneService $timezoneService, MailService $mailer)
+    public function __construct(MembershipManager $manager, TimezoneService $timezoneService, Sender $sender)
     {
         parent::__construct();
 
         $this->manager = $manager;
         $this->timezoneService = $timezoneService;
-        $this->mailer = $mailer;
+        $this->mailer = $sender;
     }
 
     protected function configure()
