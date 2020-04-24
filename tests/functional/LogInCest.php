@@ -2,7 +2,7 @@
 
 namespace App\Tests;
 
-use \Codeception\Util\Locator;
+use App\DataFixtures\UserFixtures;
 
 class LogInCest
 {
@@ -42,8 +42,10 @@ class LogInCest
     {
         $I->wantToTest('Log in with not confirmed email');
 
-        $I->fillField("#username", 'testuser');
-        $I->fillField("#password", 'user_passWord');
+        $user = UserFixtures::NOT_ENABLED_USER;
+
+        $I->fillField("#username", $user['username']);
+        $I->fillField("#password", $user['password']);
 
         $I->click('#_submit');
         $I->see('You need to confirm your email first.');
@@ -57,8 +59,10 @@ class LogInCest
     {
         $I->wantToTest('Log in with wrong password');
 
-        $I->fillField("#username", 'testuser');
-        $I->fillField("#password", 'testuser');
+        $user = UserFixtures::NOT_ENABLED_USER;
+
+        $I->fillField("#username", $user['username']);
+        $I->fillField("#password", 'wrongpassworf');
 
         $I->click('#_submit');
         $I->see('Invalid credentials.');
@@ -72,8 +76,10 @@ class LogInCest
     {
         $I->wantToTest('Successful Log in');
 
-        $I->fillField("#username", 'testuser');
-        $I->fillField("#password", 'testuser');
+        $user = UserFixtures::ENABLED_USER;
+
+        $I->fillField("#username", $user['username']);
+        $I->fillField("#password", $user['password']);
 
         $I->click('#_submit');
         $I->canSeeInCurrentUrl('/module/');

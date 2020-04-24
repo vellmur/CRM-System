@@ -11,7 +11,7 @@ extensions:
         - Codeception\Extension\RunFailed
 params:
     - .env
-    - .env.local
+    - .env.test.local
 coverage:
     enabled: true
     remote: true

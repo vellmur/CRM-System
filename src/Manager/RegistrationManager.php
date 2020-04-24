@@ -16,6 +16,7 @@ use App\Service\CountryList;
 use App\Service\Mail\Sender;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
@@ -67,37 +68,12 @@ class RegistrationManager
         $this->em->getConnection()->beginTransaction();
 
         try {
-            $user->setRoles(['ROLE_OWNER']);
-            $user->setPassword($this->passwordEncoder->encodePassword($user, $user->getPlainPassword()));
-            $user->setConfirmationToken($this->token->generateToken());
+            $this->registerUser($user, $clientName);
 
-            // Create new client and team
-            $client = $this->createClient($clientName, $user->getEmail());
-            $team = $this->createTeam($client, $user);
-
-            // Create first location for pickups of client products (Home Delivery)
-            $homeDeliveryLabel = $this->translator->trans('membership.renew.location.home_delivery', [], 'labels');
-            $homeDeliveryLocation = $this->createLocation($homeDeliveryLabel, 'Delivery');
-            $client->addLocation($homeDeliveryLocation);
-
-            // Save client as new affiliate
-            $affiliate = new Affiliate();
-            $affiliate->setReferralCode(substr($this->token->generateToken(),0,20));
-            $client->setAffiliate($affiliate);
-
-            $accesses = $this->createAccess($client);
-            $client->setAccesses($accesses);
-            $this->createAutomatedEmails($client, $user->getLocale()->getCode());
-
-            $this->em->persist($user);
-            $this->em->persist($client);
-            $this->em->persist($team);
-
-            if ($refCode && $referral = $this->createReferral($client, $refCode)) {
+            if ($refCode && $referral = $this->createReferral($user->getClient(), $refCode)) {
                 $this->em->persist($referral);
+                $this->em->flush();
             }
-
-            $this->em->flush();
 
             $this->sender->sendEmailConfirmation($user);
 
@@ -110,6 +86,43 @@ class RegistrationManager
 
             throw $e;
         }
+    }
+
+    /**
+     * @param User $user
+     * @param string $clientName
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
+    public function registerUser(User $user, string $clientName)
+    {
+        $user->setRoles(['ROLE_OWNER']);
+        $user->setPassword($this->passwordEncoder->encodePassword($user, $user->getPlainPassword()));
+        $user->setConfirmationToken($this->token->generateToken());
+
+        // Create new client and team
+        $client = $this->createClient($clientName, $user->getEmail());
+        $team = $this->createTeam($client, $user);
+
+        // Create first location for pickups of client products (Home Delivery)
+        $homeDeliveryLabel = $this->translator->trans('membership.renew.location.home_delivery', [], 'labels');
+        $homeDeliveryLocation = $this->createLocation($homeDeliveryLabel, 'Delivery');
+        $client->addLocation($homeDeliveryLocation);
+
+        // Save client as new affiliate
+        $affiliate = new Affiliate();
+        $affiliate->setReferralCode(substr($this->token->generateToken(),0,20));
+        $client->setAffiliate($affiliate);
+
+        $accesses = $this->createAccess($client);
+        $client->setAccesses($accesses);
+        $this->createAutomatedEmails($client, $user->getLocale()->getCode());
+
+        $this->em->persist($user);
+        $this->em->persist($client);
+        $this->em->persist($team);
+        $this->em->flush();
     }
 
     /**

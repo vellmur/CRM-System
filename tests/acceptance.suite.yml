@@ -12,14 +12,12 @@ modules:
         - Db
     config:
         WebDriver:
-            url: http://customer.local
+            url: "http://%DOMAIN%"
             browser: 'chrome'
         Db:
-            dsn: 'mysql:host=127.0.0.1:8889;dbname=customer'
+            dsn: '%CODECEPTION_TEST_DB%'
             user: root
             password: root
-            cleanup: true
-            dump: 'tests/_data/customer_test.sql'
 
 # add Codeception\Step\Retry trait to AcceptanceTester to enable retries
 step_decorators:

@@ -56,7 +56,7 @@ class User implements UserInterface
     private $email;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Translation\TranslationLocale", inversedBy="users",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Translation\TranslationLocale", inversedBy="users")
      * @ORM\JoinColumn(name="locale_id", referencedColumnName="id", nullable=false)
      * @Assert\NotBlank(message="validation.form.required")
      */
@@ -137,6 +137,11 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity="App\Entity\Client\Notification\NotifiableNotification", mappedBy="user", cascade={"all"}, orphanRemoval=true)
      */
     private $notifications;
+
+    const ROLE_ADMIN = 'ROLE_ADMIN';
+    const ROLE_OWNER = 'ROLE_OWNER';
+    const ROLE_EMPLOYEE = 'ROLE_EMPLOYEE';
+    const ROLE_USER = 'ROLE_USER';
 
     /**
      * @var array

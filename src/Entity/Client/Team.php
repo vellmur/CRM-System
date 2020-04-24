@@ -23,7 +23,7 @@ class Team
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Client\Client", inversedBy="team")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Client\Client", inversedBy="team", cascade={"persist"})
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id", nullable=false)
      */
     private $client;
@@ -82,9 +82,7 @@ class Team
     }
 
     /**
-     * Get user
-     *
-     * @return int
+     * @return User
      */
     public function getUser()
     {

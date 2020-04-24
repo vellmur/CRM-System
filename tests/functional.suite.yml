@@ -10,7 +10,7 @@ modules:
     enabled:
         - Symfony:
             app_path: 'src'
-            environment: 'local'
+            environment: 'test'
         - Doctrine2:
             depends: Symfony
             cleanup: true
@@ -18,8 +18,6 @@ modules:
         - \App\Tests\Helper\Functional
     config:
         Db:
-            dsn: 'mysql:host=127.0.0.1:8889;dbname=customer_test'
+            dsn: '%CODECEPTION_TEST_DB%'
             user: root
             password: root
-            cleanup: true
-            dump: 'tests/_data/customer_test.sql'

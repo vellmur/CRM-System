@@ -2,6 +2,7 @@
 
 namespace App\Tests;
 
+use App\DataFixtures\UserFixtures;
 use \Codeception\Util\Locator;
 
 class SignUpCest
@@ -55,15 +56,18 @@ class SignUpCest
     {
         $I->wantToTest('Sign up with unique validation');
 
+        $enabledUser = UserFixtures::ENABLED_USER;
+
+       // die(var_dump($enabledUser['client']['name']));
+
         $formFields = [
-            'registration_username' => 'testuser',
-            'registration_email' => 'testemail@example.com',
+            'registration_username' => $enabledUser['username'],
+            'registration_email' => $enabledUser['email'],
             'registration_locale' => 0,
-            'registration_client_name' => 'Test Client',
+            'registration_client_name' => $enabledUser['client']['name'],
             'registration_plainPassword_first' => 'testuser',
             'registration_plainPassword_second' => 'testuser'
         ];
-
 
         $this->fillForm($I, $formFields);
         $I->click('#_submit');
