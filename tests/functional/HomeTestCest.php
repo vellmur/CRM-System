@@ -12,7 +12,7 @@ class HomeTestCest
         $I->wantToTest('Website page');
 
         $I->amOnPage('/');
-        $I->see('BLACK DIRT');
+        $I->seeSoftwareName();
     }
 
     /**

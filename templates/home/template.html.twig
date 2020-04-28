@@ -15,7 +15,7 @@
         gtag('config', 'UA-59758532-2');
     </script>
 
-    <title>{% block title %}{% endblock %}{{ app.request.requestUri|length > 1 ? ' - ' }}Black Dirt Software</title>
+    <title>{% block title %}{% endblock %}{{ app.request.requestUri|length > 1 ? ' - ' }}{{ software_name }}</title>
 
     <!-- Favicons -->
     <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('apple-touch-icon.png') }}">
@@ -74,7 +74,7 @@
         <div class="header-inner">
             <div id="siteTitleWrapper" class="wrapper" data-content-field="site-title">
                 <h1 id="siteTitle" class="site-title">
-                    <a href="{{ path('home_index') }}">Black Dirt</a>
+                    <a href="{{ path('home_index') }}">{{ software_name }}</a>
                 </h1>
             </div>
             <div class="mobile-nav-toggle">
@@ -152,7 +152,7 @@
         <div class="header-inner">
             <div id="siteTitleWrapper" class="wrapper" data-content-field="site-title">
                 <h1 id="siteTitle" class="site-title">
-                    <a href="{{ path('home_index') }}">Black Dirt</a>
+                    <a href="{{ path('home_index') }}">{{ software_name }}</a>
                 </h1>
             </div>
             <div class="mobile-nav-toggle">
@@ -212,7 +212,7 @@
                         <div class="sqs-block html-block sqs-block-html" data-block-type="2" id="block-yui_3_17_2_1_1546923011068_6141">
                             <div class="sqs-block-content">
                                 <p>
-                                    ©2019 Black Dirt Software<br>
+                                    ©2020 {{ software_name }}<br>
                                     <br>hi@blackdirt.org<br>
                                     <br>Photography by:<br>
                                     <span>Jocelyn Horne</span><br/>

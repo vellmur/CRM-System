@@ -28,16 +28,20 @@ class WeeklyFeedbackReportCommand extends Command
 
     private $mailer;
 
+    private $softwareName;
+
     public function __construct(
         MemberEmailManager $manager,
         MasterManager $masterManager,
-        Sender $sender
+        Sender $sender,
+        string $softwareName
     ) {
         parent::__construct();
 
         $this->manager = $manager;
         $this->masterManager = $masterManager;
         $this->mailer = $sender;
+        $this->softwareName = $softwareName;
     }
 
     protected function configure()
@@ -63,7 +67,7 @@ class WeeklyFeedbackReportCommand extends Command
                     if ($feedbackReport['totalMembers'] > 0) {
                         // Send customer review to client
                         $this->mailer->sendMail(
-                            'Black Dirt Software',
+                            $this->softwareName,
                             $client->getContactEmail(),
                             'emails/customer/weekly_feedback_report.html.twig',
                             'Members feedback report',

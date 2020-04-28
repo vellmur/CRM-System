@@ -53,25 +53,25 @@ help:
         sent: We have received your message
         wait_for_answer: We will do our best to answer you quickly
 page_tip:
-    profile: Set up your preferences to customize how Black Dirt Software works for you.
-    users: Black Dirt Software allows you unlimited users (without charging extra) so you can better track who is doing what on your company.
+    profile: Set up your preferences to customize how [New Company] works for you.
+    users: "[New Company] allows you unlimited users (without charging extra) so you can better track who is doing what on your company."
 subscription:
     customers: Unlock the ability to manage your customer database, automate emails, process orders and payments, and let your customers manage their own profile.
     pay_what_you_can: Pay what you can
     coming_soon: Coming soon
-    thanks_for_support: Thank you for supporting Black Dirt.
+    thanks_for_support: Thank you for supporting [New Company].
     card_description: We accept credit cards because it’s easy for you.
         But we also hate giving away the account to a banker, which is why we prefer Venmo.
     venmo_thanks: Thank you for choosing to pay with Venmo. It allows us to keep 100% of your donation.
     cart: Cart
     total: Total
     payment_confirmed: Confirmation Message!
-    confirmation_message: Thank you! We’re glad you’re finding Black Dirt useful on your account and appreciate your support.
+    confirmation_message: Thank you! We’re glad you’re finding [New Company] useful on your account and appreciate your support.
 payment:
     description:
         first_level: $%amount% This is approximately the fee for one account on our server.
         second_level: $%amount% This covers the cost for maintaining our servers.
-        third_level: $%amount% This covers the cost for Black Dirt Software support.
+        third_level: $%amount% This covers the cost for [New Company] Software support.
         fourth_level: $%amount% This covers the cost for new features for one year.
     description_bitcoin:  |
         Don't have Bitcoin?

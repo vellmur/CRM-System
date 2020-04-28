@@ -53,7 +53,7 @@ class HelpController extends AbstractController
             ];
             
             $this->sender->sendMail(
-                'Black Dirt Software',
+                $this->getParameter('software_name'),
                 $_ENV['SUPPORT_EMAIL'],
                 'emails/support.html.twig',
                 $request->request->get('support')['subject'],

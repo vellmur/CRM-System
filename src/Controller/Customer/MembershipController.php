@@ -601,7 +601,7 @@ class MembershipController extends AbstractController
                     if ($isSent == 'false') {
                         // Send notify to client, that merchant must be configured
                         $this->mailer->sendMail(
-                            'Black Dirt Software',
+                            $this->getParameter('software_name'),
                             $client->getContactEmail(),
                             'emails/member/merchant_configuration_reminder.html.twig',
                             'You need to add merchant key into BDS',
@@ -647,7 +647,7 @@ class MembershipController extends AbstractController
 
             if ($signUpLink) {
                 $this->mailer->sendMail(
-                    'Black Dirt Software',
+                    $this->getParameter('software_name'),
                     $recipient->getEmail(),
                     'customer/emails/testimonial_email.html.twig',
                     'Invitation to join ' . $member->getClient()->getName(),

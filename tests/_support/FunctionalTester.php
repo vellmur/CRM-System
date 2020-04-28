@@ -57,4 +57,9 @@ class FunctionalTester extends Actor
 
         return $this->getScenario()->runStep(new Condition('amOnPage', func_get_args()));
     }
+
+    public function seeSoftwareName()
+    {
+        $this->see($this->grabService('kernel')->getContainer()->getParameter('software_name'));
+    }
 }

@@ -21,8 +21,6 @@ use Wa72\HtmlPageDom\HtmlPageCrawler;
 
 class Sender
 {
-    const SENDER_NAME = 'Black Dirt Software';
-
     private $mailer;
 
     private $manager;
@@ -39,6 +37,8 @@ class Sender
 
     private $domain;
 
+    private $softwareName;
+
     public function __construct(
         \Swift_Mailer $mailer,
         EmailManager $manager,
@@ -46,8 +46,9 @@ class Sender
         UrlGeneratorInterface $router,
         Environment $twig,
         TranslatorInterface $translator,
-        $mailerUser,
-        $domain
+        string $mailerUser,
+        string $domain,
+        string $softwareName
     ) {
         $this->mailer = $mailer;
         $this->manager = $manager;
@@ -57,6 +58,7 @@ class Sender
         $this->translator = $translator;
         $this->mailerUser = $mailerUser;
         $this->domain = $domain;
+        $this->softwareName = $softwareName;
     }
 
     /**
@@ -84,7 +86,7 @@ class Sender
             array_push($notifyEmails, 'cf@blackdirt.org');
         }
 
-        $this->sendMail(self::SENDER_NAME, $notifyEmails, 'emails/new_client.html.twig', $subject, [
+        $this->sendMail($this->softwareName, $notifyEmails, 'emails/new_client.html.twig', $subject, [
             'user' => $user
         ]);
     }
@@ -122,7 +124,7 @@ class Sender
     {
         $message = $this->mailer->createMessage()
             ->setSubject($recipient->getEmailLog()->getSubject())
-            ->setFrom([$this->mailerUser => self::SENDER_NAME])
+            ->setFrom([$this->mailerUser => $this->softwareName])
             ->setTo($recipient->getEmailAddress())
             ->setBody($this->templating->render($template, $data));
 
@@ -194,7 +196,7 @@ class Sender
                     ->setReplyTo([$recipient->getEmailLog()->getReplyEmail() => $recipient->getEmailLog()->getReplyName()])
                     ->setTo($recipient->getCustomer()->getEmail());
             } else {
-                $message->setFrom([$this->mailerUser => self::SENDER_NAME])
+                $message->setFrom([$this->mailerUser => $this->softwareName])
                     ->setTo($recipient->getEmailAddress())
                     ->setSubject($recipient->getEmailLog()->getSubject() . ' (' . $recipient->getId() . ')');
             }
@@ -279,7 +281,7 @@ class Sender
 
             $message = $this->mailer->createMessage()
                 ->setSubject($subject)
-                ->setFrom([$this->mailerUser => self::SENDER_NAME])
+                ->setFrom([$this->mailerUser => $this->softwareName])
                 ->setReplyTo([$customer->getEmail() => $customer->getFullname() ? $customer->getFullname() : 'Contact'])
                 ->setTo([$customer->getClient()->getContactEmail(), 'kinroom@blackdirt.org'])
                 ->setBody($this->templating->render('emails/member/contact_send.html.twig', [
@@ -309,8 +311,8 @@ class Sender
 
             $message = $this->mailer->createMessage()
                 ->setSubject($subject)
-                ->setFrom([$this->mailerUser => self::SENDER_NAME])
-                ->setReplyTo(['cf@blackdirt.org' => self::SENDER_NAME])
+                ->setFrom([$this->mailerUser => $this->softwareName])
+                ->setReplyTo(['cf@blackdirt.org' => $this->softwareName])
                 ->setTo(['kinroom@blackdirt.org', 'cf@blackdirt.org'])
                 ->setBody($this->templating->render('emails/widget/new_mailchimp_subscription.twig', [
                     'subject' => $subject,
@@ -377,7 +379,7 @@ class Sender
 
         $message = $this->mailer->createMessage()
             ->setSubject('Customer ' . $shareBeforeSkipping['action'] . ' a week')
-            ->setFrom([$this->mailerUser => 'Black Dirt Software'])
+            ->setFrom([$this->mailerUser => $this->softwareName])
             ->setTo($to)
             ->setBody($this->templating->render('emails/member/skip_week.html.twig', $data), 'text/html');
 
@@ -433,7 +435,7 @@ class Sender
         }
 
         // Send customer review to client
-        $this->sendMail(self::SENDER_NAME,
+        $this->sendMail($this->softwareName,
             $customer->getClient()->getContactEmail(),
             'emails/member/member_review.html.twig',
             'Customer feedback',
@@ -591,10 +593,9 @@ class Sender
             'token' => $user->getConfirmationToken()
         ], UrlGeneratorInterface::ABSOLUTE_URL);
 
-        $senderName = self::SENDER_NAME;
-        $subject = $senderName . ' - Reset password';
+        $subject = $this->softwareName . ' - Reset password';
 
-        $this->sendMail($senderName, $user->getEmail(), 'emails/password_resetting.email.twig', $subject, [
+        $this->sendMail($this->softwareName, $user->getEmail(), 'emails/password_resetting.email.twig', $subject, [
             'client' => $user->getClient()->getName(),
             'confirmationUrl' => $url
         ]);

@@ -100,7 +100,7 @@ class SignUpCest
 
         $I->canSeeInCurrentUrl('/register/check-email');
         $I->see('Your account has been created');
-        $I->see('Black Dirt Software');
+        $I->seeSoftwareName();
     }
 
     /**

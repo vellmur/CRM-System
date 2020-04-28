@@ -84,6 +84,6 @@ class LogInCest
         $I->click('#_submit');
         $I->canSeeInCurrentUrl('/module/');
         $I->canSeeResponseCodeIs(200);
-        $I->see('Black Dirt Software');
+        $I->seeSoftwareName();
     }
 }

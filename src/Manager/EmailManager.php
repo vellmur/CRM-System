@@ -27,28 +27,33 @@ class EmailManager
 
     private $host;
 
+    private $softwareName;
+
     /**
      * EmailManager constructor.
      * @param EntityManagerInterface $em
      * @param UrlGeneratorInterface $urlGenerator
      * @param Environment $twig
      * @param MailService $mailService
-     * @param $httpProtocol
-     * @param $domain
+     * @param string $httpProtocol
+     * @param string $domain
+     * @param string $softwareName
      */
     public function __construct(
         EntityManagerInterface $em,
         UrlGeneratorInterface $urlGenerator,
         Environment $twig,
         MailService $mailService,
-        $httpProtocol,
-        $domain
+        string $httpProtocol,
+        string $domain,
+        string $softwareName
     ) {
         $this->em = $em;
         $this->urlGenerator = $urlGenerator;
         $this->twig = $twig;
         $this->mailService = $mailService;
         $this->host = $httpProtocol . '://' . $domain;
+        $this->softwareName = $softwareName;
     }
 
     /**
@@ -401,7 +406,7 @@ class EmailManager
     {
         $subjects = [
             'confirmation' => 'Please confirm your email',
-            'welcome' => 'Welcome to Black Dirt Software',
+            'welcome' => 'Welcome to ' . $this->softwareName,
             'aborted' => 'Oops! Let’s try again…',
             'failed' => 'You’re Almost Set Up!'
         ];

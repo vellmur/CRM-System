@@ -4,7 +4,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
 
-        <title>Black Dirt Software</title>
+        <title>{{ software_name }}</title>
 
         <!-- Favicons --->
         <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('apple-touch-icon.png') }}">
@@ -49,7 +49,7 @@
     <body class="navbar-bottom">
         <div class="navbar navbar-inverse">
             <div class="navbar-header">
-                <span class="navbar-brand">Black Dirt Software</span>
+                <span class="navbar-brand">{{ software_name }}</span>
                 <ul class="nav navbar-nav visible-xs-block">
                     <li><a data-toggle="collapse" data-target="#navbar-mobile"><i class="icon-tree5"></i></a></li>
                     <li><a class="sidebar-mobile-main-toggle"><i class="icon-paragraph-justify3"></i></a></li>
@@ -223,7 +223,7 @@
             </ul>
             <div class="navbar-collapse collapse" id="footer">
                 <div class="navbar-text">
-                    &copy; 2019. Developed by Black Dirt Software
+                    &copy; 2020. Developed by {{ software_name }}
                 </div>
                 <div class="navbar-right">
                     <ul class="nav navbar-nav">

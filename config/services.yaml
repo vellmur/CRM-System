@@ -1,5 +1,6 @@
 parameters:
     domain: '%env(DOMAIN)%'
+    software_name: '[New Company]'
     container.dumper.inline_factories: true
     container.dumper.inline_class_loader: true
     google_recaptcha_site_key: '%env(GOOGLE_RECAPTCHA_SITE_KEY)%'
@@ -31,6 +32,7 @@ services:
         arguments:
             $httpProtocol: '%env(HTTP_PROTOCOL)%'
             $domain: '%env(DOMAIN)%'
+            $softwareName: '%software_name%'
 
     App\Manager\ImageManager:
         arguments:
@@ -42,6 +44,7 @@ services:
         arguments:
             $mailerUser: '%env(MAILER_USER)%'
             $domain: '%env(DOMAIN)%'
+            $softwareName: '%software_name%'
 
     App\Service\LocationService:
         arguments:
@@ -88,6 +91,10 @@ services:
             $protocol: '%env(HTTP_PROTOCOL)%'
             $rootDir: '%kernel.project_dir%'
             $env: '%kernel.environment%'
+
+    App\Command\WeeklyFeedbackReportCommand:
+        arguments:
+            $softwareName: '%software_name%'
 
     # End of Services
 

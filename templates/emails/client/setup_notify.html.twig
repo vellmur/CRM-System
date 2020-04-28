@@ -5,13 +5,13 @@
 </head>
 <body>
 <div>
-    <h4>Welcome to Black Dirt Software</h4>
+    <h4>Welcome to {{ software_name }}</h4>
 
-    <p>Thanks for creating an account. Black Dirt Software helps farmers make big business of small farming.
+    <p>Thanks for creating an account. {{ software_name }} helps farmers make big business of small farming.
         And we’re excited to help you. So let’s jump in and get our hands dirty.</p>
 
     <p>SETUP</p>
-    <p>Planting your farm in Black Dirt is simple.</p>
+    <p>Planting your farm in {{ software_name }} is simple.</p>
     <ul>
         <li style="margin-left:0;">First, go to <a href="{{ plantsPath }}" target="_blank">SETUP>Plants</a> and tell us what you grow.</li>
         <li style="margin-left:0;">Then, go to <a href="{{ gardensPath }}" target="_blank">SETUP>Gardens</a> and tell us how your farm’s set up.</li>
@@ -25,7 +25,7 @@
         and <a href="https://www.youtube.com/channel/UCSLnfmRao-nLHKC1PAtY3jw">YouTube</a>.
     </p>
     <p>Thank you,<br/>
-        The Black Dirt Team</p>
+        The {{ software_name }} Team</p>
 
     {% if confirmationLink is not null %}
         <p>ps. If you have not confirmed your site yet, you can do so at <a href="{{ confirmationLink }}" target="_blank">[this link].</a></p>
