@@ -28,7 +28,7 @@ class LoginSubscriber implements EventSubscriberInterface
         $user = $event->getAuthenticationToken()->getUser();
 
         if ($user->getLocale() !== null) {
-            $this->session->set('_locale', $user->getLocale()->getCode());
+            $this->session->set('_locale', $user->getLocaleCode());
         }
 
         $this->session->set('date_format', $user->getDateFormat());

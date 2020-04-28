@@ -87,18 +87,6 @@ class MemberType extends AbstractType
                     'data-rule-phoneOrEmailRequired' => 'true'
                 ]
             ])
-            ->add('deliveryDay', ChoiceType::class, [
-                'choices' =>  $daysOfWeek,
-                'label' => 'customer.add.delivery_day',
-                'label_attr' => [
-                    'class' => 'col-md-2 col-sm-3 col-xs-5 control-label'
-                ],
-                'attr' => [
-                    'class' => 'select'
-                ],
-                'required' => false,
-                'placeholder' => ''
-            ])
             ->add('addresses', CollectionType::class, [
                 'required' => false,
                 'entry_type' => AddressType::class,

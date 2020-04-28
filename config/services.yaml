@@ -50,16 +50,6 @@ services:
         arguments:
             $geonamesLogin: '%env(GEONAMES_LOGIN)%'
 
-    App\Service\Translation\DbLoader:
-        arguments:
-            $translationEntity: App\Entity\Translation\TranslationKey
-        tags:
-            - { name: translation.loader, alias: db }
-
-    App\Service\Translation\TranslationService:
-        arguments:
-            $rootDir: '%kernel.project_dir%'
-
     app.menu_builder:
         class: App\Menu\MenuBuilder
         arguments: ["@knp_menu.factory"]
@@ -91,10 +81,6 @@ services:
             $protocol: '%env(HTTP_PROTOCOL)%'
             $rootDir: '%kernel.project_dir%'
             $env: '%kernel.environment%'
-
-    App\Command\WeeklyFeedbackReportCommand:
-        arguments:
-            $softwareName: '%software_name%'
 
     # End of Services
 

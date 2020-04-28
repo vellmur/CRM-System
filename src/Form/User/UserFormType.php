@@ -2,13 +2,10 @@
 
 namespace App\Form\User;
 
-use App\Entity\Translation\TranslationLocale;
 use App\Entity\User\User;
 use App\Form\Client\ClientType;
 use App\Form\EventListener\ProfileSubscriber;
-use App\Repository\Translation\TranslationLocaleRepository;
 use App\Service\CountryList;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -30,14 +27,8 @@ class UserFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('locale', EntityType::class , [
-                'class' => TranslationLocale::class,
-                'query_builder' => function (TranslationLocaleRepository $repository) {
-                    return $repository->createQueryBuilder('t');
-                },
-                'choice_label' => function (TranslationLocale $locale) {
-                    return $this->countryList->getLanguageByLocale($locale->getCode());
-                },
+            ->add('locale', ChoiceType::class , [
+                'choices' => User::LOCALES,
                 'label' => 'account.settings.language',
                 'attr' => [
                     'class' => 'select'

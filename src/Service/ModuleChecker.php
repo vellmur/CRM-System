@@ -59,43 +59,12 @@ class ModuleChecker
 
     /**
      * @param Client $client
-     * @return bool
-     */
-    public function isSharesEnabled(Client $client)
-    {
-        if ($client->getModulesSettings()) {
-            foreach ($client->getModulesSettings() as $setting) {
-                if ($setting->getName() == 'shares_enabled' && !$setting->isEnabled()) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * @param Client $client
-     * @return array
-     */
-    public function getDisabledFeatures(Client $client)
-    {
-        $disabledFeatures = [];
-
-        if (!$this->isSharesEnabled($client)) $disabledFeatures[] = 'shares';
-
-        return $disabledFeatures;
-    }
-
-    /**
-     * @param Client $client
      * @return array
      */
     public function getModulesStatuses(Client $client)
     {
         return [
-            'lapsed' => $this->getLapsedModules($client),
-            'disabled' => $this->getDisabledFeatures($client)
+            'lapsed' => $this->getLapsedModules($client)
         ];
     }
 

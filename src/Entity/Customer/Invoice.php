@@ -47,12 +47,6 @@ class Invoice
     private $refnum;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Customer\Location", inversedBy="invoices")
-     * @ORM\JoinColumn(name="location_id", referencedColumnName="id")
-     */
-    private $location;
-
-    /**
      * @var \DateTime
      * @ORM\Column(name="order_date", type="date")
      */
@@ -162,22 +156,6 @@ class Invoice
     public function setRefnum($refnum)
     {
         $this->refnum = $refnum;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLocation()
-    {
-        return $this->location;
-    }
-
-    /**
-     * @param mixed $location
-     */
-    public function setLocation($location)
-    {
-        $this->location = $location;
     }
 
     /**

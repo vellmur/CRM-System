@@ -1,22 +1,7 @@
-member_orders:
-    path:     /for-members
-    defaults: { _controller: App\Controller\Customer\OrderController::memberOrder }
-    methods:  [GET, POST]
-
 vendor_orders:
     path:     /for-vendors
     defaults: { _controller: App\Controller\Customer\OrderController::vendorOrder }
     methods: [GET, POST]
-
-member_order_update:
-    path:     /{role}/{orderId}/update/
-    defaults: { _controller: App\Controller\Customer\OrderController::updateShare }
-    methods:  POST
-
-member_order_delete:
-    path:     /{role}/{orderId}/delete
-    defaults: { _controller: App\Controller\Customer\OrderController::deleteShare }
-    methods:  DELETE
 
 member_orders_product_add:
     path:     /product/{role}/{orderId}/add
@@ -32,13 +17,3 @@ member_orders_product_delete:
     path:     /order/product/{id}/delete
     defaults: { _controller: App\Controller\Customer\OrderController::deleteProduct }
     methods:  DELETE
-
-member_harvest_list:
-    path:     /harvest-list
-    defaults: { _controller: App\Controller\Customer\OrderController::harvestList }
-    methods:  GET
-
-member_packaging_list:
-    path:     /packaging
-    defaults: { _controller: App\Controller\Customer\OrderController::packaging }
-    methods:  GET

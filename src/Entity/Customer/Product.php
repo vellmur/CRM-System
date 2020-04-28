@@ -123,16 +123,6 @@ class Product
     private $image;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\ShareProduct", mappedBy="product")
-     */
-    private $shareProduct;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\CustomShare", mappedBy="product", cascade={"all"})
-     */
-    private $customShares;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Customer\InvoiceProduct", mappedBy="product")
      */
     private $invoices;
@@ -162,23 +152,6 @@ class Product
     {
         $this->id = $id;
     }
-    
-    /**
-     * @return mixed
-     */
-    public function getShareProduct()
-    {
-        return $this->shareProduct;
-    }
-
-    /**
-     * @param mixed $shareProduct
-     */
-    public function setShareProduct($shareProduct)
-    {
-        $this->shareProduct = $shareProduct;
-    }
-
 
     /**
      * @return float

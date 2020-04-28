@@ -2,7 +2,6 @@
 
 namespace App\Form\Security;
 
-use App\Entity\Translation\TranslationLocale;
 use App\Entity\User\User;
 use App\Form\Client\ClientNameType;
 use App\Service\CountryList;
@@ -62,11 +61,7 @@ class RegistrationType extends AbstractType
             ])
             ->add('locale', ChoiceType::class , [
                 'required' => false,
-                'choices' => $options['locales'],
-                'choice_label' => function(?TranslationLocale $locale) {
-
-                    return $this->countryList->getLanguageByLocale($locale->getCode());
-                },
+                'choices' => User::LOCALES,
                 'label' => 'register.your_language',
                 'attr' => [
                     'class' => 'select'

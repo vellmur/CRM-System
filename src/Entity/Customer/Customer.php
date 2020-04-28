@@ -103,12 +103,6 @@ class Customer
     private $phone;
 
     /**
-     * @var integer|null
-     * @ORM\Column(name="delivery_day", type="integer", nullable=true, length=1)
-     */
-    private $deliveryDay;
-
-    /**
      * @ORM\Column(name="notes", type="text", length=2500, nullable=true)
      */
     private $notes;
@@ -145,11 +139,6 @@ class Customer
     private $isActivated = 0;
 
     /**
-     * @ORM\Column(name="testimonial", type="text", length=2500, nullable=true)
-     */
-    private $testimonial;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Customer\Email\EmailRecipient", mappedBy="customer", cascade={"all"}, orphanRemoval=true)
      */
     private $emails;
@@ -167,16 +156,6 @@ class Customer
     private $addresses;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\CustomerShare", mappedBy="customer", cascade={"all"}, orphanRemoval=true)
-     */
-    private $shares;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\Email\Feedback", mappedBy="customer", cascade={"all"}, orphanRemoval=true)
-     */
-    private $feedback;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Customer\Payment", mappedBy="customer", cascade={"all"}, orphanRemoval=true)
      */
     private $payments;
@@ -190,11 +169,6 @@ class Customer
      * @ORM\OneToMany(targetEntity="App\Entity\Customer\POS", mappedBy="customer", cascade={"all"}, orphanRemoval=true)
      */
     private $orders;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\TestimonialRecipient", mappedBy="affiliate", cascade={"all"}, orphanRemoval=true)
-     */
-    private $testimonialRecipients;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Customer\CustomerReferral", mappedBy="customer", cascade={"all"}, orphanRemoval=true)
@@ -360,44 +334,6 @@ class Customer
         $this->phone = strlen($phone) ? preg_replace('/[^0-9.]+/', '', $phone) : null;
 
         return $this;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getDeliveryDay()
-    {
-        return $this->deliveryDay;
-    }
-
-    /**
-     * @param int|null $deliveryDay
-     */
-    public function setDeliveryDay($deliveryDay)
-    {
-        $this->deliveryDay = $deliveryDay;
-    }
-
-    /**
-     * Return delivery day of customer in day of week format
-     *
-     * @return mixed
-     */
-    public function getWeekDay()
-    {
-        $week = [
-            'Monday' => 1,
-            'Tuesday' => 2,
-            'Wednesday' => 3,
-            'Thursday' => 4,
-            'Friday' => 5,
-            'Saturday' => 6,
-            'Sunday' => 7
-        ];
-
-        $day = $this->deliveryDay ? array_flip($week)[$this->deliveryDay] : null;
-
-        return $day;
     }
 
     /**
@@ -614,43 +550,6 @@ class Customer
     }
 
     /**
-     * @return \Doctrine\Common\Collections\Collection|CustomerShare[] $shares
-     */
-    public function getShares()
-    {
-        return $this->shares;
-    }
-
-    /**
-     * @param mixed $shares
-     */
-    public function setShares($shares)
-    {
-        $this->shares = $shares;
-    }
-
-    /**
-     * @param CustomerShare $share
-     * @return $this
-     */
-    public function addShare(CustomerShare $share)
-    {
-        $this->shares->add($share);
-        $share->setCustomer($this);
-
-        return $this;
-    }
-
-    /**
-     * @param CustomerShare $share
-     */
-    public function removeShare(CustomerShare $share)
-    {
-        $this->shares->removeElement($share);
-        $share->setCustomer(null);
-    }
-
-    /**
      * @return mixed
      */
     public function getOrders()
@@ -664,21 +563,5 @@ class Customer
     public function setOrders($orders)
     {
         $this->orders = $orders;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTestimonial()
-    {
-        return $this->testimonial;
-    }
-
-    /**
-     * @param mixed $testimonial
-     */
-    public function setTestimonial($testimonial)
-    {
-        $this->testimonial = $testimonial;
     }
 }

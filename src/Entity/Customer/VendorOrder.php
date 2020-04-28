@@ -43,11 +43,6 @@ class VendorOrder
     private $orderDate;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\ShareProduct", mappedBy="vendorOrder", cascade={"all"})
-     */
-    private $shareProducts;
-
-    /**
      * @return int
      */
     public function getId()
@@ -90,7 +85,7 @@ class VendorOrder
     /**
      * @param mixed $vendor
      */
-    public function setVendor($vendor)
+    public function setVendor($vendor): void
     {
         $this->vendor = $vendor;
     }
@@ -98,7 +93,7 @@ class VendorOrder
     /**
      * @return \DateTime
      */
-    public function getOrderDate()
+    public function getOrderDate(): ?\DateTime
     {
         return $this->orderDate;
     }
@@ -106,24 +101,8 @@ class VendorOrder
     /**
      * @param \DateTime $orderDate
      */
-    public function setOrderDate($orderDate)
+    public function setOrderDate(\DateTime $orderDate): void
     {
         $this->orderDate = $orderDate;
-    }
-
-    /**
-     * @return \Doctrine\Common\Collections\Collection|ShareProduct[] $products
-     */
-    public function getShareProducts()
-    {
-        return $this->shareProducts;
-    }
-
-    /**
-     * @param mixed $shareProducts
-     */
-    public function setShareProducts($shareProducts)
-    {
-        $this->shareProducts = $shareProducts;
     }
 }

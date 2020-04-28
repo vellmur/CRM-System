@@ -16,15 +16,4 @@ interface CustomerRecipientInterface
      * @return mixed
      */
     public function setCustomer(Customer $customer);
-
-    /**
-     * @return mixed
-     */
-    public function getFeedback();
-
-    /**
-     * @param Feedback $feedback
-     * @return mixed
-     */
-    public function setFeedback(Feedback $feedback);
 }

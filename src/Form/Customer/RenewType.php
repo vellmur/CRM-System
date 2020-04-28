@@ -7,7 +7,6 @@ use App\Form\EventListener\RenewSubscriber;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -25,12 +24,6 @@ class RenewType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('shares', ChoiceType::class, [
-                'required' => false,
-                'label' => false,
-                'expanded' => true,
-                'multiple' => true
-            ])
             ->add('products', ChoiceType::class, [
                 'required' => false,
                 'label' => false,
@@ -44,15 +37,6 @@ class RenewType extends AbstractType
                 'label' => 'customer.add.location',
                 'expanded' => true,
                 'placeholder' => false
-            ])
-            ->add('orderDate', TextType::class, [
-                'attr' => [
-                    'class' => 'hidden'
-                ],
-                'constraints' => [
-                    new NotBlank(['message' => 'Please choose one of the share days for location.'])
-                ],
-                'required' => false,
             ])
             ->add('member', MemberType::class, [
                 'data' => $options['customer'],

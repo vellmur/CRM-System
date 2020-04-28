@@ -129,7 +129,6 @@ class MenuBuilder
         $menu[$master]->addChild('Posts', ['route' => 'master_blog'])->setAttribute('icon', 'icon-newspaper');
         $menu[$master]->addChild('Statistics', ['route' => 'master_statistics'])->setAttribute('icon', 'icon-stats-bars2');
         $menu[$master]->addChild('Media Manager', ['route' => 'master_image_manager'])->setAttribute('icon', 'icon-image2');
-        $menu[$master]->addChild('Translation', ['route' => 'master_translation'])->setAttribute('icon', 'icon-earth');
     }
 
     /**
@@ -157,7 +156,6 @@ class MenuBuilder
 
         $menu[$account]->addChild($this->trans->trans('navigation.account.users', [], $domain), ['route' => 'user_index'])->setAttribute('icon', 'icon-user-plus');
         $menu[$account]->addChild($this->trans->trans('navigation.account.settings', [], $domain), ['route' => 'profile_settings'])->setAttribute('icon', 'icon-gear');
-        $menu[$account]->addChild($this->trans->trans('navigation.account.translation', [], $domain), ['route' => 'translation'])->setAttribute('icon', 'icon-earth');
         $menu[$account]->addChild($this->trans->trans('navigation.account.subscription', [], $domain), ['route' => 'subscription_index'])->setAttribute('icon', 'icon-pencil5');
     }
 
@@ -182,7 +180,6 @@ class MenuBuilder
         $customers = $this->trans->trans('navigation.customers.manage_customers', [], $domain);
         $menu->addChild($customers)->setAttribute('icon', 'icon-people')->setAttribute('class', 'has-ul');;
         $menu[$customers]->addChild($this->trans->trans('navigation.customers.add', [], $domain), ['route' => 'member_add'])->setAttribute('icon', 'icon-user-plus');
-        $menu[$customers]->addChild($this->trans->trans('navigation.customers.location', [], $domain), ['route' => 'member_location'])->setAttribute('icon', 'icon-location3');
 
         $filterBy = $this->request->cookies->get('customersFilterBy');
         if ($filterBy === null || $filterBy === 'undefined') $filterBy = 'all';
@@ -193,11 +190,6 @@ class MenuBuilder
                 'searchBy' => $filterBy
             ]
         ])->setAttribute('icon', 'icon-search4');
-
-        if ($client && $this->moduleChecker->isSharesEnabled($client)) {
-            $menu[$customers]->addChild($this->trans->trans('navigation.customers.shares', [], $domain), ['route' => 'member_share'])->setAttribute('icon', 'icon-bag');
-            $menu[$customers]->addChild($this->trans->trans('navigation.customers.suspend', [], $domain), ['route' => 'app_shares_weeks'])->setAttribute('icon', 'icon-pause');
-        }
 
         $menu[$customers]->addChild($this->trans->trans('navigation.customers.upload', [], $domain), ['route' => 'members_parse'])->setAttribute('icon', 'icon-file-excel');
     }
@@ -224,9 +216,7 @@ class MenuBuilder
     {
         $orders = $this->trans->trans('navigation.orders.orders', [], $domain);
         $menu->addChild($orders)->setAttribute('icon', 'icon-cart')->setAttribute('class', 'has-ul');;
-        $menu[$orders]->addChild($this->trans->trans('navigation.orders.for_members', [], $domain), ['route' => 'member_orders'])->setAttribute('icon', 'icon-user-tie');
         $menu[$orders]->addChild($this->trans->trans('navigation.orders.for_vendors', [], $domain), ['route' => 'vendor_orders'])->setAttribute('icon', 'icon-store2');
-        $menu[$orders]->addChild($this->trans->trans('navigation.orders.packaging', [], $domain), ['route' => 'member_packaging_list'])->setAttribute('icon', 'icon-bag');
     }
 
     /**

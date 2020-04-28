@@ -13,11 +13,6 @@ help_support:
     defaults: { _controller: App\Controller\Security\HelpController::support }
     methods:  [GET, POST]
 
-translation:
-    path:       /translation
-    defaults:   { _controller: App\Controller\Translation\TranslationController::userTranslations }
-    methods:    GET
-
 translation_translate:
     path:       /translation/translate/{locale}/{domain}/
     defaults:   { _controller: App\Controller\Translation\TranslationController::translate }

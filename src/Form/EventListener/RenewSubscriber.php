@@ -75,7 +75,6 @@ class RenewSubscriber implements EventSubscriberInterface
             $form->get('billingAddress')->setData($customer->getAddressByType('BILLING'));
         }
 
-        $this->addShares($form);
         $this->addProducts($form);
     }
 
@@ -89,12 +88,11 @@ class RenewSubscriber implements EventSubscriberInterface
 
         // Remove products qty from form (form can`t contain extra fields). Data still exists in request.
         if (isset($data['parentFrame'])) { unset($data['parentFrame']); }
-        if (isset($data['shareQty'])) { unset($data['shareQty']); }
         if (isset($data['productQty'])) { unset($data['productQty']); }
 
         if ($form->get('member')->getData()) {
             // Add validation error, if customer did'nt choose any product
-            if (!isset($data['shares']) && !isset($data['products'])) {
+            if (!isset($data['products'])) {
                 $form->addError(new FormError('Please add to a cart one or multiple products', null, [], null, 'EmptyProduct'));
             }
         }
@@ -129,35 +127,6 @@ class RenewSubscriber implements EventSubscriberInterface
         }
 
         $event->setData($data);
-    }
-
-    /**
-     * @param FormInterface $form
-     */
-    public function addShares(FormInterface $form)
-    {
-        $options = $form->get('shares')->getConfig()->getOptions();
-
-        /** @var Client $client */
-        $client = $form->getConfig()->getOptions()['client'];
-
-        $shares = $this->manager->getShares($client, true);
-
-        foreach ($shares as $key => $share) {
-            $options['choices'][$key] = $share->getId();
-
-            $options['choice_attr'][$key] = [
-                'data-price' => $share->getPrice(),
-                'data-name' => $share->getName(),
-                'data-description' => $share->getDescription(),
-                'autocomplete' => 'off',
-                'class' => 'customer-product hidden',
-                'data-rule-checkRequired' => 'true',
-                'data-empty-error' => $this->translator->trans('renewal.product_required', [], 'validators')
-            ];
-        }
-
-        $form->add('shares', ChoiceType::class, $options);
     }
 
     /**

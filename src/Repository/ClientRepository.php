@@ -268,9 +268,8 @@ class ClientRepository extends ServiceEntityRepository
     }
 
     /**
-     * Patron - it is a customer who had at least one share with a "PATRONS" type or one pos order with past dates
-     *
      * @return mixed
+     * @throws \Exception
      */
     public function getPOSPatrons()
     {
@@ -279,10 +278,9 @@ class ClientRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('c')
             ->select('c, customers')
             ->leftJoin('c.customers', 'customers')
-            ->leftJoin('customers.shares', 'shares')
             ->leftJoin('customers.orders', 'orders')
             ->where('customers.isLead = 0')
-            ->andWhere('(shares.id IS NOT NULL AND shares.renewalDate < :now) OR (orders.id IS NOT NULL AND orders.createdAt < :now)')
+            ->andWhere('orders.id IS NOT NULL AND orders.createdAt < :now')
             ->setParameter('now', $today->format('Y-m-d'));
 
         return $qb->getQuery()->getResult();

@@ -2,20 +2,15 @@
 
 namespace App\Controller\Customer;
 
-use App\Entity\Customer\Invoice;
 use App\Entity\Customer\Email\EmailRecipient;
 use App\Entity\Customer\Customer;
-use App\Entity\Customer\CustomerShare;
-use App\Entity\Customer\ShareProduct;
 use App\Entity\Customer\VendorOrder;
 use App\Form\Customer\ContactType;
 use App\Form\Customer\MembershipLoginType;
 use App\Form\Customer\MemberType;
 use App\Form\Customer\RenewType;
-use App\Form\Customer\ShareProductType;
 use App\Form\Customer\VendorOrderType;
 use App\Manager\MembershipManager;
-use App\Manager\ShareManager;
 use App\Service\Mail\Sender;
 use App\Service\Payment\PaymentService;
 use JMS\Serializer\SerializerInterface;
@@ -117,7 +112,7 @@ class MembershipController extends AbstractController
 
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
-                    $this->manager->saveMemberData($member, $data);
+                    $this->manager->saveCustomerData($member, $data);
 
                     $invoice = $paymentService->customerPayment($member, $data);
 
@@ -212,7 +207,7 @@ class MembershipController extends AbstractController
             if ($renewForm->isSubmitted() && $renewForm->isValid()) {
                 try {
                     $data = $request->request->get('renew');
-                    $this->manager->saveMemberData($member, $data);
+                    $this->manager->saveCustomerData($member, $data);
                     $invoice = $paymentService->customerPayment($member, $data);
 
                     // Save view of renewal competed page
@@ -259,16 +254,9 @@ class MembershipController extends AbstractController
             return $this->render('customer/membership/member/profile.html.twig', [
                 'form' => $form->createView(),
                 'renewForm' => $renewForm->createView(),
-                'shares' => $this->manager->getCustomerShares($member),
-                'sharesLeft' => $this->manager->countPickups($member->getShares()),
-                'products' => $this->manager->getMemberManager()->getAvailableProducts($member->getClient(), 1),
-                'sharesProducts' => $this->manager->getSharesProducts($member),
-                'customShares' => $this->getCustomShares($member),
-                'feedback' => $this->manager->getSharesFeedback($member),
                 'invoice' => $invoiceId ? $this->manager->getInvoice($request->query->all()['invoiceId']) : null,
                 'date_format' => $member->getClient()->getOwnerDateFormat(),
-                'status' =>  $this->manager->getMemberManager()->getMemberStatus($member),
-                'isWeekSuspended' => $this->manager->getMemberManager()->getEmailManager()->isWeekSuspended($member->getClient())
+                'status' =>  $this->manager->getMemberManager()->getMemberStatus($member)
             ]);
         }
 
@@ -338,42 +326,15 @@ class MembershipController extends AbstractController
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $addressesChanges = $this->manager->computeAddressesChange($member);
-
                 try {
                     $this->manager->getMemberManager()->update($member);
                     $status = "saved";
                 } catch (\Exception $e) {
                     $status = $e->getMessage();
                 }
-
-               // if ($addressesChanges) {
-                   //  $status = $this->manager->getMemberManager()->getMemberStatus($member);
-                    // $this->mailer->sendAddressesChanges($member, $status, $addressesChanges);
-             //   }
             } else {
                 return new JsonResponse($serializer->serialize(['error' => $form], 'json'), 500);
             }
-        }
-
-        return new JsonResponse(['status' => $status]);
-    }
-
-    /**
-     * @param Request $request
-     * @param $token
-     * @return JsonResponse
-     */
-    public function saveFeedback(Request $request, $token)
-    {
-        $member = $this->manager->findOneByToken($token);
-
-        $status = 'invalid';
-
-        $values = $request->request->all();
-
-        if ($member) {
-            $this->manager->saveFeedback($member, $values['shareId'], $values['shareDate'], $values['isSatisfied']);
         }
 
         return new JsonResponse(['status' => $status]);
@@ -442,26 +403,6 @@ class MembershipController extends AbstractController
 
                 $orders = $this->manager->getVendorOrders($contact->getVendor());
 
-                // Create add product form and list of update products forms for all existed orders
-                foreach ($orders as $order) {
-                    $products = $this->manager->getMemberManager()->getAvailableProducts($client, $contact->getVendor()->getCategory());
-
-                    // First form in array is Add product form
-                    $shareProduct = new ShareProduct();
-                    $productsForms[$order->getId()][0] = $this->createForm(ShareProductType::class, $shareProduct, [
-                        'client' => $client,
-                        'products' => $products
-                    ])->createView();
-
-                    // Push to array forms for each product related to order (for updating/removing products)
-                    foreach ($this->manager->getOrderProducts($order, 'vendor') as $key => $product) {
-                        $productsForms[$order->getId()][$key + 1] = $this->createForm(ShareProductType::class, $product, [
-                            'client' => $client,
-                            'products' => $products
-                        ])->createView();
-                    }
-                }
-
                 $return += [
                     'orderForm' => $orderForm->createView(),
                     'orders' => $orders,
@@ -475,154 +416,6 @@ class MembershipController extends AbstractController
         return $this->redirectToRoute('membership');
     }
 
-    /**
-     * @param Customer $member
-     * @return array
-     */
-    public function getCustomShares(Customer $member)
-    {
-        $customShares = [];
-
-        foreach ($member->getShares() as $share) {
-            foreach ($share->getCustomShares() as $customShare) {
-                $customShares[$share->getId()][$customShare->getShareProduct()->getId()] = $customShare;
-            }
-        }
-
-        return $customShares;
-    }
-
-    /**
-     * @param Request $request
-     * @return JsonResponse|Response
-     */
-    public function skipPickup(Request $request)
-    {
-        if ($request->isXMLHttpRequest()) {
-            $pickup = $this->manager->getPickup($request->request->get('pickup'));
-
-            // Save share data before skipping / receiving of the pickup
-            $share = [
-                'action' => $pickup->isSkipped() ? 'receiving' : 'skipping',
-                'renewalDate' => $pickup->getShare()->getRenewalDate()->format('Y-m-d'),
-                'pickupsNum' => $this->manager->getMemberManager()->countPickups($pickup->getShare())
-            ];
-
-            $pickups = $this->manager->controlPickup($pickup);
-
-            if (!($pickups instanceof \Throwable)) {
-                $customerShare = $pickup->getShare();
-                $dateFormat = $customerShare->getShare()->getClient()->getTwigFormatDate();
-
-                $renewalDate = $customerShare->getRenewalDate()->format($dateFormat);
-
-                $response = [];
-
-                // Add all new pickups (active/suspended) to response
-                foreach ($pickups as $key => $pickup) {
-                    $response[$key] = [
-                        'id' => $pickup->getId(),
-                        'date' => $pickup->getDate()->format($dateFormat),
-                        'shareId' => $pickup->getShare()->getId(),
-                        'renewalDate' => $renewalDate,
-                        'isSuspended' => $pickup->isSuspended()
-                    ];
-                }
-
-                // Send email notify to client about skipping the week by customer
-                $this->mailer->sendSkipWeekNotify($share, $pickups[0]->getShare());
-
-                return new JsonResponse([
-                    'pickups' => $response
-                ], 200);
-            } else {
-                return new JsonResponse(['error' => $pickup->getMessage()], 500);
-            }
-        }
-
-        return new Response('Request not valid', 400);
-    }
-
-    /**
-     * @param Request $request
-     * @param CustomerShare $share
-     * @param ShareManager $shareManager
-     * @return JsonResponse|Response
-     */
-    public function customizeShare(Request $request, CustomerShare $share, ShareManager $shareManager)
-    {
-        if ($request->isXMLHttpRequest())
-        {
-            // Try to get customized share and share product if customized share already exists
-            $custom = $shareManager->getCustomShareById($request->request->get('customId'));
-            $shareProduct = $shareManager->getShareProductById($request->request->get('shareProductId'));
-
-            // Save name of original product from customized product or from original share product for customize notify
-            $originalName = $custom ? $custom->getProduct()->getName() : $shareProduct->getProduct()->getName();
-
-            // Customize share and return custom share
-            $customized = $shareManager->customizeShare($share, $request->request->get('productId'), $custom, $shareProduct);
-
-            // Send notification about customized event with original and customized Product names
-            $this->mailer->sendCustomizeNotify(
-                $share->getMember(),
-                $share->getShareDay(),
-                $originalName,
-                $customized->getProduct()->getName()
-            );
-
-            return new JsonResponse(['code' => 202, 'status' => 'success', 'customId' => $customized->getId()], 202);
-        }
-
-        return new Response('Request not valid', 400);
-    }
-
-    /**
-     * Event happens by clicking on payments methods on renewal tab or customer sign-up page. (if credit card method selected)
-     * Send reminder to a client that merchant must be configured in order to receive payments.
-     *
-     * @param Request $request
-     * @param $token
-     * @param $merchant
-     * @param $isSent
-     * @return JsonResponse|Response
-     */
-    public function isMethodConfigured(Request $request, $token, $merchant, $isSent)
-    {
-        if ($request->isXMLHttpRequest()) {
-            $client = $this->manager->findClientByToken($token);
-
-            if ($client) {
-                $merchant = $this->manager->gePaymentMerchant($client, $merchant);
-
-                // Merchant settings for the client not found or merchant key not entered
-                if (!$merchant || !$merchant->getKey()) {
-                    // If email reminder was not sent
-                    if ($isSent == 'false') {
-                        // Send notify to client, that merchant must be configured
-                        $this->mailer->sendMail(
-                            $this->getParameter('software_name'),
-                            $client->getContactEmail(),
-                            'emails/member/merchant_configuration_reminder.html.twig',
-                            'You need to add merchant key into BDS',
-                            ['client' => $client->getName()]
-                        );
-                    }
-
-                    return new JsonResponse([
-                        'error' => 'Payment by credit card is not possible. Please contact ' . $client->getName()
-                            . ' and let them know they have not setup their credit card processing.'
-                    ], 500);
-                }
-
-                return new JsonResponse(['result' => 'OK!'], 202);
-            } else {
-                return new JsonResponse(['error' => 'Token not valid!'], 500);
-            }
-        }
-
-        return new Response('Request not valid', 400);
-    }
 
     /**
      * @param Request $request
@@ -690,7 +483,5 @@ class MembershipController extends AbstractController
         } else {
             return $this->redirectToRoute('membership_profile', ['token' => $existsCustomer->getToken()]);
         }
-
-        // Add credits
     }
 }

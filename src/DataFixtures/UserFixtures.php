@@ -2,9 +2,6 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Client\Client;
-use App\Entity\Client\Team;
-use App\Entity\Translation\TranslationLocale;
 use App\Entity\User\User;
 use App\Manager\RegistrationManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -53,11 +50,6 @@ class UserFixtures extends Fixture
      */
     public function load(ObjectManager $manager)
     {
-        $locale = $this->createDefaultLocale();
-        $manager->persist($locale);
-
-        $this->addReference(self::DEFAULT_LOCALE_REFERENCE, $locale);
-
         $userAdmin = $this->createAdmin();
         $manager->persist($userAdmin);
         $manager->flush();
@@ -71,17 +63,6 @@ class UserFixtures extends Fixture
         $secondUser = self::NOT_ENABLED_USER;
         $notConfirmedUser = $this->createUser($secondUser['username'], $secondUser['email'], $secondUser['password'], false);
         $this->registrationManager->registerUser($notConfirmedUser, $secondUser['client']['name']);
-    }
-
-    /**
-     * @return TranslationLocale
-     */
-    private function createDefaultLocale()
-    {
-        $locale = new TranslationLocale();
-        $locale->setCode('en');
-
-        return $locale;
     }
 
     /**

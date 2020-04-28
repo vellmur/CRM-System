@@ -34,43 +34,6 @@ class VendorOrdersRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $client
-     * @param $date
-     * @return array
-     */
-    public function getOldShares($client, $date)
-    {
-        $qb = $this->createQueryBuilder('s')
-            ->where('s.client = :client')
-            ->andWhere('s.orderDate < :date')
-            ->setParameter('client', $client)
-            ->setParameter('date', $date);
-
-        return $qb->getQuery()->getResult();
-    }
-
-    /**
-     * @param Client $client
-     * @return \Doctrine\Common\Collections\Collection|VendorOrder[] $orders
-     */
-    public function getVendorOrders(Client $client)
-    {
-        $qb = $this->createQueryBuilder('v')
-            ->select('v, shareProducts, product')
-            ->innerJoin('v.vendor', 'vendor')
-            ->innerJoin('v.shareProducts', 'shareProducts')
-            ->innerJoin('shareProducts.product', 'product')
-            ->where('v.client = :client')
-            ->andWhere('vendor.category <> :empty')
-            ->andWhere('v.orderDate >= :now')
-            ->setParameter('client', $client)
-            ->setParameter('empty', 'a:0:{}')
-            ->setParameter('now', new \DateTime("midnight"));
-
-        return $qb->getQuery()->getResult();
-    }
-
-    /**
      * @param Vendor $vendor
      * @return array
      */

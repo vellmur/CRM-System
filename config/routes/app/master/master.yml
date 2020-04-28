@@ -139,38 +139,3 @@ master_image_manager:
     path:     /image/manager
     defaults: { _controller: App\Controller\Master\MasterController::imageManager }
     methods:  GET
-
-master_translation:
-    path:     /translation
-    defaults: { _controller: App\Controller\Translation\TranslationController::list }
-    methods:  [GET, POST]
-
-master_translation_keys:
-    path:     /translation/keys/list
-    defaults: { _controller: App\Controller\Translation\TranslationController::keys }
-    methods:  GET
-
-master_translation_edit_keys:
-    path:     /translation/keys/edit/{domain}/
-    defaults: { _controller: App\Controller\Translation\TranslationController::editKeys }
-    methods:  [GET, POST]
-
-master_translation_update_key:
-    path:   /translation/keys/update/{id}/
-    defaults: { _controller: App\Controller\Translation\TranslationController::updateKey }
-    methods:  POST
-
-master_translation_delete_key:
-    path:   /translation/keys/delete/{id}/
-    defaults: { _controller: App\Controller\Translation\TranslationController::deleteKey }
-    methods:  DELETE
-
-master_translation_share:
-    path:   /translation/share/{locale}/{domain}/
-    defaults: { _controller: App\Controller\Translation\TranslationController::shareTranslation }
-    methods:  POST
-
-master_translation_translate:
-    path:      /translation/translate/{locale}/{domain}/
-    defaults: { _controller: App\Controller\Translation\TranslationController::translate }
-    methods:  [GET, POST]

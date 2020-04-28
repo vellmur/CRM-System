@@ -34,14 +34,6 @@ customers_list:
     prefix:   /
     resource: list.yml
 
-customers_shares:
-    prefix:   /shares
-    resource: share.yml
-
-customers_locations:
-    prefix:   /locations
-    resource: location.yml
-
 customers_emails:
     prefix:   /emails
     resource: email.yml

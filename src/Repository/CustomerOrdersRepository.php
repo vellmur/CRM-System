@@ -30,20 +30,4 @@ class CustomerOrdersRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
-
-    /**
-     * @param $client
-     * @param $date
-     * @return array
-     */
-    public function getOldShares($client, $date)
-    {
-        $qb = $this->createQueryBuilder('s')
-            ->where('s.client = :client')
-            ->andWhere('s.endDate < :date')
-            ->setParameter('client', $client)
-            ->setParameter('date', $date);
-
-        return $qb->getQuery()->getResult();
-    }
 }

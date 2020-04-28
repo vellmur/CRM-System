@@ -61,23 +61,13 @@ class MemberRepository extends ServiceEntityRepository
     public function searchByAll($client, $search)
     {
         $qb = $this->createQueryBuilder('m')
-                ->select('m, shares, share, location')
+                ->select('m')
                 ->where('m.client = :client')
-                ->leftJoin('m.shares', 'shares')
-                ->leftJoin('shares.share', 'share')
-                ->leftJoin('shares.location' ,'location')
                 ->orderBy('m.firstname, m.lastname')
                 ->setParameter('client', $client);
 
         if (strlen($search) > 0) {
-            $query = "(CONCAT(m.firstname, ' ',m.lastname) LIKE '%$search%') OR m.email LIKE '%$search%' 
-                OR share.name LIKE '%$search%' OR location.name LIKE '%$search%'";
-
-            $shareDay = $this->getShareDay($search);
-            if ($shareDay) $query .= ' OR shares.pickupDay=' . $shareDay;
-
-            $status = $this->getStatus($search);
-            if ($status) $query .= ' OR shares.status = ' . $status;
+            $query = "(CONCAT(m.firstname, ' ',m.lastname) LIKE '%$search%') OR m.email LIKE '%$search%'";
 
             $qb->andWhere($query);
         }
@@ -86,11 +76,6 @@ class MemberRepository extends ServiceEntityRepository
     }
 
     /**
-     *
-     * Lead - it is a customer that never had any shares in a system.
-     *
-     * If lead had any share once, he becomes a customer or contact
-     *
      * @param $client
      * @param $search
      * @return \Doctrine\ORM\Query
@@ -117,8 +102,7 @@ class MemberRepository extends ServiceEntityRepository
     public function searchByContacts($client, $search)
     {
         $qb = $this->createQueryBuilder('m')
-            ->where('m.client = :client AND m.isLead = 0 AND shares.id IS NULL')
-            ->leftJoin('m.shares', 'shares')
+            ->where('m.client = :client AND m.isLead = 0')
             ->orderBy('m.firstname, m.lastname')
             ->setParameter('client', $client);
 
@@ -131,38 +115,28 @@ class MemberRepository extends ServiceEntityRepository
 
 
     /**
-     * Get Leads and Contacts for send delivery day notification
-     * Customers that have a delivery day equal to day after tomorrow (today + 2 days)
-     *
      * @param Client $client
      * @param $deliveryTypeId
-     * @return array
+     * @return mixed
+     * @throws \Exception
      */
     public function getLeadsAndContacts(Client $client, $deliveryTypeId)
     {
         $date = new \DateTime("midnight");
         $date->modify('+2 days');
 
-        $deliveryDay = $date->format('N');
-
         $qb = $this->createQueryBuilder('m')
-            ->leftJoin('m.shares', 'shares')
             ->innerJoin('m.notifications', 'notifications')
             ->where('m.client = :client')
             ->andWhere('m.email IS NOT NULL')
-            ->andWhere('shares.id IS NULL')
-            ->andWhere('m.deliveryDay = :deliveryDay')
             ->andWhere('notifications.notifyType = :deliveryType AND notifications.isActive = 1')
             ->setParameter('deliveryType', $deliveryTypeId)
-            ->setParameter('client', $client)
-            ->setParameter('deliveryDay', $deliveryDay);
+            ->setParameter('client', $client);
 
         return $qb->getQuery()->getResult();
     }
 
     /**
-     * Member - it is a customer who have at least one share with any status but with for MEMBER type
-     *
      * @param $client
      * @param $search
      * @return \Doctrine\ORM\Query
@@ -170,24 +144,13 @@ class MemberRepository extends ServiceEntityRepository
     public function searchByMembers($client, $search)
     {
         $qb = $this->createQueryBuilder('m')
-            ->select('m, shares, share, location')
+            ->select('m')
             ->where('m.client = :client AND m.isLead = 0')
-            ->andWhere('shares.type = 1')
-            ->innerJoin('m.shares', 'shares')
-            ->innerJoin('shares.share', 'share')
-            ->leftJoin('shares.location' ,'location')
             ->orderBy('m.firstname, m.lastname')
             ->setParameter('client', $client);
 
         if (strlen($search) > 0) {
-            $query = "(CONCAT(m.firstname, ' ',m.lastname) LIKE '%$search%') OR m.email LIKE '%$search%' 
-                OR share.name LIKE '%$search%' OR location.name LIKE '%$search%'";
-
-            $shareDay = $this->getShareDay($search);
-            if ($shareDay) $query .= ' OR shares.pickupDay = ' . $shareDay;
-
-            $status = $this->getStatus($search);
-            if ($status) $query .= ' OR shares.status = ' . $status;
+            $query = "(CONCAT(m.firstname, ' ',m.lastname) LIKE '%$search%') OR m.email LIKE '%$search%'";
 
             $qb->andWhere($query);
         }
@@ -196,8 +159,6 @@ class MemberRepository extends ServiceEntityRepository
     }
 
     /**
-     * Patron - it is a customer who have at least one share with a "PATRONS" type
-     *
      * @param $client
      * @param $search
      * @return \Doctrine\ORM\Query
@@ -205,90 +166,19 @@ class MemberRepository extends ServiceEntityRepository
     public function searchByPatrons($client, $search)
     {
         $qb = $this->createQueryBuilder('m')
-            ->select('m, shares, share, location, orders')
-            ->where('m.client = :client AND m.isLead = 0 AND shares.customer IS NOT NULL AND shares.type = 2')
+            ->select('m, orders')
+            ->where('m.client = :client AND m.isLead = 0')
             ->orWhere('m.client = :client AND m.isLead = 0 AND orders.customer IS NOT NULL')
-            ->leftJoin('m.shares', 'shares')
-            ->leftJoin('shares.share', 'share')
             ->leftJoin('m.orders', 'orders')
-            ->leftJoin('shares.location' ,'location')
             ->orderBy('m.firstname, m.lastname')
             ->setParameter('client', $client);
 
         if (strlen($search) > 0) {
-            $query = "(CONCAT(m.firstname, ' ',m.lastname) LIKE '%$search%') OR m.email LIKE '%$search%' 
-                OR share.name LIKE '%$search%' OR location.name LIKE '%$search%'";
-
-            $shareDay = $this->getShareDay($search);
-            if ($shareDay) $query .= ' OR shares.pickupDay = ' . $shareDay;
-
-            $status = $this->getStatus($search);
-            if ($status) $query .= ' OR shares.status = ' . $status;
-
+            $query = "(CONCAT(m.firstname, ' ',m.lastname) LIKE '%$search%') OR m.email LIKE '%$search%'";
             $qb->andWhere($query);
         }
 
         return $qb->getQuery();
-    }
-
-    /**
-     * @param $status
-     * @return bool
-     */
-    private function getStatus($status)
-    {
-        $statuses = [
-            1 => 'PENDING',
-            2 => 'ACTIVE',
-            3 => 'LAPSED'
-        ];
-
-        $found = $this->searchForMatch($status, $statuses);
-
-        return $found;
-    }
-
-    /**
-     * @param $day
-     * @return bool
-     */
-    private function getShareDay($day)
-    {
-        $week = [
-            1 => 'MONDAY',
-            2 => 'TUESDAY',
-            3 => 'WEDNESDAY',
-            4 => 'THURSDAY',
-            5 => 'FRIDAY',
-            6 => 'SATURDAY',
-            7 => 'SUNDAY'
-        ];
-
-        $found = $this->searchForMatch($day, $week);
-
-        return $found;
-    }
-
-    /**
-     *
-     * Search for matching value in array
-     * Array must have this view -> [$key => $string value]
-     *
-     * @param $search
-     * @param $array
-     * @return bool
-     */
-    public function searchForMatch($search, $array)
-    {
-        $found = false;
-
-        foreach ($array as $item) {
-            if (strpos($item,mb_strtoupper($search)) !== false) {
-                $found = array_flip($array)[$item];
-            }
-        }
-
-        return $found;
     }
 
     /**

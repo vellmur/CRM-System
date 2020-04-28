@@ -4,12 +4,10 @@ namespace App\Entity\User;
 
 use App\Entity\Client\Client;
 use App\Entity\Client\Team;
-use App\Entity\Translation\TranslationLocale;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use EWZ\Bundle\RecaptchaBundle\Validator\Constraints as Recaptcha;
 use DateTime;
 
 /**
@@ -56,8 +54,9 @@ class User implements UserInterface
     private $email;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Translation\TranslationLocale", inversedBy="users")
-     * @ORM\JoinColumn(name="locale_id", referencedColumnName="id", nullable=false)
+     * @var int
+     *
+     * @ORM\Column(type="integer", length=1)
      * @Assert\NotBlank(message="validation.form.required")
      */
     private $locale;
@@ -142,6 +141,12 @@ class User implements UserInterface
     const ROLE_OWNER = 'ROLE_OWNER';
     const ROLE_EMPLOYEE = 'ROLE_EMPLOYEE';
     const ROLE_USER = 'ROLE_USER';
+
+    const LOCALES = [
+        1 => 'English',
+        2 => 'Русский',
+        3 => 'Українська'
+    ];
 
     /**
      * @var array
@@ -354,17 +359,31 @@ class User implements UserInterface
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getLocale()
+    public function getLocale(): ?int
     {
         return $this->locale;
     }
 
     /**
-     * @param mixed $locale
+     * @return string|null
      */
-    public function setLocale(TranslationLocale $locale): void
+    public function getLocaleCode(): ?string
+    {
+        $locales = [
+            1 => 'en',
+            2 => 'ru',
+            3 => 'uk'
+        ];
+
+        return $this->locale ? $locales[$this->locale] : null;
+    }
+
+    /**
+     * @param int $locale
+     */
+    public function setLocale(int $locale): void
     {
         $this->locale = $locale;
     }

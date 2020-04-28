@@ -8,20 +8,13 @@ use App\Entity\Customer\Contact;
 use App\Entity\Customer\CustomerReferral;
 use App\Entity\Customer\Invoice;
 use App\Entity\Customer\Email\EmailRecipient;
-use App\Entity\Customer\Feedback;
-use App\Entity\Customer\Location;
 use App\Entity\Customer\Customer;
 use App\Entity\Customer\CustomerOrders;
-use App\Entity\Customer\CustomerShare;
-use App\Entity\Customer\Merchant;
-use App\Entity\Customer\Pickup;
 use App\Entity\Customer\RenewalView;
-use App\Entity\Customer\Share;
-use App\Entity\Customer\ShareProduct;
 use App\Entity\Customer\TestimonialRecipient;
 use App\Entity\Customer\Vendor;
 use App\Entity\Customer\VendorOrder;
-use App\Entity\Team;
+use App\Entity\Client\Team;
 use App\Entity\User\User;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -61,134 +54,13 @@ class MembershipManager
     }
 
     /**
-     * Add/Renew customer membership for the invoice products (shares/products)
-     *
-     * Customer shares have 1 + N pickups (share dates)
-     * Patron shares have just one pickup (one date).
-     *
-     * For customer shares we create pickups of ONE share based on qty.
-     * For patron shares we create MULTIPLE different shares with one pickup of same type based on Qty.
-     *
-     * @param Invoice $invoice
-     * @return Invoice
-     */
-    public function renewMembership(Invoice $invoice)
-    {
-        $member = $invoice->getMember();
-
-        // Add/Renew customer shares and products
-        foreach ($invoice->getItems() as $item) {
-            // Add/Renew shares
-            if ($item->getShare()) {
-                $existedShare = $this->findCustomerShare($member, $item->getShare());
-
-                // Renew existed share or add new share
-                if ($existedShare) {
-                    // If existed share have MEMBER type, just add N weeks to the share
-                    if ($existedShare->getTypeName() == 'MEMBER') {
-                        $this->renewShare($existedShare, $invoice->getLocation(), $item->getQty());
-                    } else {
-                        // If existed share have PATRON type, create N weeks of PATRON shares with one pickup
-                        for ($i = 0; $i < $item->getQty(); $i++) {
-                            $this->addNewShare($member, $invoice->getLocation(), $item->getShare(), 1);
-                        }
-                    }
-                } else {
-                    $this->addNewShare($member, $invoice->getLocation(), $item->getShare(), $item->getQty());
-                }
-            }
-        }
-
-        if (!$invoice->isPaid()) $invoice->setIsPaid(true);
-
-        $this->memberManager->update($member);
-
-        return $invoice;
-    }
-
-    /**
-     * Reduce membership of customer. Cut N of share pickups
-     *
-     * @param Invoice $invoice
-     * @return Invoice
-     */
-    public function reduceMembership(Invoice $invoice)
-    {
-        $member = $invoice->getMember();
-
-        // Reduce qty of weeks/products for shares/products
-        foreach ($invoice->getItems() as $item) {
-            if ($item->getShare()) {
-                $shares = $this->findCustomerShares($member, $item->getShare());
-
-                if ($shares) {
-                    // Use first share for defining a type
-                    $customerShare = $shares[0];
-
-                    // Reduce weeks num for customer or remove share for patron (Patron have one week in the product invoice)
-                    if ($customerShare->getTypeName() == 'MEMBER') {
-                        $weeksLeft = $customerShare->getPickupsNum() - $item->getQty();
-                        $weeksLeft > 0 ? $customerShare->setPickupsNum($weeksLeft) : $this->em->remove($customerShare);
-                    } else {
-                        // Get patron shares from invoice products and remove them
-                        for ($i = 0; $i < $item->getQty(); $i++) {
-                            if (!isset($shares[$i])) break;
-
-                            $this->em->remove($shares[$i]);
-                        }
-                    }
-                }
-            }
-        }
-
-        $invoice->setIsPaid(false);
-
-        $this->memberManager->update($member);
-
-        return $invoice;
-    }
-
-    /**
-     * @param Customer $customer
-     * @param Share $share
-     * @return CustomerShare|null|object
-     */
-    public function findCustomerShare(Customer $customer, Share $share)
-    {
-        $share = $this->em->getRepository(CustomerShare::class)->findOneBy([
-            'customer' => $customer,
-            'share' => $share
-        ]);
-
-        return $share;
-    }
-
-    /**
-     * @param Customer $customer
-     * @param Share $share
-     * @return CustomerShare[]|array
-     */
-    public function findCustomerShares(Customer $customer, Share $share)
-    {
-        $shares = $this->em->getRepository(CustomerShare::class)->findBy([
-            'customer' => $customer,
-            'share' => $share
-        ]);
-
-        return $shares;
-    }
-
-    /**
      * Add/Update customer data after signUp/Renewal action
      *
      * @param Customer $member
      * @param $data
      */
-    public function saveMemberData(Customer $member, $data)
+    public function saveCustomerData(Customer $member, $data)
     {
-        $orderDate = new \DateTime($data['orderDate']);
-        $member->setDeliveryDay($orderDate->format('N'));
-
         // If customer set that billing address is not different from delivery, save address as 'BILLING AND DELIVERY'
         $extraBilling = isset($data['isNeedBilling']);
         $firstType = $extraBilling ? 'Delivery' : 'Billing and Delivery';
@@ -234,154 +106,12 @@ class MembershipManager
     }
 
     /**
-     * @param Customer $member
-     * @param Location $location
-     * @param Share $share
-     * @param $weeks
-     * @return CustomerShare
-     */
-    public function addNewShare(Customer $member, Location $location, Share $share, $weeks)
-    {
-        $customerShare = new CustomerShare();
-        $customerShare->setShare($share);
-        $customerShare->setLocation($location);
-        $customerShare->setStartDate(new \DateTime());
-        $customerShare->setPickupsNum($weeks);
-
-        // If customer purchased more than one share, set type to MEMBER, else save as PATRON
-        $customerShare->setType($customerShare->getPickupsNum() > 1 ? 1 : 2);
-
-        // Set share pickup date (share day) to customer delivery day or start date day of week
-        if ($member->getDeliveryDay()) {
-            $customerShare->setPickUpDay($member->getDeliveryDay());
-        } else {
-            $customerShare->setPickUpDay($customerShare->getStartDate()->format('w'));
-        }
-
-        $member->addShare($customerShare);
-
-        return $customerShare;
-    }
-
-    /**
-     * @param CustomerShare $customerShare
-     * @param Location $location
-     * @param $weeks
-     * @return CustomerShare
-     */
-    public function renewShare(CustomerShare $customerShare, Location $location, $weeks)
-    {
-        $deliveryDay = $customerShare->getMember()->getDeliveryDay();
-
-        // If delivery day of customer is changed, update share pickup day,
-        if ($deliveryDay && $deliveryDay != $customerShare->getPickUpDay()) {
-            $customerShare->setPickUpDay($deliveryDay);
-        }
-
-        $customerShare->setLocation($location);
-        $customerShare->setPickupsNum($customerShare->getPickupsNum() + $weeks);
-
-        return $customerShare;
-    }
-
-    /**
-     * @param Pickup $pickup
-     * @return \Doctrine\Common\Collections\Collection|Pickup[] $pickups|bool|\Exception
-     */
-    public function controlPickup(Pickup $pickup)
-    {
-        $this->em->getConnection()->beginTransaction();
-
-        try {
-            $share = $pickup->getShare();
-
-            $pickup->setSkipped($pickup->isSkipped() ? false : true);
-
-            if ($pickup->isSkipped()) {
-                $newPickup = new Pickup();
-                $newPickup->setDate($share->getRenewalDate()->modify('+7 days'));
-                $share->addPickup($newPickup);
-
-                $response[] = $newPickup;
-
-                // Automatically updates of share renewal date and statuses based on pickups num, start date and renewal date
-                $this->getMemberManager()->updateShareRenewalDate($share);
-
-                // Get all suspended weeks by client
-                $suspendedWeeks = $this->getMemberManager()->getSuspendedWeeks($share->getMember()->getClient());
-
-                if ($suspendedWeeks) {
-                    // Suspend client weeks and add to response suspended pickups
-                    $suspendedPickups = $this->getMemberManager()->checkSuspendedWeeks($share, $suspendedWeeks);
-                    if ($suspendedPickups) $response = array_merge($response, $suspendedPickups);
-                }
-            } else {
-                // Save removed object for response
-                $lastPickup = $this->em->getRepository(Pickup::class)->findOneBy(['share' => $share->getId(), 'skipped' => false], ['date' => 'desc']);
-                $response[] = clone $lastPickup;
-
-                $this->getMemberManager()->cutPickups($share);
-
-                // Automatically updates of share renewal date and statuses based on pickups num, start date and renewal date
-                $this->getMemberManager()->updateShareRenewalDate($share);
-            }
-
-            $this->em->flush();
-
-            $this->em->getConnection()->commit();
-        } catch (\Throwable $e) {
-            $this->em->getConnection()->rollBack();
-
-            $response = $e;
-        }
-
-        return $response;
-    }
-
-    /**
-     * @param \Doctrine\Common\Collections\Collection|CustomerShare[] $customerShares
-     * @return array
-     */
-    public function countPickups($customerShares)
-    {
-        $counter = ['total' => 0];
-
-        $now = new \DateTime('midnight');
-
-        foreach ($customerShares as $share) {
-            if (!isset($counter[$share->getShare()->getId()])) $counter[$share->getShare()->getId()] = 0;
-
-            foreach ($share->getPickups() as $pickup) {
-                if ($pickup->getDate() < $now || $pickup->isSkipped() || $pickup->isSuspended()) continue;
-
-                $counter[$share->getShare()->getId()] += 1;
-                $counter['total'] += 1;
-            }
-        }
-
-        return $counter;
-    }
-
-    /**
-     * @param Customer $member
-     * @return CustomerShare[]|array
-     */
-    public function getCustomerShares(Customer $member)
-    {
-        $shares = $this->em->getRepository(CustomerShare::class)->getMemberCurrentShares($member);
-
-        return $shares;
-    }
-
-    /**
      * @param $token
      * @return null|Customer|object
      */
     public function findOneByToken($token)
     {
-        $member = $this->em->getRepository(Customer::class)->findByToken($token);
-
-        return $member;
+        return $this->em->getRepository(Customer::class)->findByToken($token);
     }
 
     /**
@@ -390,9 +120,7 @@ class MembershipManager
      */
     public function findVendorContactByToken($token)
     {
-        $member = $this->em->getRepository(Contact::class)->findOneBy(['token' => $token]);
-
-        return $member;
+        return $this->em->getRepository(Contact::class)->findOneBy(['token' => $token]);
     }
 
     /**
@@ -401,52 +129,8 @@ class MembershipManager
      */
     public function findClientByToken($token)
     {
-        $client = $this->em->getRepository(Client::class)->findOneBy(['token' => $token]);
-
-        return $client;
+        return $this->em->getRepository(Client::class)->findOneBy(['token' => $token]);
     }
-
-    /**
-     * @param Client $client
-     * @param $methodId
-     * @return \App\Entity\Customer\Merchant|null|object
-     */
-    public function gePaymentMerchant(Client $client, $methodId)
-    {
-        $merchant = $this->em->getRepository(Merchant::class)->findOneBy(['client' => $client, 'merchant' => $methodId]);
-
-        return $merchant;
-    }
-
-    /**
-     * @param Client $client
-     * @return User
-     */
-    public function findFarmOwner(Client $client)
-    {
-        $owner = $this->em->getRepository(Team::class)->findOneBy(['client' => $client], ['user' => 'asc']);
-
-        return $owner->getUser();
-    }
-
-    /**
-     * @param $id
-     * @return \App\Entity\Customer\Pickup|null|object
-     */
-    public function getPickup($id)
-    {
-        return $this->em->find(Pickup::class, $id);
-    }
-
-    /**
-     * @param Client $client
-     * @return \Doctrine\Common\Collections\Collection|CustomerShare[] $shares
-     */
-    public function getSharesToArchive(Client $client)
-    {
-        return $this->em->getRepository(CustomerShare::class)->getSharesToArchive($client);
-    }
-
     /**
      * @param $id
      * @return Client|null|object
@@ -470,73 +154,6 @@ class MembershipManager
         }
 
         return $member;
-    }
-
-    /**
-     * @param Customer $member
-     * @return array
-     */
-    public function computeAddressesChange(Customer $member)
-    {
-        $uow = $this->em->getUnitOfWork();
-        $uow->computeChangeSets(); // do not compute changes if inside a listener
-
-        $changeSet = [];
-
-        // Compute addresses changes
-        foreach ($member->getAddresses() as $address) {
-            $changeSet = $uow->getEntityChangeSet($address);
-        }
-
-        // If something changed, save in array addresses before and after
-        if ($changeSet) {
-            $addressesBefore = $this->em->getRepository(Address::class)->getDatabaseAddresses($member);
-
-            $changeSet = [
-                'before' => [],
-                'after' => []
-            ];
-
-            // before
-            foreach ($addressesBefore as $key => $address) {
-                $changeSet['before'][$key] = $address;
-            }
-
-            // after
-            foreach ($member->getAddresses() as $key => $address) {
-                $changeSet['after'][$key] = $address;
-            }
-        }
-
-        return $changeSet;
-    }
-
-    /**
-     * @param Customer $member
-     * @return array
-     */
-    public function getSharesProducts(Customer $member)
-    {
-        $shares = $this->em->getRepository(CustomerShare::class)->getSharesProducts($member);
-
-        // Remove shares that are not in a date range in customer orders page
-        /** @var CustomerShare $share */
-        foreach ($shares as $key => $share) {
-            $nextShare = $share->getPickups()[0];
-
-            /** @var CustomerOrders $order */
-            $order = $share->getShare()->getCustomerOrders()[0];
-
-            $today = new \DateTime("midnight");
-            $daysToNext = $today->diff($nextShare->getDate());
-
-            // Remove customizing if end date of order is less than next share date or if last share date was 1 day ago
-            if (($order->getEndDate() < $nextShare->getDate()) || $daysToNext->days == 6) {
-                unset($shares[$key]);
-            }
-        }
-
-        return $shares;
     }
 
     /**
@@ -574,48 +191,6 @@ class MembershipManager
     {
         $recipient->setIsClicked(true);
         $this->em->flush();
-    }
-
-    /**
-     * @param Customer $customer
-     * @param $shareId
-     * @param $shareDate
-     * @param $isSatisfied
-     * @param EmailRecipient|null $recipient
-     */
-    public function saveFeedback(Customer $customer, $shareId, $shareDate, $isSatisfied, EmailRecipient $recipient = null)
-    {
-        $share = $this->em->find(Share::class, $shareId);
-        $shareDate = new \DateTime($shareDate);
-
-        $feedback = $this->em->getRepository(Feedback::class)->findOneBy(['customer' => $customer, 'share' => $share, 'shareDate' => $shareDate]);
-
-        if (!$feedback) {
-            $feedback = new Feedback();
-            $feedback->setCustomer($customer);
-            $feedback->setShare($share);
-            $feedback->setShareDate($shareDate);
-        }
-
-        // Add email recipient if customer clicked on a feedback link from feedback email notification
-        if ($recipient) {
-            $feedback->setRecipient($recipient);
-        }
-
-        $feedback->setIsSatisfied($isSatisfied);
-        $feedback->setCreatedAt(new \DateTime());
-
-        $this->em->persist($feedback);
-        $this->em->flush();
-    }
-
-    /**
-     * @param Customer $member
-     * @return mixed
-     */
-    public function getSharesFeedback(Customer $member)
-    {
-        return $this->em->getRepository(Pickup::class)->getSharesFeedback($member);
     }
 
     /**
@@ -664,9 +239,7 @@ class MembershipManager
      */
     public function getClientsWithPatrons()
     {
-        $patrons = $this->em->getRepository(Client::class)->getPOSPatrons();
-
-        return $patrons;
+        return $this->em->getRepository(Client::class)->getPOSPatrons();
     }
 
     /**

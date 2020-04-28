@@ -3,9 +3,7 @@
 namespace App\Entity\Client;
 
 use App\Entity\Customer\Email\AutoEmail;
-use App\Entity\Customer\Location;
 use App\Entity\Customer\Customer;
-use App\Entity\Customer\Share;
 use App\Entity\Customer\Tag;
 use App\Entity\User\User;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -26,7 +24,6 @@ class Client
         $this->createdAt = new \DateTime();
         $this->accesses =  new ArrayCollection();
         $this->transactions = new ArrayCollection();
-        $this->location =  new ArrayCollection();
         $this->notes = new ArrayCollection();
         $this->modulesSettings = new ArrayCollection();
         $this->paymentSettings = new ArrayCollection();
@@ -119,11 +116,6 @@ class Client
     private $createdAt;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\Location", mappedBy="client", cascade={"all"})
-     */
-    private $locations;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Client\ModuleAccess", mappedBy="client", cascade={"all"})
      */
     private $accesses;
@@ -149,19 +141,9 @@ class Client
     private $vendors;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\Share", mappedBy="client", cascade={"remove"})
-     */
-    private $shares;
-
-    /**
      * @ORM\OneToOne(targetEntity="App\Entity\Client\Affiliate", mappedBy="client", cascade={"all"})
      */
     private $affiliate;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\CustomerOrders", mappedBy="client", cascade={"remove"})
-     */
-    private $customerOrders;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Customer\VendorOrder", mappedBy="client", cascade={"remove"})
@@ -177,11 +159,6 @@ class Client
      * @ORM\OneToMany(targetEntity="App\Entity\Customer\Email\AutoEmail", mappedBy="client", cascade={"all"})
      */
     private $autoEmails;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\SuspendedWeek", mappedBy="client", cascade={"all"})
-     */
-    private $suspendedWeeks;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Customer\RenewalView", mappedBy="client", cascade={"all"}, orphanRemoval=true)
@@ -621,28 +598,6 @@ class Client
     }
 
     /**
-     * Get locations
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getLocations()
-    {
-        return $this->locations;
-    }
-
-    /**
-     * @param Location $location
-     * @return $this
-     */
-    public function addLocation(Location $location)
-    {
-        $location->setClient($this);
-        $this->locations[] = $location;
-
-        return $this;
-    }
-
-    /**
      * @param Customer $customer
      * @return $this
      */
@@ -669,35 +624,6 @@ class Client
     public function getCustomers()
     {
         return $this->customers;
-    }
-
-    /**
-     * @param Share $share
-     * @return $this
-     */
-    public function addShare(Share $share)
-    {
-        $this->shares[] = $share;
-
-        return $this;
-    }
-
-    /**
-     * @param Share $share
-     */
-    public function removeShare(Share $share)
-    {
-        $this->shares->removeElement($share);
-    }
-
-    /**
-     * Get shares
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getShares()
-    {
-        return $this->shares;
     }
 
     /**

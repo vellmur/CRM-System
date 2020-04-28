@@ -39,7 +39,8 @@
         "twig/extra-bundle": "^3.0",
         "twig/intl-extra": "^3.0",
         "vich/uploader-bundle": "^1.13",
-        "wa72/htmlpagedom": "^2.0"
+        "wa72/htmlpagedom": "^2.0",
+        "ext-openssl": "*"
     },
     "require-dev": {
         "codeception/c3": "^2.4",

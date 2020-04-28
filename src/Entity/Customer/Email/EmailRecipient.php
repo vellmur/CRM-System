@@ -26,11 +26,6 @@ class EmailRecipient extends BaseRecipient implements CustomerRecipientInterface
     private $customer;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Customer\Email\Feedback", mappedBy="recipient", cascade={"all"}, orphanRemoval=true)
-     */
-    private $feedback;
-
-    /**
      * @return Customer
      */
     public function getCustomer() : Customer
@@ -46,21 +41,5 @@ class EmailRecipient extends BaseRecipient implements CustomerRecipientInterface
         if (is_array($customer)) $customer = $customer[0];
 
         $this->customer = $customer;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFeedback()
-    {
-        return $this->feedback;
-    }
-
-    /**
-     * @param mixed $feedback
-     */
-    public function setFeedback(Feedback $feedback)
-    {
-        $this->feedback = $feedback;
     }
 }

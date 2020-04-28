@@ -155,15 +155,9 @@ class CustomerController extends AbstractController
      * @param Request $request
      * @param PaginatorInterface $paginator
      * @param ShareManager $shareManager
-     * @param MemberService $service
      * @return JsonResponse|Response
      */
-    public function list(
-        Request $request,
-        PaginatorInterface $paginator,
-        ShareManager $shareManager,
-        MemberService $service
-    ) {
+    public function list(Request $request, PaginatorInterface $paginator, ShareManager $shareManager) {
         $client = $this->getUser()->getClient();
 
         $searchBy = $request->query->get('searchBy') && $request->query->get('searchBy') != 'undefined'
@@ -174,18 +168,10 @@ class CustomerController extends AbstractController
         $members = $paginator->paginate($query, $request->query->getInt('page', 1), 20);
 
         if (!$request->isXMLHttpRequest()) {
-            $shares = $shareManager->getCustomerSharesArray($client);
-            $sharesNum = $shareManager->countShareMembers($client);
-            $statusAmount = $shareManager->countShareMembersByStatus($client);
-            $renewalNum = $shareManager->countRenewalMembers($client);
-            $newWeekNum = $shareManager->countNewByDays($client, 7);
-            $newMonthNum = $shareManager->countNewByDays($client, 30);
-            $sharesInfo = $service->countSharesData($shares, $sharesNum, $statusAmount, $renewalNum, $newWeekNum, $newMonthNum);
             $ordersInfo = $shareManager->countOrders($client);
 
             return $this->render('customer/list.html.twig', [
                 'members' => $members,
-                'sharesStats' => $sharesInfo,
                 'ordersStats' => $ordersInfo
             ]);
         } else {

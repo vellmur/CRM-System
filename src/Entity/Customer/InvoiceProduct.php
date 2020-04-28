@@ -33,12 +33,6 @@ class InvoiceProduct
     private $invoice;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Customer\Share", inversedBy="invoices")
-     * @ORM\JoinColumn(name="share_id", referencedColumnName="id", nullable=true)
-     */
-    private $share;
-
-    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Customer\Product", inversedBy="invoices")
      * @ORM\JoinColumn(name="product_id", referencedColumnName="id", nullable=true)
      */
@@ -106,22 +100,6 @@ class InvoiceProduct
     public function setInvoice($invoice)
     {
         $this->invoice = $invoice;
-    }
-
-    /**
-     * @return Share
-     */
-    public function getShare()
-    {
-        return $this->share;
-    }
-
-    /**
-     * @param mixed $share
-     */
-    public function setShare($share)
-    {
-        $this->share = $share;
     }
 
     /**

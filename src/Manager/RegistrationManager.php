@@ -5,18 +5,15 @@ namespace App\Manager;
 use App\Entity\Client\Affiliate;
 use App\Entity\Client\Client;
 use App\Entity\Customer\Email\AutoEmail;
-use App\Entity\Customer\Location;
 use App\Entity\Client\ModuleAccess;
 use App\Entity\Client\Referral;
 use App\Entity\Client\Team;
-use App\Entity\Translation\TranslationLocale;
 use App\Entity\User\User;
 use App\Security\AccessUpdater;
 use App\Service\CountryList;
 use App\Service\Mail\Sender;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
@@ -312,18 +309,8 @@ class RegistrationManager
      */
     public function getLocales()
     {
-        $allLocales = $this->em->getRepository(TranslationLocale::class)->getAllLocales();
+        $locales = [];
 
-        if (!$allLocales) {
-            $defaultLocale = new TranslationLocale();
-            $defaultLocale->setCode('en');
-
-            $this->em->persist($defaultLocale);
-            $this->em->flush();
-
-            $allLocales = [$defaultLocale];
-        }
-
-        return $allLocales;
+        return $locales;
     }
 }
