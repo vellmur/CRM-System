@@ -25,8 +25,6 @@ class Client
         $this->accesses =  new ArrayCollection();
         $this->transactions = new ArrayCollection();
         $this->notes = new ArrayCollection();
-        $this->modulesSettings = new ArrayCollection();
-        $this->paymentSettings = new ArrayCollection();
         $this->tags = new ArrayCollection();
         $this->team = new ArrayCollection();
         $this->posts = new ArrayCollection();
@@ -181,11 +179,6 @@ class Client
     private $images;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Client\ModuleSetting", mappedBy="client", cascade={"persist", "remove"})
-     */
-    private $modulesSettings;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Customer\POS", mappedBy="client", cascade={"persist", "remove"})
      */
     private $pos;
@@ -199,11 +192,6 @@ class Client
      * @ORM\OneToMany(targetEntity="App\Entity\Customer\Tag", mappedBy="client", cascade={"remove"})
      */
     private $tags;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Client\PaymentSettings", mappedBy="client", cascade={"remove"})
-     */
-    private $paymentSettings;
 
     /**
      * Get id
@@ -670,34 +658,6 @@ class Client
     {
         $autoEmail->setClient($this);
         $this->autoEmails[] = $autoEmail;
-
-        return $this;
-    }
-
-    /**
-     * @return \Doctrine\Common\Collections\Collection|ModuleSetting[] $moduleSettings
-     */
-    public function getModulesSettings()
-    {
-        return $this->modulesSettings;
-    }
-
-    /**
-     * @param mixed $modulesSettings
-     */
-    public function setModulesSettings($modulesSettings)
-    {
-        $this->modulesSettings = $modulesSettings;
-    }
-
-    /**
-     * @param ModuleSetting $moduleSetting
-     * @return $this
-     */
-    public function addModuleSettings(ModuleSetting $moduleSetting)
-    {
-        $moduleSetting->setClient($this);
-        $this->modulesSettings[] = $moduleSetting;
 
         return $this;
     }
