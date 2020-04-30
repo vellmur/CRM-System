@@ -37,8 +37,7 @@ class POSType extends AbstractType
                 'mapped' => false
             ])
             ->add('customer', CustomerType::class, [
-                'label' => false,
-                'client' => $builder->getData()->getClient()
+                'label' => false
             ])
             ->add('productSearch', TextType::class, [
                 'attr' => [

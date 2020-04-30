@@ -61,13 +61,8 @@ class ProductSubscriber implements EventSubscriberInterface
 
         if ($data) {
             if ($data->getCategory() == 1 && $data->isPos()) {
-                $form->remove('weight');
                 $this->addPayBy($event->getForm());
-
-                $data->setWeight(null);
             } else {
-                $this->addWeight($form);
-
                 $form->remove('payByItem');
                 $data->setPayByItem(false);
             }
@@ -86,11 +81,8 @@ class ProductSubscriber implements EventSubscriberInterface
 
         if ($data) {
             if (isset($data['category']) && $data['category'] == 1 && isset($data['isPos']) && $data['isPos'] == true) {
-                $form->remove('weight');
                 $this->addPayBy($event->getForm());
-                unset($data['weight']);
             } else {
-                $this->addWeight($event->getForm());
                 $form->remove('payByItem');
 
                 unset($data['payByItem']);
@@ -98,28 +90,6 @@ class ProductSubscriber implements EventSubscriberInterface
 
             $event->setData($data);
         }
-    }
-
-    /**
-     * @param FormInterface $form
-     */
-    public function addWeight(FormInterface $form)
-    {
-        $label = $this->translator->trans('product.product_weight', [
-            '%format%' => $form->getConfig()->getOptions()['client']->getWeightName()
-        ], 'labels');
-
-        $form->add('weight', NumberType::class, [
-            'attr' => [
-                'class' => 'form-control',
-                'placeholder' => $label
-            ],
-            'label' => $label,
-            'label_attr' => [
-                'class' => 'col-md-2 col-sm-3 col-xs-5 control-label'
-            ],
-            'required' => false
-        ]);
     }
 
     /**

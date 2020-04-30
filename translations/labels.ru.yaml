@@ -7,18 +7,11 @@ navigation:
         settings: Настройки
         subscription: Подписка
         owner: Владелец
-        employee: Работник
-        translation: Перевод
         logout: Выйти
-    reports:
-        share_day: Дата выдачи
     customers:
         manage_customers: Управление клиентами
         add: Добавить
-        location: Места выдачи
         search: Поиск
-        shares: Продукты
-        suspend: Приостановить
         upload: Загрузить
     emails:
         emails: Почта
@@ -28,10 +21,7 @@ navigation:
         logs: Логи
     orders:
         orders: Заказы
-        for_members: Для клиентов
         for_vendors: Для поставщиков
-        harvest_list: Список урожая
-        packaging: Пакетирование
     pos:
         pos: Касса
         dashboard: Панель управления
@@ -60,12 +50,6 @@ account:
         method: Метод
         description: Описание
         payment_methods: Способы оплаты
-        delivery_price: Цена доставки
-        time_to_order: Время для заказа
-        when_to_disable: Когда отключать
-        day_before: За день
-        day_of: День в день
-        shares_enabled: Включить или отключить функцию «Продукты»
         customer_module: Модуль Клиент
         client_name: Название фермы или сада
         my_settings: Профиль
@@ -81,7 +65,6 @@ account:
         city_placeholder: Выберите город
         country_placeholder: Выберите страну
         date_format: Формат даты
-        weight_format: Вес
         language: Язык
         form_repeat_password: Повторите пароль
         new_password: Новый пароль
@@ -101,7 +84,6 @@ account:
         users: Пользователи
         role: Тип аккаунта
         owner: Владелец
-        employee: Работник
         language: Язык
         date_format: Формат даты
         new_password: Новый пароль
@@ -113,22 +95,6 @@ account:
         email: Email
         password: Пароль
         repeat_password: Повторите пароль
-translation:
-    translation: Перевод
-    language: Язык
-    key: Ключ
-    keys: Ключи
-    original: Оригинал
-    domain: Домен
-    search: Поиск
-    progress: Прогресс перевода
-    no_results: Не найдено совпадений
-    showing: Показывается
-    entries: результатов
-    to: по
-    of: с
-    filtered_from: отфильтровано с
-    total_entries: общего количества
 report:
     report: Отчет
     count: Номер
@@ -142,25 +108,6 @@ customer:
         phone: Телефон
         email: Email
         notes: Заметки
-        list_shares: Список покупок
-        delivery_day: День доставки
-    share:
-        share: Покупка
-        shares: Покупки
-        type: Тип
-        status: Статус
-        renewal_date: Дата обновления
-        remaining_shares: Осталось пакетов
-        share_day: День выдачи
-        order_day: День заказа
-        share_location: Место выдачи
-        order_location: Место заказа
-        add_share: Добавить покупку
-        add_another_share: Добавить еще одну покупку
-        shares_num: Сколько покупок
-        start_date: Дата начала
-        order_date: Дата заказа
-        denied_remove: Покупка с оформленными покупателями не может быть удалена.
     address:
         address: Адрес
         type: Тип адреса
@@ -169,53 +116,21 @@ customer:
         region: Область/Штат
         city: Город
         postal_code: Почтовый адресс
-        types:
-            delivery: Доставка
-            billing: Платежи
-            billing_and_delivery: Доставка и Платежи
-    level:
-        name: Название
-        description: Описание
-        price: Цена
-    location:
-        location: Место выдачи
-        locations: Места выдачи
-        name: Название
-        description: Описание
-        hours: Часов
-        denied_remove: Место выдачи с оформленными покупками не может быть удалено.
     search:
         search: Поиск
-        share: Пакет
         total: Всего
         pending: В ожидании
         active: Активно
-        renewal_overdue: Срок обновления
-        lapsed: Просрочено
         new_in_last: Новые за %days% дней
         open_orders: Открытые заказы
         todays_orders: Сегодняшние заказы
         future_orders: Будущие заказы
         filter: Фильтр
-        contact: Контакт
-        contacts: Контакты
-        lead: Лид
-        leads: Лиды
         customer: Покупатель
         customers: Покупатели
-        members: Клиенты
-        member: Клиент
-        patron: Покупатель
-        patrons: Покупатели
         records_found: Найдено записей
-        search_by_placeholder: ПОИСК по КЛИЕНТУ, ПОЧТЕ, ПОКУПКЕ ...
+        search_by_placeholder: ПОИСК по КЛИЕНТУ, ПОЧТЕ ...
         search_by: ПОИСК ПО ПОКУПАТЕЛЮ
-    suspend:
-        suspend: Приостановить покупки
-        week: Неделя
-        status: Статус
-        suspend_btn: Приостановить
-        suspended: Приостановлено
     upload:
         upload: Загрузить
         upload_as: Загрузить данные как
@@ -228,7 +143,6 @@ customer:
         in_file_uploaded: в файле были успешно загружены
         in_file_not_uploaded: в файле не были загружены
     orders:
-        for_members: Для клиентов
         start_date: Дата начала
         end_date: Дата завершения
         for_vendors: Для поставщиков
@@ -266,7 +180,6 @@ emails:
         MemberData: Данные клиента
         BillingAddressData: Данные платежного адреса
         DeliveryAddressData: Данные адреса доставки
-        ShareData:  Данные покупок
         ClientData: Данные клиента
         Pages: Страницы
     type: Тип
@@ -386,40 +299,13 @@ membership:
         second: Когда кнопка красного цвета, мы пропустим вашу покупку.
         third: Нажмите зеленую кнопку «Пропустить», чтобы пропустить свою покупку.
         fourth: Нажмите красную кнопку «Получить», чтобы получить свою покупку.
-    pickups:
-        share_date: Дата получения
-        time_to_skip: Время для пропуска
-        status: Статус
-        skip: Пропустить
-        receive: Получить
-        suspended: Приостановлено
-        time_past: Время пропустить эту неделю прошло.
-    customize:
-        customize: Настроить
-        share_skipped: Вы пропускаете свою покупку на этой неделе.
-        next_share: Покупка следующей недели
-        customize_share: Настроить свою покупку
-        product_name: Наименование товара
-        weight: Вес
-        price: Цена
-        total: Всего
-    feedback:
-        feedback: Отзыв
-        satisfied: Удовлетворен
-        not_satisfied: Не удовлетворен
-        reason: Причина
-        reason_placeholder: ПОЖАЛУЙСТА, СКАЖИТЕ НАМ, ПОЧЕМУ ВЫ УДОВЛЕТВОРЕНЫ / НЕ УДОВЛЕТВОРЕНЫ ВАШЕЙ ПОКУПКОЙ
     renew:
         renew: Возобновить
         weeks: недель
         qty: к-во
         in_basket: В вашей корзине
         filter_by: Фильтр по
-        shares: Покупки
         products: Товары
-        renew_current_shares: Обновить текущие покупки
-        add_new_shares: Добавить новые покупки
-        shares_left: Покупок осталось
         each: каждый
         per_item: за единицу
         per_Kg: за Кг
@@ -430,17 +316,6 @@ membership:
             delivery: Доставка
             total: Всего
         payment_method: Метод оплаты
-        location:
-            home_delivery: Доставка на дом
-            different_billing_address: Платежный адрес отличается от адреса доставки
-            expired_order_time: Время заказа на эту дату прошло.
-            delivery_day: День доставки
-            delivery_date: Дата доставки
-            delivery_description: Описание доставки
-            pickup_day: День получения
-            pickup_date: Дата получения
-            pickup_description: Описание получения
-            time_to_order: Время до заказа
         payment_methods:
             cash: Наличные
             card: Кредитная карта
@@ -451,9 +326,6 @@ membership:
             billing_address: Платежный адрес
             billing_and_delivery_address: Адрес для Счета и Доставки
         summary: Итог
-    testimonial:
-        testimonial: Отзыв
-        share_testimonial: Поделитесь своим отзывом
 invoice:
     invoice: Счет
     date_created: Дата создания

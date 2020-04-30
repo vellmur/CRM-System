@@ -4,28 +4,6 @@
     <div class="panel panel-default">
         <div class="panel-body">
             <div class="row">
-                <div class="col-sm-2">
-                    <div class="form-group form-group-material">
-                        <label for="search_filter">{{ 'customer.search.filter'|trans({}, 'labels') }}:</label>
-                        <select class="select" id="search_filter" data-width="100%">
-                            <option value="all" {{ app.request.cookies.get('customersFilterBy') == 'all' ? "selected" }}>
-                                {{ 'label.all'|trans({}, 'labels') }}
-                            </option>
-                            <option value="contacts" {{ app.request.cookies.get('customersFilterBy') == 'contacts' ? "selected" }}>
-                                {{ 'customer.search.contacts'|trans({}, 'labels') }}
-                            </option>
-                            <option value="leads" {{ app.request.cookies.get('customersFilterBy') == 'leads' ? "selected" }}>
-                                {{ 'customer.search.leads'|trans({}, 'labels') }}
-                            </option>
-                            <option value="members" {{ app.request.cookies.get('customersFilterBy') == 'members' ? "selected" }}>
-                                {{ 'customer.search.members'|trans({}, 'labels') }}
-                            </option>
-                            <option value="patrons" {{ app.request.cookies.get('customersFilterBy') == 'patrons' ? "selected" }}>
-                                {{ 'customer.search.patrons'|trans({}, 'labels') }}
-                            </option>
-                        </select>
-                    </div>
-                </div>
                 <div class="col-sm-7">
                     <label for="search_text">{{ 'customer.search.search'|trans({}, 'labels') }}:</label>
                     <input type="text"
@@ -41,7 +19,7 @@
                 </div>
                 <div class="col-sm-3 vertical-table-text">
                     <p class="vertical-text">{{ 'customer.search.records_found'|trans({}, 'labels') }}:
-                        <span id="content_counter">{{ members.getTotalItemCount }}</span>
+                        <span id="content_counter">{{ customers.getTotalItemCount }}</span>
                     </p>
                 </div>
             </div>

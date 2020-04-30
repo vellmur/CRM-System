@@ -141,21 +141,23 @@ class CustomerController extends AbstractController
             : 'all';
 
         $query = $this->manager->searchCustomers($client, $searchBy, $request->query->get('search'));
-        $members = $paginator->paginate($query, $request->query->getInt('page', 1), 20);
+        $customers = $paginator->paginate($query, $request->query->getInt('page', 1), 20);
 
         if (!$request->isXMLHttpRequest()) {
             $ordersInfo = $shareManager->countOrders($client);
 
             return $this->render('customer/list.html.twig', [
-                'members' => $members,
+                'customers' => $customers,
                 'ordersStats' => $ordersInfo
             ]);
         } else {
-            $template = $this->render('customer/forms/table.html.twig', ['members' => $members])->getContent();
+            $template = $this->render('customer/forms/table.html.twig', [
+                'customers' => $customers
+            ])->getContent();
 
             return new JsonResponse([
                 'template' => $template,
-                'counter' => $members->getTotalItemCount()
+                'counter' => $customers->getTotalItemCount()
             ],  200);
         }
     }

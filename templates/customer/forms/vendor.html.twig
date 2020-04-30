@@ -55,64 +55,6 @@
             </div>
         </div>
     </div>
-    <h6><i class="icon-truck"></i> {{ 'membership.renew.addresses.delivery_address'|trans({}, 'labels') }}</h6><hr>
-    <div class="address">
-        <div class="form-group {{ form.address.street.vars.errors|length ? 'has-error' }}">
-            {{ form_label(form.address.street) }}
-            <div class="col-md-10 col-sm-9 col-xs-7">
-                {{ form_widget(form.address.street)}}
-                {% if not form.address.street.vars.valid %}
-                    <label id="{{ form.address.street.vars.id }}-error" class="validation-error-label" for="{{ form.address.street.vars.id }}">
-                        {{ form.address.street.vars.errors[0].message }}
-                    </label>
-                {% endif %}
-            </div>
-        </div>
-        <div class="form-group {{ form.address.apartment.vars.errors|length ? 'has-error' }}">
-            {{ form_label(form.address.apartment) }}
-            <div class="col-md-10 col-sm-9 col-xs-7">
-                {{ form_widget(form.address.apartment)}}
-                {% if not form.address.apartment.vars.valid %}
-                    <label id="{{ form.address.apartment.vars.id }}-error" class="validation-error-label" for="{{ form.address.apartment.vars.id }}">
-                        {{ form.address.apartment.vars.errors[0].message }}
-                    </label>
-                {% endif %}
-            </div>
-        </div>
-        <div class="form-group {{ form.address.postalCode.vars.errors|length ? 'has-error' }}">
-            {{ form_label(form.address.postalCode) }}
-            <div class="col-md-10 col-sm-9 col-xs-7">
-                {{ form_widget(form.address.postalCode)}}
-                {% if not form.address.postalCode.vars.valid %}
-                    <label id="{{ form.address.postalCode.vars.id }}-error" class="validation-error-label" for="{{ form.address.postalCode.vars.id }}">
-                        {{ form.address.postalCode.vars.errors[0].message }}
-                    </label>
-                {% endif %}
-            </div>
-        </div>
-        <div class="form-group {{ form.address.region.vars.errors|length ? 'has-error' }}">
-            {{ form_label(form.address.region) }}
-            <div class="col-md-10 col-sm-9 col-xs-7">
-                {{ form_widget(form.address.region) }}
-                {% if not form.address.region.vars.valid %}
-                    <label id="{{ form.address.region.vars.id }}-error" class="validation-error-label" for="{{ form.address.region.vars.id }}">
-                        {{ form.address.region.vars.errors[0].message }}
-                    </label>
-                {% endif %}
-            </div>
-        </div>
-        <div class="form-group {{ form.address.city.vars.errors|length ? 'has-error' }}">
-            {{ form_label(form.address.city) }}
-            <div class="col-md-10 col-sm-9 col-xs-7">
-                {{ form_widget(form.address.city) }}
-                {% if not form.address.city.vars.valid %}
-                    <label id="{{ form.address.city.vars.id }}-error" class="validation-error-label" for="{{ form.address.city.vars.id }}">
-                        {{ form.address.city.vars.errors[0].message }}
-                    </label>
-                {% endif %}
-            </div>
-        </div>
-    </div>
     <h6><i class="icon-address-book3"></i> {{ 'customer.vendor.contacts'|trans({}, 'labels') }}</h6><hr>
     <div class="collection"
          data-prototype="
@@ -198,7 +140,6 @@
     </div>
 
     {% do form.contacts.setRendered %}
-    {% do form.address.setRendered %}
 {{ form_end(form) }}
 
 {{ include ("modal/modal-with-message.html.twig", {'id': 'delete-modal'}) }}

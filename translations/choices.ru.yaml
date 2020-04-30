@@ -1,12 +1,6 @@
 # Software modules
 Customers: Клиенты
 
-# Customer statuses
-ACTIVE: АКТИВНО
-PENDING: ОЖИДАНИЕ
-LAPSED: ПРОСРОЧЕНО
-RENEWAL: ЗАКАНЧИВАЕТСЯ
-
 # Day of weeks
 monday: Понедельник
 tuesday: Вторник

@@ -1,12 +1,6 @@
 # Software modules
 Customers: Customers
 
-# Customer statuses
-ACTIVE: ACTIVE
-PENDING: PENDING
-LAPSED: LAPSED
-RENEWAL: RENEWAL
-
 # Day of weeks
 monday: Monday
 tuesday: Tuesday

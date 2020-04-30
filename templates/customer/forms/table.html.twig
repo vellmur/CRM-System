@@ -1,57 +1,21 @@
 <table class="table">
     <thead>
     <tr role="row" class="heading-style">
-        <th>{{ 'customer.search.member'|trans({}, 'labels') }}</th>
+        <th>{{ 'customer.search.customer'|trans({}, 'labels') }}</th>
         <th>{{ 'customer.add.email'|trans({}, 'labels') }}</th>
-        <th>{{ 'customer.share.share'|trans({}, 'labels') }}</th>
-        <th>{{ 'customer.share.status'|trans({}, 'labels') }}</th>
-        <th>{{ 'customer.share.renewal_date'|trans({}, 'labels') }}</th>
-        <th>{{ 'customer.share.share_day'|trans({}, 'labels') }}</th>
-        <th>{{ 'customer.share.share_location'|trans({}, 'labels') }}</th>
     </tr>
     </thead>
     <tbody>
-    {% if members|length > 0 %}
-        {% for key, member in members %}
-
-        {% endfor %}
-        {% for key, member in members %}
-            {% if member.shares|length > 0 %}
-                {% for key, share in member.shares %}
-                    <tr {{ key is not divisible by (2) ? 'class="row-style"' }}>
-                        {% if loop.first %}
-                            <td>
-                                <a class="website-link" href="{{ path('member_edit', {'id': member.id}) }}">
-                                    {{ member.fullname }}
-                                </a>
-                            </td>
-                            <td>{{ member.email }}</td>
-                        {% else %}
-                            <td></td>
-                            <td></td>
-                        {% endif %}
-                        <td>{{ share.shareName }}</td>
-                        <td>{{ share.statusName|trans([], 'choices') }}</td>
-                        <td>{{ share.renewalDate|date(app.user.getTwigFormatDate())|upper }}</td>
-                        <td>{{ share.pickUpDay is not null ? (share.getShareDay|lower)|trans([], 'choices')|upper }}</td>
-                        <td>{{ share.location is not null ? share.location }}</td>
-                    </tr>
-                {% endfor %}
-            {% else %}
-                <tr>
-                    <td>
-                        <a class="website-link" href="{{ path('member_edit', {'id': member.id}) }}">
-                            {{ member.fullname }}
-                        </a>
-                    </td>
-                    <td>{{ member.email }}</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            {% endif %}
+    {% if customers|length > 0 %}
+        {% for key, customer in customers %}
+            <tr>
+                <td>
+                    <a class="website-link" href="{{ path('member_edit', {'id': customer.id}) }}">
+                        {{ customer.fullname }}
+                    </a>
+                </td>
+                <td>{{ customer.email }}</td>
+            </tr>
         {% endfor %}
     {% endif %}
     </tbody>
@@ -59,6 +23,6 @@
 
 {% if withoutNav is not defined  %}
     <div class="navigation text-right">
-        {{ knp_pagination_render(members, 'parts/pagination.html.twig') }}
+        {{ knp_pagination_render(customers, 'parts/pagination.html.twig') }}
     </div>
 {% endif %}

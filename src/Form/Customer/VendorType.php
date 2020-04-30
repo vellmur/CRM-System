@@ -90,13 +90,6 @@ class VendorType extends AbstractType
                     'class' => 'switchery'
                 ]
             ])
-            ->add('address', AddressType::class, [
-                'by_reference' => false,
-                'constraints' => [
-                    new Valid()
-                ],
-                'country' => $client->getCountry()
-            ])
             ->add('contacts', CollectionType::class, [
                 'by_reference' => false,
                 'entry_type' => ContactType::class,
@@ -113,11 +106,7 @@ class VendorType extends AbstractType
                 'constraints' => [
                     new Valid()
                 ]
-            ])
-
-        ;
-
-        $builder->get('address')->get('type')->setData(3);
+            ]);
     }
 
     /**

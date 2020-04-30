@@ -22,8 +22,6 @@ class CustomerType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $client = $builder->getData()->getClient();
-
         $builder
             ->add('firstname', TextType::class, [
                 'required' => false,
@@ -50,7 +48,7 @@ class CustomerType extends AbstractType
             ])
             ->add('phone', PhoneType::class, [
                 'required' => false,
-                'country_code' => $client->getCountry(),
+                'country_code' => $builder->getData() ? $builder->getData()->getClient()->getCountry() : null,
                 'label' => 'customer.add.phone',
                 'label_attr' => [
                     'class' => 'col-md-2 col-sm-3 col-xs-5 control-label'
