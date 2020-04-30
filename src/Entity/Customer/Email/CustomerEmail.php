@@ -107,35 +107,7 @@ class CustomerEmail extends BaseEmailLog implements ClientEmailInterface
                 'Notes' => 'Notes',
                 'CustomerEmail' => 'CustomerEmail',
                 'Phone' => 'Phone',
-                'DeliveryDay' => 'Delivery day',
-                'ProfileLink' => 'Profile link',
-                'SkipWeek' => 'Skip a week link',
-                'CustomizeShare' => 'Customize a share link',
-                'RenewLink' => 'Renewal link',
-                'FeedbackLinks' => 'Feedback links'
-            ],
-            'ShareData' => [
-                'ShareName' => 'Name',
-                'ShareRenewal' => 'Renewal date',
-                'ShareStatus' => 'Status',
-                'ShareDay' => 'Share day',
-                'ShareLocation' => 'Share location',
-            ],
-            'BillingAddressData' => [
-                'BilType' => 'Address Type',
-                'BilStreet' => 'Street',
-                'BilApartment' => 'Apartment',
-                'BilPostalCode' => 'PostalCode',
-                'BilCity' => 'City',
-                'BilState' => 'Province/State'
-            ],
-            'DeliveryAddressData' => [
-                'DelType' => 'Address Type',
-                'DelStreet' => 'Street',
-                'DelApartment' => 'Apartment',
-                'DelPostalCode' => 'PostalCode',
-                'DelCity' => 'City',
-                'DelState' => 'Province/State'
+                'ProfileLink' => 'Profile link'
             ]
         ];
 

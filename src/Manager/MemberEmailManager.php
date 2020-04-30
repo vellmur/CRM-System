@@ -5,11 +5,7 @@ namespace App\Manager;
 use App\Entity\Customer\CustomerEmailNotify;
 use App\Entity\Customer\Email\AutoEmail;
 use App\Entity\Customer\Email\EmailRecipient;
-use App\Entity\Customer\Email\Feedback;
-use App\Entity\Customer\CustomerShare;
 use App\Entity\Customer\Customer;
-use App\Entity\Customer\Share;
-use App\Entity\Customer\SuspendedWeek;
 use App\Repository\MemberEmailRepository;
 use App\Entity\Customer\Email\CustomerEmail;
 use App\Entity\Client\Client;
@@ -56,24 +52,6 @@ class MemberEmailManager
         $this->host = $host;
         $this->translator = $translator;
         $this->mailService = $mailService;
-    }
-
-    /**
-     * @return \App\Entity\Client\Client[]|array
-     */
-    public function getSoftwareClients()
-    {
-        return $this->em->getRepository(Client::class)->getSoftwareClients();
-    }
-
-    /**
-     * @param Client $client
-     * @return array
-     */
-    public function getLeadsAndContacts(Client $client)
-    {
-        return $this->em->getRepository(Customer::class)
-            ->getLeadsAndContacts($client, $this->getNotifyId('delivery_day'));
     }
 
     /**
@@ -233,31 +211,6 @@ class MemberEmailManager
 
     /**
      * @param EmailRecipient $recipient
-     * @param Share $share
-     * @param $isSatisfied
-     * @return string
-     */
-    public function getFeedbackLink(EmailRecipient $recipient, Share $share, $isSatisfied)
-    {
-        // Helps to generate absolute path from console command
-        $context = $this->router->getContext();
-        $context->setHost($this->host);
-        $this->router->setContext($context);
-
-        $link = $this->router->generate('membership_profile', [
-            'token' => $recipient->getCustomer()->getToken(),
-            'id' => $recipient->getId(),
-            'shareId' => $share->getId(),
-            'isSatisfied' => $isSatisfied
-        ], UrlGeneratorInterface::ABSOLUTE_URL);
-
-        $link .= '#feedback';
-
-        return $link;
-    }
-
-    /**
-     * @param EmailRecipient $recipient
      * @return string
      */
     public function getProfileLink(EmailRecipient $recipient)
@@ -268,143 +221,12 @@ class MemberEmailManager
         $this->router->setContext($context);
 
         $link = $this->router->generate('membership_profile', [
-            '_locale' => $recipient->getCustomer()->getClient()->getOwner()->getLocale()->getCode(),
+            '_locale' => $recipient->getCustomer()->getClient()->getOwner()->getLocaleCode(),
             'token' => $recipient->getCustomer()->getToken(),
             'id' => $recipient->getId()
         ], UrlGeneratorInterface::ABSOLUTE_URL);
 
         return $link;
-    }
-
-    /**
-     * Get share for weekly, renewal or lapsed notifications.
-     *
-     * Weekly notification: If 2 days lefts to next share pickup date.
-     * Renewal notification: Sends 1 week(7 days) before the renewal date and last share pickup date.
-     * Lapsed notification: If renewal date is the past and share status is not equal to lapsed.
-     *
-     * Weekly email can be send only once in a week.
-     * Renewal and lapsed emails, can be sent only once in a day.
-     *
-     * @param CustomerShare $share
-     * @return array
-     */
-    public function getShareStatusNotify(CustomerShare $share)
-    {
-        $member = $share->getMember();
-
-        // This array saves share that needs to be notified by each notify type
-        $notify = [];
-
-        // Count days to renewal date (last share pickup date)
-        $daysToRenew = $this->countDaysLeft($share->getRenewalDate());
-
-        // If renewal date is past, update status and save as lapsed notify
-        if ($daysToRenew < 0) {
-            if ($share->getStatusName() != 'LAPSED') {
-                 $share->setStatusByName('LAPSED');
-                 $this->em->flush();
-
-                // If lapsed notification enabled, save share as lapsed notify
-                if ($this->notifyEnabled($member, 'lapsed')) {
-                    $notify['lapsed'] = $share;
-                }
-            }
-            // Count days to the renewal date and if 7 days lefts (one share pickup) -> send renewal notification
-        } elseif ($daysToRenew == 7) {
-            if ($this->notifyEnabled($member, 'renewal')) {
-                $notify['renewal'] = $share;
-            }
-            // Count days to the next share pickup date and if 2 days lefts to share day -> send weekly notification
-        } elseif ($this->countDaysToPickup($share) == 2 && $this->canReceiveWeeklyNotify($member)) {
-            $notify['weekly'] = $share;
-        }
-
-        return $notify;
-    }
-
-    /**
-     * Get shares to activate or send activation emails to customer
-     *
-     * @param Client $client
-     * @return \Doctrine\Common\Collections\Collection|CustomerShare[] $shares
-     */
-    public function getNotActiveShares(Client $client)
-    {
-        return $this->em->getRepository(CustomerShare::class)->getNotActiveShares($client);
-    }
-
-    /**
-     * @param Client $client
-     * @return \Doctrine\Common\Collections\Collection|CustomerShare[] $shares
-     */
-    public function getNotLapsedShares(Client $client)
-    {
-        return $this->em->getRepository(CustomerShare::class)->getNotLapsedShares($client);
-    }
-
-    /**
-     * @param Client $client
-     * @return mixed
-     */
-    public function getWeeklyFeedback(Client $client)
-    {
-        return $this->em->getRepository(Share::class)->getWeeklyFeedback($client);
-    }
-
-    /**
-     * Count number of days lefts to the next pickup date
-     *
-     * @param CustomerShare $share
-     * @return int|mixed
-     */
-    public function countDaysToPickup(CustomerShare $share)
-    {
-        $daysToPickup = 0;
-
-        $now = new \DateTime("midnight");
-
-        foreach ($share->getPickups() as $pickup) {
-            if ($pickup->getDate()->format('Y-m-d') >= $now->format('Y-m-d')) {
-                $daysToPickup = $this->countDaysLeft($pickup->getDate());
-                break;
-            }
-        }
-
-        return $daysToPickup;
-    }
-
-    /**
-     * @param CustomerShare $share
-     * @return bool
-     * @throws \Exception
-     */
-    public function mustReceiveFeedback(CustomerShare $share)
-    {
-        $feedbackNotify = false;
-
-        // If feedback notification is enabled in customer data
-        if ($this->notifyEnabled($share->getCustomer(), 'feedback')) {
-            $now = new \DateTime("midnight");
-
-            foreach ($share->getPickups() as $key => $pickup) {
-                // If next pickup date is future -> we need previous pickup date for a feedback
-                if ($pickup->getDate() > $now) {
-                    // If next pickup date is not first customer pickup
-                    if ($key > 0) {
-                        // Previous pickup date is pickup needed for the feedback
-                        $feedbackDate = $share->getPickups()[$key - 1];
-
-                        // If pickup is not skipped and 2 days gone from the date, customer must receive notify
-                        if (!$feedbackDate->isSkipped() && $this->countDaysLeft($feedbackDate->getDate()) == -2) $feedbackNotify = true;
-                    }
-
-                    break;
-                }
-            }
-        }
-
-        return $feedbackNotify;
     }
 
     /**
@@ -564,16 +386,15 @@ class MemberEmailManager
     /**
      * @param EmailRecipient $recipient
      * @param $message
-     * @param null $share
-     * @return mixed
+     * @return string|string[]
      */
-    public function setMacrosFields(EmailRecipient $recipient, $message, $share = null)
+    public function setMacrosFields(EmailRecipient $recipient, $message)
     {
         foreach ($recipient->getEmailLog()->getMacros() as $macros) {
             foreach ($macros as $key => $macro) {
                 // If macros found -> replace it
                 if (stristr($message, '{' . $key . '}')) {
-                    $value = $this->setCustomerMacros($recipient, $key, $share);
+                    $value = $this->setCustomerMacros($recipient, $key);
                     $message = str_replace('{' . $key . '}', $value, $message);
                 }
             }
@@ -585,10 +406,9 @@ class MemberEmailManager
     /**
      * @param EmailRecipient $recipient
      * @param $field
-     * @param CustomerShare|null $share
      * @return string
      */
-    public function setCustomerMacros(EmailRecipient $recipient, $field, CustomerShare $share = null)
+    public function setCustomerMacros(EmailRecipient $recipient, $field)
     {
         $member = $recipient->getCustomer();
 
@@ -613,94 +433,11 @@ class MemberEmailManager
             case 'Phone':
                 $value = $member->getPhone();
                 break;
-            case 'DeliveryDay':
-                $value = $member->getWeekDay();
-                break;
             case 'ProfileLink':
                 $value = '<a href="' . $this->getProfileLink($recipient) . '">View profile</a>';
                 break;
-            case 'SkipWeek':
-                $value = '<a href="' . $this->getProfileLink($recipient) . '#skip_week' . '">Skip a week</a>';
-                break;
-            case 'CustomizeShare':
-                $value = '<a href="' . $this->getProfileLink($recipient) . '#customize' . '">Customize a share</a>';
-                break;
             case 'RenewLink':
                 $value = '<a href="' . $this->getProfileLink($recipient) . '#market' . '">Renew membership</a>';
-                break;
-            case 'FeedbackLinks':
-                if ($share !== null) {
-                    $satisfiedLink = $this->getFeedbackLink($recipient, $share->getShare(), '1');
-                    $notSatisfiedLink = $this->getFeedbackLink($recipient, $share->getShare(), '0');
-
-                    $value = '<a href="' . $satisfiedLink . '">Satisfied</a> / <a href="' . $notSatisfiedLink . '">Not satisfied</a>';
-                } else {
-                    $value = '';
-                }
-
-                break;
-            case 'ShareName':
-                $value = $share !== null ? $share->getShareName() : '';
-                break;
-            case 'ShareRenewal':
-                $value = $share !== null ? $share->getRenewalDate()->format('Y-m-d') : '';
-                break;
-            case 'ShareStatus':
-                $value = $share !== null ? $share->getStatusName() : '';
-                break;
-            case 'ShareDay':
-                $value = $share !== null ? $share->getShareDay() : '';
-                break;
-            case 'ShareLocation':
-                $value = $share !== null && $share->getLocation() ? $share->getLocation()->getName() : '';
-                break;
-            case 'DelType':
-                $address = $member->getAddressByType('delivery');
-                $value = $address !== null ? $address->getTypeName() : '';
-                break;
-            case 'DelStreet':
-                $address = $member->getAddressByType('delivery');
-                $value = $address !== null ? $address->getStreet() : '';
-                break;
-            case 'DelApartment':
-                $address = $member->getAddressByType('delivery');
-                $value = $address !== null ? $address->getApartment() : '';
-                break;
-            case 'DelPostalCode':
-                $address = $member->getAddressByType('delivery');
-                $value = $address !== null ? $address->getPostalCode() : '';
-                break;
-            case 'DelCity':
-                $address = $member->getAddressByType('delivery');
-                $value = $address !== null ? $address->getCity() : '';
-                break;
-            case 'DelState':
-                $address = $member->getAddressByType('delivery');
-                $value = $address !== null ? $address->getRegion() : '';
-                break;
-            case 'BilType':
-                $address = $member->getAddressByType('billing');
-                $value = $address !== null ? $address->getTypeName() : '';
-                break;
-            case 'BilStreet':
-                $address = $member->getAddressByType('billing');
-                $value = $address !== null ? $address->getStreet() : '';
-                break;
-            case 'BilApartment':
-                $address = $member->getAddressByType('billing');
-                $value = $address !== null ? $address->getApartment() : '';
-                break;
-            case 'BilPostalCode':
-                $address = $member->getAddressByType('billing');
-                $value = $address !== null ? $address->getPostalCode() : '';
-                break;
-            case 'BilCity':
-                $address = $member->getAddressByType('billing');
-                $value = $address !== null ? $address->getCity() : '';
-                break;
-            case 'BilState':
-                $address = $member->getAddressByType('billing');
-                $value = $address !== null ? $address->getRegion() : '';
                 break;
         }
 
@@ -713,55 +450,5 @@ class MemberEmailManager
     public function flush()
     {
         $this->em->flush();
-    }
-
-    /**
-     * @param Client $client
-     * @return array
-     */
-    public function getFeedbackReport(Client $client)
-    {
-        $feedbackReport = $this->em->getRepository(Feedback::class)->getWeeklyFeedbackReport($client);
-        $recipients = $this->em->getRepository(CustomerEmail::class)->countFeedbackWeeklyStats($client, $this->getNotifyId('feedback'));
-
-        $report = [
-            'recipients' => $recipients,
-            'feedback' => $feedbackReport
-        ];
-
-        return $report;
-    }
-
-    /**
-     * @param $id
-     * @return Share|null|object
-     */
-    public function getShareById($id)
-    {
-        return $this->em->find(Share::class, $id);
-    }
-
-    /**
-     * @param Client $client
-     * @param null $weekDate
-     * @return bool
-     * @throws \Exception
-     */
-    public function isWeekSuspended(Client $client, $weekDate = null) : bool
-    {
-        // If week is not defined set week number to current
-        if (!$weekDate) {
-            // If today is not Saturday, set date to next Saturday (we getting right week number from last day of week)
-            $weekDate = new \DateTime("midnight");
-            if ($weekDate->format('w') != 6) $weekDate->modify('next Saturday');
-        }
-
-        $suspendedWeek = $this->em->getRepository(SuspendedWeek::class)->findOneBy([
-            'client' => $client,
-            'week' => $weekDate->format('W'),
-            'year' => $weekDate->format('Y')
-        ]);
-
-        return $suspendedWeek ? true : false;
     }
 }

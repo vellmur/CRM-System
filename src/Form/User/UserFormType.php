@@ -5,13 +5,18 @@ namespace App\Form\User;
 use App\Entity\User\User;
 use App\Form\Client\ClientType;
 use App\Form\EventListener\ProfileSubscriber;
+use App\Form\Type\DateFormatType;
+use App\Form\Type\LocaleType;
 use App\Service\CountryList;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Valid;
 
+/**
+ * Class UserFormType
+ * @package App\Form\User
+ */
 class UserFormType extends AbstractType
 {
     private $subscriber;
@@ -24,28 +29,15 @@ class UserFormType extends AbstractType
         $this->countryList = $countryList;
     }
 
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('locale', ChoiceType::class , [
-                'choices' => User::LOCALES,
-                'label' => 'account.settings.language',
-                'attr' => [
-                    'class' => 'select'
-                ]
-            ])
-            ->add('dateFormat', ChoiceType::class , [
-                'choices' => [
-                    'DD-MM-YYYY' => 0,
-                    'MM-DD-YYYY' => 1,
-                    'YYYY-MM-DD' => 2,
-                    'DD-MMM-YYYY' => 3
-                ],
-                'label' => 'account.settings.date_format',
-                'attr' => [
-                    'class' => 'select'
-                ]
-            ])
+            ->add('locale', LocaleType::class)
+            ->add('dateFormat', DateFormatType::class)
             ->add('client', ClientType::class, [
                 'validation_groups' => 'profile_validation',
                 'constraints' => [
@@ -56,6 +48,9 @@ class UserFormType extends AbstractType
         $builder->addEventSubscriber($this->subscriber);
     }
 
+    /**
+     * @param OptionsResolver $resolver
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([

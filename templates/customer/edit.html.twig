@@ -3,9 +3,9 @@
 {% block body %}
     <div class="panel panel-default">
         <div class="panel-head">
-            <h6><i class="icon-user"></i> {{ ('customer.search.' ~ status)|trans({}, 'labels') }}
-                {% if member is defined and is_granted('ROLE_PREVIOUS_ADMIN') %}
-                    - <a href="{{ member|profile_link }}" target="_blank">{{ 'membership.view_profile'|trans({}, 'labels') }}</a>
+            <h6><i class="icon-user"></i> {{ ('customer.search.customer')|trans({}, 'labels') }}
+                {% if customer is defined and is_granted('ROLE_PREVIOUS_ADMIN') %}
+                    - <a href="{{ customer|profile_link }}" target="_blank">{{ 'membership.view_profile'|trans({}, 'labels') }}</a>
                 {% endif %}
             </h6>
         </div>

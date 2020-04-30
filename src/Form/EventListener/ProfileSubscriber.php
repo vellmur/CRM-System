@@ -37,7 +37,7 @@ class ProfileSubscriber implements EventSubscriberInterface
     {
         $user = $event->getData();
 
-        $this->session->set('_locale', $user->getLocale()->getCode());
+        $this->session->set('_locale', $user->getLocaleCode());
         $this->session->set('date_format', $user->getDateFormatName());
         $this->session->set('timezone', $user->getTimezone());
     }

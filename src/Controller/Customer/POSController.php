@@ -82,7 +82,7 @@ class POSController extends AbstractController
             // Create customer if he is not created yet
             if (!$order->getCustomer()->getId() && $order->getCustomer()->getFullname()) {
                 $order->getCustomer()->setIsLead(false);
-                $order->setCustomer($this->memberManager->addMember($order->getCustomer()));
+                $order->setCustomer($this->memberManager->addCustomer($order->getCustomer()));
             } elseif (!$order->getCustomer()->getFullname()) {
                 $order->setCustomer(null);
             }

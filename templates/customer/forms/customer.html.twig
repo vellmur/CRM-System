@@ -43,21 +43,17 @@
             {% endif %}
         </div>
     </div>
-
-    <!-- Show share day field in edit member page (when id exists) only for Contacts or Leads with saved Delivery address -->
-    {% if form.vars.value.id is not null and (status == 'lead' or status == 'contact') and form.vars.value.getAddressByType('Delivery') %}
-        <div {% if form.deliveryDay.vars.errors|length %} class="form-group has-error" {% else %} class="form-group" {% endif %}>
-            {{ form_label(form.deliveryDay) }}
-            <div class="col-md-10 col-sm-9 col-xs-7">
-                {{ form_widget(form.deliveryDay)}}
-                {% if not form.deliveryDay.vars.valid %}
-                    <label id="{{ form.deliveryDay.vars.id }}-error" class="validation-error-label" for="{{ form.deliveryDay.vars.id }}">
-                        {{ form.deliveryDay.vars.errors[0].message }}
-                    </label>
-                {% endif %}
-            </div>
+    <div class="form-group {% if form.apartment.number.vars.errors|length %} has-error {% endif %}">
+        {{ form_label(form.apartment.number) }}
+        <div class="col-md-10 col-sm-9 col-xs-7">
+            {{ form_widget(form.apartment.number)}}
+            {% if not form.apartment.number.vars.valid %}
+                <label id="{{ form.apartment.number.vars.id }}-error" class="validation-error-label" for="{{ form.apartment.number.vars.id }}">
+                    {{ form.apartment.number.vars.errors[0].message }}
+                </label>
+            {% endif %}
         </div>
-    {% endif %}
+    </div>
 
     <div class="form-group {% if form.notes.vars.errors|length %} has-error {% endif %}">
         {{ form_label(form.notes) }}
@@ -71,93 +67,6 @@
         </div>
     </div>
 
-    <h6><i class="icon-home2"></i> {{ 'customer.address.address'|trans({}, 'labels') }}</h6><hr>
-    <div class="collection address-collection"
-         data-collection="address"
-         data-prototype='{{ include('parts/collection-theme.twig', {'form': form.addresses.vars.prototype|e('html_attr') }) }}'
-    >
-        {% for key, address in form.addresses %}
-            <div class="collection_item address-item">
-                <div class="form-group {% if address.type.vars.errors|length %} has-error {% endif %}">
-                    {{ form_label(address.type) }}
-                    <div class="col-md-10 col-sm-9 col-xs-7">
-                        {{ form_widget(address.type)}}
-                        {% if not address.type.vars.valid %}
-                            <label id="{{ address.type.vars.id }}-error" class="validation-error-label" for="{{ address.type.vars.id }}">
-                                {{ address.type.vars.errors[0].message }}
-                            </label>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="form-group {% if address.street.vars.errors|length %} has-error {% endif %}">
-                    {{ form_label(address.street) }}
-                    <div class="col-md-10 col-sm-9 col-xs-7">
-                        {{ form_widget(address.street)}}
-                        {% if not address.street.vars.valid %}
-                            <label id="{{ address.street.vars.id }}-error" class="validation-error-label" for="{{ address.street.vars.id }}">
-                                {{ address.street.vars.errors[0].message }}
-                            </label>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="form-group {% if address.apartment.vars.errors|length %} has-error {% endif %}">
-                    {{ form_label(address.apartment) }}
-                    <div class="col-md-10 col-sm-9 col-xs-7">
-                        {{ form_widget(address.apartment)}}
-                        {% if not address.apartment.vars.valid %}
-                            <label id="{{ address.apartment.vars.id }}-error" class="validation-error-label" for="{{ address.apartment.vars.id }}">
-                                {{ address.apartment.vars.errors[0].message }}
-                            </label>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="form-group {% if address.postalCode.vars.errors|length %} has-error {% endif %}">
-                    {{ form_label(address.postalCode) }}
-                    <div class="col-md-10 col-sm-9 col-xs-7">
-                        {{ form_widget(address.postalCode)}}
-                        {% if not address.postalCode.vars.valid %}
-                            <label id="{{ address.postalCode.vars.id }}-error" class="validation-error-label" for="{{ address.postalCode.vars.id }}">
-                                {{ address.postalCode.vars.errors[0].message }}
-                            </label>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="form-group {% if address.region.vars.errors|length %} has-error {% endif %}">
-                    {{ form_label(address.region) }}
-                    <div class="col-md-10 col-sm-9 col-xs-7">
-                        {{ form_widget(address.region)}}
-                        {% if not address.region.vars.valid %}
-                            <label id="{{ address.region.vars.id }}-error" class="validation-error-label" for="{{ address.region.vars.id }}">
-                                {{ address.region.vars.errors[0].message }}
-                            </label>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="form-group {% if address.city.vars.errors|length %} has-error {% endif %}">
-                    {{ form_label(address.city) }}
-                    <div class="col-md-10 col-sm-9 col-xs-7">
-                        {{ form_widget(address.city)}}
-                        {% if not address.city.vars.valid %}
-                            <label id="{{ address.city.vars.id }}-error" class="validation-error-label" for="{{ address.city.vars.id }}">
-                                {{ address.city.vars.errors[0].message }}
-                            </label>
-                        {% endif %}
-                    </div>
-                </div>
-                <button type="button" class="btn btn-icon btn-danger delete-collection-modal"
-                        id="address-{{ address.vars.value.id }}" href="#">
-                    <i class="icon-trash"></i>
-                </button>
-            </div>
-        {% endfor %}
-
-        <button type="button"
-                class="btn btn-action add_collection_link add-address"
-                {% if form.addresses|length == 2 or (form.addresses|length == 1 and form.addresses[0].type.vars.value == 2) %}
-                    style="display: none;"
-                {% endif %}
-        >{{ 'button.add'|trans({}, 'labels') }}</button>
-    </div>
     <div class="form-actions text-right">
         <button type="submit" class="btn btn-icon btn-success" id="btn-submit">
             {{ 'button.save'|trans({}, 'labels') }}
@@ -171,33 +80,23 @@
             </button>
         {% endif %}
     </div>
-
-    {% do form.addresses.setRendered %}
 {{ form_end(form) }}
 
-{{ include ("modal/modal-with-message.html.twig", {'id': 'address-modal'}) }}
-{{ include ("modal/modal-with-message.html.twig", {'id': 'share-modal'}) }}
 {{ include ("modal/modal-with-message.html.twig", {'id': 'delete-modal'}) }}
 
-<script src="{{ asset('js/pages/member/member.js') }}"></script>
-
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFudPQ3bgPztQLPBngp9B425BBl9q5Duo&libraries=places"></script>
-<script src="{{ asset('js/plugins/googleMapsSearch.js') }}"></script>
-<script type="text/javascript" src="{{ asset('js/collections.js') }}?v=1"></script>
-<script type="text/javascript" src="{{ asset('js/pages/member/addresses.js') }}"></script>
 <script>
     $('#member_email').on('mouseleave', function () {
-        var $email = $(this);
+        let $email = $(this);
 
         if ($email.val().length > 5) {
-            var id = '{{ form.vars.value.id }}';
+            let id = '{{ form.vars.value.id }}';
 
             $.ajax({
                 url: '{{ path('member_check_email') }}',
                 type: "POST",
                 data: { id: id, email: $email.val(), client: '{{ app.user.team.client.id }}'},
                 success: function (response) {
-                    var link = jQuery.parseJSON(response).link;
+                    let link = jQuery.parseJSON(response).link;
                     if (link !== undefined) {
 
                         $email.tooltip('destroy');

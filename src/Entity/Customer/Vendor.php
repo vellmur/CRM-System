@@ -64,11 +64,6 @@ class Vendor
      * @ORM\Column(name="is_active", type="boolean", nullable=false)
      */
     private $isActive = true;
-
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Customer\Address", inversedBy="vendor", cascade={"all"}, orphanRemoval=true)
-     */
-    private $address;
     
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Customer\Contact", mappedBy="vendor", cascade={"all"}, orphanRemoval=true)
@@ -158,24 +153,6 @@ class Vendor
     public function setOrderDay($orderDay)
     {
         $this->orderDay = $orderDay;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAddress()
-    {
-        return $this->address;
-    }
-
-    /**
-     * @param mixed $address
-     */
-    public function setAddress(Address $address)
-    {
-        $address->setType(1);
-        $address->setVendor($this);
-        $this->address = $address;
     }
 
     /**

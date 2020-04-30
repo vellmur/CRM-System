@@ -72,11 +72,7 @@ class MenuBuilder
         // User menu
         if ($this->security->isGranted('ROLE_OWNER') || $this->security->isGranted('ROLE_EMPLOYEE'))
         {
-            if ($this->security->isGranted('ROLE_OWNER')) {
-                $this->addOwnerAccountMenu($menu, $domain);
-            } elseif ($this->security->isGranted('ROLE_EMPLOYEE')) {
-               $this->addEmployeeMenu($menu, $domain);
-            }
+            $this->addOwnerAccountMenu($menu, $domain);
 
             // Module Customers Header
             $customersHeader = $this->trans->trans('navigation.module_customers', [], $domain);
@@ -103,7 +99,6 @@ class MenuBuilder
         $menu = $this->factory->createItem('root');
 
         $this->addOwnerAccountMenu($menu, $domain);
-        $this->addEmployeeMenu($menu, $domain);
         $customersHeader = $this->trans->trans('navigation.module_customers', [], $domain);
         $menu->addChild($customersHeader)->setAttribute('icon', 'icon-menu')->setAttribute('class', 'navigation-header');
         $this->addManageCustomersMenu($menu, $domain);
@@ -156,17 +151,6 @@ class MenuBuilder
 
         $menu[$account]->addChild($this->trans->trans('navigation.account.users', [], $domain), ['route' => 'user_index'])->setAttribute('icon', 'icon-user-plus');
         $menu[$account]->addChild($this->trans->trans('navigation.account.subscription', [], $domain), ['route' => 'subscription_index'])->setAttribute('icon', 'icon-pencil5');
-    }
-
-    /**
-     * @param $menu
-     * @param $domain
-     */
-    private function addEmployeeMenu(&$menu, $domain)
-    {
-        $account = $this->trans->trans('navigation.account.employee', [], $domain);
-        $menu->addChild($account)->setAttribute('icon', 'icon-vcard')->setAttribute('class', 'has-ul');;
-        $menu[$account]->addChild($this->trans->trans('navigation.account.profile', [], $domain), ['route' => 'employee.profile.edit'])->setAttribute('icon', 'icon-user');
     }
 
     /**

@@ -2,13 +2,13 @@
 
 namespace App\Entity\Customer;
 
+use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Client\Client;
 use App\Form\Customer\NotificationType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
-
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Customer
@@ -31,39 +31,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Customer
 {
-    public function __construct()
-    {
-        $this->createdAt = new \DateTime();
-        $this->addresses = new ArrayCollection();
-        $this->shares = new ArrayCollection();
-        $this->notifications = new ArrayCollection();
-    }
-
-    public function __toString()
-    {
-        return $this->firstname . ' ' . $this->lastname;
-    }
-
-    /**
-     * @Assert\Callback
-     *
-     * @param ExecutionContextInterface $context
-     */
-    public function validate(ExecutionContextInterface $context)
-    {
-        if (!$this->email && !$this->phone) {
-            $context->buildViolation('validation.form.required')
-                ->setTranslationDomain('validators')
-                ->atPath('email')
-                ->addViolation();
-
-            $context->buildViolation('validation.form.required')
-                ->setTranslationDomain('validators')
-                ->atPath('phone')
-                ->addViolation();
-        }
-    }
-
     /**
      * @var int
      *
@@ -120,14 +87,6 @@ class Customer
     private $token;
 
     /**
-     * Lead is a new customer, that haven`t shares yet
-     *
-     * @var boolean
-     * @ORM\Column(name="is_lead", type="boolean")
-     */
-    private $isLead = 1;
-
-    /**
      *
      * This field helps to know did customer received an activation email
      * Active customer - this is a customer that have shares and start date of one from shares is past or coming soon
@@ -149,11 +108,11 @@ class Customer
     private $notifications;
 
     /**
-     * @Assert\Valid()
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\Address", mappedBy="customer", cascade={"all"}, orphanRemoval=true)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Customer\Apartment", inversedBy="residents", cascade={"all"})
+     * @ORM\JoinColumn(name="apartment_id", referencedColumnName="id", nullable=false)
+     * @Assert\Valid
      */
-    private $addresses;
+    protected $apartment;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Customer\Payment", mappedBy="customer", cascade={"all"}, orphanRemoval=true)
@@ -161,24 +120,51 @@ class Customer
     private $payments;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\RenewalView", mappedBy="customer", cascade={"all"}, orphanRemoval=true)
-     */
-    private $renewalViews;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Customer\POS", mappedBy="customer", cascade={"all"}, orphanRemoval=true)
      */
     private $orders;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\CustomerReferral", mappedBy="customer", cascade={"all"}, orphanRemoval=true)
-     */
-    private $referrals;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Customer\Invoice", mappedBy="customer", cascade={"all"}, orphanRemoval=true)
      */
     private $invoices;
+
+    /**
+     * Customer constructor.
+     * @throws \Exception
+     */
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+        $this->notifications = new ArrayCollection();
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->firstname . ' ' . $this->lastname;
+    }
+
+    /**
+     * @Assert\Callback
+     * @param ExecutionContextInterface $context
+     */
+    public function validate(ExecutionContextInterface $context)
+    {
+        if (!$this->email && !$this->phone) {
+            $context->buildViolation('validation.form.required')
+                ->setTranslationDomain('validators')
+                ->atPath('email')
+                ->addViolation();
+
+            $context->buildViolation('validation.form.required')
+                ->setTranslationDomain('validators')
+                ->atPath('phone')
+                ->addViolation();
+        }
+    }
 
     /**
      * Get id
@@ -191,9 +177,10 @@ class Customer
     }
 
     /**
+     * @param int $id
      * @return $this
      */
-    public function setId($id)
+    public function setId(int $id)
     {
         $this->id = $id;
 
@@ -212,27 +199,11 @@ class Customer
     }
 
     /**
-     * @return mixed
+     * @return Client
      */
     public function getClient()
     {
         return $this->client;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getClientName()
-    {
-        return $this->client->getName();
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCountry()
-    {
-        return $this->client->getCountry();
     }
 
     /**
@@ -386,6 +357,22 @@ class Customer
     /**
      * @return mixed
      */
+    public function getApartment()
+    {
+        return $this->apartment;
+    }
+
+    /**
+     * @param mixed $apartment
+     */
+    public function setApartment($apartment): void
+    {
+        $this->apartment = $apartment;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getToken()
     {
         return $this->token;
@@ -397,22 +384,6 @@ class Customer
     public function setToken($token)
     {
         $this->token = substr(sha1(openssl_random_pseudo_bytes(50)) . sha1($token), 0, 50);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getIsLead()
-    {
-        return $this->isLead;
-    }
-
-    /**
-     * @param mixed $isLead
-     */
-    public function setIsLead($isLead)
-    {
-        $this->isLead = $isLead;
     }
 
     /**
@@ -457,111 +428,5 @@ class Customer
         $notification->setCustomer($this);
 
         return $this;
-    }
-
-    /**
-     * @return \Doctrine\Common\Collections\Collection|Address $addresses
-     */
-    public function getAddresses()
-    {
-        return $this->addresses;
-    }
-
-    /**
-     * @param mixed $addresses
-     */
-    public function setAddresses($addresses)
-    {
-        $this->addresses = $addresses;
-    }
-
-    /**
-     * @param $type
-     * @return Address|null
-     */
-    public function getAddressByType($type)
-    {
-        $address = null;
-
-        $addresses = [];
-
-        foreach ($this->addresses as $key => $customerAddress) {
-            $addresses[] = $customerAddress;
-        }
-
-        // Count existed customer addresses
-        $addressesNum = count($addresses);
-
-        // If customer added some addresses
-        if ($addressesNum) {
-            switch (mb_strtoupper($type)) {
-                case 'BILLING':
-                    $typeId = 1;
-                    break;
-                case 'DELIVERY':
-                    $typeId = 3;
-                    break;
-                case 'BILLING AND DELIVERY':
-                    $typeId = 2;
-                    break;
-                default:
-                    $typeId = null;
-                    break;
-            }
-
-            if ($typeId) {
-                // If added only one address and type id is 2 (Billing and Delivery), return first address to both types
-                if ($addressesNum == 1 && $addresses[0]->getType() == 2) {
-                    $address = $addresses[0];
-                } else {
-                    // If only one address exists, return first address if type id same as needed, or return null
-                    if ($addressesNum == 1) {
-                        $address = $addresses[0]->getType() == $typeId ? $addresses[0] : null;
-                    } else {
-                        // Return address if exists or null
-                        $address = $addresses[0]->getType() == $typeId ? $addresses[0] : $addresses[1];
-                    }
-                }
-            }
-        }
-
-        return $address;
-    }
-
-    /**
-     * @param Address $address
-     * @return $this
-     */
-    public function addAddress(Address $address)
-    {
-        $this->addresses->add($address);
-        $address->setCustomer($this);
-
-        return $this;
-    }
-
-    /**
-     * @param Address $address
-     */
-    public function removeAddress(Address $address)
-    {
-        $this->addresses->removeElement($address);
-        $address->setCustomer(null);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOrders()
-    {
-        return $this->orders;
-    }
-
-    /**
-     * @param mixed $orders
-     */
-    public function setOrders($orders)
-    {
-        $this->orders = $orders;
     }
 }

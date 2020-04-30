@@ -38,7 +38,7 @@ class RenewType extends AbstractType
                 'expanded' => true,
                 'placeholder' => false
             ])
-            ->add('member', MemberType::class, [
+            ->add('member', CustomerType::class, [
                 'data' => $options['customer'],
                 'date_format' => 'y-M-d',
                 'label' => false,

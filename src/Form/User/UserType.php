@@ -3,6 +3,8 @@
 namespace App\Form\User;
 
 use App\Entity\User\User;
+use App\Form\Type\DateFormatType;
+use App\Form\Type\LocaleType;
 use App\Service\CountryList;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -25,33 +27,15 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('locale', ChoiceType::class , [
-                'choices' => User::LOCALES,
-                'label' => 'account.settings.language',
+            ->add('locale', LocaleType::class, [
                 'label_attr' => [
-                    'class' => 'col-md-2 col-sm-3 col-xs-5 control-label'
-                ],
-                'attr' => [
-                    'class' => 'select'
+                    'class' => 'col-md-2'
                 ]
             ])
-            ->add('dateFormat', ChoiceType::class , [
-                'choices' => [
-                    'DD-MM-YYYY' => 0,
-                    'MM-DD-YYYY' => 1,
-                    'YYYY-MM-DD' => 2,
-                    'DD-MMM-YYYY' => 3
-                ],
-                'label' => 'account.users.date_format',
+            ->add('dateFormat', DateFormatType::class, [
                 'label_attr' => [
-                    'class' => 'col-md-2 col-sm-3 col-xs-5 control-label'
-                ],
-                'attr' => [
-                    'class' => 'select',
-                    'data-empty' => 'false'
-                ],
-                'required' => false,
-                'placeholder' => false
+                    'class' => 'col-md-2'
+                ]
             ])
             ->add('role', ChoiceType::class , [
                 'choices'  => [

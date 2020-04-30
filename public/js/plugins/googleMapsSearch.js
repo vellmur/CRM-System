@@ -1,51 +1,58 @@
-function initAutocomplete($fields, country)
+function initAutocomplete($fields, $holder, country = null)
 {
-    var geocoder = new google.maps.Geocoder();
+    new google.maps.Geocoder();
 
-    var options = {
+    let options = {
         types: ['address']
     };
 
-    if (country !== null) options.componentRestrictions = {country: country};
+    if (country !== null)  {
+        options.strictBounds = true;
+        options.componentRestrictions = { country: country };
+    }
 
     $fields.each(function () {
-        var input = this;
-        var autocomplete = new google.maps.places.Autocomplete(input, options);
+        let input = this,
+            autocomplete = new google.maps.places.Autocomplete(input, options);
+
+        $(input).on('click keydown',function () {
+            let countryFieldValue = $holder.find('[id$=country]').val(),
+                countryCode = countryFieldValue ? countryFieldValue : null;
+
+            autocomplete.setStrictBounds = countryCode !== null;
+            autocomplete.setComponentRestrictions({'country': countryCode !== null ? countryCode : []});
+        });
 
         autocomplete.addListener('place_changed',function () {
-            placeChange(autocomplete, input);
+            placeChange(autocomplete, input, $holder);
         });
     });
 }
 
-var placeChange = function (autocomplete, input)
+let placeChange = function (autocomplete, input, $holder)
 {
-    var place = autocomplete.getPlace();
-    updateAddress({
+    let place = autocomplete.getPlace();
+
+    updateAddress($holder,{
         input: input,
         address_components: place.address_components
     });
 };
 
-var updateAddress = function (args)
+let updateAddress = function ($holder, args)
 {
-    var $fieldset = $(args.input).closest('.collection_item');
-
-    if (!$fieldset.length) $fieldset = $(args.input).closest('.address');
-
-    var $street = $fieldset.find('[id$=street]');
-    var $postalCode = $fieldset.find('[id$=postalCode]');
-    var $region = $fieldset.find('[id$=region]');
-    var $city = $fieldset.find('[id$=city]');
+    let $street = $holder.find('[id$=street]'),
+        $postalCode = $holder.find('[id$=postalCode]'),
+        $region = $holder.find('[id$=region]'),
+        $city = $holder.find('[id$=city]'),
+        streetNumber = '',
+        route = '';
 
     $postalCode.val('');
 
-    var streetNumber = '';
-    var route = '';
-
-    for (var i = 0; i < args.address_components.length; i++) {
-        var component = args.address_components[i];
-        var addressType = component.types[0];
+    for (let i = 0; i < args.address_components.length; i++) {
+        let component = args.address_components[i],
+            addressType = component.types[0];
 
         switch (addressType) {
             case 'street_number':

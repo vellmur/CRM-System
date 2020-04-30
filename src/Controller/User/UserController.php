@@ -2,9 +2,7 @@
 
 namespace App\Controller\User;
 
-use App\Entity\Client\Client;
 use App\Form\User\ChangePasswordType;
-use App\Form\User\Collection\SettingsCollection;
 use App\Manager\RegistrationManager;
 use App\Manager\UserManager;
 use JMS\Serializer\SerializerInterface;
@@ -15,9 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Form\User\UserFormType;
 use App\Form\User\UserType;
 use App\Entity\User\User;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use App\Entity\Client\PaymentSettings;
 
 class UserController extends AbstractController
 {
@@ -30,32 +26,17 @@ class UserController extends AbstractController
 
     /**
      * @param Request $request
-     * @param AuthorizationCheckerInterface $checker
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
-    public function update(Request $request, AuthorizationCheckerInterface $checker)
+    public function update(Request $request)
     {
         $form = $this->createForm(UserFormType::class, $this->getUser());
-
-        // We don't show fields from client form to employers
-        if ($checker->isGranted('ROLE_EMPLOYEE')) {
-            $form->remove('client');
-            $redirectPath = $this->generateUrl('employee_profile_edit');
-        } else {
-            $form->get('client')->remove('level');
-            $redirectPath = $this->generateUrl('profile_edit');
-        }
-
         $form->handleRequest($request);
 
-        if ($request->isXMLHttpRequest()) {
-            return $this->render('account/profile/address.html.twig', [
-                'form' => $form->createView()
-            ]);
-        } elseif ($form->isSubmitted() && $form->isValid()) {
+       if ($form->isSubmitted() && $form->isValid()) {
             $this->manager->saveUser($this->getUser());
 
-            return $this->redirect($redirectPath);
+            return $this->redirect($this->generateUrl('profile_edit'));
         }
 
         return $this->render('account/profile/profile.html.twig', [
@@ -164,34 +145,5 @@ class UserController extends AbstractController
         }
 
         return new Response('Request not valid', 400);
-    }
-
-    /**
-     * @param Request $request
-     * @return Response
-     */
-    public function settings(Request $request)
-    {
-        /** @var Client $client */
-        $client = $this->getUser()->getClient();
-
-        if (!count($client->getModulesSettings())) {
-            $this->manager->createSettings($client);
-        }
-
-        $settingsForm = $this->createForm(SettingsCollection::class, [
-            'settings' => $client->getModulesSettings()
-        ]);
-        $settingsForm->handleRequest($request);
-
-        if ($settingsForm->isSubmitted() && $settingsForm->isValid()) {
-            $this->manager->flush();
-
-            return $this->redirectToRoute('profile_settings');
-        }
-
-        return $this->render('account/profile/settings.html.twig', [
-            'settingsForm' => $settingsForm->createView()
-        ]);
     }
 }

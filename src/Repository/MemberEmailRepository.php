@@ -46,42 +46,10 @@ class MemberEmailRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param Client $client
-     * @param $feedbackType
-     * @return array
-     */
-    public function countFeedbackWeeklyStats(Client $client, $feedbackType)
-    {
-        $today = new \DateTime("midnight");
-        $weekNumber = $today->format('W') - 1;
-
-        $qb = $this->createQueryBuilder('e');
-
-        $qb->select('
-                COUNT(0) as total,
-                SUM(case when recipients.isSent = 1 then 1 else 0 end) as sent,
-                SUM(case when recipients.isDelivered = 1 then 1 else 0 end) as delivered,
-                SUM(case when recipients.isOpened = 1 then 1 else 0 end) as opened,
-                SUM(case when recipients.isClicked = 1 then 1 else 0 end) as clicked
-            ')
-            ->innerJoin('e.recipients', 'recipients')
-            ->innerJoin('e.automatedEmail', 'automatedEmail')
-            ->where('e.client = :client')
-            ->andWhere('e.isDraft = 0')
-            ->andWhere('automatedEmail.type = :feedbackType')
-            ->andWhere('WEEK(e.createdAt) = :currentWeek')
-            ->setParameter('currentWeek', $weekNumber)
-            ->setParameter('feedbackType', $feedbackType)
-            ->setParameter('client', $client)
-            ->orderBy('e.createdAt', 'desc');
-
-        return $qb->getQuery()->getSingleResult();
-    }
-
-    /**
      * @param Customer $customer
      * @param $typeId
-     * @return mixed
+     * @return bool
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function receivedWeekly(Customer $customer, $typeId)
     {

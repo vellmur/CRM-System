@@ -3,20 +3,23 @@
 namespace App\Form\Client;
 
 use App\Entity\Client\Client;
-use App\Form\EventListener\OwnerLocationSubscriber;
+use App\Form\EventListener\AddressSubscriber;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-
-use MenaraSolutions\Geographer\Earth;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class ClientType extends AbstractType
 {
     public $locationSubscriber;
 
-    public function __construct(OwnerLocationSubscriber $subscriber)
+    /**
+     * ClientType constructor.
+     * @param AddressSubscriber $subscriber
+     */
+    public function __construct(AddressSubscriber $subscriber)
     {
         $this->locationSubscriber = $subscriber;
     }
@@ -27,16 +30,6 @@ class ClientType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $earth = new Earth();
-
-        $countries = [];
-
-        foreach ($earth->getCountries()->setLocale('ru') as $country) {
-            $countries[$country->getName('ru')] = $country->getCode();
-        }
-
-        ksort($countries);
-
         $currencies = Client::getCurrencies();
         ksort($currencies);
 
@@ -61,13 +54,28 @@ class ClientType extends AbstractType
                 ]
             ])
             ->add('country', ChoiceType::class, [
-                'choices' => $countries,
+                'choices' => [
+                    'Россия' => 'ru',
+                    'Україна' => 'ua'
+                ],
                 'attr' => [
                     'class' => 'select'
                 ],
-                'empty_data' => 'US',
+                'empty_data' => 'uk',
                 'required' => false,
                 'placeholder' => ''
+            ])
+            ->add('street', TextType::class, [
+                'attr' => [
+                    'class' => 'form-control text-uppercase readonly-visible',
+                    'placeholder' => 'customer.address.street',
+                    'data-type' => 'string',
+                    'onfocus'=> "this.removeAttribute('readonly');",
+                    'readonly' => 'readonly'
+                ],
+                'constraints' => [
+                    new NotNull()
+                ]
             ])
             ->add('postalCode', TextType::class, [
                 'attr' => [
@@ -75,42 +83,20 @@ class ClientType extends AbstractType
                 ],
                 'required' => false
             ])
-            ->add('region', ChoiceType::class, [
-                'label_attr' => [
-                    'class' => 'control-label'
-                ],
+            ->add('region', TextType::class, [
                 'attr' => [
-                    'class' => 'select'
+                    'class' => 'form-control'
                 ],
-                'required' => false,
-                'placeholder' => ''
+                'required' => false
             ])
-            ->add('city', ChoiceType::class, [
-                'choices' => [],
-                'label' => 'City',
-                'label_attr' => [
-                    'class' => 'col-md-2 col-sm-3 col-xs-5 control-label'
-                ],
+            ->add('city', TextType::class, [
                 'attr' => [
-                    'class' => 'select'
+                    'class' => 'form-control'
                 ],
-                'required' => false,
-                'placeholder' => ''
-            ])
-            ->add('weightFormat', ChoiceType::class, [
-                'choices' => [
-                    'Kg' => '1',
-                    'Lbs' => '2'
-                ],
-                'attr' => [
-                    'class' => 'select',
-                ],
-                'required' => false,
-                'multiple' => false,
-                'placeholder' => false
+                'required' => false
             ])
             ->add('currency', ChoiceType::class , [
-                'choices' => $currencies,
+                'choices' =>  $currencies,
                 'placeholder' => false,
                 'label' => 'account.settings.currency',
                 'attr' => [
@@ -139,5 +125,4 @@ class ClientType extends AbstractType
     {
         return 'client';
     }
-
 }

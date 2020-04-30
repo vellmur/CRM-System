@@ -3,7 +3,6 @@
 namespace App\Manager;
 
 use App\Entity\Client\Client;
-use App\Entity\Customer\Address;
 use App\Entity\Customer\Customer;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -55,22 +54,6 @@ class ImportManager
                     $newCustomer->setEmail($customer['Email']);
                     $newCustomer->setPhone($customer['Phone']);
                     $newCustomer->setNotes($customer['Additional information']);
-                    $newCustomer->setIsLead($status);
-
-                    // If all needed fields for address exists and not empty
-                    if ($this->isLengthValid([$customer['Address'], $customer['Postal code'], $customer['Province/State'], $customer['City']], 2)) {
-                        // Set customer address data
-                        $address = new Address();
-                        $address->setType(2);
-                        $address->setCountry($client->getCountry());
-                        $address->setStreet($customer['Address']);
-                        $address->setPostalCode($customer['Postal code']);
-                        $address->setRegion($customer['Province/State']);
-                        $address->setCity($customer['City']);
-
-                        // Add new address to user
-                        $newCustomer->addAddress($address);
-                    }
 
                     $this->saveCustomer($newCustomer);
 

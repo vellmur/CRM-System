@@ -2,11 +2,11 @@
 
 namespace App\Controller\Customer;
 
+use App\Entity\Customer\Apartment;
 use App\Manager\ImportManager;
 use App\Manager\MemberManager;
 use App\Manager\ShareManager;
 use App\Service\Mail\Sender;
-use App\Service\MemberService;
 use App\Service\SpreadsheetService;
 use JMS\Serializer\SerializerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use App\Entity\Customer\Customer;
-use App\Form\Customer\MemberType;
+use App\Form\Customer\CustomerType;
 
 class CustomerController extends AbstractController
 {
@@ -49,25 +49,17 @@ class CustomerController extends AbstractController
 
         $customer = new Customer();
         $customer->setClient($client);
+        $customer->setApartment(new Apartment());
 
-        $form = $this->createForm(MemberType::class, $customer, [
+        $form = $this->createForm(CustomerType::class, $customer, [
             'date_format' => $this->getUser()->getDateFormatName()
-        ]);
-        $form->handleRequest($request);
+        ])->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $this->manager->addMember($customer);
+                $this->manager->addCustomer($customer);
             } catch (\Exception $exception) {
                 die(var_dump($exception->getMessage()));
-            }
-
-            // If customer have active shares after added, send activation email and update status
-            $activeShare = $this->manager->checkActivation($customer);
-
-            if ($activeShare && $customer->getEmail()) {
-                $email = $this->manager->getEmailManager()->createAutoLog($customer->getClient(), 'activation');
-                $this->sender->sendAutomatedEmail($email, $customer, $activeShare);
             }
 
             return $this->redirectToRoute('member_edit', ['id' => $customer->getId()]);
@@ -86,36 +78,20 @@ class CustomerController extends AbstractController
      */
     public function edit(Request $request, Customer $customer)
     {
-        $form = $this->createForm(MemberType::class, $customer, [
+        $form = $this->createForm(CustomerType::class, $customer, [
             'date_format' => $this->getUser()->getDateFormatName()
-        ]);
-
-        $form->handleRequest($request);
+        ])->handleRequest($request);
 
         // If action not ajax, update customer and send all notifies
         if ($form->isSubmitted() && $form->isValid() && !$request->isXMLHttpRequest()) {
             $this->manager->update($customer);
 
-            // If customer didn't activate (didn't receive activation email) -> send it and update status if active
-            if (!$customer->isActivated()) {
-                $activeShare = $this->manager->checkActivation($customer);
-
-                if ($activeShare && $customer->getEmail()) {
-                    $email = $this->manager->getEmailManager()->createAutoLog($customer->getClient(), 'activation');
-                    $this->sender->sendAutomatedEmail($email, $customer, $activeShare);
-                }
-            }
-
             return $this->redirectToRoute('member_edit', ['id' => $customer->getId()]);
         }
 
-        $pickups = $this->manager->getFollowingPickups($customer);
-
         return $this->render('customer/edit.html.twig', [
             'form' => $form->createView(),
-            'member' => $customer,
-            'pickups' => $pickups,
-            'status' => $this->manager->getMemberStatus($customer)
+            'customer' => $customer
         ]);
     }
 
@@ -125,7 +101,7 @@ class CustomerController extends AbstractController
      */
     public function delete(Customer $member)
     {
-        $this->manager->removeMember($member);
+        $this->manager->removeCustomer($member);
 
         return new JsonResponse(['redirect' => $this->generateUrl('member_list'), 'status' => 'success'], 202);
     }
@@ -208,26 +184,6 @@ class CustomerController extends AbstractController
         }
 
         return new Response('Request not valid', 400);
-    }
-
-    /**
-     * @param Request $request
-     * @param ShareManager $shareManager
-     * @return JsonResponse
-     */
-    public function searchSummary(Request $request, ShareManager $shareManager)
-    {
-        $status = $request->request->get('searchStatus');
-        $share = $request->request->get('searchItem');
-        $shares = $shareManager->searchSummaryShares($this->getUser()->getClient(), $status, $share);
-
-        $template = $this->render('customer/forms/summary_list.html.twig', ['shares' => $shares])->getContent();
-
-        return new JsonResponse(
-            $this->serializer->serialize([
-                'template' => $template,
-                'counter' => count($shares)
-            ], 'json'), 200);
     }
 
     /**

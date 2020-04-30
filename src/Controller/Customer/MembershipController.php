@@ -7,7 +7,7 @@ use App\Entity\Customer\Customer;
 use App\Entity\Customer\VendorOrder;
 use App\Form\Customer\ContactType;
 use App\Form\Customer\MembershipLoginType;
-use App\Form\Customer\MemberType;
+use App\Form\Customer\CustomerType;
 use App\Form\Customer\RenewType;
 use App\Form\Customer\VendorOrderType;
 use App\Manager\MembershipManager;
@@ -163,16 +163,6 @@ class MembershipController extends AbstractController
                 'lastname' => $member->getLastname(),
                 'phone' => $member->getPhone()
             ];
-
-            foreach ($member->getAddresses() as $address) {
-                $memberData['address'][$address->getTypeName()] = [
-                    'street' => $address->getStreet(),
-                    'apartment' => $address->getApartment(),
-                    'postalCode' => $address->getPostalCode(),
-                    'region' => $address->getRegion(),
-                    'city' => $address->getCity()
-                ];
-            }
         }
 
         $response = new JsonResponse(['member' => $memberData], 200, array());
@@ -194,7 +184,7 @@ class MembershipController extends AbstractController
         $member = $this->manager->findOneByToken($token);
 
         if ($member) {
-            $form = $this->createForm(MemberType::class, $member, ['isMembership' => true]);
+            $form = $this->createForm(CustomerType::class, $member, ['isMembership' => true]);
 
             $renewForm = $this->createForm(RenewType::class, null, [
                 'client' => $member->getClient(),
@@ -322,7 +312,7 @@ class MembershipController extends AbstractController
         $status = 'invalid';
 
         if ($member) {
-            $form = $this->createForm(MemberType::class, $member, ['isMembership' => true]);
+            $form = $this->createForm(CustomerType::class, $member, ['isMembership' => true]);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {

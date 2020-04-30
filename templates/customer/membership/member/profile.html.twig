@@ -121,24 +121,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Show readonly delivery day field only for Leads and Contacts with saved delivery day and Delivery address -->
-                                {% if (status == 'lead' or status == 'contact')
-                                    and form.vars.value.deliveryDay
-                                    and form.vars.value.getAddressByType('Delivery') %}
-                                    <div class="form-group">
-                                        <label class="col-md-3 col-sm-3 col-xs-5 control-label">
-                                            {{ 'customer.add.delivery_day'|trans({}, 'labels') }}
-                                        </label>
-                                        <div class="col-md-9 col-sm-9 col-xs-7">
-                                            <input type="text"
-                                                   disabled
-                                                   readonly
-                                                   class="form-control custom-read-only"
-                                                   value="{{ form.vars.value.deliveryDay|dayOfWeek }}"/>
-                                        </div>
-                                    </div>
-                                {% endif %}
-
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="control-label">{{ 'membership.automated_emails'|trans({}, 'labels') }}</label>

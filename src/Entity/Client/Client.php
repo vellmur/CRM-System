@@ -19,24 +19,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Client
 {
-    public function __construct()
-    {
-        $this->createdAt = new \DateTime();
-        $this->accesses =  new ArrayCollection();
-        $this->transactions = new ArrayCollection();
-        $this->notes = new ArrayCollection();
-        $this->tags = new ArrayCollection();
-        $this->team = new ArrayCollection();
-        $this->posts = new ArrayCollection();
-
-        $this->token = substr(base_convert(sha1(uniqid(mt_rand())), 16, 36), 0, 30);
-    }
-
-    public function __toString()
-    {
-        return $this->name;
-    }
-
     /**
      * @var int
      *
@@ -61,12 +43,6 @@ class Client
     private $email;
 
     /**
-     * @var integer
-     * @ORM\Column(name="weight_format", type="integer", length=1, nullable=false)
-     */
-    private $weightFormat = 2;
-
-    /**
      * @var int
      *
      * @ORM\Column(name="currency", type="integer", length=2)
@@ -80,17 +56,22 @@ class Client
     private $country;
 
     /**
+     * @ORM\Column(name="street", type="string", length=255, nullable=true)
+     */
+    private $street;
+
+    /**
      * @ORM\Column(name="postal_code", type="string", length=10, nullable=true)
      */
     private $postalCode;
 
     /**
-     * @ORM\Column(name="region", type="integer", length=10, nullable=true)
+     * @ORM\Column(name="region", type="string", length=255, nullable=true)
      */
     private $region;
 
     /**
-     * @ORM\Column(name="city", type="integer", length=10, nullable=true)
+     * @ORM\Column(name="city", type="string", length=255, nullable=true)
      */
     private $city;
 
@@ -159,11 +140,6 @@ class Client
     private $autoEmails;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\RenewalView", mappedBy="client", cascade={"all"}, orphanRemoval=true)
-     */
-    private $renewalViews;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Master\Email\Recipient", mappedBy="client", cascade={"remove"})
      */
     private $emailRecipients;
@@ -192,6 +168,32 @@ class Client
      * @ORM\OneToMany(targetEntity="App\Entity\Customer\Tag", mappedBy="client", cascade={"remove"})
      */
     private $tags;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Customer\Apartment", mappedBy="building", cascade={"remove"})
+     */
+    private $apartments;
+
+    /**
+     * Client constructor.
+     * @throws \Exception
+     */
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+        $this->accesses =  new ArrayCollection();
+        $this->notes = new ArrayCollection();
+        $this->tags = new ArrayCollection();
+        $this->team = new ArrayCollection();
+        $this->posts = new ArrayCollection();
+
+        $this->token = substr(base_convert(sha1(uniqid(mt_rand())), 16, 36), 0, 30);
+    }
+
+    public function __toString()
+    {
+        return $this->name;
+    }
 
     /**
      * Get id
@@ -300,34 +302,6 @@ class Client
     }
 
     /**
-     * @param $weightFormat
-     * @return $this
-     */
-    public function setWeightFormat($weightFormat)
-    {
-        $this->weightFormat = $weightFormat;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getWeightFormat()
-    {
-        return $this->weightFormat;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getWeightName(){
-        $weightFormats = ['Kg', 'Lbs'];
-
-        return $weightFormats[$this->weightFormat - 1];
-    }
-
-    /**
      * @return int
      */
     public function getCurrency()
@@ -421,13 +395,27 @@ class Client
     }
 
     /**
+     * @return mixed
+     */
+    public function getStreet()
+    {
+        return $this->street;
+    }
+
+    /**
+     * @param mixed $street
+     */
+    public function setStreet($street): void
+    {
+        $this->street = $street;
+    }
+
+    /**
      * @return array
      */
     public function getRegions()
     {
-        $regions = $this->country ? $this->country->getRegions() : [];
-
-        return $regions;
+        return $this->country ? $this->country->getRegions() : [];
     }
 
     /**

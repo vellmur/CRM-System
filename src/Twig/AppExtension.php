@@ -2,13 +2,11 @@
 
 namespace App\Twig;
 
-use App\Entity\Customer\Address;
 use App\Entity\Customer\Customer;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
-use Detection\MobileDetect;
 use Twig\Extension\AbstractExtension;
 
 class AppExtension extends AbstractExtension
@@ -34,17 +32,7 @@ class AppExtension extends AbstractExtension
     public function getFilters()
     {
         return [
-            new TwigFilter('dayOfWeek', [$this, 'dayOfWeek']),
-            new TwigFilter('usdtobtc', [$this, 'convertUSDtoBTC']),
-            new TwigFilter('satoshitobtc', [$this, 'convertSatoshiToBTC']),
-            new TwigFilter('satoshitousd', [$this, 'convertSatoshitoUSD']),
-            new TwigFilter('moduleName', [$this, 'nameOfModule']),
-            new TwigFilter('json_decode', [$this, 'json_decode']),
-            new TwigFilter('address_format', [$this, 'address_format']),
             new TwigFilter('profile_link', [$this, 'getProfileLink']),
-            new TwigFilter('get_end_time', [$this, 'calculateEndTime']),
-            new TwigFilter('add_read_more', [$this, 'addReadMore']),
-            new TwigFilter('media_public_url', [$this, 'getMediaPublicUrl']),
             new TwigFilter('file_size', [$this, 'formatSizeUnits'])
         ];
     }
@@ -60,167 +48,6 @@ class AppExtension extends AbstractExtension
     }
 
     /**
-     * Get datetime object from start time (in hours) and duration (in hours)
-     *
-     * @param $start
-     * @param $duration
-     * @return \DateTime|null
-     * @throws \Exception
-     */
-    public function calculateEndTime($start, $duration)
-    {
-        if ($start && $duration) {
-            $date = date("Y:m:d H:i:s", strtotime($start));
-            $datetime = new \DateTime($date);
-            $datetime->modify('+ ' . $duration . ' hours');
-
-            return $datetime;
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * @param $string
-     * @return mixed
-     */
-    public function json_decode($string)
-    {
-        return json_decode($string, true);
-    }
-
-    /**
-     * @param $usd
-     * @return mixed
-     */
-    public function convertUSDtoBTC($usd)
-    {
-        $request = 'https://blockchain.info/tobtc?currency=USD&value=' . $usd;
-
-        return $this->requestToApi($request);
-    }
-
-    public function nameOfModule($id)
-    {
-        $modules = [
-            '1' => 'Customers',
-        ];
-
-        return $modules[$id];
-    }
-
-    public function dayOfWeek($numOfDay)
-    {
-        $week = [
-            '1' => $this->translator->trans('monday', [], 'choices'),
-            '2' => $this->translator->trans('tuesday', [], 'choices'),
-            '3' => $this->translator->trans('wednesday', [], 'choices'),
-            '4' => $this->translator->trans('thursday', [], 'choices'),
-            '5' => $this->translator->trans('friday', [], 'choices'),
-            '6' => $this->translator->trans('saturday', [], 'choices'),
-            '7' => $this->translator->trans('sunday', [], 'choices')
-        ];
-        
-        return $week[$numOfDay];
-    }
-    
-    /**
-     * @param $url
-     * @return mixed
-     */
-    function requestToApi($url)
-    {
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
-
-        $result = curl_exec($ch);
-
-        curl_close($ch);
-
-        return json_decode($result);
-    }
-
-    /**
-     * @param $satoshi
-     * @return string
-     */
-    public function convertSatoshiToBTC($satoshi)
-    {
-        $value = sprintf('%.8f',  ($satoshi / 100000000));
-        return rtrim($value, '0');
-    }
-
-    /**
-     * @return mixed
-     */
-    public function convertSatoshitoUSD($satoshi)
-    {
-        $btcPrice = $this->getBtcAveragePrice();
-        $satoshiInBtc = $satoshi / 100000000;
-        $oneSatoshiPrice =  $btcPrice / 100000000;
-
-        return round(($satoshiInBtc * $oneSatoshiPrice) * 100000000, 3);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getBtcAveragePrice()
-    {
-        $request = "https://bitaps.com/api/ticker/average";
-        $response = $this->requestToApi($request);
-
-        return $response->usd;
-    }
-
-    /**
-     * Convert address to needed format with tags.
-     *
-     * First line of address is Street Apartment
-     * Second line of address is Postal code, City State
-     *
-     * @param Address|array $address
-     * @return string
-     */
-    public function address_format($address)
-    {
-        // Get data form Address object or from array
-        if (is_object($address)) {
-            $street = $address->getStreet();
-            $apartment = $address->getApartment();
-            $postalCode = $address->getPostalCode();
-            $region = $address->getRegion();
-            $city = $address->getCity();
-        } else {
-            $street = $address['street'];
-            $apartment = $address['apartment'];
-            $postalCode = $address['postalCode'];
-            $region = $address['region'];
-            $city = $address['city'];
-        }
-
-        $formattedAddress = '<span class="address-details">' . $street;
-
-        if ($apartment) $formattedAddress .= ' ' . $apartment;
-
-        $formattedAddress .= '</span><br/><span class="address-region">';
-
-        if ($postalCode) $formattedAddress .= $postalCode;
-
-        if ($region || $city) {
-            $formattedAddress .= ', ' . $city . ' ' . $region;
-        }
-
-        $formattedAddress .= '</span>';
-
-        return $formattedAddress;
-    }
-
-    /**
      * @param Customer $customer
      * @return string
      */
@@ -230,7 +57,7 @@ class AppExtension extends AbstractExtension
 
         // Generate absolute url
         $link = $this->router->generate('membership_profile', [
-            '_locale' => $user->getLocale()->getId() ? $user->getLocale()->getCode() : 'en',
+            '_locale' => $user->getLocaleCode() ? $user->getLocaleCode() : 'en',
             'token' => $customer->getToken()
         ], UrlGeneratorInterface::ABSOLUTE_URL);
 
@@ -240,34 +67,6 @@ class AppExtension extends AbstractExtension
         }
 
         return $link;
-    }
-
-    /**
-     * @return bool
-     */
-    function isMobile()
-    {
-        $detect = new MobileDetect();
-        return $detect->isMobile();
-    }
-
-    /**
-     * @param $text
-     * @return string
-     */
-    public function addReadMore($text)
-    {
-        $visibleWordsNum = 96;
-        $textToAdd = '<span class="text-dots">...</span><span class="read-more">';
-        $words = explode(' ',$text,$visibleWordsNum + 1);
-        $lastWord = array_pop($words);
-
-        $croppedText = '<div class="text-read-block">' .
-                implode(" ", $words) . ' ' . $textToAdd . ' ' . $lastWord . '</span>
-                <button type="button" class="btn-link read-more-btn">Show more</button>
-            </div>';
-
-        return $croppedText;
     }
 
     /**

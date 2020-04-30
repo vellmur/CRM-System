@@ -239,11 +239,9 @@
 
     <footer>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
-        <script src="{{ asset('js/validation/jquery-validation.js') }}?v=8"></script>
 
-        {% if app.request.locale != 'en' %}
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/localization/messages_{{ app.request.locale }}.js"></script>
-        {% endif %}
+
+
         <input type="hidden" id="locale" value="{{ app.request.locale }}"/>
         <script src="{{ asset('js/ajax.js') }}?v=7"></script>
         <script src="{{ asset('js/plugins/visibility/jquery.visible.min.js') }}"></script>

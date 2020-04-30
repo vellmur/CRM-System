@@ -4,7 +4,6 @@ namespace App\Form\EventListener;
 
 use App\Service\LocationService;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -26,34 +25,9 @@ class AddressSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            FormEvents::PRE_SET_DATA => 'preSet',
-            FormEvents::POST_SET_DATA => 'postSet'
+            FormEvents::POST_SET_DATA => 'postSet',
+            FormEvents::PRE_SUBMIT => 'preSubmit'
         );
-    }
-
-    /**
-     *
-     * @param FormEvent $event
-     */
-    public function preSet(FormEvent $event)
-    {
-        $form = $event->getForm();
-        $data = $event->getData();
-
-        if ($data == null) {
-            $options = $form->get('type')->getConfig()->getOptions();;
-            $options['data'] = 2;
-            $form->add('type', ChoiceType::class, $options);
-        } else {
-            // If entity is Location, remove addresses fields from the Delivery
-            if (stristr(get_class($data), 'Location') && $data->isDelivery()) {
-                $form->remove('region');
-                $form->remove('city');
-                $form->remove('street');
-                $form->remove('apartment');
-                $form->remove('postalCode');
-            }
-        }
     }
 
     /**
@@ -64,26 +38,45 @@ class AddressSubscriber implements EventSubscriberInterface
     public function postSet(FormEvent $event)
     {
         $form = $event->getForm();
+        $data = $event->getData();
 
-        $this->addRegionField($form);
+        $countryCode = $data && $data->getCountry() ? $data->getCountry() : null;
+        $this->addTimezoneField($form, $countryCode);
+    }
+
+    /**
+     *
+     * Here we dynamically set customer location data, based on country/region/city/postalCode
+     *
+     * @param FormEvent $event
+     */
+    public function preSubmit(FormEvent $event)
+    {
+        $form = $event->getForm();
+        $data = $event->getData();
+
+        $countryCode = array_key_exists('country', $data) ? $data['country'] : null;
+
+        // All this have must happens only if some country selected
+        if ($countryCode && $countryCode !== '') {
+            $this->addTimezoneField($form, $countryCode);
+            $event->setData($data);
+        }
     }
 
     /**
      * @param FormInterface $form
+     * @param $countryCode
      */
-    private function addRegionField(FormInterface $form)
+    public function addTimezoneField(FormInterface $form, $countryCode)
     {
-        $country = $form->getConfig()->getOptions()['country'];
-
-        if ($country) {
-            $countryInfo = $this->locationService->getCountryInfo($country);
-
-            if ($form->has('region') && strlen($countryInfo['territoryType']) > 0) {
-                $options = $form->get('region')->getConfig()->getOptions();
-                $options['attr']['placeholder'] = 'customer.address.region';
-                $options['label'] = 'customer.address.region';
-                $form->add('region', TextType::class, $options);
-            }
-        }
+        $form->add('timezone', ChoiceType::class, [
+            'required' => false,
+            'choices' => $this->locationService->getTimezonesList($countryCode),
+            'attr' => [
+                'class' => 'select'
+            ],
+            'placeholder' => ''
+        ]);
     }
 }
