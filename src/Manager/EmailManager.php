@@ -13,6 +13,7 @@ use App\Entity\User\User;
 use App\Service\Mail\MailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Twig\Environment;
 
 class EmailManager
@@ -122,7 +123,8 @@ class EmailManager
         foreach ($clients as $clientId) {
             /** @var Client $client */
             $client = $this->em->find(Client::class, $clientId);
-            $recipient = $this->addEmailRecipient($email, $client);
+            $user = $client->getUsers()[0];
+            $recipient = $this->addEmailRecipient($email, $user);
 
             $this->em->persist($recipient);
         }
@@ -161,17 +163,15 @@ class EmailManager
      */
     private function setMacrosField(Recipient $recipient, string $macros)
     {
-        $client = $recipient->getClient();
+        $user = $recipient->getUser();
 
         $value = '';
 
         switch ($macros) {
             case 'ClientName':
-                $value = $client->getName();
+                $value = $user->getClient()->getName();
                 break;
             case 'ConfirmationLink':
-                /*
-                 * $user == ?
                 if (!$user->isEnabled()) {
                     $token = $user->getConfirmationToken();
                     $path = $this->urlGenerator->generate('app_registration_confirm', ['token' => $token]);
@@ -179,7 +179,7 @@ class EmailManager
                 } else {
                     $path = $this->urlGenerator->generate('app_login');
                     $value = '<a href="' . $path . '" target="_blank">Confirmation link</a>';
-                }*/
+                }
 
                 break;
         }
@@ -265,14 +265,14 @@ class EmailManager
     }
 
     /**
-     * @param User $user
+     * @param UserInterface $user
      * @return Email
-     * @throws \Exception
+     * @throws \Doctrine\DBAL\ConnectionException
      */
-    public function createUserConfirmationEmail(User $user)
+    public function createUserConfirmationEmail(UserInterface $user)
     {
         $email = $this->getAutomatedEmailOfType('confirmation');
-        $recipient = $this->addEmailRecipient($email, $user->getClient());
+        $recipient = $this->addEmailRecipient($email, $user);
 
         $this->em->persist($recipient);
 
@@ -430,14 +430,14 @@ class EmailManager
 
     /**
      * @param Email $email
-     * @param Client $client
+     * @param User $user
      * @return Recipient
      */
-    public function addEmailRecipient(Email &$email, Client $client)
+    public function addEmailRecipient(Email &$email, User $user)
     {
         $recipient = new Recipient();
-        $recipient->setClient($client);
-        $recipient->setEmailAddress($client->getEmail());
+        $recipient->setUser($user);
+        $recipient->setEmailAddress($user->getClient()->getEmail());
 
         $email->addRecipient($recipient);
 

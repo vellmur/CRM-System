@@ -2,17 +2,17 @@
 
 namespace App\Entity\Master\Email;
 
-use App\Entity\Client\Client;
 use App\Entity\Email\BaseRecipient;
+use App\Entity\User\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="master__email_recipient", uniqueConstraints={
- *     @ORM\UniqueConstraint(name="master_email_recipient", columns={"email_id", "client_id"})
+ *     @ORM\UniqueConstraint(name="master_email_recipient", columns={"email_id", "user_id"})
  * }))
  * @ORM\Entity(repositoryClass="App\Repository\RecipientRepository")
  */
-class Recipient extends BaseRecipient implements ClientRecipientInterface
+class Recipient extends BaseRecipient implements UserRecipientInterface
 {
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Master\Email\Email", inversedBy="recipients")
@@ -21,25 +21,25 @@ class Recipient extends BaseRecipient implements ClientRecipientInterface
     protected $emailLog;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Client\Client", inversedBy="emailRecipients")
-     * @ORM\JoinColumn(name="client_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\User\User", inversedBy="emailRecipients")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      */
-    private $client;
+    private $user;
 
     /**
-     * @return Client
+     * @return User
      */
-    public function getClient() : Client
+    public function getUser() : User
     {
-        return $this->client;
+        return $this->user;
     }
 
     /**
-     * @param mixed $client
+     * @param User $user
      */
-    public function setClient(Client $client): void
+    public function setUser(User $user): void
     {
-        $this->client = $client;
+        $this->user = $user;
 
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Entity\Client;
 
+use App\Entity\User\User;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Customer\Email\AutoEmail;
 use App\Entity\Customer\Customer;
@@ -406,7 +408,7 @@ class Client
     /**
      * Get customers
      *
-     * @return \Doctrine\Common\Collections\Collection|Customer[] $customers
+     * @return Collection|Customer[] $customers
      */
     public function getCustomers()
     {
@@ -416,7 +418,7 @@ class Client
     /**
      * Get accesses
      *
-     * @return \Doctrine\Common\Collections\Collection|ModuleAccess[] $accesses
+     * @return Collection|ModuleAccess[] $accesses
      */
     public function getAccesses()
     {
@@ -462,7 +464,7 @@ class Client
     }
 
     /**
-     * @return \Doctrine\Common\Collections\Collection|Tag[] $tags
+     * @return Collection|Tag[] $tags
      */
     public function getTags()
     {
@@ -530,7 +532,7 @@ class Client
     }
 
     /**
-     * @return mixed
+     * @return Collection|User[] $users
      */
     public function getUsers()
     {
