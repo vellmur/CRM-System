@@ -5,45 +5,46 @@ namespace App\Data;
 class CountryInfo
 {
     /**
-     * @param null $countryCode
-     * @return array|mixed
+     * @param string $countryCode
+     * @return mixed
+     * @throws \Exception
      */
-    public function getCountryInfo($countryCode = null)
+    public function getCountryInfo(string $countryCode)
     {
-        $countryInfo = $countryCode ? $this->countryInfo[mb_strtoupper($countryCode)] : null;
+        $countryCode = mb_strtoupper($countryCode);
 
-        return $countryInfo;
+        if (!isset($this->countryInfo[$countryCode])) {
+            throw new \Exception('Country phone format was not found.');
+        }
+
+        return $this->countryInfo[$countryCode];
     }
 
     /**
-     * @param $countryCode string
-     * @return null|array
+     * @param string $countryCode
+     * @return mixed
+     * @throws \Exception
      */
-    public function getPhoneFormat($countryCode)
+    public function getPhoneFormat(string $countryCode)
     {
-        $phoneFormat = null;
+        $countryInfo = $this->getCountryInfo($countryCode);
 
-        if ($countryCode) {
-            $countryInfo = $this->getCountryInfo($countryCode);
+        $countryFormat = '+' . $countryInfo['country_code'];
 
-            if ($countryInfo) {
-                $countryFormat = '+' . $countryInfo['country_code'];
-
-                $phoneFormat['code'] = $countryFormat;
-                $phoneFormat['mask'] = $countryFormat . ' ' . $countryInfo['phone_format'];
-                $phoneFormat['unmaskedLength'] = preg_match_all( "/[0-9]/", $countryInfo['phone_format']);
-                $phoneFormat['length'] = preg_match_all( "/[0-9]/", $phoneFormat['mask']);
-                $phoneFormat['validationLength'] = strlen($phoneFormat['mask']);
-            }
-        }
+        $phoneFormat['code'] = $countryFormat;
+        $phoneFormat['mask'] = $countryFormat . ' ' . $countryInfo['phone_format'];
+        $phoneFormat['unmaskedLength'] = preg_match_all( "/[0-9]/", $countryInfo['phone_format']);
+        $phoneFormat['length'] = preg_match_all( "/[0-9]/", $phoneFormat['mask']);
+        $phoneFormat['validationLength'] = strlen($phoneFormat['mask']);
 
         return $phoneFormat;
     }
 
     /**
-     * @param $phone string
-     * @param $countryCode string
-     * @return string|null
+     * @param $phone
+     * @param $countryCode
+     * @return string|string[]|null
+     * @throws \Exception
      */
     public function getUnmaskedPhone($phone, $countryCode)
     {

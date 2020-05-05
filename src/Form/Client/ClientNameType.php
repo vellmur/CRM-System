@@ -3,7 +3,7 @@
 namespace App\Form\Client;
 
 use App\Entity\Client\Client;
-use App\Form\EventListener\OwnerLocationSubscriber;
+use App\Form\Subscriber\OwnerLocationSubscriber;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;

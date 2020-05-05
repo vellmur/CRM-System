@@ -3,9 +3,9 @@
 namespace App\Manager;
 
 use App\Entity\User\PageView;
-use App\Entity\ModuleAccess;
+use App\Entity\Client\ModuleAccess;
 use App\Entity\Client\Client;
-use App\Entity\Client\Team;
+use App\Entity\User\User;
 use Doctrine\ORM\EntityManagerInterface;
 
 class MasterManager
@@ -27,9 +27,7 @@ class MasterManager
      */
     public function getClientUsers($client)
     {
-        $users = $this->em->getRepository(Team::class)->findBy(['client' => $client]);
-
-        return $users;
+        return $this->em->getRepository(User::class)->findBy(['client' => $client]);
     }
 
     public function updateClientAccess(ModuleAccess $access)
@@ -39,46 +37,12 @@ class MasterManager
     }
 
     /**
-     * @return array
-     */
-    public function getClientsLevelsArray()
-    {
-        $modules = [
-            1 => 'Farmer'
-        ];
-
-        return $modules;
-    }
-
-    /**
-     * @return array
-     */
-    public function countLevelClients()
-    {
-        $levelClients = $this->em->getRepository(Client::class)->countLevelClients();
-
-        return $levelClients;
-    }
-
-    /**
-     * @return array
-     */
-    public function countLevelClientsByStatus()
-    {
-        $statusMembers = $this->em->getRepository(Client::class)->countLevelClientsByStatus();
-
-        return $statusMembers;
-    }
-
-    /**
      * @param $days
      * @return array
      */
     public function countNewByDays($days)
     {
-        $newMembersNum = $this->em->getRepository(Client::class)->countNewClients($days);
-
-        return $newMembersNum;
+        return $this->em->getRepository(Client::class)->countNewClients($days);
     }
 
     /**
@@ -87,9 +51,7 @@ class MasterManager
      */
     public function getSoftwareClients($search = null)
     {
-        $clients = $this->em->getRepository(Client::class)->getSoftwareClients($search);
-
-        return $clients;
+        return $this->em->getRepository(Client::class)->getSoftwareClients($search);
     }
 
     /**
@@ -129,9 +91,7 @@ class MasterManager
      */
     public function searchClients($text)
     {
-        $clients = $this->em->getRepository(Client::class)->searchClientsByAllFields($text);
-
-        return $clients;
+        return $this->em->getRepository(Client::class)->searchClientsByAllFields($text);
     }
 
     /**
@@ -150,7 +110,7 @@ class MasterManager
     {
         $clientsModules = $this->em->getRepository(Client::class)->getClientsByModulesStatuses();
 
-        return  count($clientsModules);
+        return count($clientsModules);
     }
 
     /**
@@ -159,9 +119,7 @@ class MasterManager
      */
     public function countNewClientsByDays($days)
     {
-        $count = $this->em->getRepository(Client::class)->countNewClientsByDays($days);
-
-        return $count;
+        return $this->em->getRepository(Client::class)->countNewClientsByDays($days);
     }
 
     /**
@@ -170,9 +128,7 @@ class MasterManager
      */
     public function countClientsByActivation($isConfirmed)
     {
-        $clientsNum = $this->em->getRepository(Client::class)->countClientsByActivation($isConfirmed);
-
-        return $clientsNum;
+        return $this->em->getRepository(Client::class)->countClientsByActivation($isConfirmed);
     }
 
     /**
@@ -180,9 +136,7 @@ class MasterManager
      */
     public function countLandingViews()
     {
-        $views = $this->em->getRepository(PageView::class)->countLandingViews();
-
-        return $views;
+        return $this->em->getRepository(PageView::class)->countLandingViews();
     }
 
     /**

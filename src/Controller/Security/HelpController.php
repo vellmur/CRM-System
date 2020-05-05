@@ -46,7 +46,7 @@ class HelpController extends AbstractController
 
         if ($support->isSubmitted() && $support->isValid()) {
             $data = [
-                'name' => $this->getUser()->getTeam()->getClient()->getName(),
+                'name' => $this->getUser()->getClient()->getName(),
                 'email' => $this->getUser()->getEmail(),
                 'subject' => $request->request->get('support')['subject'],
                 'message' => $request->request->get('support')['message']

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\EventListener;
+namespace App\Form\Subscriber;
 
 use App\Form\Customer\NotificationType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;

@@ -51,10 +51,10 @@ class MembershipController extends AbstractController
             if ($form->isSubmitted() && $form->isValid()) {
                 $email = $form->getData()['email'];
                 $client = isset($form->getData()['client']) ? $this->manager->getClientById($form->getData()['client']) : null;
-                $member = $this->manager->findOneByEmail($email, $client);
+                $customer = $this->manager->findOneByEmail($email, $client);
 
-                if ($member) {
-                    $this->mailer->sendMemberControl($member);
+                if ($customer) {
+                    $this->mailer->sendCustomerControl($customer, 'en');
 
                     return $this->redirectToRoute('membership_access_sent');
                 } else {
@@ -245,7 +245,6 @@ class MembershipController extends AbstractController
                 'form' => $form->createView(),
                 'renewForm' => $renewForm->createView(),
                 'invoice' => $invoiceId ? $this->manager->getInvoice($request->query->all()['invoiceId']) : null,
-                'date_format' => $member->getClient()->getOwnerDateFormat(),
                 'status' =>  $this->manager->getMemberManager()->getMemberStatus($member)
             ]);
         }
@@ -367,8 +366,7 @@ class MembershipController extends AbstractController
             }
 
             $return = [
-                'form' => $form->createView(),
-                'date_format' => $client->getOwnerDateFormat()
+                'form' => $form->createView()
             ];
 
             // If vendor is activated add to response orders forms for Orders tab
@@ -376,7 +374,6 @@ class MembershipController extends AbstractController
                 $order = new VendorOrder();
 
                 $orderForm = $this->createForm(VendorOrderType::class, $order, [
-                    'date_format' => $client->getOwnerDateFormat(),
                     'vendors' => [$contact->getVendor()]
                 ]);
 

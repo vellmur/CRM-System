@@ -184,17 +184,15 @@
                 <div class="sidebar sidebar-main sidebar-default">
                     <div class="sidebar-content">
                         <div class="sidebar-category sidebar-category-visible">
-                            {% if app.user.team %}
-                                <div class="category-content sidebar-user">
-                                    <div class="media">
-                                        <div class="media-body">
-                                            <span class="media-heading text-semibold">
-                                                {{ app.user.client.name }}
-                                            </span>
-                                        </div>
+                            <div class="category-content sidebar-user">
+                                <div class="media">
+                                    <div class="media-body">
+                                        <span class="media-heading text-semibold">
+                                            {{ app.user.client.name }}
+                                        </span>
                                     </div>
                                 </div>
-                            {% endif %}
+                            </div>
 
                             <div class="category-content no-padding">
                                 <ul class="navigation navigation-main navigation-accordion">

@@ -3,7 +3,6 @@
 namespace App\Entity\User;
 
 use App\Entity\Client\Client;
-use App\Entity\Client\Team;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -116,9 +115,10 @@ class User implements UserInterface
     private $isActive = true;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Client\Team", mappedBy="user", cascade={"persist", "remove" })
+     * @ORM\ManyToOne(targetEntity="App\Entity\Client\Client", inversedBy="users", cascade={"persist"})
+     * @ORM\JoinColumn(name="client_id", referencedColumnName="id", nullable=false)
      */
-    private $team;
+    private $client;
 
     /**
      * @var DateTime
@@ -389,14 +389,6 @@ class User implements UserInterface
     }
 
     /**
-     * @return string|null
-     */
-    public function getTimeZone(): ?string
-    {
-        return $this->getTeam() && $this->getClient()->getTimezone() ? $this->getClient()->getTimezone() : null;
-    }
-
-    /**
      * Set createdAt
      *
      * @param $createdAt
@@ -457,31 +449,23 @@ class User implements UserInterface
     {
         return $this->isActive;
     }
-    
-    /**
-     * @param $team
-     * @return $this
-     */
-    public function setTeam(Team $team)
-    {
-        $this->team = $team;
-
-        return $this;
-    }
-
-    /**
-     * @return Team|null
-     */
-    public function getTeam() : ?Team
-    {
-        return $this->team;
-    }
 
     /**
      * @return Client|null
      */
     public function getClient() : ?Client
     {
-        return $this->getTeam() ? $this->getTeam()->getClient() : null;
+        return $this->client;
+    }
+
+    /**
+     * @param Client $client
+     * @return $this
+     */
+    public function setClient(Client $client)
+    {
+        $this->client = $client;
+
+        return $this;
     }
 }

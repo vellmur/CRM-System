@@ -63,13 +63,13 @@ class SignUpCest
         $formFields = [
             'registration_username' => $enabledUser['username'],
             'registration_email' => $enabledUser['email'],
-            'registration_locale' => 0,
+            'registration_locale' => 1,
             'registration_client_name' => $enabledUser['client']['name'],
             'registration_plainPassword_first' => 'testuser',
             'registration_plainPassword_second' => 'testuser'
         ];
 
-        $this->fillForm($I, $formFields);
+        $I->fillForm($formFields);
         $I->click('#_submit');
         $I->see('Create account');
 
@@ -88,14 +88,14 @@ class SignUpCest
 
         $formFields = [
             'registration_username' => 'johngolt',
-            'registration_locale' => 0,
+            'registration_locale' => 1,
             'registration_email' => 'johngolt@example.com',
             'registration_client_name' => 'John Golt',
             'registration_plainPassword_first' => 'johngolt',
             'registration_plainPassword_second' => 'johngolt'
         ];
 
-        $this->fillForm($I, $formFields);
+        $I->fillForm($formFields);
         $I->click('#_submit');
 
         $I->canSeeInCurrentUrl('/register/check-email');
@@ -111,20 +111,5 @@ class SignUpCest
     private function iSeeLabelError(FunctionalTester $I, string $fieldId, string $error)
     {
         $I->canSee($error, Locator::find('label', ['for' => $fieldId]));
-    }
-
-    /**
-     * @param FunctionalTester $I
-     * @param $formFields
-     */
-    private function fillForm(FunctionalTester $I, $formFields)
-    {
-        foreach ($formFields as $fieldId => $value) {
-            if (is_int($value)) {
-                $I->selectOption("#$fieldId", $value);
-            } else {
-                $I->fillField("#$fieldId", $value);
-            }
-        }
     }
 }

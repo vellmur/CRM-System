@@ -24,8 +24,6 @@ class VendorType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $client = $builder->getData()->getClient();
-
         $daysOfWeek = [
             $this->translator->trans('sunday', [], 'choices') => 7,
             $this->translator->trans('monday', [], 'choices') => 1,
@@ -95,7 +93,6 @@ class VendorType extends AbstractType
                 'entry_type' => ContactType::class,
                 'entry_options' => [
                     'label' => 'customer.vendor.contacts',
-                    'country_code' => $client->getCountry(),
                 ],
                 'allow_add' => true,
                 'allow_delete' => true,

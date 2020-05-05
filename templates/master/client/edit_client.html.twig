@@ -1,10 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-
     <div class="panel panel-default">
         <div class="panel-heading heading-style">
-            <h6 class="panel-title">{{ teams[0].client.name }} users</h6>
+            <h6 class="panel-title">{{ client.name }} users</h6>
         </div>
         <div class="datatable-ajax-source">
             <table class="table">
@@ -17,20 +16,18 @@
                 </tr>
                 </thead>
                 <tbody id="users_list">
-                    {% for key, team in teams %}
+                    {% for key, user in users %}
                         <tr role="row" class="odd">
-                            <td>{{ team.user.username }}</td>
-                            <td>{{ team.user.email }}</td>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ 'ROLE_OWNER' in user.roles ? 'OWNER' : 'EMPLOYEE' }}</td>
                             <td>
-                                {% if 'ROLE_OWNER' in team.user.roles|json_encode %}
-                                    OWNER
-                                {% else %}
-                                    EMPLOYEE
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if app.user.id != team.user.id %}
-                                    <a role="button" href="{{ path('customer_list', {'_switch_user' : team.user.username}) }}" class="btn btn-success btn-icon"><i class="icon-enter2"></i></a>
+                                {% if app.user.id != user.id %}
+                                    <a role="button"
+                                       href="{{ path('customer_list', {'_switch_user' : user.username}) }}"
+                                       class="btn btn-success btn-icon">
+                                        <i class="icon-enter2"></i>
+                                    </a>
                                 {% endif %}
                             </td>
                         </tr>
@@ -57,13 +54,22 @@
                 <tbody>
                 {% for key, form in forms %}
                     <tr {% if key is not divisible by (2) %} class="row-style" {% endif %}>
-                        {{ form_start(form, { 'attr': {'action': path('master_client_access_update', { 'id' : form.vars.value.id }), 'role' : 'form', 'class' : 'ajaxUpdate'} }) }}
-                        <td class="form-group">{{ modules[form.vars.value.module] is defined ? modules[form.vars.value.module] }}</td>
-                        <td class="form-group">{{ form.vars.value.statusName }}</td>
-                        <td class="form-group">{{ form_widget(form.expiredAt,  {'id' : '' ~ form.vars.value.id}) }}</td>
-                        <td class="form-group">
-                            <span id="form-status"><button type="submit" class="btn btn-success btn-icon btn-save"><i class="icon-floppy-disk"></i></button></span>
-                        </td>
+                        {{ form_start(form, {
+                            'attr': {
+                                'action': path('master_client_access_update', {'id': form.vars.value.id}),
+                                'class': 'ajaxUpdate'
+                            }
+                        }) }}
+                            <td class="form-group">{{ modules[form.vars.value.module] is defined ? modules[form.vars.value.module] }}</td>
+                            <td class="form-group">{{ form.vars.value.statusName }}</td>
+                            <td class="form-group">{{ form_widget(form.expiredAt,  {'id' : '' ~ form.vars.value.id}) }}</td>
+                            <td class="form-group">
+                                <span id="form-status">
+                                    <button type="submit" class="btn btn-success btn-icon btn-save">
+                                        <i class="icon-floppy-disk"></i>
+                                    </button>
+                                </span>
+                            </td>
                         {{ form_end(form) }}
                     </tr>
                 {% endfor %}

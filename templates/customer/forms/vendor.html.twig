@@ -152,7 +152,7 @@
 
         if ($addressFields[0]) {
             // Enable google address search autocomplete
-            var country = '{{ app.user.client.country }}'.length > 0 ? '{{ app.user.client.country }}' : null;
+            var country = '{{ app.user.client.address.country }}'.length > 0 ? '{{ app.user.client.address.country }}' : null;
             initAutocomplete($addressFields, country);
         }
     </script>

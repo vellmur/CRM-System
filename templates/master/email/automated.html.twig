@@ -1,8 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {{ form_start(form, {'attr': {'role': 'form', 'class': 'form-horizontal'} }) }}
-    <!-- Page tabs -->
+    {{ form_start(form, {'attr': {'class': 'form-horizontal'} }) }}
     <div class="tabbable page-tabs">
         <ul class="nav nav-tabs left-tabs">
             {% for key, type in automatedTypes %}
@@ -11,22 +10,21 @@
         </ul>
         <div class="tab-content">
             {% for key, automatedEmail in form.automatedEmails %}
-                <div class="tab-pane fade {{ key == 0 ? 'active in' }}" id="{{ automatedTypes[automatedEmail.vars.value.id] }}-tab">
+                <div class="tab-pane fade {{ key == 0 ? 'active in' }}" id="{{ automatedTypes[automatedEmail.vars.value.type] }}-tab">
                     <div class="block">
                         <div class="form-group row">
                             {{ form_label(automatedEmail.subject) }}
                             <div class="col-md-11 {{ automatedEmail.subject.vars.errors|length ? 'has-error' }}">
                                 {% if not automatedEmail.subject.vars.valid %}
                                     {{ form_widget(automatedEmail.subject, {
-                                        'id' : 'activationSubject',
-                                        'attr' : {
+                                        'attr': {
                                             'data-placement': 'top',
-                                            'title': form.automatedEmails[0].subject.vars.errors[0].message,
+                                            'title': automatedEmail.subject.vars.errors[0].message,
                                             'class': 'form-control tip tip-open'
                                         }
                                     }) }}
                                 {% else %}
-                                    {{ form_widget(automatedEmail.subject, {id : 'activationSubject'}) }}
+                                    {{ form_widget(automatedEmail.subject) }}
                                 {% endif %}
                             </div>
                         </div>
@@ -37,12 +35,12 @@
                                         'id': automatedTypes[automatedEmail.vars.value.id],
                                         'attr': {
                                             'data-placement': 'top',
-                                            'title': form.automatedEmails[0].text.vars.errors[0].message,
+                                            'title': automatedEmail.text.vars.errors[0].message,
                                             'class': 'form-control tip tip-open'
                                         }
                                     }) }}
                                 {% else %}
-                                    {{ form_widget(automatedEmail.text, {id: automatedTypes[automatedEmail.vars.value.id]}) }}
+                                    {{ form_widget(automatedEmail.text, {id: automatedTypes[automatedEmail.vars.value.type]}) }}
                                 {% endif %}
                             </div>
                         </div>
@@ -54,7 +52,6 @@
             {% endfor %}
         </div>
     </div>
-    <!-- /page tabs -->
     {{ form_end(form) }}
 
     {{ include ("modal/macros-modal.html.twig", {'macros': macros}) }}

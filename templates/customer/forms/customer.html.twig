@@ -94,7 +94,7 @@
             $.ajax({
                 url: '{{ path('member_check_email') }}',
                 type: "POST",
-                data: { id: id, email: $email.val(), client: '{{ app.user.team.client.id }}'},
+                data: { id: id, email: $email.val(), client: '{{ app.user.client.id }}'},
                 success: function (response) {
                     let link = jQuery.parseJSON(response).link;
                     if (link !== undefined) {

@@ -3,8 +3,6 @@
 namespace App\Tests\Entity\User;
 
 use App\Entity\Client\Client;
-use App\Entity\Client\Team;
-use App\Entity\Translation\TranslationLocale;
 use App\Entity\User\User;
 use PHPUnit\Framework\TestCase;
 
@@ -19,11 +17,10 @@ class UserTest extends TestCase
     {
         $user = new User();
         $date = new \DateTime();
-        $locale = new TranslationLocale();
-        $locale->setCode('en');
         $client = new Client();
-        $team = new Team($client, $user);
         $dateFormat = $user::DATE_FORMATS[1];
+
+        $locales = $user::LOCALES;
 
         $user->setId(1);
         $user->setEmail('johngolt@gmail.com');
@@ -32,8 +29,8 @@ class UserTest extends TestCase
         $user->setPassword('23232wdsadafdsr4r42dasdewraerewreq');
         $user->setPlainPassword('23232wdsadafdsr4r42dasdewraerewreq');
         $user->setConfirmationToken('434343434edaerw4r34');
-        $user->setLocale($locale);
-        $user->setTeam($team);
+        $user->setLocale(1);
+        $user->setClient($client);
         $user->setDateFormat($dateFormat);
         $user->setCreatedAt($date);
         $user->setPasswordRequestedAt($date);
@@ -47,8 +44,7 @@ class UserTest extends TestCase
         $this->assertEquals('23232wdsadafdsr4r42dasdewraerewreq', $user->getPassword());
         $this->assertEquals('23232wdsadafdsr4r42dasdewraerewreq', $user->getPlainPassword());
         $this->assertEquals('434343434edaerw4r34', $user->getConfirmationToken());
-        $this->assertEquals($locale, $user->getLocale());
-        $this->assertEquals($team, $user->getTeam());
+        $this->assertSame($locales[1], $locales[$user->getLocale()]);
         $this->assertEquals($client, $user->getClient());
         $this->assertEquals(array_flip($user::DATE_FORMATS)[$dateFormat], $user->getDateFormat());
         $this->assertEquals($date, $user->getCreatedAt());
@@ -57,17 +53,15 @@ class UserTest extends TestCase
         $this->assertEquals(true, $user->getIsActive());
     }
 
-    public function testSetTeam()
+    public function testSetClient()
     {
         $user = new User();
         $client = new Client();
-        $team = new Team($client, $user);
 
-        $user->setTeam($team);
-        $userTeam = $user->getTeam();
+        $user->setClient($client);
 
-        $this->assertNotNull($userTeam);
-        $this->assertEquals($userTeam->getUser(), $user);
+        $this->assertNotNull($client);
+        $this->assertEquals($user->getClient(), $client);
     }
 
     public function testIsPasswordRequestNonExpired()
@@ -105,23 +99,13 @@ class UserTest extends TestCase
 
     public function testTimezone()
     {
-        $user = new User();
         $client = new Client();
-
         $defaultTimezone = 'UTC';
-        $this->assertEquals(null, $user->getTimeZone());
         $this->assertEquals($defaultTimezone, $client->getTimeZone());
-
-        $team = new Team($client, $user);
-        $user->setTeam($team);
-
-        $this->assertEquals($defaultTimezone, $user->getTimeZone());
 
         $timezone = 'Europe/Paris';
         $client->setTimezone($timezone);
-
         $this->assertEquals($timezone, $client->getTimeZone());
-        $this->assertEquals($timezone, $user->getTimeZone());
     }
 
     public function testEmptyData()

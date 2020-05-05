@@ -7,7 +7,6 @@ use App\Entity\Client\Client;
 use App\Entity\Customer\Email\AutoEmail;
 use App\Entity\Client\ModuleAccess;
 use App\Entity\Client\Referral;
-use App\Entity\Client\Team;
 use App\Entity\User\User;
 use App\Security\AccessUpdater;
 use App\Service\CountryList;
@@ -98,14 +97,8 @@ class RegistrationManager
         $user->setPassword($this->passwordEncoder->encodePassword($user, $user->getPlainPassword()));
         $user->setConfirmationToken($this->token->generateToken());
 
-        // Create new client and team
         $client = $this->createClient($clientName, $user->getEmail());
-        $team = $this->createTeam($client, $user);
-
-        // Create first location for pickups of client products (Home Delivery)
-        $homeDeliveryLabel = $this->translator->trans('membership.renew.location.home_delivery', [], 'labels');
-        $homeDeliveryLocation = $this->createLocation($homeDeliveryLabel, 'Delivery');
-        $client->addLocation($homeDeliveryLocation);
+        $user->setClient($client);
 
         // Save client as new affiliate
         $affiliate = new Affiliate();
@@ -114,11 +107,11 @@ class RegistrationManager
 
         $accesses = $this->createAccess($client);
         $client->setAccesses($accesses);
-        $this->createAutomatedEmails($client, $user->getLocale()->getCode());
+        $this->createAutomatedEmails($client, $user->getLocaleCode());
 
-        $this->em->persist($user);
         $this->em->persist($client);
-        $this->em->persist($team);
+        $this->em->persist($user);
+
         $this->em->flush();
     }
 
@@ -150,16 +143,16 @@ class RegistrationManager
      * @param string $roles
      * @throws \Doctrine\DBAL\ConnectionException
      */
-    public function addUserToClientTeam(Client $client, User $user, string $roles)
+    public function addUserToClient(Client $client, User $user, string $roles)
     {
         $this->em->getConnection()->beginTransaction();
 
         try {
             $user->setRoles(is_array($roles) ? $roles : [$roles]);
             $user->setPassword($this->passwordEncoder->encodePassword($user, $user->getPlainPassword()));
-            $team = new Team($client, $user);
+            $user->setClient($client);
 
-            $this->em->persist($team);
+            $this->em->persist($user);
             $this->em->flush();
             $this->em->getConnection()->commit();
             $this->em->clear();
@@ -183,36 +176,6 @@ class RegistrationManager
         $client->setEmail($email);
 
         return $client;
-    }
-
-    /**
-     * @param string $name
-     * @param string $typeName
-     * @return Location
-     */
-    private function createLocation(string $name, string $typeName)
-    {
-        // Add basic delivery location
-        $location = new Location();
-        $location->setName(mb_strtoupper($name));
-        $location->setTypeByName($typeName);
-        $location->addWorkDays();
-
-        return $location;
-    }
-
-    /**
-     * @param Client $client
-     * @param User $user
-     * @return Team
-     */
-    private function createTeam(Client &$client, User &$user)
-    {
-        $team = new Team($client, $user);
-        $user->setTeam($team);
-        $client->addTeam($team);
-
-        return $team;
     }
 
     /**
@@ -302,15 +265,5 @@ class RegistrationManager
     public function save()
     {
         $this->em->flush();
-    }
-
-    /**
-     * @return array
-     */
-    public function getLocales()
-    {
-        $locales = [];
-
-        return $locales;
     }
 }

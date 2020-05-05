@@ -221,7 +221,7 @@ class MemberEmailManager
         $this->router->setContext($context);
 
         $link = $this->router->generate('membership_profile', [
-            '_locale' => $recipient->getCustomer()->getClient()->getOwner()->getLocaleCode(),
+            '_locale' => 'en',
             'token' => $recipient->getCustomer()->getToken(),
             'id' => $recipient->getId()
         ], UrlGeneratorInterface::ABSOLUTE_URL);
@@ -276,7 +276,7 @@ class MemberEmailManager
         $email->setClient($client);
         $email->setSubject($autoEmail->getSubject());
         $email->setText($autoEmail->getText());
-        $email->setReplyEmail($client->getContactEmail());
+        $email->setReplyEmail($client->getEmail());
         $email->setReplyName($client->getName());
         $email->setIsDraft(false);
         $email->setAutomatedEmail($autoEmail);
@@ -302,7 +302,7 @@ class MemberEmailManager
         $log->setClient($client);
         $log->setIsDraft(false);
         $log->setReplyName($client->getEmail());
-        $log->setReplyEmail($client->getContactEmail());
+        $log->setReplyEmail($client->getEmail());
         $log->setSubject($subject);
         $log->setText($text);
 

@@ -2,7 +2,6 @@
 
 namespace App\Tests\Form\Security;
 
-use App\Entity\Translation\TranslationLocale;
 use App\Entity\User\User;
 use App\Form\Security\RegistrationType;
 use App\Service\CountryList;
@@ -21,12 +20,9 @@ class RegistrationTypeTest extends TypeTestCase
 {
     private $countryList;
 
-    private $locales;
-
     protected function setUp() : void
     {
         $this->countryList = $this->createMock(CountryList::class);
-        $this->locales = $this->createLocales();
 
         parent::setUp();
     }
@@ -78,18 +74,19 @@ class RegistrationTypeTest extends TypeTestCase
     {
         $user = new User();
         $form = $this->factory->create(RegistrationType::class, $user, [
-            'validation_groups' => ['register_validation', 'Default'],
-            'locales' => $this->locales
+            'validation_groups' => ['register_validation', 'Default']
         ]);
 
         $form->submit($data);
+
+        $locales = User::LOCALES;
 
         $this->assertTrue($form->isSynchronized());
         $this->assertTrue($form->isSubmitted());
         $this->assertTrue($form->isValid());
         $this->assertSame($data['username'], $user->getUsername());
         $this->assertSame($data['email'], $user->getEmail());
-        $this->assertSame($this->locales[$data['locale']]->getCode(), $user->getLocale()->getCode());
+        $this->assertSame($locales[$data['locale']], $locales[$user->getLocale()]);
         $this->assertSame($data['plainPassword']['first'], $user->getPlainPassword());
 
 
@@ -104,44 +101,16 @@ class RegistrationTypeTest extends TypeTestCase
     }
 
     /**
-     * @param int $id
-     * @param string $code
-     * @return TranslationLocale
-     */
-    private function createLocale(int $id, string $code)
-    {
-        $locale = new TranslationLocale();
-        $locale->setId($id);
-        $locale->setCode($code);
-
-        return $locale;
-    }
-
-    /**
-     * @return array
-     */
-    public function createLocales()
-    {
-        return [
-            $this->createLocale(0, 'en'),
-            $this->createLocale(1, 'ru'),
-            $this->createLocale(2, 'uk')
-        ];
-    }
-
-    /**
      * @return array
      */
     public function getUsersValidData()
     {
-        $locales = $this->createLocales();
-
         return [
             [
                 [
                     'username' => 'whereismy',
                     'email' => 'whereismy@mail.ru',
-                    'locale' => $locales[0]->getId(),
+                    'locale' => 1,
                     'client' => [
                         'name' => 'Where is my'
                     ],
@@ -155,7 +124,7 @@ class RegistrationTypeTest extends TypeTestCase
                 [
                     'username' => 'john',
                     'email' => 'golt',
-                    'locale' => $locales[1]->getId(),
+                    'locale' => 2,
                     'client' => [
                         'name' => 'John Golt'
                     ],
@@ -169,7 +138,7 @@ class RegistrationTypeTest extends TypeTestCase
                 [
                     'username' => 'john',
                     'email' => 'golt',
-                    'locale' => $locales[2]->getId(),
+                    'locale' => 3,
                     'client' => [
                         'name' => 'John Golt'
                     ],

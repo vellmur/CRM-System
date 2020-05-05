@@ -3,27 +3,25 @@
 namespace App\Form\Client;
 
 use App\Entity\Client\Client;
-use App\Form\EventListener\AddressSubscriber;
+use App\Form\Subscriber\TimezoneSubscriber;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Validator\Constraints\NotNull;
 
 class ClientType extends AbstractType
 {
-    public $locationSubscriber;
+    public $timezoneSubscriber;
 
     /**
      * ClientType constructor.
-     * @param AddressSubscriber $subscriber
+     * @param TimezoneSubscriber $timezoneSubscriber
      */
-    public function __construct(AddressSubscriber $subscriber)
+    public function __construct(TimezoneSubscriber $timezoneSubscriber)
     {
-        $this->locationSubscriber = $subscriber;
+        $this->timezoneSubscriber = $timezoneSubscriber;
     }
-
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -53,48 +51,6 @@ class ClientType extends AbstractType
                     'class' => 'form-control'
                 ]
             ])
-            ->add('country', ChoiceType::class, [
-                'choices' => [
-                    'Россия' => 'ru',
-                    'Україна' => 'ua'
-                ],
-                'attr' => [
-                    'class' => 'select'
-                ],
-                'empty_data' => 'uk',
-                'required' => false,
-                'placeholder' => ''
-            ])
-            ->add('street', TextType::class, [
-                'attr' => [
-                    'class' => 'form-control text-uppercase readonly-visible',
-                    'placeholder' => 'customer.address.street',
-                    'data-type' => 'string',
-                    'onfocus'=> "this.removeAttribute('readonly');",
-                    'readonly' => 'readonly'
-                ],
-                'constraints' => [
-                    new NotNull()
-                ]
-            ])
-            ->add('postalCode', TextType::class, [
-                'attr' => [
-                    'class' => 'form-control'
-                ],
-                'required' => false
-            ])
-            ->add('region', TextType::class, [
-                'attr' => [
-                    'class' => 'form-control'
-                ],
-                'required' => false
-            ])
-            ->add('city', TextType::class, [
-                'attr' => [
-                    'class' => 'form-control'
-                ],
-                'required' => false
-            ])
             ->add('currency', ChoiceType::class , [
                 'choices' =>  $currencies,
                 'placeholder' => false,
@@ -102,9 +58,11 @@ class ClientType extends AbstractType
                 'attr' => [
                     'class' => 'select'
                 ]
-            ]);
+            ])
+            ->add('address', AddressType::class)
+        ;
 
-        $builder->addEventSubscriber($this->locationSubscriber);
+        $builder->addEventSubscriber($this->timezoneSubscriber);
     }
 
 
@@ -116,13 +74,7 @@ class ClientType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Client::class,
             'validation_groups' => ['register_validation', 'profile_validation'],
-            'translation_domain' => 'labels',
-            'cascade_validation' => true
+            'translation_domain' => 'labels'
         ]);
-    }
-
-    public function getName()
-    {
-        return 'client';
     }
 }

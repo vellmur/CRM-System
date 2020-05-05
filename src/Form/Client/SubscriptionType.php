@@ -2,7 +2,7 @@
 
 namespace App\Form\Client;
 
-use App\Form\EventListener\SubscriptionSubscriber;
+use App\Form\Subscriber\SubscriptionSubscriber;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;

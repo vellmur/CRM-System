@@ -6,8 +6,6 @@ use App\Entity\Customer\POS;
 use App\Form\Customer\POSType;
 use App\Manager\MemberManager;
 use App\Manager\ProductManager;
-use Dompdf\Dompdf;
-use Dompdf\Options;
 use JMS\Serializer\SerializerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -82,7 +80,8 @@ class POSController extends AbstractController
             // Create customer if he is not created yet
             if (!$order->getCustomer()->getId() && $order->getCustomer()->getFullname()) {
                 $order->getCustomer()->setIsLead(false);
-                $order->setCustomer($this->memberManager->addCustomer($order->getCustomer()));
+                $customer = $this->memberManager->addCustomer($order->getCustomer());
+                $order->setCustomer($customer);
             } elseif (!$order->getCustomer()->getFullname()) {
                 $order->setCustomer(null);
             }

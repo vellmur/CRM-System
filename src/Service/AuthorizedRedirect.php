@@ -33,10 +33,8 @@ class AuthorizedRedirect
 
         if ($this->auth->isGranted('ROLE_ADMIN')) {
             return $this->router->generate('master_dashboard');
-        } elseif ($user->getTeam()) {
+        } else {
             return $this->router->generate('customer_list');
         }
-
-        return;
     }
 }

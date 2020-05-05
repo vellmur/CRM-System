@@ -1,7 +1,7 @@
 {%  for key, client in clients %}
     <tr role="row" class="odd {{ key is not divisible by (2) ? 'row-style' }}">
         <td><a class="website-link" href="{{ path('master_client_edit', {'id': client.id }) }}">{{ client.name }}</a></td>
-        <td>{{ client.owner.enabled ? 'Yes' : 'No' }}</td>
+        <td>{{ client.users[0].enabled ? 'Yes' : 'No' }}</td>
         <td>{{ client.createdAt|date('Y-m-d') }}</td>
         <td>
             {% if client.id in lapsedClients %}

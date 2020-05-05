@@ -108,11 +108,13 @@ class PageViewRepository extends ServiceEntityRepository
             }
         }
 
-        if ($client && $client->getOwner()) {
+        if ($client) {
+            // Here must be user views
+            /*
             $qb->innerJoin('v.device', 'device')
                 ->innerJoin('device.user', 'user')
                 ->andWhere('user.id = :userId')
-                ->setParameter('userId', $client->getOwner()->getId());
+                ->setParameter('userId', $client->getOwner()->getId());*/
         }
 
         return $qb->getQuery()->getResult();

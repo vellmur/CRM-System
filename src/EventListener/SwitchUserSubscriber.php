@@ -25,7 +25,7 @@ class SwitchUserSubscriber implements EventSubscriberInterface
             $user = $event->getTargetUser();
 
             $session->set('date_format', $user->getDateFormat());
-            $session->set('timezone', $user->getTimezone());
+            $session->set('timezone', $user->getClient()->getTimezone());
         }
     }
 

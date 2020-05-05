@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\EventListener;
+namespace App\Form\Subscriber;
 
 use App\Service\LocationService;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -10,7 +10,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormInterface;
 
-class AddressSubscriber implements EventSubscriberInterface
+class TimezoneSubscriber implements EventSubscriberInterface
 {
     private $factory;
 
@@ -24,14 +24,13 @@ class AddressSubscriber implements EventSubscriberInterface
 
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             FormEvents::POST_SET_DATA => 'postSet',
             FormEvents::PRE_SUBMIT => 'preSubmit'
-        );
+        ];
     }
 
     /**
-     *
      * Here we dynamically set customer location data, based on country/region/city/postalCode
      * @param FormEvent $event
      */
@@ -40,7 +39,7 @@ class AddressSubscriber implements EventSubscriberInterface
         $form = $event->getForm();
         $data = $event->getData();
 
-        $countryCode = $data && $data->getCountry() ? $data->getCountry() : null;
+        $countryCode = $data && $data->getAddress() && $data->getAddress()->getCountry() ? $data->getAddress()->getCountry() : null;
         $this->addTimezoneField($form, $countryCode);
     }
 

@@ -62,4 +62,18 @@ class FunctionalTester extends Actor
     {
         $this->see($this->grabService('kernel')->getContainer()->getParameter('software_name'));
     }
+
+    /**
+     * @param $formFields
+     */
+    public function fillForm($formFields)
+    {
+        foreach ($formFields as $fieldId => $value) {
+            if (is_int($value)) {
+                $this->selectOption("#$fieldId", $value);
+            } else {
+                $this->fillField("#$fieldId", $value);
+            }
+        }
+    }
 }

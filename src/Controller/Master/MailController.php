@@ -2,6 +2,7 @@
 
 namespace App\Controller\Master;
 
+use App\Entity\Master\Email\AutomatedEmail;
 use App\Entity\Master\Email\Email;
 use App\Form\Master\AutomatedEmails;
 use App\Form\Master\EmailType;
@@ -93,11 +94,11 @@ class MailController extends AbstractController
 
     /**
      * @param PaginatorInterface $paginator
-     * @param Email|null $email
      * @param $page
+     * @param Email|null $email
      * @return JsonResponse
      */
-    public function loadClients(PaginatorInterface $paginator, Email $email = null, $page)
+    public function loadClients(PaginatorInterface $paginator, $page, Email $email = null)
     {
         $client = $this->getUser()->getClient();
         $clients = $paginator->paginate($this->manager->searchClients($client), $page, 20);
@@ -294,7 +295,7 @@ class MailController extends AbstractController
 
         return $this->render('master/email/automated.html.twig', [
             'form' => $form->createView(),
-            'automatedTypes' => $this->manager->getAutomatedTypes(),
+            'automatedTypes' => AutomatedEmail::AUTOMATED_TYPES,
             'macros' => $this->manager->getMacrosList()
         ]);
     }

@@ -3,8 +3,9 @@
 namespace App\Form\User;
 
 use App\Entity\User\User;
+use App\Form\Client\AddressType;
 use App\Form\Client\ClientType;
-use App\Form\EventListener\ProfileSubscriber;
+use App\Form\Subscriber\ProfileSubscriber;
 use App\Form\Type\DateFormatType;
 use App\Form\Type\LocaleType;
 use App\Service\CountryList;

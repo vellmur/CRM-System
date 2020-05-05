@@ -17,27 +17,18 @@ class AffiliateRepository extends ServiceEntityRepository
         parent::__construct($registry, Affiliate::class);
     }
 
+
     /**
      * @return mixed
      */
-    public function findAffiliatesInfo()
-    {
-        $qb = $this->createQueryBuilder('affiliate')
-            ->innerJoin('affiliate.referrals', 'referrals')
-            ->select('affiliate, COUNT(DISTINCT(referrals.id)) as referralsNum');
-
-        return $qb->getQuery()->getSingleResult();
-    }
-
     public function findAllAffiliates()
     {
         $qb = $this->createQueryBuilder('a')
-            ->select('a, c, team, user, accesses, referrals')
+            ->select('a, c, users, accesses, referrals')
             ->innerJoin('a.client', 'c')
-            ->innerJoin('c.team', 'team')
-            ->innerJoin('team.user', 'user')
             ->innerJoin('c.accesses', 'accesses')
-            ->leftJoin('a.referrals', 'referrals');
+            ->leftJoin('a.referrals', 'referrals')
+            ->leftJoin('c.users', 'users');
 
         return $qb->getQuery()->getResult();
     }

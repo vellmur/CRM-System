@@ -309,7 +309,7 @@ class ProductController extends AbstractController
      */
     public function pricingSend(Request $request, MemberEmailManager $memberEmailManager, Sender $sender)
     {
-        $client = $this->getUser()->getTeam()->getClient();
+        $client = $this->getUser()->getClient();
         $pricing = $request->request->get('pricing');
         $products = $this->manager->getProductsPricing($client, $pricing['category']);
 

@@ -29,10 +29,9 @@ class ClientRepository extends ServiceEntityRepository
     {
         $qb =
             $this->createQueryBuilder('c')
-                ->select('c, team, user, accesses, affiliate')
-                ->innerJoin('c.team', 'team')
-                ->innerJoin('team.user', 'user')
+                ->select('c, users, accesses, affiliate')
                 ->innerJoin('c.accesses', 'accesses')
+                ->leftJoin('c.users', 'users')
                 ->leftJoin('c.affiliate', 'affiliate')
                 ->orderBy('c.createdAt', 'DESC');
 
@@ -51,29 +50,14 @@ class ClientRepository extends ServiceEntityRepository
     {
         $qb =
             $this->createQueryBuilder('c')
-                ->select('c, team, user, devices, pageViews, affiliate')
-                ->innerJoin('c.team', 'team')
-                ->innerJoin('team.user', 'user')
-                ->innerJoin('user.devices', 'devices')
-                ->innerJoin('devices.pageViews', 'pageViews')
+                ->select('c, users, devices, pageViews, affiliate')
                 ->leftJoin('c.affiliate', 'affiliate')
+                ->leftJoin('c.users', 'users')
+                ->innerJoin('users.devices', 'devices')
+                ->innerJoin('devices.pageViews', 'pageViews')
                 ->orderBy('c.createdAt', 'DESC');
 
         return $qb->getQuery()->getResult();
-    }
-
-    /**
-     * @param $user
-     * @return mixed
-     */
-    public function getClientByOwner($user)
-    {
-        $qb =
-            $this->createQueryBuilder('c')
-                ->where('c.user = :client')
-                ->setParameter('client', $user);
-
-        return $qb->getQuery()->getSingleResult();
     }
 
     /**
@@ -129,14 +113,13 @@ class ClientRepository extends ServiceEntityRepository
 
         $expr = $qb->expr();
 
-        $qb->select('c, team, user, accesses, affiliate')
+        $qb->select('c, users, accesses, affiliate')
             ->where($expr->like($expr->lower('c.name'),':search'))
             ->orWhere($expr->like($expr->lower('c.email'), ':search'))
-            ->orWhere($expr->like($expr->lower('user.username'),':search'))
-            ->orWhere($expr->like($expr->lower('user.email'), ':search'))
-            ->innerJoin('c.team', 'team')
-            ->innerJoin('team.user', 'user')
+            ->orWhere($expr->like($expr->lower('users.username'),':search'))
+            ->orWhere($expr->like($expr->lower('users.email'), ':search'))
             ->innerJoin('c.accesses', 'accesses')
+            ->leftJoin('c.users', 'users')
             ->leftJoin('c.affiliate', 'affiliate')
             ->setParameter('search', "%$search%")
             ->orderBy('c.createdAt', 'DESC');
@@ -189,10 +172,9 @@ class ClientRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('c');
 
-        $qb->select('c, team, user, accesses, affiliate')
-            ->innerJoin('c.team', 'team')
-            ->innerJoin('team.user', 'user')
+        $qb->select('c, users, accesses, affiliate')
             ->innerJoin('c.accesses', 'accesses')
+            ->leftJoin('c.users', 'users')
             ->leftJoin('c.affiliate', 'affiliate')
             ->where('accesses.status = :status')
             ->setParameter('status', $statusId);
@@ -208,11 +190,9 @@ class ClientRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('c');
 
-        $qb
-            ->select($qb->expr()->countDistinct('c.id'))
-            ->innerJoin('c.team', 'team')
-            ->innerJoin('team.user', 'user')
-            ->where('user.isActive = :isActive')
+        $qb->select($qb->expr()->countDistinct('c.id'))
+            ->leftJoin('c.users', 'users')
+            ->where('users.isActive = :isActive')
             ->setParameter('isActive', $isConfirmed);
 
         return $qb->getQuery()->getSingleScalarResult();
@@ -228,12 +208,11 @@ class ClientRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('c');
 
         $qb
-            ->select('c, team, user, accesses, affiliate')
-            ->innerJoin('c.team', 'team')
-            ->innerJoin('team.user', 'user')
+            ->select('c, users, accesses, affiliate')
+            ->innerJoin('c.users', 'users')
             ->innerJoin('c.accesses', 'accesses')
             ->leftJoin('c.affiliate', 'affiliate')
-            ->where('user.enabled = :isEnabled')
+            ->where('users.enabled = :isEnabled')
             ->orderBy('c.createdAt', 'DESC')
             ->setParameter('isEnabled', $isConfirmed)
             ->distinct();
@@ -248,15 +227,15 @@ class ClientRepository extends ServiceEntityRepository
     /**
      * @param $days
      * @return mixed
+     * @throws \Exception
      */
     public function getNewClientsByDays($days)
     {
         $now = new \DateTime();
 
         $qb = $this->createQueryBuilder('c')
-            ->select('c, team, user, accesses, affiliate')
-            ->innerJoin('c.team', 'team')
-            ->innerJoin('team.user', 'user')
+            ->select('c, users, accesses, affiliate')
+            ->leftJoin('c.users', 'users')
             ->innerJoin('c.accesses', 'accesses')
             ->leftJoin('c.affiliate', 'affiliate')
             ->where('DATE_DIFF(:now, c.createdAt) <= :daysNum')

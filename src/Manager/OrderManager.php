@@ -8,7 +8,7 @@ use App\Entity\Customer\Vendor;
 use App\Entity\Customer\VendorOrder;
 use Doctrine\ORM\EntityManagerInterface;
 
-class ShareManager
+class OrderManager
 {
     private $em;
 

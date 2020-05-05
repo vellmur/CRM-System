@@ -50,39 +50,13 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     {
         $qb =
             $this->createQueryBuilder('u')
-                ->innerJoin('u.team', 't')
-                ->where('t.client = :client')
+                ->where('u.client = :client')
                 ->andWhere('u.id <> :user_id')
                 ->setParameter('client', $client)
                 ->setParameter('user_id', $user_id)
                 ->orderBy('u.username', 'ASC');
 
         return $qb->getQuery()->getResult();
-    }
-
-    /**
-     * @param Client $client
-     * @return mixed
-     */
-    public function getClientEmployees(Client $client)
-    {
-        $qb = $this->createQueryBuilder('u')
-                ->innerJoin('u.team', 't')
-                ->where('t.client = :client')
-                ->andWhere('u.id <> :user_id')
-                ->setParameter('client', $client)
-                ->setParameter('user_id', $client->getOwner()->getId())
-                ->orderBy('u.username', 'ASC');
-
-        $users = $qb->getQuery()->getResult();
-
-        foreach ($users as $key => $user) {
-            if (in_array('ROLE_OWNER', $user->getRoles())) {
-                unset($users[$key]);
-            }
-        }
-
-        return $users;
     }
 
     /**

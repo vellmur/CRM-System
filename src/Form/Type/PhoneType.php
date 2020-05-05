@@ -2,7 +2,7 @@
 
 namespace App\Form\Type;
 
-use App\Form\EventListener\PhoneSubscriber;
+use App\Form\Subscriber\PhoneSubscriber;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -28,7 +28,6 @@ class PhoneType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'country_code' => null,
             'required' => false
         ]);
     }

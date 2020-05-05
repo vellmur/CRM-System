@@ -5,7 +5,7 @@ namespace App\Controller\Customer;
 use App\Entity\Customer\Apartment;
 use App\Manager\ImportManager;
 use App\Manager\MemberManager;
-use App\Manager\ShareManager;
+use App\Manager\OrderManager;
 use App\Service\Mail\Sender;
 use App\Service\SpreadsheetService;
 use JMS\Serializer\SerializerInterface;
@@ -46,21 +46,19 @@ class CustomerController extends AbstractController
     public function add(Request $request)
     {
         $client = $this->getUser()->getClient();
+        $apartment = new Apartment();
+        $apartment->setBuilding($client);
 
         $customer = new Customer();
         $customer->setClient($client);
-        $customer->setApartment(new Apartment());
+        $customer->setApartment($apartment);
 
         $form = $this->createForm(CustomerType::class, $customer, [
             'date_format' => $this->getUser()->getDateFormatName()
         ])->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $this->manager->addCustomer($customer);
-            } catch (\Exception $exception) {
-                die(var_dump($exception->getMessage()));
-            }
+            $this->manager->addCustomer($customer);
 
             return $this->redirectToRoute('member_edit', ['id' => $customer->getId()]);
         }
@@ -130,10 +128,10 @@ class CustomerController extends AbstractController
     /**
      * @param Request $request
      * @param PaginatorInterface $paginator
-     * @param ShareManager $shareManager
+     * @param OrderManager $orderManager
      * @return JsonResponse|Response
      */
-    public function list(Request $request, PaginatorInterface $paginator, ShareManager $shareManager) {
+    public function list(Request $request, PaginatorInterface $paginator, OrderManager $orderManager) {
         $client = $this->getUser()->getClient();
 
         $searchBy = $request->query->get('searchBy') && $request->query->get('searchBy') != 'undefined'
@@ -144,7 +142,7 @@ class CustomerController extends AbstractController
         $customers = $paginator->paginate($query, $request->query->getInt('page', 1), 20);
 
         if (!$request->isXMLHttpRequest()) {
-            $ordersInfo = $shareManager->countOrders($client);
+            $ordersInfo = $orderManager->countOrders($client);
 
             return $this->render('customer/list.html.twig', [
                 'customers' => $customers,
@@ -243,14 +241,14 @@ class CustomerController extends AbstractController
 
     /**
      * @param Request $request
-     * @param ShareManager $shareManager
+     * @param OrderManager $orderManager
      * @return JsonResponse
      */
-    public function searchOrders(Request $request, ShareManager $shareManager)
+    public function searchOrders(Request $request, OrderManager $orderManager)
     {
         $client = $this->getUser()->getClient();
         $status = $request->request->get('searchStatus');
-        $invoices = $shareManager->searchOpenOrders($client, $status);
+        $invoices = $orderManager->searchOpenOrders($client, $status);
 
         $template = $this->render('customer/invoices_table_list.html.twig', [
             'invoices' => $invoices

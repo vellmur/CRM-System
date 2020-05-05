@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\EventListener;
+namespace App\Form\Subscriber;
 
 use App\Manager\ProductManager;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;

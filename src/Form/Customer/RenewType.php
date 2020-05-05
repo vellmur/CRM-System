@@ -3,7 +3,7 @@
 namespace App\Form\Customer;
 
 use App\Form\CardPaymentType;
-use App\Form\EventListener\RenewSubscriber;
+use App\Form\Subscriber\RenewSubscriber;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;

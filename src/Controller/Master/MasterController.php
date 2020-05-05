@@ -172,11 +172,6 @@ class MasterController extends AbstractController
     {
         $clients = $this->manager->getSoftwareClients();
         $lapsedClients = $this->manager->getLapsedClients($clients);
-        $levels = $this->manager->getClientsLevelsArray();
-        $levelsNum = $this->manager->countLevelClients();
-        $statusNum = $this->manager->countLevelClientsByStatus();
-        $newWeekNum = $this->manager->countNewByDays(7);
-        $newMonthNum = $this->manager->countNewByDays(30);
 
         return $this->render('master/client/list.html.twig', [
             'clients' => $clients,
@@ -222,7 +217,8 @@ class MasterController extends AbstractController
         return $this->render('master/client/edit_client.html.twig', [
             'modules' => ModuleAccess::MODULES,
             'forms' => $formsArray,
-            'teams' => $this->manager->getClientUsers($client)
+            'client' => $client,
+            'users' => $this->manager->getClientUsers($client)
         ]);
     }
 
@@ -301,11 +297,6 @@ class MasterController extends AbstractController
             'items' => $pages,
             'clients' => $clients
         ]);
-    }
-
-    function moveElement(&$array, $a, $b) {
-        $out = array_splice($array, $a, 1);
-        array_splice($array, $b, 0, $out);
     }
 
     /**

@@ -8,7 +8,6 @@ use App\Entity\Customer\Invoice;
 use App\Entity\Customer\Email\EmailRecipient;
 use App\Entity\Customer\Customer;
 use App\Entity\Customer\Email\CustomerEmail;
-use App\Entity\Customer\CustomerShare;
 use App\Entity\User\User;
 use App\Manager\EmailManager;
 use App\Manager\MemberEmailManager;
@@ -163,7 +162,7 @@ class Sender
 
             // If type of email is activation, send CC (copy of email to a farm owner)
             if ($typeName == 'activation') {
-                $message->setTo($customer->getClient()->getContactEmail());
+                $message->setTo($customer->getClient()->getEmail());
                 $this->mailer->send($message);
             }
         } catch (Exception $exception) {
@@ -211,14 +210,13 @@ class Sender
 
     /**
      * @param Customer $customer
+     * @param string|null $locale
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function sendMemberControl(Customer $customer)
+    public function sendCustomerControl(Customer $customer, ?string $locale)
     {
-        $locale = $customer->getClient()->getOwner()->getLocale()->getCode();
-
         $profileLink = $this->router->generate('membership_profile', [
             'token' => $customer->getToken(),
             '_locale' => $locale
@@ -248,14 +246,14 @@ class Sender
             'invoice' => $invoice
         ]);
 
-        $to = [$client->getContactEmail(), 'kinroom@blackdirt.org'];
+        $to = [$client->getEmail(), 'kinroom@blackdirt.org'];
 
         if ($invoice->getCustomer()->getEmail()) $to[] = $invoice->getCustomer()->getEmail();
 
         $message = $this->mailer->createMessage()
             ->setSubject($this->translator->trans('invoice.title', [], 'labels'))
             ->setFrom([$this->mailerUser => $client->getName()])
-            ->setReplyTo([$client->getContactEmail() => $client->getName()])
+            ->setReplyTo([$client->getEmail() => $client->getName()])
             ->setTo($to)
             ->setBody($template, 'text/html');
 
@@ -283,7 +281,7 @@ class Sender
                 ->setSubject($subject)
                 ->setFrom([$this->mailerUser => $this->softwareName])
                 ->setReplyTo([$customer->getEmail() => $customer->getFullname() ? $customer->getFullname() : 'Contact'])
-                ->setTo([$customer->getClient()->getContactEmail(), 'kinroom@blackdirt.org'])
+                ->setTo([$customer->getClient()->getEmail(), 'kinroom@blackdirt.org'])
                 ->setBody($this->templating->render('emails/member/contact_send.html.twig', [
                     'subject' => $subject,
                     'customer' => $customer,
@@ -332,119 +330,6 @@ class Sender
         return strstr($this->domain, 'testserver')
             || strstr($this->domain, '127.0.0.1')
             || strstr($this->domain, 'customer.local');
-    }
-
-    /* ------------------------- Testing functions ------------------------------------- */
-    /**
-     * @param Customer $member
-     * @param $status
-     * @param $addresses
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
-     */
-    public function sendAddressesChanges(Customer $customer, $status, $addresses)
-    {
-        $subject = $status . ' address change';
-        $template = 'emails/member/addresses_updated.html.twig';
-
-        $this->sendMail($customer->getClientName(), $customer->getClient()->getContactEmail(), $template, $subject, [
-            'member' => $customer,
-            'status' => $status,
-            'addresses' => $addresses
-        ]);
-    }
-
-    /**
-     * @param $shareBeforeSkipping
-     * @param CustomerShare $share
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
-     */
-    public function sendSkipWeekNotify($shareBeforeSkipping, CustomerShare $share)
-    {
-        $to = $this->isDevelopment() ? 'kinroom@blackdirt.org' : 'cf@blackdirt.org';
-
-        $data = [
-            'member' => $share->getCustomer(),
-            'share' => $share->getShareName(),
-            'action' => $shareBeforeSkipping['action'],
-            'previousRenewalDate' => $shareBeforeSkipping['renewalDate'],
-            'renewalDate' => $share->getRenewalDate()->format('Y-m-d'),
-            'previousSharesNum' => $shareBeforeSkipping['pickupsNum'],
-            'sharesNum' => $shareBeforeSkipping['pickupsNum'],
-            'shareDay' => $share->getShareDay()
-        ];
-
-        $message = $this->mailer->createMessage()
-            ->setSubject('Customer ' . $shareBeforeSkipping['action'] . ' a week')
-            ->setFrom([$this->mailerUser => $this->softwareName])
-            ->setTo($to)
-            ->setBody($this->templating->render('emails/member/skip_week.html.twig', $data), 'text/html');
-
-        $this->mailer->send($message);
-    }
-
-    /**
-     * @param Customer $customer
-     * @param $shareDay
-     * @param $original
-     * @param $custom
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
-     */
-    public function sendCustomizeNotify(Customer $customer, $shareDay, $original, $custom)
-    {
-        $to = $this->isDevelopment() ? 'valentinemurnik@gmail.com' : $customer->getClient()->getContactEmail();
-
-        $data = [
-            'member' => $customer,
-            'shareDay' => $shareDay,
-            'originalProduct' => $original,
-            'customProduct' => $custom,
-        ];
-
-        $message = $this->mailer->createMessage()
-            ->setSubject('Customer customizing share')
-            ->setFrom([$this->mailerUser => 'BlackDirtSoftware'])
-            ->setTo($to)
-            ->setBody($this->templating->render('emails/member/customize_notify.html.twig', $data), 'text/html');
-
-        $this->mailer->send($message);
-    }
-
-    /**
-     * Send feedback from customer (profile/feedback tab) to client (farm owner)
-     *
-     * @param Customer $customer
-     * @param $feedback
-     */
-    public function sendFeedback(Customer $customer, $feedback)
-    {
-        $shares = [];
-
-        foreach ($feedback['share'] as $shareId => $isSatisfied) {
-            $share = $this->memberEmailManager->getShareById($shareId);
-
-            $shares[] = [
-                'name' => $share->getName(),
-                'isSatisfied' => $isSatisfied == 1 ? 'Satisfied' : 'Not satisfied'
-            ];
-        }
-
-        // Send customer review to client
-        $this->sendMail($this->softwareName,
-            $customer->getClient()->getContactEmail(),
-            'emails/member/member_review.html.twig',
-            'Customer feedback',
-            [
-                'member' => $customer,
-                'shares' => $shares,
-                'text' => $feedback['message']
-            ]
-        );
     }
 
     /**
@@ -562,6 +447,7 @@ class Sender
      * @param int $recipientId
      * @param string $recipientType
      * @return string|string[]
+     * @throws \Exception
      */
     public function addOpeningTracking(string $html, int $recipientId, string $recipientType)
     {

@@ -4,11 +4,11 @@ namespace App\Form\Security;
 
 use App\Entity\User\User;
 use App\Form\Client\ClientNameType;
+use App\Form\Type\LocaleType;
 use App\Service\CountryList;
 use EWZ\Bundle\RecaptchaBundle\Form\Type\EWZRecaptchaType;
 use EWZ\Bundle\RecaptchaBundle\Validator\Constraints\IsTrue;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -59,13 +59,9 @@ class RegistrationType extends AbstractType
                     ]
                 ]
             ])
-            ->add('locale', ChoiceType::class , [
+            ->add('locale', LocaleType::class , [
                 'required' => false,
-                'choices' => User::LOCALES,
                 'label' => 'register.your_language',
-                'attr' => [
-                    'class' => 'select'
-                ],
                 'placeholder' => 'register.your_language'
             ])
             ->add('client', ClientNameType::class, [
@@ -93,8 +89,7 @@ class RegistrationType extends AbstractType
         $resolver->setDefaults([
             'data_class' => User::class,
             'translation_domain' => 'messages',
-            'validation_groups' => 'register_validation',
-            'locales' => []
+            'validation_groups' => 'register_validation'
         ]);
     }
 }

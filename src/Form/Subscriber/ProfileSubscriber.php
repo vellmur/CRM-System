@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\EventListener;
+namespace App\Form\Subscriber;
 
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -39,6 +39,6 @@ class ProfileSubscriber implements EventSubscriberInterface
 
         $this->session->set('_locale', $user->getLocaleCode());
         $this->session->set('date_format', $user->getDateFormatName());
-        $this->session->set('timezone', $user->getTimezone());
+        $this->session->set('timezone', $user->getClient()->getTimezone());
     }
 }

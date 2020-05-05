@@ -3,7 +3,7 @@
 namespace App\Form\Customer;
 
 use App\Entity\Customer\Product;
-use App\Form\EventListener\ProductSubscriber;
+use App\Form\Subscriber\ProductSubscriber;
 use App\Form\Type\PriceType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;

@@ -1,6 +1,7 @@
 <?php
 namespace App\Tests\Helper;
 
+use App\DataFixtures\UserFixtures;
 use App\Entity\User\User;
 use App\Manager\RegistrationManager;
 use Codeception\Exception\ModuleException;
@@ -30,11 +31,11 @@ class Functional extends Module
             $this->fail('Unable to get module \'Doctrine2\'');
         }
 
-        $userEmail = 'testemail@example.com';
+        $userFixtures = UserFixtures::ENABLED_USER;
 
         /** @var User $user */
         $user = $doctrine->grabEntityFromRepository(User::class, [
-            'email' => $userEmail
+            'email' => $userFixtures['email']
         ]);
 
         if (!$user) {
@@ -44,14 +45,12 @@ class Functional extends Module
             $user = new User();
 
             try {
-                $locale = $manager->getLocales()[0];
+                $user->setUsername($userFixtures['username']);
+                $user->setEmail($userFixtures['email']);
+                $user->setPlainPassword($userFixtures['password']);
+                $user->setLocale(1);
 
-                $user->setUsername('testuser');
-                $user->setEmail($userEmail);
-                $user->setPlainPassword('user_passWord');
-                $user->setLocale($locale);
-
-                $manager->register($user, 'Test Client');
+                $manager->register($user, $userFixtures['client']['name']);
             } catch (\Throwable $exception) {
                 $this->fail('Unable to create user for test: "' . $exception->getMessage() . '".');
             }

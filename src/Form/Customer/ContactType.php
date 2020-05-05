@@ -14,10 +14,6 @@ class ContactType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if (!$options['country_code'] && $builder->getData()) {
-            $options['country_code'] = $builder->getData()->getVendor()->getClient()->getCountry();
-        }
-
         $builder
             ->add('name', TextType::class, [
                 'label' => 'customer.vendor.name',
@@ -45,7 +41,6 @@ class ContactType extends AbstractType
                 ]
             ])
             ->add('phone', PhoneType::class, [
-                'country_code' => $options['country_code'],
                 'label' => 'customer.add.phone',
                 'label_attr' => [
                     'class' => 'col-md-2 col-sm-3 col-xs-5 control-label'
@@ -72,7 +67,6 @@ class ContactType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Contact::class,
-            'country_code' => null,
             'translation_domain' => 'labels'
         ]);
     }

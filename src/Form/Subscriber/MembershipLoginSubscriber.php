@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\EventListener;
+namespace App\Form\Subscriber;
 
 use App\Entity\Customer\Customer;
 use Doctrine\ORM\EntityManagerInterface;

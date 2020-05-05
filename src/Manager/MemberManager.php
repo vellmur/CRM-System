@@ -3,6 +3,7 @@
 namespace App\Manager;
 
 use App\Data\CountryInfo;
+use App\Entity\Customer\Apartment;
 use App\Entity\Customer\CustomerEmailNotify;
 use App\Entity\Customer\Email\AutoEmail;
 use App\Entity\Customer\Product;
@@ -33,7 +34,6 @@ class MemberManager
         $now = new \DateTime();
         $customer->setToken($customer->getFullname() . $now->format('Y-m-d H:i:s'));
 
-        // Add all email notifies to a customer, add pickups and update share statuses
         $this->activateNotifications($customer);
 
         $this->em->persist($customer);
@@ -124,7 +124,7 @@ class MemberManager
             $member = $this->repository->findOneBy(['client' => $client, 'email' => $email]);
         } else {
             $countryInfo = new CountryInfo();
-            $phone = $countryInfo->getUnmaskedPhone($phone, $client->getCountry());
+            $phone = $countryInfo->getUnmaskedPhone($phone, $client->getAddress()->getCountry());
             $member = $this->repository->findOneBy(['client' => $client, 'phone' => $phone]);
         }
 

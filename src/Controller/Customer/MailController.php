@@ -216,7 +216,7 @@ class MailController extends AbstractController
      */
     public function searchRecipients(Request $request)
     {
-        $client = $this->getUser()->getTeam()->getClient();
+        $client = $this->getUser()->getClient();
 
         $searchBy = $request->query->get('searchBy');
         $searchText = $request->query->get('search');

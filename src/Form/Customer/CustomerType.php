@@ -3,7 +3,7 @@
 namespace App\Form\Customer;
 
 use App\Entity\Customer\Customer;
-use App\Form\EventListener\CustomerSubscriber;
+use App\Form\Subscriber\CustomerSubscriber;
 use App\Form\Type\PhoneType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -48,7 +48,6 @@ class CustomerType extends AbstractType
             ])
             ->add('phone', PhoneType::class, [
                 'required' => false,
-                'country_code' => $builder->getData() ? $builder->getData()->getClient()->getCountry() : null,
                 'label' => 'customer.add.phone',
                 'label_attr' => [
                     'class' => 'col-md-2 col-sm-3 col-xs-5 control-label'

@@ -64,7 +64,7 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $role = $request->request->get('user')['role'] == 'owner' ? 'ROLE_OWNER' : 'ROLE_EMPLOYEE';
-            $registrationManager->addUserToClientTeam($client, $user, $role);
+            $registrationManager->addUserToClient($client, $user, $role);
 
             return $this->redirectToRoute('user_index');
         }

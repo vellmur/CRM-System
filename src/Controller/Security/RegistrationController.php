@@ -51,8 +51,7 @@ class RegistrationController extends AbstractController
 
         $user = new User();
         $form = $this->createForm(RegistrationType::class, $user, [
-            'validation_groups' => ['register_validation', 'Default'],
-            'locales' => $this->manager->getLocales()
+            'validation_groups' => ['register_validation', 'Default']
         ])->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

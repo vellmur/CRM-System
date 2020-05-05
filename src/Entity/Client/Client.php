@@ -2,15 +2,13 @@
 
 namespace App\Entity\Client;
 
+use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Customer\Email\AutoEmail;
 use App\Entity\Customer\Customer;
 use App\Entity\Customer\Tag;
-use App\Entity\User\User;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
-
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="client")
@@ -36,7 +34,7 @@ class Client
     private $name;
 
     /**
-     * @ORM\Column(name="email", type="string", length=50, nullable=true)
+     * @ORM\Column(name="email", type="string", length=50, nullable=false)
      * @Assert\Email(message = "validation.form.not_valid_email")
      * @Assert\NotBlank(message="validation.form.required", groups={"profile_validation"})
      */
@@ -48,32 +46,6 @@ class Client
      * @ORM\Column(name="currency", type="integer", length=2)
      */
     private $currency = 4;
-
-    /**
-     * @var string
-     * @ORM\Column(name="country", type="string", length=2, nullable=true)
-     */
-    private $country;
-
-    /**
-     * @ORM\Column(name="street", type="string", length=255, nullable=true)
-     */
-    private $street;
-
-    /**
-     * @ORM\Column(name="postal_code", type="string", length=10, nullable=true)
-     */
-    private $postalCode;
-
-    /**
-     * @ORM\Column(name="region", type="string", length=255, nullable=true)
-     */
-    private $region;
-
-    /**
-     * @ORM\Column(name="city", type="string", length=255, nullable=true)
-     */
-    private $city;
 
     /**
      * @var int
@@ -98,11 +70,6 @@ class Client
      * @ORM\OneToMany(targetEntity="App\Entity\Client\ModuleAccess", mappedBy="client", cascade={"all"})
      */
     private $accesses;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Client\Team", mappedBy="client", cascade={"remove"})
-     */
-    private $team;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Client\Subscription", mappedBy="client", cascade={"remove"})
@@ -175,19 +142,29 @@ class Client
     private $apartments;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\User\User", mappedBy="client", cascade={"remove"})
+     */
+    private $users;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Client\Address", cascade={"all"})
+     * @ORM\JoinColumn(name="address_id", referencedColumnName="id")
+     */
+    private $address;
+
+    /**
      * Client constructor.
      * @throws \Exception
      */
     public function __construct()
     {
+        $this->token = substr(base_convert(sha1(uniqid(mt_rand())), 16, 36), 0, 30);
         $this->createdAt = new \DateTime();
+
         $this->accesses =  new ArrayCollection();
         $this->notes = new ArrayCollection();
         $this->tags = new ArrayCollection();
-        $this->team = new ArrayCollection();
         $this->posts = new ArrayCollection();
-
-        $this->token = substr(base_convert(sha1(uniqid(mt_rand())), 16, 36), 0, 30);
     }
 
     public function __toString()
@@ -262,43 +239,6 @@ class Client
     public function setAffiliate(Affiliate $affiliate)
     {
         $this->affiliate = $affiliate;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getContactEmail()
-    {
-        return $this->getEmail() ? $this->getEmail() : $this->getOwner()->getEmail();
-    }
-
-    public function getDateFormat()
-    {
-        return $this->getOwner()->getTwigFormatDate();
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTwigFormatDate()
-    {
-        return $this->getOwner()->getTwigFormatDate();
-    }
-
-    /**
-     * @return User|null
-     */
-    public function getOwner()
-    {
-        return $this->getTeam()[0]->getUser();
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOwnerDateFormat()
-    {
-        return $this->getOwner()->getDateFormatName();
     }
 
     /**
@@ -378,105 +318,6 @@ class Client
     /**
      * @return mixed
      */
-    public function getCountry()
-    {
-        return $this->country;
-    }
-
-    /**
-     * @param $country
-     * @return $this
-     */
-    public function setCountry($country)
-    {
-        $this->country = $country;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStreet()
-    {
-        return $this->street;
-    }
-
-    /**
-     * @param mixed $street
-     */
-    public function setStreet($street): void
-    {
-        $this->street = $street;
-    }
-
-    /**
-     * @return array
-     */
-    public function getRegions()
-    {
-        return $this->country ? $this->country->getRegions() : [];
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPostalCode()
-    {
-        return $this->postalCode;
-    }
-
-    /**
-     * @param mixed $postalCode
-     */
-    public function setPostalCode($postalCode)
-    {
-        $this->postalCode = $postalCode;
-    }
-
-    /**
-     * Get region
-     *
-     * @return string
-     */
-    public function getRegion()
-    {
-        return $this->region;
-    }
-
-    /**
-     * @param $region
-     * @return $this
-     */
-    public function setRegion($region)
-    {
-        $this->region = $region;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCity()
-    {
-        return $this->city;
-    }
-
-    /**
-     * @param $city
-     * @return $this
-     */
-    public function setCity($city)
-    {
-        $this->city = $city;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getTimezone()
     {
         return $this->timezone ? $this->timezone : date_default_timezone_get();
@@ -541,36 +382,6 @@ class Client
     public function getMembershipLink()
     {
         return 'http://' . $_SERVER['HTTP_HOST'] . '/membership/member/sign-up/' . $this->getToken();
-    }
-
-    /**
-     * @param Team $team
-     */
-    public function removeTeam(Team $team)
-    {
-        $this->team->removeElement($team);
-    }
-
-    /**
-     * Get team
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getTeam()
-    {
-        return $this->team;
-    }
-
-    /**
-     * @param Team $team
-     * @return $this
-     */
-    public function addTeam(Team $team)
-    {
-        $team->setClient($this);
-        $this->team[] = $team;
-
-        return $this;
     }
 
     /**
@@ -700,5 +511,37 @@ class Client
     public function getImages()
     {
         return $this->images;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAddress()
+    {
+        return $this->address;
+    }
+
+    /**
+     * @param mixed $address
+     */
+    public function setAddress($address): void
+    {
+        $this->address = $address;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsers()
+    {
+        return $this->users;
+    }
+
+    /**
+     * @param mixed $users
+     */
+    public function setUsers($users): void
+    {
+        $this->users = $users;
     }
 }

@@ -5,6 +5,7 @@ namespace App\Controller\Customer;
 use App\Entity\Customer\VendorOrder;
 use App\Form\Customer\VendorOrderType;
 use App\Manager\MemberManager;
+use App\Manager\OrderManager;
 use App\Manager\ShareManager;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,11 +22,11 @@ class OrderController extends AbstractController
 
     /**
      * OrderController constructor.
-     * @param ShareManager $manager
+     * @param OrderManager $manager
      * @param MemberManager $memberManager
      * @param SerializerInterface $serializer
      */
-    public function __construct(ShareManager $manager, MemberManager $memberManager, SerializerInterface $serializer)
+    public function __construct(OrderManager $manager, MemberManager $memberManager, SerializerInterface $serializer)
     {
         $this->manager = $manager;
         $this->memberManager = $memberManager;

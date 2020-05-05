@@ -162,7 +162,6 @@ class EmailManager
     private function setMacrosField(Recipient $recipient, string $macros)
     {
         $client = $recipient->getClient();
-        $user = $client->getOwner();
 
         $value = '';
 
@@ -171,6 +170,8 @@ class EmailManager
                 $value = $client->getName();
                 break;
             case 'ConfirmationLink':
+                /*
+                 * $user == ?
                 if (!$user->isEnabled()) {
                     $token = $user->getConfirmationToken();
                     $path = $this->urlGenerator->generate('app_registration_confirm', ['token' => $token]);
@@ -178,7 +179,7 @@ class EmailManager
                 } else {
                     $path = $this->urlGenerator->generate('app_login');
                     $value = '<a href="' . $path . '" target="_blank">Confirmation link</a>';
-                }
+                }*/
 
                 break;
         }
@@ -248,14 +249,6 @@ class EmailManager
     public function getAutomatedEmails()
     {
         return $this->em->getRepository(AutomatedEmail::class)->findAll();
-    }
-
-    /**
-     * @return array
-     */
-    public function getAutomatedTypes()
-    {
-        return AutomatedEmail::AUTOMATED_TYPES;
     }
 
     /**
@@ -346,7 +339,7 @@ class EmailManager
     /**
      * @throws \Doctrine\DBAL\ConnectionException
      */
-    private function emailsExistsOrCreated()
+    public function emailsExistsOrCreated()
     {
         if (count($this->em->getRepository(AutomatedEmail::class)->findAll()) == 0) {
             $this->em->getConnection()->beginTransaction();
@@ -444,7 +437,7 @@ class EmailManager
     {
         $recipient = new Recipient();
         $recipient->setClient($client);
-        $recipient->setEmailAddress($client->getContactEmail());
+        $recipient->setEmailAddress($client->getEmail());
 
         $email->addRecipient($recipient);
 
