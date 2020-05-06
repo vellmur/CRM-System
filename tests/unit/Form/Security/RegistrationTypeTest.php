@@ -72,8 +72,8 @@ class RegistrationTypeTest extends TypeTestCase
      */
     public function testSubmitValidData($data)
     {
-        $user = new User();
-        $form = $this->factory->create(RegistrationType::class, $user, [
+        $formUser = new User();
+        $form = $this->factory->create(RegistrationType::class, $formUser, [
             'validation_groups' => ['register_validation', 'Default']
         ]);
 
@@ -81,9 +81,19 @@ class RegistrationTypeTest extends TypeTestCase
 
         $locales = User::LOCALES;
 
+        $user = new User();
+        $user->setUsername($data['username']);
+        $user->setEmail($data['email']);
+        $user->setLocale($data['locale']);
+        $user->setPlainPassword($data['plainPassword']['first']);
+        $user->setCreatedAt($formUser->getCreatedAt());
+
         $this->assertTrue($form->isSynchronized());
         $this->assertTrue($form->isSubmitted());
         $this->assertTrue($form->isValid());
+
+        $this->assertEquals($user, $formUser);
+
         $this->assertSame($data['username'], $user->getUsername());
         $this->assertSame($data['email'], $user->getEmail());
         $this->assertSame($locales[$data['locale']], $locales[$user->getLocale()]);

@@ -51,6 +51,7 @@ class UserTest extends TestCase
         $this->assertEquals($date, $user->getPasswordRequestedAt());
         $this->assertEquals(true, $user->isEnabled());
         $this->assertEquals(true, $user->getIsActive());
+        $this->assertEquals('en', $user->getLocaleCode());
     }
 
     public function testSetClient()

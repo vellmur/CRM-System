@@ -6,9 +6,9 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Client\Client;
 use App\Form\Customer\NotificationType;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\Validator\Constraints as AppAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * Customer
@@ -28,6 +28,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
  *     errorPath="phone",
  *     message="validation.form.unique"
  * )
+ * @AppAssert\EmailOrPhoneRequired
  */
 class Customer
 {
@@ -145,25 +146,6 @@ class Customer
     public function __toString()
     {
         return $this->firstname . ' ' . $this->lastname;
-    }
-
-    /**
-     * @Assert\Callback
-     * @param ExecutionContextInterface $context
-     */
-    public function validate(ExecutionContextInterface $context)
-    {
-        if (!$this->email && !$this->phone) {
-            $context->buildViolation('validation.form.required')
-                ->setTranslationDomain('validators')
-                ->atPath('email')
-                ->addViolation();
-
-            $context->buildViolation('validation.form.required')
-                ->setTranslationDomain('validators')
-                ->atPath('phone')
-                ->addViolation();
-        }
     }
 
     /**

@@ -55,7 +55,7 @@ class PhoneSubscriber implements EventSubscriberInterface
         /** @var Client|null $client */
         $client = $this->security->getUser() ? $this->security->getUser()->getClient() : null;
 
-        if ($client->getAddress() && $countryCode = $client->getAddress()->getCountry()) {
+        if ($client && $client->getAddress() && $countryCode = $client->getAddress()->getCountry()) {
             $phoneFormat = $this->countriesInfo->getPhoneFormat($countryCode);
 
             $phoneLengthError = $this->translator->trans('validation.form.phone_length', [
@@ -92,7 +92,7 @@ class PhoneSubscriber implements EventSubscriberInterface
         /** @var Client|null $client */
         $client = $this->security->getUser() ? $this->security->getUser()->getClient() : null;
 
-        if ($client->getAddress() && $countryCode = $client->getAddress()->getCountry()) {
+        if ($client && $client->getAddress() && $countryCode = $client->getAddress()->getCountry()) {
             $unmaskedPhone = $this->countriesInfo->getUnmaskedPhone($phone, $countryCode);
 
             if ($unmaskedPhone) {
