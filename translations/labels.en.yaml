@@ -51,7 +51,7 @@ account:
         description: Description
         payment_methods: Payment methods
         customer_module: Module Customer
-        client_name: Client name
+        client_name: Building name
         my_settings: Profile
         firstname: Firstname
         lastname: Lastname

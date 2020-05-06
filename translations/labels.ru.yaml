@@ -51,7 +51,7 @@ account:
         description: Описание
         payment_methods: Способы оплаты
         customer_module: Модуль Клиент
-        client_name: Название фермы или сада
+        client_name: Название дома
         my_settings: Профиль
         firstname: Имя
         lastname: Фамилия

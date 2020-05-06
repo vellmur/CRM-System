@@ -14,7 +14,7 @@ register:
     create_password: Create password
     repeat_password: Repeat password
     passwords_dont_match: The entered passwords don't match.
-    company_name: Company name
+    company_name: Building name
     have_account: Have an account
     terms: By creating an account, you agree to our Terms of Service and have read and understood the Privacy Policy
     account_created: Your account has been created
