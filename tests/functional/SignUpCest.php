@@ -58,12 +58,10 @@ class SignUpCest
 
         $enabledUser = UserFixtures::ENABLED_USER;
 
-       // die(var_dump($enabledUser['client']['name']));
-
         $formFields = [
             'registration_username' => $enabledUser['username'],
             'registration_email' => $enabledUser['email'],
-            'registration_locale' => 1,
+            'registration_locale' => [1],
             'registration_client_name' => $enabledUser['client']['name'],
             'registration_plainPassword_first' => 'testuser',
             'registration_plainPassword_second' => 'testuser'
@@ -88,7 +86,7 @@ class SignUpCest
 
         $formFields = [
             'registration_username' => 'johngolt',
-            'registration_locale' => 1,
+            'registration_locale' => [1],
             'registration_email' => 'johngolt@example.com',
             'registration_client_name' => 'John Golt',
             'registration_plainPassword_first' => 'johngolt',

@@ -47,8 +47,8 @@ class CustomerController extends AbstractController
         $client = $this->getUser()->getClient();
 
         $requestData = $request->request->get('customer');
-        $apartmentNumber = $requestData == null ?? $requestData['apartment']['number'];
-        $apartment = $this->manager->findOrCreateApartment($client, $apartmentNumber);
+        $apartmentNum = $requestData != null ? $requestData['apartment']['number'] : null;
+        $apartment = $this->manager->findOrCreateApartment($client, $apartmentNum);
 
         $customer = new Customer();
         $customer->setApartment($apartment);
@@ -74,9 +74,12 @@ class CustomerController extends AbstractController
     public function edit(Request $request, Customer $customer)
     {
         $requestData = $request->request->get('customer');
-        $apartmentNumber = $requestData == null ?? $requestData['apartment']['number'];
-        $apartment = $this->manager->findOrCreateApartment($customer->getClient(), $apartmentNumber);
-        $customer->setApartment($apartment);
+        $apartmentNum = $requestData != null ? $requestData['apartment']['number'] : null;
+
+        if ($apartmentNum && (!$customer->getApartment() || $customer->getApartment()->getNumber() != $apartmentNum)) {
+            $apartment = $this->manager->findOrCreateApartment($customer->getClient(), $apartmentNum);
+            $customer->setApartment($apartment);
+        }
 
         $form = $this->createForm(CustomerType::class, $customer)->handleRequest($request);
 

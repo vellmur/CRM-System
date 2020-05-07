@@ -69,11 +69,24 @@ class FunctionalTester extends Actor
     public function fillForm($formFields)
     {
         foreach ($formFields as $fieldId => $value) {
-            if (is_int($value)) {
+            if (is_array($value)) {
                 $this->selectOption("#$fieldId", $value);
             } else {
                 $this->fillField("#$fieldId", $value);
             }
         }
+    }
+
+    /**
+     * @param $entity
+     * @param $data
+     */
+    public function seeRecordIsAdded($entity, $data)
+    {
+        $this->seeInRepository($entity, $data);
+        $dbCustomer = $this->grabEntityFromRepository($entity, $data);
+        $this->assertNotNull($dbCustomer);
+        $this->assertNotNull($dbCustomer->getId());
+        $this->assertIsInt($dbCustomer->getId());
     }
 }

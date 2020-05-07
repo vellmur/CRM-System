@@ -38,7 +38,7 @@ class Apartment
     private $building;
 
     /**
-     * @ORM\Column(name="number", type="integer", length=5, unique=true, nullable=false)
+     * @ORM\Column(name="number", type="string", length=10, unique=true, nullable=false)
      * @Assert\NotBlank(message="validation.form.required")
      */
     private $number;

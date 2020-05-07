@@ -14,6 +14,7 @@ modules:
         - Doctrine2:
             depends: Symfony
             cleanup: true
+        - Asserts
         - Db
         - \App\Tests\Helper\Functional
     config:
