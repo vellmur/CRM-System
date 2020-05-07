@@ -111,7 +111,6 @@ class CustomerType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Customer::class,
             'translation_domain' => 'labels',
-            'date_format' => 'yyyy-MM-dd',
             'isMembership' => null
         ]);
     }

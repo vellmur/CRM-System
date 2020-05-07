@@ -25,14 +25,16 @@ class MemberManager
     }
 
     /**
+     * @param Client $client
      * @param Customer $customer
      * @return Customer
      * @throws \Exception
      */
-    public function addCustomer(Customer $customer)
+    public function addCustomer(Client $client, Customer $customer)
     {
         $now = new \DateTime();
         $customer->setToken($customer->getFullname() . $now->format('Y-m-d H:i:s'));
+        $customer->setClient($client);
 
         $this->activateNotifications($customer);
 
@@ -40,6 +42,26 @@ class MemberManager
         $this->em->flush();
 
         return $customer;
+    }
+
+    /**
+     * @param Client $client
+     * @param int|null $apartmentNumber
+     * @return Apartment
+     */
+    public function findOrCreateApartment(Client $client, ?int $apartmentNumber)
+    {
+        $rep = $this->em->getRepository(Apartment::class);
+
+        if ($apartmentNumber !== null && $apartment = $rep->findOneBy(['building' => $client, 'number' => trim($apartmentNumber)])) {
+            /** @var Apartment $apartment */
+            return $apartment;
+        }
+
+        $apartment = new Apartment();
+        $apartment->setBuilding($client);
+
+        return $apartment;
     }
 
     /**
@@ -116,7 +138,8 @@ class MemberManager
      * @param Client $client
      * @param null $email
      * @param null $phone
-     * @return null|object
+     * @return object|null
+     * @throws \Exception
      */
     public function findOneByEmailOrPhone(Client $client, $email = null, $phone = null)
     {
@@ -143,7 +166,8 @@ class MemberManager
     /**
      * @param Client $client
      * @param $data
-     * @return null|object
+     * @return object|null
+     * @throws \Exception
      */
     public function findCustomerByData(Client $client, $data)
     {
@@ -170,7 +194,7 @@ class MemberManager
 
     /**
      * @param Client $client
-     * @return \App\Entity\Customer\Product[]|\Doctrine\Common\Collections\Collection
+     * @return mixed
      */
     public function getCustomerProducts(Client $client)
     {

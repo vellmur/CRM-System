@@ -2,7 +2,6 @@
 
 namespace App\Controller\Customer;
 
-use App\Entity\Customer\Apartment;
 use App\Manager\ImportManager;
 use App\Manager\MemberManager;
 use App\Manager\OrderManager;
@@ -46,19 +45,16 @@ class CustomerController extends AbstractController
     public function add(Request $request)
     {
         $client = $this->getUser()->getClient();
-        $apartment = new Apartment();
-        $apartment->setBuilding($client);
+        $requestData = $request->request->get('customer');
+        $apartment = $this->manager->findOrCreateApartment($client, $requestData['apartment']['number']);
 
         $customer = new Customer();
-        $customer->setClient($client);
         $customer->setApartment($apartment);
 
-        $form = $this->createForm(CustomerType::class, $customer, [
-            'date_format' => $this->getUser()->getDateFormatName()
-        ])->handleRequest($request);
+        $form = $this->createForm(CustomerType::class, $customer)->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->manager->addCustomer($customer);
+            $this->manager->addCustomer($client, $customer);
 
             return $this->redirectToRoute('member_edit', ['id' => $customer->getId()]);
         }
@@ -72,16 +68,16 @@ class CustomerController extends AbstractController
      * @param Request $request
      * @param Customer $customer
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
-     * @throws \Exception
      */
     public function edit(Request $request, Customer $customer)
     {
-        $form = $this->createForm(CustomerType::class, $customer, [
-            'date_format' => $this->getUser()->getDateFormatName()
-        ])->handleRequest($request);
+        $requestData = $request->request->get('customer');
+        $apartment = $this->manager->findOrCreateApartment($customer->getClient(), $requestData['apartment']['number']);
+        $customer->setApartment($apartment);
 
-        // If action not ajax, update customer and send all notifies
-        if ($form->isSubmitted() && $form->isValid() && !$request->isXMLHttpRequest()) {
+        $form = $this->createForm(CustomerType::class, $customer)->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->manager->update($customer);
 
             return $this->redirectToRoute('member_edit', ['id' => $customer->getId()]);
@@ -110,14 +106,13 @@ class CustomerController extends AbstractController
      */
     public function checkEmail(Request $request)
     {
-        $client = $this->getUser()->getClient();
-        $member = $this->manager->findOneByEmailOrPhone($client, $request->request->get('email'));
+        $customer = $this->manager->findOneByEmailOrPhone($this->getUser()->getClient(), $request->request->get('email'));
 
         $link = null;
 
-        if ($member && $member->getId() != $request->request->get('id')) {
+        if ($customer && $customer->getId() != $request->request->get('id')) {
             $link = 'A customer with the same email exists.  <br/> <a class="white-link" target="_blank" href="'
-                . $this->generateUrl('member_edit', ['id' => $member->getId()]) . '">Click here to view.</a>';
+                . $this->generateUrl('member_edit', ['id' => $customer->getId()]) . '">Click here to view.</a>';
         }
 
         return new JsonResponse($this->serializer->serialize([
@@ -131,7 +126,8 @@ class CustomerController extends AbstractController
      * @param OrderManager $orderManager
      * @return JsonResponse|Response
      */
-    public function list(Request $request, PaginatorInterface $paginator, OrderManager $orderManager) {
+    public function list(Request $request, PaginatorInterface $paginator, OrderManager $orderManager)
+    {
         $client = $this->getUser()->getClient();
 
         $searchBy = $request->query->get('searchBy') && $request->query->get('searchBy') != 'undefined'
@@ -194,7 +190,6 @@ class CustomerController extends AbstractController
     public function countFileRows(Request $request, SpreadsheetService $spreadsheetService)
     {
         if ($request->isXMLHttpRequest()) {
-            // If file added we parse it
             if (isset($request->files->all()['parseMembers'])) {
                 $spreadsheet = $spreadsheetService->loadFile($request->files->get('parseMembers')['file']);
 
@@ -222,7 +217,6 @@ class CustomerController extends AbstractController
         $rowsNum = 0;
         $importedNum = 0;
 
-        // If file added we parse it
         if (isset($request->files->all()['parseMembers']) && $request->files->get('parseMembers')['file']) {
             $spreadsheet = $spreadsheetService->loadFile($request->files->get('parseMembers')['file']);
             $rowsNum = $spreadsheet->getHighestRow() - 1;

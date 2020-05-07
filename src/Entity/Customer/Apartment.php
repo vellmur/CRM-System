@@ -4,6 +4,7 @@ namespace App\Entity\Customer;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Class Apartment
@@ -13,6 +14,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     @ORM\UniqueConstraint(name="aparment_unique", columns={"building_id", "number"})
  * })
  * @ORM\Entity()
+ * @UniqueEntity(
+ *     fields={"building", "number"},
+ *     errorPath="number",
+ *     message="validation.form.unique"
+ * )
  */
 class Apartment
 {
@@ -87,7 +93,7 @@ class Apartment
      */
     public function setNumber(?int $number): void
     {
-        $this->number = $number;
+        $this->number = trim($number);
     }
 
     /**
