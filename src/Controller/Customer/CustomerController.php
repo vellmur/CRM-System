@@ -45,8 +45,10 @@ class CustomerController extends AbstractController
     public function add(Request $request)
     {
         $client = $this->getUser()->getClient();
+
         $requestData = $request->request->get('customer');
-        $apartment = $this->manager->findOrCreateApartment($client, $requestData['apartment']['number']);
+        $apartmentNumber = $requestData == null ?? $requestData['apartment']['number'];
+        $apartment = $this->manager->findOrCreateApartment($client, $apartmentNumber);
 
         $customer = new Customer();
         $customer->setApartment($apartment);
@@ -72,7 +74,8 @@ class CustomerController extends AbstractController
     public function edit(Request $request, Customer $customer)
     {
         $requestData = $request->request->get('customer');
-        $apartment = $this->manager->findOrCreateApartment($customer->getClient(), $requestData['apartment']['number']);
+        $apartmentNumber = $requestData == null ?? $requestData['apartment']['number'];
+        $apartment = $this->manager->findOrCreateApartment($customer->getClient(), $apartmentNumber);
         $customer->setApartment($apartment);
 
         $form = $this->createForm(CustomerType::class, $customer)->handleRequest($request);
@@ -103,6 +106,7 @@ class CustomerController extends AbstractController
     /**
      * @param Request $request
      * @return JsonResponse
+     * @throws \Exception
      */
     public function checkEmail(Request $request)
     {
