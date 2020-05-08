@@ -5,17 +5,19 @@
         <div class="panel-body">
             <div class="row">
                 <div class="col-sm-7">
-                    <label for="search_text">{{ 'customer.search.search'|trans({}, 'labels') }}:</label>
-                    <input type="text"
-                           class="form-control text-uppercase"
-                           data-action="{{ path('customer_list')}}"
-                           data-block="content_list"
-                           value="{{ app.request.get('searchText') }}"
-                           data-counter="content_counter"
-                           name="search_text"
-                           id="search_text"
-                           placeholder="{{ 'customer.search.search_by_placeholder'|trans({}, 'labels') }}"
-                           autocomplete="off">
+                    <form name="search" id="customer_search">
+                        <label for="search_text">{{ 'customer.search.search'|trans({}, 'labels') }}:</label>
+                        <input type="text"
+                               class="form-control text-uppercase"
+                               data-action="{{ path('customer_list')}}"
+                               data-block="content_list"
+                               value="{{ app.request.get('searchText') }}"
+                               data-counter="content_counter"
+                               name="search"
+                               id="search_text"
+                               placeholder="{{ 'customer.search.search_by_placeholder'|trans({}, 'labels') }}"
+                               autocomplete="off">
+                    </form>
                 </div>
                 <div class="col-sm-3 vertical-table-text">
                     <p class="vertical-text">{{ 'customer.search.records_found'|trans({}, 'labels') }}:
@@ -66,6 +68,7 @@
                 url: url,
                 type: "POST",
                 success: function (response) {
+                    console.log(response)
                     block.html(response.template);
                     counter.html(response.counter);
                 },
@@ -74,32 +77,6 @@
                 }
             });
         });
-
-        $('.summary-search').on('click', function ()
-        {
-            var $this = $(this),
-                url = $('#summary-search-path').data('path'),
-                block = $('#content_list'),
-                counter = $('#content_counter');
-
-            $.ajax({
-                url: url,
-                type: "POST",
-                data: { searchItem: $this.data('item'), searchStatus: $this.data('status') },
-                success: function (response) {
-                    console.log(response);
-                    var data = jQuery.parseJSON(response);
-
-                    block.html(data.template);
-                    counter.html(data.counter);
-                },
-                error: function (response) {
-                    console.log(response);
-                    counter.html(0);
-                }
-            });
-        });
-
         var currentFilterValue = '{{ app.request.get('searchBy') }}',
             cookieFilterValue = getCookie('customersFilterBy');
 

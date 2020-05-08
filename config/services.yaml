@@ -116,3 +116,8 @@ services:
     App\EventListener\RegistrationListener:
         tags:
             - { 'name': 'kernel.event_listener', 'event': 'App\Event\RegistrationSuccessEvent', 'method': 'onRegistrationSuccess' }
+
+    menu.voter.request:
+        class: App\Menu\RequestVoter
+        tags:
+            - { name: knp_menu.voter }

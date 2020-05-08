@@ -9,6 +9,7 @@ use App\Manager\MemberManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use Faker\Factory;
 
 class CustomerFixtures extends Fixture implements DependentFixtureInterface
 {
@@ -40,7 +41,6 @@ class CustomerFixtures extends Fixture implements DependentFixtureInterface
      */
     public function load(ObjectManager $manager)
     {
-
         $firstCustomer = self::ENABLED_CUSTOMER;
 
         $client = $this->getReference(UserFixtures::ENABLED_USER_REFERENCE)->getClient();
@@ -56,6 +56,22 @@ class CustomerFixtures extends Fixture implements DependentFixtureInterface
         );
 
         $this->memberManager->addCustomer($client, $customer);
+
+        $faker = Factory::create();
+
+        for ($i = 0; $i < 10; $i++) {
+            $customer = $this->createCustomer(
+                $client,
+                $faker->firstName,
+                $faker->lastName,
+                $faker->email,
+                $faker->phoneNumber,
+                $faker->text,
+                $faker->numberBetween(1, 100)
+            );
+
+            $this->memberManager->addCustomer($client, $customer);
+        }
     }
 
     /**
@@ -69,7 +85,7 @@ class CustomerFixtures extends Fixture implements DependentFixtureInterface
      * @return Customer
      * @throws \Exception
      */
-    private function createCustomer(Client $client, string $firstname, string $lastname, string $email, bool $phone, string $notes, string $apartmentNumber)
+    private function createCustomer(Client $client, string $firstname, string $lastname, string $email, string $phone, string $notes, string $apartmentNumber)
     {
         $customer = new Customer();
         $customer->setFirstname($firstname);

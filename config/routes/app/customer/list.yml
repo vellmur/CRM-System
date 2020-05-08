@@ -1,5 +1,5 @@
 customer_list:
-    path:     /customer-search
+    path:     /search
     defaults: { _controller: App\Controller\Customer\CustomerController::list }
     methods:  [GET, POST]
 
@@ -11,7 +11,7 @@ member_edit:
             expose: true
 
 member_add:
-    path:     /customer-add
+    path:     /add
     defaults: { _controller: App\Controller\Customer\CustomerController::add }
     methods:  [GET, POST]
 
@@ -19,11 +19,6 @@ member_delete:
     path:     /{id}/delete
     defaults: { _controller: App\Controller\Customer\CustomerController::delete }
     methods:  DELETE
-
-member_summary_search:
-    path:     /search-summary
-    defaults: { _controller: App\Controller\Customer\CustomerController::searchSummary }
-    methods:  POST
 
 customer_orders_search:
     path:     /search-orders

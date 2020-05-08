@@ -5,6 +5,8 @@ namespace App\Tests;
 use App\DataFixtures\CustomerFixtures;
 use App\Entity\Customer\Apartment;
 use App\Entity\Customer\Customer;
+use Codeception\Example;
+use Faker\Factory;
 
 class AddCustomerCest
 {
@@ -18,26 +20,29 @@ class AddCustomerCest
      */
     public function goToCustomerAddPage(FunctionalTester $I)
     {
-        $I->amOnPage('/module/customers/customer-add');
-        $I->seeInCurrentUrl('/module/customers/customer-add');
+        $I->wantToTest('Work of customer add page.');
+        $I->amOnPage('/module/customers/add');
+        $I->seeInCurrentUrl('/module/customers/add');
         $I->see('Lead');
     }
 
     /**
      * @before goToCustomerAddPage
+     * @dataProvider customerData
+     * @param Example $data
      * @param FunctionalTester $I
      */
-    public function testAdd(FunctionalTester $I)
+    public function testAdd(FunctionalTester $I, Example $data)
     {
         $I->wantToTest('Successful add of customer to database.');
 
         $formFields = [
-            'customer_firstname' => 'JACK',
-            'customer_lastname' => 'JONES',
-            'customer_email' => 'jackjones@gmail.com',
-            'customer_phone' => '380432037231',
-            'customer_apartment_number' => 62,
-            'customer_notes' => 'Hello world'
+            'customer_firstname' => $data['firstname'],
+            'customer_lastname' => $data['lastname'],
+            'customer_email' => $data['email'],
+            'customer_phone' => $data['phone'],
+            'customer_apartment_number' => $data['apartment']['number'],
+            'customer_notes' => $data['notes']
         ];
 
         $this->submitCustomerForm($I, $formFields);
@@ -59,7 +64,7 @@ class AddCustomerCest
             'firstname' => $formFields['customer_firstname'],
             'lastname' => $formFields['customer_lastname'],
             'email' => $formFields['customer_email'],
-            'phone' => $formFields['customer_phone'],
+            'phone' => preg_replace('/[^0-9.]+/', '', $formFields['customer_phone']),
             'notes' => $formFields['customer_notes']
         ]);
 
@@ -152,5 +157,29 @@ class AddCustomerCest
         $I->click('#btn-submit');
 
         $I->iSeeValidationErrorLabels($formFields);
+    }
+
+    /**
+     * @return array
+     */
+    protected function customerData()
+    {
+        $faker = Factory::create();
+        $customers = [];
+
+        for ($i = 0; $i < 10; $i++) {
+            $customers[] = [
+                'firstname' => $faker->firstName,
+                'lastname' => $faker->lastName,
+                'email' => $faker->email,
+                'phone' => $faker->phoneNumber,
+                'apartment' => [
+                    'number' => $faker->numberBetween(1, 100)
+                ],
+                'notes' => $faker->text
+            ];
+        }
+
+        return $customers;
     }
 }

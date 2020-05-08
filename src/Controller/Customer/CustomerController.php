@@ -146,14 +146,7 @@ class CustomerController extends AbstractController
         $query = $this->manager->searchCustomers($client, $searchBy, $request->query->get('search'));
         $customers = $paginator->paginate($query, $request->query->getInt('page', 1), 20);
 
-        if (!$request->isXMLHttpRequest()) {
-            $ordersInfo = $orderManager->countOrders($client);
-
-            return $this->render('customer/list.html.twig', [
-                'customers' => $customers,
-                'ordersStats' => $ordersInfo
-            ]);
-        } else {
+        if ($request->getMethod() == 'POST' && $request->isXmlHttpRequest()) {
             $template = $this->render('customer/forms/table.html.twig', [
                 'customers' => $customers
             ])->getContent();
@@ -163,6 +156,10 @@ class CustomerController extends AbstractController
                 'counter' => $customers->getTotalItemCount()
             ],  200);
         }
+
+        return $this->render('customer/list.html.twig', [
+            'customers' => $customers
+        ]);
     }
 
     /**
