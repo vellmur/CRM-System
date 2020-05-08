@@ -46,10 +46,10 @@ class MemberManager
 
     /**
      * @param Client $client
-     * @param int|null $apartmentNumber
-     * @return Apartment
+     * @param string|null $apartmentNumber
+     * @return Apartment|object|null
      */
-    public function findOrCreateApartment(Client $client, ?int $apartmentNumber)
+    public function findOrCreateApartment(Client $client, ?string $apartmentNumber)
     {
         $rep = $this->em->getRepository(Apartment::class);
 

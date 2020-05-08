@@ -2,6 +2,7 @@
 
 namespace App\Tests;
 
+use App\DataFixtures\CustomerFixtures;
 use App\Entity\Customer\Apartment;
 use App\Entity\Customer\Customer;
 
@@ -15,23 +16,39 @@ class AddCustomerCest
     /**
      * @param FunctionalTester $I
      */
+    public function goToCustomerAddPage(FunctionalTester $I)
+    {
+        $I->amOnPage('/module/customers/customer-add');
+        $I->seeInCurrentUrl('/module/customers/customer-add');
+        $I->see('Lead');
+    }
+
+    /**
+     * @before goToCustomerAddPage
+     * @param FunctionalTester $I
+     */
     public function testAdd(FunctionalTester $I)
     {
         $I->wantToTest('Successful add of customer to database.');
 
-        $I->amOnPage('/module/customers/customer-add');
-        $I->seeInCurrentUrl('/module/customers/customer-add');
-        $I->see('Lead');
-
         $formFields = [
-            'customer_firstname' => 'JOHN',
-            'customer_lastname' => 'WICK',
-            'customer_email' => 'johnwick@example.com',
-            'customer_phone' => '380936069590',
-            'customer_apartment_number' => 63,
-            'customer_notes' => 'We want to track our home. So we are your clients.'
+            'customer_firstname' => 'JACK',
+            'customer_lastname' => 'JONES',
+            'customer_email' => 'jackjones@gmail.com',
+            'customer_phone' => '380432037231',
+            'customer_apartment_number' => 62,
+            'customer_notes' => 'Hello world'
         ];
 
+        $this->submitCustomerForm($I, $formFields);
+    }
+
+    /**
+     * @param FunctionalTester $I
+     * @param $formFields
+     */
+    private function submitCustomerForm(FunctionalTester $I, $formFields)
+    {
         $I->fillForm($formFields);
         $I->click('#btn-submit');
 
@@ -52,31 +69,61 @@ class AddCustomerCest
     }
 
     /**
+     * @before goToCustomerAddPage
+     * @param FunctionalTester $I
+     */
+    public function testAddCustomerToSameApartment(FunctionalTester $I)
+    {
+        $I->wantToTest('Adding of customer to existed apartment.');
+
+        $existedCustomer = CustomerFixtures::ENABLED_CUSTOMER;
+
+        $formFields = [
+            'customer_firstname' => 'Customer',
+            'customer_lastname' => 'Wife',
+            'customer_email' => 'customerwife@mail.com',
+            'customer_phone' => '384378927568',
+            'customer_apartment_number' => $existedCustomer['apartment']['number'],
+            'customer_notes' => 'This is customer to existed apartment'
+        ];
+
+        $this->submitCustomerForm($I, $formFields);
+
+        $customer = $I->grabEntityFromRepository(Customer::class, [
+            'email' => $existedCustomer['email']
+        ]);
+
+        $I->seeRecordIsAdded(Customer::class, [
+            'email' => $formFields['customer_email'],
+            'client' => $customer->getClient()->getId()
+        ]);
+    }
+
+    /**
+     * @before goToCustomerAddPage
      * @param FunctionalTester $I
      */
     public function testUniqueValidationError(FunctionalTester $I)
     {
         $I->wantToTest('Unique error while add customer with same email or phone to database.');
 
-        $I->amOnPage('/module/customers/customer-add');
-        $I->seeInCurrentUrl('/module/customers/customer-add');
-        $I->see('Lead');
+        $existedCustomer = CustomerFixtures::ENABLED_CUSTOMER;
 
         $formFields = [
-            'customer_firstname' => 'JOHN',
-            'customer_lastname' => 'WICK',
-            'customer_email' => 'johnwick@example.com',
-            'customer_phone' => '380936069590',
-            'customer_apartment_number' => 63,
-            'customer_notes' => 'We want to track our home. So we are your clients.'
+            'customer_firstname' => $existedCustomer['firstname'],
+            'customer_lastname' => $existedCustomer['lastname'],
+            'customer_email' => $existedCustomer['email'],
+            'customer_phone' => $existedCustomer['phone'],
+            'customer_apartment_number' => $existedCustomer['apartment']['number'],
+            'customer_notes' => 'This is adding of already existed customer.'
         ];
 
         $I->fillForm($formFields);
         $I->click('#btn-submit');
-        $I->seeInCurrentUrl('/edit');
-        $I->see('Customer');
+        $I->dontSeeInCurrentUrl('/edit');
+        $I->see('Lead');
 
-        $I->seeRecordIsAdded(Customer::class, [
+        $I->dontSeeInRepository(Customer::class, [
             'firstname' => $formFields['customer_firstname'],
             'lastname' => $formFields['customer_lastname'],
             'email' => $formFields['customer_email'],
@@ -84,16 +131,26 @@ class AddCustomerCest
             'notes' => $formFields['customer_notes']
         ]);
 
-        $I->seeRecordIsAdded(Apartment::class, [
-            'number' => $formFields['customer_apartment_number']
-        ]);
+        $I->see('This email is already taken.');
+    }
 
-        $I->amOnPage('/module/customers/customer-add');
+    /**
+     * @before goToCustomerAddPage
+     * @param FunctionalTester $I
+     */
+    public function checkValidationErrors(FunctionalTester $I)
+    {
+        $formFields = [
+            'customer_firstname' => '',
+            'customer_lastname' => '',
+            'customer_email' => '',
+            'customer_phone' => '',
+            'customer_apartment_number' => null
+        ];
+
         $I->fillForm($formFields);
         $I->click('#btn-submit');
-        $I->dontSeeInCurrentUrl('/edit');
-        $I->seeInCurrentUrl('/module/customers/customer-add');
-        $I->see('Lead');
-        $I->makeHtmlSnapshot();
+
+        $I->iSeeValidationErrorLabels($formFields);
     }
 }

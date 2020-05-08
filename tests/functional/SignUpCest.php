@@ -3,7 +3,6 @@
 namespace App\Tests;
 
 use App\DataFixtures\UserFixtures;
-use \Codeception\Util\Locator;
 
 class SignUpCest
 {
@@ -43,9 +42,7 @@ class SignUpCest
         $I->click('#_submit');
         $I->see('Create account');
 
-       foreach ($formFields as $fieldId => $value) {
-            $this->iSeeLabelError($I, $fieldId, 'This field is a required.');
-        }
+        $I->iSeeValidationErrorLabels($formFields);
     }
 
     /**
@@ -71,9 +68,9 @@ class SignUpCest
         $I->click('#_submit');
         $I->see('Create account');
 
-        $this->iSeeLabelError($I, 'registration_username', 'This value must be unique.');
-        $this->iSeeLabelError($I, 'registration_email', 'This value must be unique.');
-        $this->iSeeLabelError($I, 'registration_client_name', 'This value must be unique.');
+        $I->iSeeLabelError('registration_username', 'This value must be unique.');
+        $I->iSeeLabelError('registration_email', 'This value must be unique.');
+        $I->iSeeLabelError('registration_client_name', 'This value must be unique.');
     }
 
     /**
@@ -99,15 +96,5 @@ class SignUpCest
         $I->canSeeInCurrentUrl('/register/check-email');
         $I->see('Your account has been created');
         $I->seeSoftwareName();
-    }
-
-    /**
-     * @param FunctionalTester $I
-     * @param string $fieldId
-     * @param string $error
-     */
-    private function iSeeLabelError(FunctionalTester $I, string $fieldId, string $error)
-    {
-        $I->canSee($error, Locator::find('label', ['for' => $fieldId]));
     }
 }

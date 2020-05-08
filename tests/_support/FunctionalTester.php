@@ -6,6 +6,7 @@ use Codeception\Actor;
 use Codeception\Lib\Friend;
 use Codeception\Scenario;
 use Codeception\Step\Condition;
+use Codeception\Util\Locator;
 
 /**
  * Inherited Methods
@@ -70,7 +71,7 @@ class FunctionalTester extends Actor
     {
         foreach ($formFields as $fieldId => $value) {
             if (is_array($value)) {
-                $this->selectOption("#$fieldId", $value);
+                $this->selectOption("#$fieldId", $value[0]);
             } else {
                 $this->fillField("#$fieldId", $value);
             }
@@ -88,5 +89,24 @@ class FunctionalTester extends Actor
         $this->assertNotNull($dbCustomer);
         $this->assertNotNull($dbCustomer->getId());
         $this->assertIsInt($dbCustomer->getId());
+    }
+
+    /**
+     * @param array $formFields
+     */
+    public function iSeeValidationErrorLabels(array $formFields)
+    {
+        foreach ($formFields as $fieldId => $value) {
+            $this->iSeeLabelError($fieldId, 'This field is a required.');
+        }
+    }
+
+    /**
+     * @param string $fieldId
+     * @param string $error
+     */
+    public function iSeeLabelError(string $fieldId, string $error)
+    {
+        $this->canSee($error, Locator::find('label', ['for' => $fieldId, 'class' => 'validation-error-label']));
     }
 }

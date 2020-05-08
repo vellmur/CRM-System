@@ -29,6 +29,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *     message="validation.form.unique"
  * )
  * @AppAssert\EmailOrPhoneRequired
+ * @ORM\HasLifecycleCallbacks()
  */
 class Customer
 {
@@ -61,7 +62,7 @@ class Customer
 
     /**
      * @ORM\Column(name="email", type="string", length=50, nullable=true)
-     * @Assert\Email(message = "validation.form.not_valid_email")
+     * @Assert\Email(message="validation.form.not_valid_email")
      */
     private $email;
 
@@ -88,7 +89,6 @@ class Customer
     private $token;
 
     /**
-     *
      * This field helps to know did customer received an activation email
      * Active customer - this is a customer that have shares and start date of one from shares is past or coming soon
      * We send activation email just once for single customer, so this field changes just one time

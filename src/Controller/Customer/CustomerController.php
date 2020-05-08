@@ -51,9 +51,11 @@ class CustomerController extends AbstractController
         $apartment = $this->manager->findOrCreateApartment($client, $apartmentNum);
 
         $customer = new Customer();
+        $customer->setClient($client);
         $customer->setApartment($apartment);
 
-        $form = $this->createForm(CustomerType::class, $customer)->handleRequest($request);
+        $form = $this->createForm(CustomerType::class, $customer);
+        $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->manager->addCustomer($client, $customer);

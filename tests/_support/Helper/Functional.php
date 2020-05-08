@@ -12,9 +12,8 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 class Functional extends Module
 {
     /**
-     * Create user or administrator and set auth cookie to client
-     *
      * @param bool $admin
+     * @throws \Exception
      */
     public function auth(bool $admin = false)
     {
@@ -39,21 +38,7 @@ class Functional extends Module
         ]);
 
         if (!$user) {
-            /** @var RegistrationManager $manager */
-            $manager = $symfony->grabService('app.manager.registration');
-
-            $user = new User();
-
-            try {
-                $user->setUsername($userFixtures['username']);
-                $user->setEmail($userFixtures['email']);
-                $user->setPlainPassword($userFixtures['password']);
-                $user->setLocale(1);
-
-                $manager->register($user, $userFixtures['client']['name']);
-            } catch (\Throwable $exception) {
-                $this->fail('Unable to create user for test: "' . $exception->getMessage() . '".');
-            }
+            throw new \Exception('Test user was not found. Try to re-load fixtures.');
         }
 
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());

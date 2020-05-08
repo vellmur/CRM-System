@@ -21,8 +21,7 @@
                             <i class="icon-user text-muted"></i>
                         </div>
                         {% if form.username.vars.errors|length %}
-                            <label class="help-block text-danger" for="{{ form.username.vars.id }}">
-                                <i class="icon-cancel-circle2 position-left"></i>
+                            <label class="validation-error-label" for="{{ form.username.vars.id }}">
                                 {{ form.username.vars.errors[0].message }}
                             </label>
                         {% endif %}
@@ -32,9 +31,8 @@
                             <div class="form-group has-feedback">
                                 {{ form_widget(form.locale) }}
                                 {% if form.locale.vars.errors|length %}
-                                    <label class="help-block text-danger" for="{{ form.locale.vars.id }}">
-                                            <i class="icon-cancel-circle2 position-left"></i>
-                                            {{ form.locale.vars.errors[0].message }}
+                                    <label class="validation-error-label" for="{{ form.locale.vars.id }}">
+                                        {{ form.locale.vars.errors[0].message }}
                                     </label>
                                 {% endif %}
                             </div>
@@ -48,8 +46,7 @@
                                     <i class="icon-mention text-muted"></i>
                                 </div>
                                 {% if form.email.vars.errors|length %}
-                                    <label class="help-block text-danger" for="{{ form.email.vars.id }}">
-                                        <i class="icon-cancel-circle2 position-left"></i>
+                                    <label class="validation-error-label" for="{{ form.email.vars.id }}">
                                         {{ form.email.vars.errors[0].message }}
                                     </label>
                                 {% endif %}
@@ -64,8 +61,7 @@
                                     <i class="icon-user-check text-muted"></i>
                                 </div>
                                 {% if form.client.name.vars.errors|length %}
-                                    <label class="help-block text-danger" for="{{ form.client.name.vars.id }}">
-                                        <i class="icon-cancel-circle2 position-left"></i>
+                                    <label class="validation-error-label" for="{{ form.client.name.vars.id }}">
                                         {{ form.client.name.vars.errors[0].message }}
                                     </label>
                                 {% endif %}
@@ -80,8 +76,7 @@
                                     <i class="icon-user-lock text-muted"></i>
                                 </div>
                                 {% if form.plainPassword.first.vars.errors|length %}
-                                    <label class="help-block text-danger" for="{{ form.plainPassword.first.vars.id }}">
-                                        <i class="icon-cancel-circle2 position-left"></i>
+                                    <label class="validation-error-label" for="{{ form.plainPassword.first.vars.id }}">
                                         {{ form.plainPassword.first.vars.errors[0].message }}
                                     </label>
                                 {% endif %}
@@ -96,8 +91,7 @@
                                     <i class="icon-user-lock text-muted"></i>
                                 </div>
                                 {% if form.plainPassword.first.vars.errors|length %}
-                                    <label class="help-block text-danger" for="{{ form.plainPassword.second.vars.id }}">
-                                        <i class="icon-cancel-circle2 position-left"></i>
+                                    <label class="validation-error-label" for="{{ form.plainPassword.second.vars.id }}">
                                         {{ form.plainPassword.first.vars.errors[0].message }}
                                     </label>
                                 {% endif %}
@@ -109,9 +103,9 @@
                             {% form_theme form '@EWZRecaptcha/Form/ewz_recaptcha_widget.html.twig' %}
                             {{ form_widget(form.recaptcha) }}
                             {% if form.recaptcha.vars.errors|length %}
-                                <span class="help-block text-danger">
-                                    <i class="icon-cancel-circle2 position-left"></i>{{ form.recaptcha.vars.errors[0].message }}
-                                </span>
+                                <label class="validation-error-label">
+                                    {{ form.recaptcha.vars.errors[0].message }}
+                                </label>
                             {% endif %}
                         </div>
                     </div>

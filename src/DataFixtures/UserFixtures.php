@@ -28,6 +28,9 @@ class UserFixtures extends Fixture
         'password' => 'admin23101994'
     ];
 
+    /** @var User */
+    public const ENABLED_USER_REFERENCE = null;
+
     const NOT_ENABLED_USER = [
         'username' => 'chucknorris',
         'email' => 'chucknorris@gmail.com',
@@ -67,6 +70,8 @@ class UserFixtures extends Fixture
         $firstUser = self::ENABLED_USER;
         $confirmedUser = $this->createUser($firstUser['username'], $firstUser['email'], $firstUser['password'], true);
         $this->registrationManager->registerUser($confirmedUser, $firstUser['client']['name']);
+
+        $this->addReference(self::ENABLED_USER_REFERENCE, $confirmedUser);
 
         // Create not enabled user
         $secondUser = self::NOT_ENABLED_USER;
