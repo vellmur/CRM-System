@@ -2,7 +2,6 @@
 
 namespace App\Form\Subscriber;
 
-use App\Entity\City;
 use App\Service\LocationService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;

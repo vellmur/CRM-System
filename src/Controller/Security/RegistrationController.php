@@ -56,11 +56,6 @@ class RegistrationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                if ($locale = $user->getLocale()) {
-                    $request->getSession()->set('_locale', $locale);
-                    $request->setLocale($locale);
-                }
-
                 $clientName = $form->get('client')->get('name')->getData();
                 $this->manager->register($user, $clientName, $request->getSession()->get('ref'));
 

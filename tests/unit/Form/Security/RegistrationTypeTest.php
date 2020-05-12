@@ -4,11 +4,14 @@ namespace App\Tests\Form\Security;
 
 use App\Entity\User\User;
 use App\Form\Security\RegistrationType;
+use App\Form\Type\LocaleType;
 use App\Service\CountryList;
+use App\Service\Localization\LanguageDetector;
 use EWZ\Bundle\RecaptchaBundle\Form\Type\EWZRecaptchaType;
 use EWZ\Bundle\RecaptchaBundle\Locale\LocaleResolver;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\PreloadedExtension;
@@ -20,9 +23,21 @@ class RegistrationTypeTest extends TypeTestCase
 {
     private $countryList;
 
+    private $requestStack;
+
+    private $router;
+
+    private $languageDetector;
+
     protected function setUp() : void
     {
         $this->countryList = $this->createMock(CountryList::class);
+        $this->languageDetector = $this->getMockBuilder(LanguageDetector::class)
+            ->enableProxyingToOriginalMethods()
+                ->setMethods(['getLanguagesList'])
+                ->getMock();
+        $this->requestStack = $this->createMock(RequestStack::class);
+        $this->router = $this->createMock(RouterInterface::class);
 
         parent::setUp();
     }
@@ -30,8 +45,10 @@ class RegistrationTypeTest extends TypeTestCase
     protected function getExtensions()
     {
         $type = new RegistrationType($this->countryList);
+        $localeType = new LocaleType($this->router, $this->requestStack);
 
         return [
+            new PreloadedExtension([$localeType], []),
             new PreloadedExtension([$type], []),
             new PreloadedExtension([$this->getEwzRecaptchaType()], []),
             new ValidatorExtension($this->getValidatorExtension()),
@@ -43,8 +60,7 @@ class RegistrationTypeTest extends TypeTestCase
      */
     private function getEwzRecaptchaType()
     {
-        $requestStack = $this->createMock(RequestStack::class);
-        $localeResolver = new LocaleResolver('en', false, $requestStack);
+        $localeResolver = new LocaleResolver('en', false, $this->requestStack);
         $ewzRecaptchaType = new EWZRecaptchaType('key', true, true, $localeResolver, 'www.google.com');
 
         return $ewzRecaptchaType;
@@ -79,7 +95,7 @@ class RegistrationTypeTest extends TypeTestCase
 
         $form->submit($data);
 
-        $locales = User::LOCALES;
+        $locales = LanguageDetector::getLanguagesList();
 
         $user = new User();
         $user->setUsername($data['username']);

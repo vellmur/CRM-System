@@ -9,7 +9,7 @@ use App\Entity\Client\ModuleAccess;
 use App\Entity\Client\Referral;
 use App\Entity\User\User;
 use App\Security\AccessUpdater;
-use App\Service\CountryList;
+use App\Service\Localization\LanguageDetector;
 use App\Service\Mail\Sender;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -31,7 +31,7 @@ class RegistrationManager
 
     private $sender;
 
-    private $countryList;
+    private $languageDetector;
 
     public function __construct(
         EntityManagerInterface $em,
@@ -40,7 +40,7 @@ class RegistrationManager
         Environment $twig,
         TranslatorInterface $translator,
         Sender $sender,
-        CountryList $countryList
+        LanguageDetector $languageDetector
     ) {
         $this->em = $em;
         $this->passwordEncoder = $passwordEncoder;
@@ -48,7 +48,7 @@ class RegistrationManager
         $this->twig = $twig;
         $this->translator = $translator;
         $this->sender = $sender;
-        $this->countryList = $countryList;
+        $this->languageDetector = $languageDetector;
     }
 
     /**
@@ -107,7 +107,7 @@ class RegistrationManager
 
         $accesses = $this->createAccess($client);
         $client->setAccesses($accesses);
-        $this->createAutomatedEmails($client, $user->getLocaleCode());
+        $this->createAutomatedEmails($client, $this->languageDetector->getLocaleCodeById($user->getLocale()));
 
         $this->em->persist($client);
         $this->em->persist($user);

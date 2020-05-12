@@ -28,6 +28,10 @@ class RegistrationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('locale', LocaleType::class , [
+                'required' => false,
+                'label' => 'register.your_language'
+            ])
             ->add('username', null, [
                 'required' => false,
                 'attr' => [
@@ -58,11 +62,6 @@ class RegistrationType extends AbstractType
                         'placeholder' => 'register.repeat_password'
                     ]
                 ]
-            ])
-            ->add('locale', LocaleType::class , [
-                'required' => false,
-                'label' => 'register.your_language',
-                'placeholder' => 'register.your_language'
             ])
             ->add('client', ClientNameType::class, [
                 'mapped' => false,

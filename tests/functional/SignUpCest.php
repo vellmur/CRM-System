@@ -26,7 +26,6 @@ class SignUpCest
 
         $formFields = [
             'registration_username' => '',
-            'registration_locale' => null,
             'registration_email' => '',
             'registration_client_name' => '',
             'registration_plainPassword_first' => '',

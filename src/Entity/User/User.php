@@ -142,12 +142,6 @@ class User implements UserInterface
     const ROLE_EMPLOYEE = 'ROLE_EMPLOYEE';
     const ROLE_USER = 'ROLE_USER';
 
-    const LOCALES = [
-        1 => 'English',
-        2 => 'Русский',
-        3 => 'Українська'
-    ];
-
     /**
      * @var array
      */
@@ -364,20 +358,6 @@ class User implements UserInterface
     public function getLocale(): ?int
     {
         return $this->locale;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getLocaleCode(): ?string
-    {
-        $locales = [
-            1 => 'en',
-            2 => 'ru',
-            3 => 'uk'
-        ];
-
-        return $this->locale ? $locales[$this->locale] : null;
     }
 
     /**

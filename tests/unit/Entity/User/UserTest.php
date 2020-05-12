@@ -4,13 +4,21 @@ namespace App\Tests\Entity\User;
 
 use App\Entity\Client\Client;
 use App\Entity\User\User;
+use App\Service\Localization\LanguageDetector;
 use PHPUnit\Framework\TestCase;
 
 class UserTest extends TestCase
 {
+    private $languageDetector;
+
     protected function setUp(): void
     {
         parent::setUp();
+
+        $this->languageDetector = $this->getMockBuilder(LanguageDetector::class)
+            ->enableProxyingToOriginalMethods()
+            ->setMethods(['getLanguagesList'])
+            ->getMock();
     }
 
     public function testUserCreate()
@@ -20,7 +28,7 @@ class UserTest extends TestCase
         $client = new Client();
         $dateFormat = $user::DATE_FORMATS[1];
 
-        $locales = $user::LOCALES;
+        $locales = $this->languageDetector->getLanguagesList();
 
         $user->setId(1);
         $user->setEmail('johngolt@gmail.com');
@@ -51,7 +59,7 @@ class UserTest extends TestCase
         $this->assertEquals($date, $user->getPasswordRequestedAt());
         $this->assertEquals(true, $user->isEnabled());
         $this->assertEquals(true, $user->getIsActive());
-        $this->assertEquals('en', $user->getLocaleCode());
+        $this->assertEquals(1, $user->getLocale());
     }
 
     public function testSetClient()
