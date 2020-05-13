@@ -21,16 +21,14 @@ class AddressType extends AbstractType
     {
         $builder
             ->add('country', ChoiceType::class, [
+                'required' => false,
                 'choices' => [
                     'Россия' => 'ru',
                     'Україна' => 'ua'
                 ],
                 'attr' => [
                     'class' => 'select'
-                ],
-                'empty_data' => 'uk',
-                'required' => false,
-                'placeholder' => ''
+                ]
             ])
             ->add('street', TextType::class, [
                 'attr' => [

@@ -52,7 +52,9 @@ class ClientType extends AbstractType
                     'class' => 'form-control'
                 ]
             ])
-            ->add('currency', CurrencyType::class)
+            ->add('currency', CurrencyType::class, [
+                'required' => false
+            ])
             ->add('address', AddressType::class)
         ;
 

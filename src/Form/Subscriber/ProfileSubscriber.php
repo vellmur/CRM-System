@@ -2,6 +2,7 @@
 
 namespace App\Form\Subscriber;
 
+use App\Service\Localization\LanguageDetector;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -11,13 +12,17 @@ class ProfileSubscriber implements EventSubscriberInterface
 {
     private $session;
 
+    private $languageDetector;
+
     /**
      * ProfileSubscriber constructor.
      * @param SessionInterface $session
+     * @param LanguageDetector $languageDetector
      */
-    public function __construct(SessionInterface $session)
+    public function __construct(SessionInterface $session, LanguageDetector $languageDetector)
     {
         $this->session = $session;
+        $this->languageDetector = $languageDetector;
     }
 
     /**
@@ -37,7 +42,7 @@ class ProfileSubscriber implements EventSubscriberInterface
     {
         $user = $event->getData();
 
-        $this->session->set('_locale', $user->getLocaleCode());
+        $this->session->set('_locale', $this->languageDetector->getLocaleCodeById($user->getLocale()));
         $this->session->set('date_format', $user->getDateFormatName());
         $this->session->set('timezone', $user->getClient()->getTimezone());
     }

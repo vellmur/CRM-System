@@ -168,15 +168,15 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFudPQ3bgPztQLPBngp9B425BBl9q5Duo&libraries=places"></script>
     <script src="{{ asset('js/plugins/googleMapsSearch.js') }}?v=3"></script>
     <script>
-        let $streetField = $('#user_form_client_address_street'),
+        let $streetField = $('#profile_client_address_street'),
             $holder =  $('form'),
-            $countyField = $('#user_form_client_address_country'),
+            $countyField = $('#profile_client_address_country'),
             countryCode = $countyField.val() ? $countyField.val() : null;
 
         initAutocomplete($streetField, $holder, countryCode);
 
         // Update currency on country change
-        $('#profile_client_address_country').on('change', function () {
+        $countyField.on('change', function () {
             let countryCurrency = $('#profile_client_currency option[data-country-code="' + $(this).val() + '"]').val(),
                 $currencyField =  $('#profile_client_currency');
 
