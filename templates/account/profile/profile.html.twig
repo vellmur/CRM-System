@@ -40,18 +40,6 @@
                             })}}
                         {% endif %}
                     </div>
-                    <div class="form-group {% if form.client.currency.vars.errors|length %} has-error {% endif %}">
-                        <label>{{ 'account.settings.currency'|trans({}, 'labels') }}</label>
-                        {% if not form.client.currency.vars.valid %}
-                            {{ form_widget(form.client.currency, {'attr': {
-                                'data-placement': 'top',
-                                'title': form.client.currency.vars.errors[0].message,
-                                'class': 'select tip tip-open'}
-                            }) }}
-                        {% else %}
-                            {{ form_widget(form.client.currency)}}
-                        {% endif %}
-                    </div>
                     <div class="form-group {% if form.dateFormat.vars.errors|length %} has-error {% endif %}">
                         <label>{{ 'account.settings.date_format' | trans({}, 'labels') }}</label>
                         {% if not form.dateFormat.vars.valid %}
@@ -154,6 +142,18 @@
                             {{ form_widget(form.client.address.city) }}
                         {% endif %}
                     </div>
+                    <div class="form-group {% if form.client.currency.vars.errors|length %} has-error {% endif %}">
+                        <label>{{ 'account.settings.currency'|trans({}, 'labels') }}</label>
+                        {% if not form.client.currency.vars.valid %}
+                            {{ form_widget(form.client.currency, {'attr': {
+                                'data-placement': 'top',
+                                'title': form.client.currency.vars.errors[0].message,
+                                'class': 'select tip tip-open'}
+                            }) }}
+                        {% else %}
+                            {{ form_widget(form.client.currency)}}
+                        {% endif %}
+                    </div>
                 </div>
 
                 <div class="form-actions text-right col-md-12">
@@ -174,5 +174,14 @@
             countryCode = $countyField.val() ? $countyField.val() : null;
 
         initAutocomplete($streetField, $holder, countryCode);
+
+        // Update currency on country change
+        $('#profile_client_address_country').on('change', function () {
+            let countryCurrency = $('#profile_client_currency option[data-country-code="' + $(this).val() + '"]').val(),
+                $currencyField =  $('#profile_client_currency');
+
+            $currencyField.val(countryCurrency);
+            $currencyField.selectpicker('refresh')
+        });
     </script>
 {% endblock %}

@@ -45,9 +45,9 @@ class Client
     /**
      * @var int
      *
-     * @ORM\Column(name="currency", type="integer", length=2)
+     * @ORM\Column(name="currency", type="integer", length=2, nullable=true)
      */
-    private $currency = 4;
+    private $currency;
 
     /**
      * @var int
@@ -164,7 +164,6 @@ class Client
         $this->createdAt = new \DateTime();
 
         $this->accesses =  new ArrayCollection();
-        $this->notes = new ArrayCollection();
         $this->tags = new ArrayCollection();
         $this->posts = new ArrayCollection();
     }
@@ -257,64 +256,6 @@ class Client
     public function setCurrency($currency)
     {
         $this->currency = $currency;
-    }
-
-    /**
-     * @return array
-     */
-    public static function getCurrencies()
-    {
-        $currencies = [
-            'EUR' => 1,
-            'RUB' => 2,
-            'UAH' => 3,
-            'USD' => 4,
-            'CAD' => 5,
-            'GBP' => 6,
-            'AUD' => 7,
-            'NZF' => 8,
-            'NOK' => 9,
-            'SEK' => 10,
-            'TRY' => 11,
-            'CHF' => 12,
-            'DKK' => 13
-        ];
-
-        return $currencies;
-    }
-
-    /**
-     * @return array
-     */
-    public function getCurrencyCodes()
-    {
-        return [
-            'EUR' => '&#8364;',
-            'RUB' => '&#8381;',
-            'UAH' => '&#8372;',
-            'USD' => '&#36;',
-            'CAD' => '&#36;',
-            'GBP' => '&#65505;',
-            'AUD' => '&#36;',
-            'NZF' => '&#36;',
-            'NOK' => '&#107;&#114; ',
-            'SEK' => '&#107;&#114; ',
-            'TRY' => '&#8378;',
-            'CHF' => '&#8355;',
-            'DKK' => '&#107;&#114; ',
-        ];
-    }
-
-    /**
-     * @return string
-     */
-    public function getCurrencyFormat()
-    {
-        $currencyNum = $this->getCurrency() ?? 4;
-        $currency = array_flip(self::getCurrencies())[$currencyNum];
-        $symbol = $this->getCurrencyCodes()[$currency];
-
-        return new \Twig\Markup($symbol, 'UTF-8');
     }
 
     /**

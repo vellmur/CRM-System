@@ -4,10 +4,11 @@ namespace App\Form\Client;
 
 use App\Entity\Client\Client;
 use App\Form\Subscriber\TimezoneSubscriber;
+use App\Form\Type\CurrencyType;
+use App\Service\Localization\CurrencyFormatter;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class ClientType extends AbstractType
@@ -28,7 +29,7 @@ class ClientType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $currencies = Client::getCurrencies();
+        $currencies = CurrencyFormatter::SYMBOL_LIST;
         ksort($currencies);
 
         $builder
@@ -51,14 +52,7 @@ class ClientType extends AbstractType
                     'class' => 'form-control'
                 ]
             ])
-            ->add('currency', ChoiceType::class , [
-                'choices' =>  $currencies,
-                'placeholder' => false,
-                'label' => 'account.settings.currency',
-                'attr' => [
-                    'class' => 'select'
-                ]
-            ])
+            ->add('currency', CurrencyType::class)
             ->add('address', AddressType::class)
         ;
 

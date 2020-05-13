@@ -3,12 +3,10 @@
 namespace App\Form\User;
 
 use App\Entity\User\User;
-use App\Form\Client\AddressType;
 use App\Form\Client\ClientType;
 use App\Form\Subscriber\ProfileSubscriber;
 use App\Form\Type\DateFormatType;
 use App\Form\Type\LocaleType;
-use App\Service\CountryList;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -18,16 +16,13 @@ use Symfony\Component\Validator\Constraints\Valid;
  * Class UserFormType
  * @package App\Form\User
  */
-class UserFormType extends AbstractType
+class ProfileType extends AbstractType
 {
     private $subscriber;
 
-    private $countryList;
-
-    public function __construct(ProfileSubscriber $subscriber, CountryList $countryList)
+    public function __construct(ProfileSubscriber $subscriber)
     {
         $this->subscriber = $subscriber;
-        $this->countryList = $countryList;
     }
 
     /**

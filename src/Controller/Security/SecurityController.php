@@ -115,6 +115,8 @@ class SecurityController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setPassword($encoder->encodePassword($user, $user->getPlainPassword()));
+            $user->setConfirmationToken(null);
+            $user->setPasswordRequestedAt(null);
             $this->manager->saveUser($user);
 
             return new RedirectResponse($this->generateUrl('app_resetting_resetted', [

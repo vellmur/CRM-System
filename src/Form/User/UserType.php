@@ -5,7 +5,6 @@ namespace App\Form\User;
 use App\Entity\User\User;
 use App\Form\Type\DateFormatType;
 use App\Form\Type\LocaleType;
-use App\Service\CountryList;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -15,15 +14,16 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
+/**
+ * Class UserType
+ * @package App\Form\User
+ */
 class UserType extends AbstractType
 {
-    private $countryList;
-
-    public function __construct(CountryList $countryList)
-    {
-        $this->countryList = $countryList;
-    }
-
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder

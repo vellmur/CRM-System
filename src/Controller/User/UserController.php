@@ -3,6 +3,7 @@
 namespace App\Controller\User;
 
 use App\Form\User\ChangePasswordType;
+use App\Form\User\ProfileType;
 use App\Manager\RegistrationManager;
 use App\Manager\UserManager;
 use JMS\Serializer\SerializerInterface;
@@ -10,10 +11,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use App\Form\User\UserFormType;
 use App\Form\User\UserType;
 use App\Entity\User\User;
 use Symfony\Contracts\Translation\TranslatorInterface;
+
 
 class UserController extends AbstractController
 {
@@ -30,7 +31,7 @@ class UserController extends AbstractController
      */
     public function update(Request $request)
     {
-        $form = $this->createForm(UserFormType::class, $this->getUser());
+        $form = $this->createForm(ProfileType::class, $this->getUser());
         $form->handleRequest($request);
 
        if ($form->isSubmitted() && $form->isValid()) {
