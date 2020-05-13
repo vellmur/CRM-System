@@ -3,6 +3,7 @@
 namespace App\Form\Client;
 
 use App\Entity\Client\ModuleAccess;
+use App\Entity\User\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -36,7 +37,7 @@ class AccessType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => ModuleAccess::class,
-            'date_format' => null
+            'date_format' => User::DATE_FORMATS[1]
         ]);
     }
 
