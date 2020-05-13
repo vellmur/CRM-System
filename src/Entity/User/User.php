@@ -341,7 +341,7 @@ class User implements UserInterface
      */
     public function getDateFormatName(): ?string
     {
-        return $this->dateFormat ? self::DATE_FORMATS[$this->dateFormat] : null;
+        return $this->dateFormat ? self::DATE_FORMATS[$this->dateFormat] : self::DATE_FORMATS[1];
     }
 
     /**
