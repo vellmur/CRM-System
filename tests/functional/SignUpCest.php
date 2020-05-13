@@ -47,6 +47,24 @@ class SignUpCest
     /**
      * @before testGoToSignUpPage
      * @param FunctionalTester $I
+     */
+    public function testSwitchOfLanguage(FunctionalTester $I)
+    {
+        $I->wantToTest('Work of language switcher.');
+        $I->see('Create account');
+        
+        $switchToEnglish = $I->grabAttributeFrom('option[value=1]', 'data-switch-path');
+        $I->amOnPage($switchToEnglish);
+        $I->see('Create account');
+
+        $switchToRussian = $I->grabAttributeFrom('option[value=2]', 'data-switch-path');
+        $I->amOnPage($switchToRussian);
+        $I->see('Создать аккаунт');
+    }
+
+    /**
+     * @before testGoToSignUpPage
+     * @param FunctionalTester $I
     */
     public function testSignUpWithUniqueError(FunctionalTester $I)
     {
