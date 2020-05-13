@@ -5,7 +5,6 @@ namespace App\Form\Client;
 use App\Entity\Client\Client;
 use App\Form\Subscriber\TimezoneSubscriber;
 use App\Form\Type\CurrencyType;
-use App\Service\Localization\CurrencyFormatter;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -29,9 +28,6 @@ class ClientType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $currencies = CurrencyFormatter::SYMBOL_LIST;
-        ksort($currencies);
-
         $builder
             ->add('name', TextType::class, [
                 'translation_domain' => 'messages',

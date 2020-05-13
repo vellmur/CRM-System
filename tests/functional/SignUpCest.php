@@ -52,7 +52,7 @@ class SignUpCest
     {
         $I->wantToTest('Work of language switcher.');
         $I->see('Create account');
-        
+
         $switchToEnglish = $I->grabAttributeFrom('option[value=1]', 'data-switch-path');
         $I->amOnPage($switchToEnglish);
         $I->see('Create account');

@@ -5,7 +5,6 @@ namespace App\Form\Security;
 use App\Entity\User\User;
 use App\Form\Client\ClientNameType;
 use App\Form\Type\LocaleType;
-use App\Service\CountryList;
 use EWZ\Bundle\RecaptchaBundle\Form\Type\EWZRecaptchaType;
 use EWZ\Bundle\RecaptchaBundle\Validator\Constraints\IsTrue;
 use Symfony\Component\Form\AbstractType;
@@ -16,15 +15,16 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Valid;
 
+/**
+ * Class RegistrationType
+ * @package App\Form\Security
+ */
 class RegistrationType extends AbstractType
 {
-    private $countryList;
-
-    public function __construct(CountryList $countryList)
-    {
-        $this->countryList = $countryList;
-    }
-
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -71,14 +71,14 @@ class RegistrationType extends AbstractType
                 ]
             ])
             ->add('recaptcha', EWZRecaptchaType::class, [
-                'attr'  => [
+                'attr' => [
                     'options' => [
                         'theme' => 'light',
                         'type'  => 'image',
                         'size'  => 'normal'
                     ]
                 ],
-                'mapped'    => false,
+                'mapped' => false,
                 'constraints' => $_ENV['APP_ENV'] == 'prod' ?  [new IsTrue()] : []
             ]);
     }

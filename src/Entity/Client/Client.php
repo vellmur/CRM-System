@@ -290,7 +290,7 @@ class Client
      */
     public function setToken($token)
     {
-        $this->token = substr(sha1(openssl_random_pseudo_bytes(50)) . sha1($token), 0, 30);
+        $this->token = $token;
     }
 
     /**

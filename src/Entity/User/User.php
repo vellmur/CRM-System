@@ -65,7 +65,7 @@ class User implements UserInterface
      *
      * @ORM\Column(name="date_format", type="integer", length=1, nullable=true)
      */
-    private $dateFormat = 3;
+    private $dateFormat;
 
     /**
      * @ORM\Column(type="json")

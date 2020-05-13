@@ -5,7 +5,6 @@ namespace App\Tests\Form\Security;
 use App\Entity\User\User;
 use App\Form\Security\RegistrationType;
 use App\Form\Type\LocaleType;
-use App\Service\CountryList;
 use App\Service\Localization\LanguageDetector;
 use EWZ\Bundle\RecaptchaBundle\Form\Type\EWZRecaptchaType;
 use EWZ\Bundle\RecaptchaBundle\Locale\LocaleResolver;
@@ -21,8 +20,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class RegistrationTypeTest extends TypeTestCase
 {
-    private $countryList;
-
     private $requestStack;
 
     private $router;
@@ -31,7 +28,6 @@ class RegistrationTypeTest extends TypeTestCase
 
     protected function setUp() : void
     {
-        $this->countryList = $this->createMock(CountryList::class);
         $this->languageDetector = $this->getMockBuilder(LanguageDetector::class)
             ->enableProxyingToOriginalMethods()
                 ->setMethods(['getLanguagesList'])
@@ -44,12 +40,11 @@ class RegistrationTypeTest extends TypeTestCase
 
     protected function getExtensions()
     {
-        $type = new RegistrationType($this->countryList);
         $localeType = new LocaleType($this->router, $this->requestStack);
 
         return [
             new PreloadedExtension([$localeType], []),
-            new PreloadedExtension([$type], []),
+            new PreloadedExtension([new RegistrationType()], []),
             new PreloadedExtension([$this->getEwzRecaptchaType()], []),
             new ValidatorExtension($this->getValidatorExtension()),
         ];
@@ -95,7 +90,7 @@ class RegistrationTypeTest extends TypeTestCase
 
         $form->submit($data);
 
-        $locales = LanguageDetector::getLanguagesList();
+        $locales = $this->languageDetector->getLanguagesList();
 
         $user = new User();
         $user->setUsername($data['username']);
@@ -134,11 +129,11 @@ class RegistrationTypeTest extends TypeTestCase
         return [
             [
                 [
-                    'username' => 'whereismy',
-                    'email' => 'whereismy@mail.ru',
+                    'username' => 'whereismymind',
+                    'email' => 'whereismymind@mail.ru',
                     'locale' => 1,
                     'client' => [
-                        'name' => 'Where is my'
+                        'name' => 'Where is mind'
                     ],
                     "plainPassword" => [
                         'first' => '232dssa23',
