@@ -70,8 +70,7 @@ class MenuBuilder
         }
 
         // User menu
-        if ($this->security->isGranted('ROLE_OWNER') || $this->security->isGranted('ROLE_EMPLOYEE'))
-        {
+        if ($this->security->isGranted('ROLE_OWNER') || $this->security->isGranted('ROLE_EMPLOYEE')) {
             $this->addOwnerAccountMenu($menu, $domain);
 
             // Module Customers Header
@@ -81,10 +80,6 @@ class MenuBuilder
             // Module Customers
             $this->addManageCustomersMenu($menu, $domain, $building);
             $this->addEmailsMenu($menu, $domain);
-            $this->addOrdersMenu($menu, $domain);
-            $this->addPosMenu($menu, $domain);
-            $this->addProductsMenu($menu, $domain);
-            $this->addVendorsMenu($menu, $domain);
         }
 
         return $menu;
@@ -103,10 +98,6 @@ class MenuBuilder
         $menu->addChild($customersHeader)->setAttribute('icon', 'icon-menu')->setAttribute('class', 'navigation-header');
         $this->addManageCustomersMenu($menu, $domain);
         $this->addEmailsMenu($menu, $domain);
-        $this->addOrdersMenu($menu, $domain);
-        $this->addPosMenu($menu, $domain);
-        $this->addProductsMenu($menu, $domain);
-        $this->addVendorsMenu($menu, $domain);
 
         return $menu;
     }
@@ -189,64 +180,5 @@ class MenuBuilder
         $menu[$emails]->addChild($this->trans->trans('navigation.emails.drafts', [], $domain), ['route' => 'member.email.draft'])->setAttribute('icon', 'icon-notebook');
         $menu[$emails]->addChild($this->trans->trans('navigation.emails.compose', [], $domain), ['route' => 'member.email.compose'])->setAttribute('icon', 'icon-compose');
         $menu[$emails]->addChild($this->trans->trans('navigation.emails.logs', [], $domain), ['route' => 'member.email.log'])->setAttribute('icon', 'icon-book');
-    }
-
-    /**
-     * @param $menu
-     * @param $domain
-     */
-    private function addOrdersMenu(&$menu, $domain)
-    {
-        $orders = $this->trans->trans('navigation.orders.orders', [], $domain);
-        $menu->addChild($orders)->setAttribute('icon', 'icon-cart')->setAttribute('class', 'has-ul');;
-        $menu[$orders]->addChild($this->trans->trans('navigation.orders.for_vendors', [], $domain), ['route' => 'vendor_orders'])->setAttribute('icon', 'icon-store2');
-    }
-
-    /**
-     * @param $menu
-     * @param $domain
-     */
-    private function addPOSMenu(&$menu, $domain)
-    {
-        $emails = $this->trans->trans('navigation.pos.pos', [], $domain);
-        $menu->addChild($emails)->setAttribute('icon', 'icon-basket')->setAttribute('class', 'has-ul');;
-        $menu[$emails]->addChild($this->trans->trans('navigation.pos.dashboard', [], $domain), ['route' => 'pos_dashboard'])->setAttribute('icon', 'icon-stats-bars2');
-        $menu[$emails]->addChild($this->trans->trans('navigation.pos.entry', [], $domain), ['route' => 'pos_entry'])->setAttribute('icon', 'icon-calculator');
-        $menu[$emails]->addChild($this->trans->trans('navigation.pos.orders', [], $domain), [
-            'route' => 'pos_orders',
-            'routeParameters' => [
-                'period' => 'today'
-            ]
-        ])->setAttribute('icon', 'icon-menu6');
-    }
-
-    /**
-     * @param $menu
-     * @param $domain
-     */
-    private function addProductsMenu(&$menu, $domain)
-    {
-        $products = $this->trans->trans('navigation.products.products', [], $domain);
-        $menu->addChild($products)->setAttribute('icon', 'icon-cart5')->setAttribute('class', 'has-ul');;
-        $menu[$products]->addChild($this->trans->trans('navigation.products.add', [], $domain), ['route' => 'customer_product_add'])->setAttribute('icon', 'icon-cart-add');
-        $menu[$products]->addChild($this->trans->trans('navigation.products.pricing', [], $domain), [
-            'route' => 'products_pricing',
-            'routeParameters' => [
-                'category' => $this->request->cookies->get('pricingFilter')
-            ]
-        ])->setAttribute('icon', 'icon-price-tag');
-        $menu[$products]->addChild($this->trans->trans('navigation.products.search', [], $domain), ['route' => 'customer_products_search'])->setAttribute('icon', 'icon-search4');
-    }
-
-    /**
-     * @param $menu
-     * @param $domain
-     */
-    private function addVendorsMenu(&$menu, $domain)
-    {
-        $vendors = $this->trans->trans('navigation.vendors.vendors', [], $domain);
-        $menu->addChild($vendors)->setAttribute('icon', 'icon-store2')->setAttribute('class', 'has-ul');;
-        $menu[$vendors]->addChild($this->trans->trans('navigation.vendors.add', [], $domain), ['route' => 'vendor_add'])->setAttribute('icon', 'icon-user-plus');
-        $menu[$vendors]->addChild($this->trans->trans('navigation.vendors.search', [], $domain), ['route' => 'vendor_list'])->setAttribute('icon', 'icon-search4');
     }
 }

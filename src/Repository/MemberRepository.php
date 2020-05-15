@@ -67,9 +67,8 @@ class MemberRepository extends ServiceEntityRepository
                 ->setParameter('building', $building);
 
         if (strlen($search) > 0) {
-            $query = "(CONCAT(m.firstname, ' ',m.lastname) LIKE '%$search%') OR m.email LIKE '%$search%'";
-
-            $qb->andWhere($query);
+            $qb->andWhere("(CONCAT(m.firstname,' ', m.lastname) LIKE :search) OR m.email LIKE :search")
+                ->setParameter(':search', '%'. $search . '%');
         }
 
         return $qb->getQuery();

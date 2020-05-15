@@ -58,7 +58,7 @@ class AppExtension extends AbstractExtension
      * @param string|null $locale
      * @return string|string[]
      */
-    public function getProfileLink(Customer $customer, ?string $locale)
+    public function getProfileLink(Customer $customer, ?string $locale = null)
     {
         // Generate absolute url
         $link = $this->router->generate('membership_profile', [

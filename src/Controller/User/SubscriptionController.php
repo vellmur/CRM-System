@@ -3,7 +3,6 @@
 namespace App\Controller\User;
 
 use App\Form\Building\SubscriptionType;
-use App\Manager\User\SubscriptionManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -12,17 +11,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SubscriptionController extends AbstractController
 {
-    private $manager;
-
-    /**
-     * SubscriptionController constructor.
-     * @param SubscriptionManager $manager
-     */
-    public function __construct(SubscriptionManager $manager)
-    {
-        $this->manager = $manager;
-    }
-
     /**
      * @param Request $request
      * @return Response

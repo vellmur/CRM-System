@@ -4,7 +4,7 @@
         <td>{{ building.users[0].enabled ? 'Yes' : 'No' }}</td>
         <td>{{ building.createdAt|date('Y-m-d') }}</td>
         <td>
-            {% if building.id in lapsedClients %}
+            {% if building.id in lapsedBuildings %}
                 <button data-path="{{ path('master_building_delete', {id: building.id}) }}"
                         data-toggle="modal"
                         href="#small_modal"

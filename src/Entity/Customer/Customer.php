@@ -116,21 +116,6 @@ class Customer
     protected $apartment;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\Payment", mappedBy="customer", cascade={"all"}, orphanRemoval=true)
-     */
-    private $payments;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\POS", mappedBy="customer", cascade={"all"}, orphanRemoval=true)
-     */
-    private $orders;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\Invoice", mappedBy="customer", cascade={"all"}, orphanRemoval=true)
-     */
-    private $invoices;
-
-    /**
      * Customer constructor.
      * @throws \Exception
      */

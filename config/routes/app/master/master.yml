@@ -3,33 +3,33 @@ master_dashboard:
     defaults: { _controller: App\Controller\Master\MasterController::dashboard }
     methods:  GET
 
-master_clients:
-    path:     /clients
-    defaults: { _controller: App\Controller\Master\MasterController::clients }
+master_buildings:
+    path:     /buildings
+    defaults: { _controller: App\Controller\Master\MasterController::buildings }
     methods:  GET
 
-master_client_delete:
+master_building_delete:
     path:     /delete/{id}
-    defaults: { _controller: App\Controller\Master\MasterController::deleteClient }
+    defaults: { _controller: App\Controller\Master\MasterController::deleteBuilding }
     methods:  DELETE
 
-master_clients_search:
-    path:     /clients/search
-    defaults: { _controller: App\Controller\Master\MasterController::searchClients }
+master_buildings_search:
+    path:     /buildings/search
+    defaults: { _controller: App\Controller\Master\MasterController::searchBuildings }
     methods:  POST
 
-master_clients_filter:
-    path:     /clients/filter
-    defaults: { _controller: App\Controller\Master\MasterController::filterClients }
+master_buildings_filter:
+    path:     /buildings/filter
+    defaults: { _controller: App\Controller\Master\MasterController::filterBuildings }
     methods:  POST
 
-master_client_edit:
-    path:     /clients/{id}/edit
-    defaults: { _controller: App\Controller\Master\MasterController::editClient }
+master_building_edit:
+    path:     /buildings/{id}/edit
+    defaults: { _controller: App\Controller\Master\MasterController::editBuilding }
     methods: [GET, POST]
 
-master_client_access_update:
-    path:     /clients/update/{id}
+master_building_access_update:
+    path:     /buildings/update/{id}
     defaults: { _controller: App\Controller\Master\MasterController::ajaxAccessUpdate }
     methods:  POST
 
@@ -74,8 +74,8 @@ master_post_delete:
     methods:  DELETE
 
 master_statistics:
-    path:     /statistics/{module}/{client}
-    defaults: { _controller: App\Controller\Master\MasterController::statistics, module: null, client: null }
+    path:     /statistics/{module}/{building}
+    defaults: { _controller: App\Controller\Master\MasterController::statistics, module: null, building: null }
     methods:  GET
 
 master.email.compose:

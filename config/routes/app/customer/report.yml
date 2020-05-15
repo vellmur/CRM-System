@@ -1,4 +1,0 @@
-report_share_day:
-    path: /share-day-report
-    defaults: { _controller: App\Controller\Customer\ReportController::shareDay }
-    methods: GET

@@ -24,13 +24,6 @@ membership_profile_save:
     defaults: { _controller: App\Controller\Customer\MembershipController::saveProfile }
     methods:  POST
 
-membership_feedback_save:
-    path:     /profile/{token}/feedback-save/
-    defaults: { _controller: App\Controller\Customer\MembershipController::saveFeedback }
-    methods:  POST
-    options:
-        expose: true
-
 membership_delete:
     path:     /{id}/delete
     defaults: { _controller: App\Controller\Customer\MembershipController::delete }
@@ -39,11 +32,6 @@ membership_delete:
 membership_skip_pickup:
     path:     /renewal/profile/skip-pickup
     defaults: { _controller: App\Controller\Customer\MembershipController::skipPickup }
-    methods:  POST
-
-membership_share_customize:
-    path:     /profile/share/product/customize/{id}
-    defaults: { _controller: App\Controller\Customer\MembershipController:customizeShare, id: null }
     methods:  POST
 
 membership_renewal_summary:
@@ -58,11 +46,6 @@ membership_check_payment_method:
     options:
               expose: true
 
-membership_invoice_view:
-    path:     /profile/renewal/summary/invoice/{id}/{token}/
-    defaults: { _controller: App\Controller\Customer\MembershipController::renewalSummary }
-    methods:  GET
-
 membership_signup:
     path:      /sign-up/{token}
     defaults:  {_controller: App\Controller\Customer\MembershipController::signUp }
@@ -72,15 +55,3 @@ membership_check_email:
     path:     /profile/sign-up/email-check/{token}
     defaults: { _controller: App\Controller\Customer\MembershipController::checkEmail }
     methods:  GET
-
-membership_send_testimonial:
-    path:     /profile/testimonial/send/{id}
-    defaults: { _controller: App\Controller\Customer\MembershipController::sendTestimonialMail }
-    methods:  POST
-    options:
-              expose: true
-
-vendor_profile:
-    path:     /vendor/profile/{token}
-    defaults: { _controller: App\Controller\Customer\MembershipController::vendorProfile }
-    methods:  [GET, POST]

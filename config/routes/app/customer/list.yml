@@ -19,8 +19,3 @@ member_delete:
     path:     /{id}/delete
     defaults: { _controller: App\Controller\Customer\CustomerController::delete }
     methods:  DELETE
-
-customer_orders_search:
-    path:     /search-orders
-    defaults: { _controller: App\Controller\Customer\CustomerController::searchOrders }
-    methods:  POST

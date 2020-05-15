@@ -20,16 +20,6 @@ customer_search:
     options:
           expose: true
 
-app_shares_weeks:
-     path:     /admin/shares/weeks
-     defaults: { _controller: App\Controller\Customer\ShareController::sharesWeeks }
-     methods:  GET
-
-app_share_suspend:
-     path:     /shares/suspend-week
-     defaults: { _controller: App\Controller\Customer\ShareController::suspendWeek }
-     methods:  POST
-
 customers_list:
     prefix:   /
     resource: list.yml
@@ -37,23 +27,3 @@ customers_list:
 customers_emails:
     prefix:   /emails
     resource: email.yml
-
-customers_report:
-    resource: report.yml
-    prefix:    /report
-
-customers_vendor:
-    resource: vendor.yml
-    prefix:    /vendors
-
-customers_orders:
-    resource: order.yml
-    prefix:   /orders
-
-customers_products:
-    prefix:   /products
-    resource: product.yml
-
-customers_pos:
-    prefix:   /pos
-    resource: pos.yml

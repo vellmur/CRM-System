@@ -7,7 +7,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Customer\Email\AutoEmail;
 use App\Entity\Customer\Customer;
-use App\Entity\Customer\Tag;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -84,19 +83,9 @@ class Building
     private $customers;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\Vendor", mappedBy="building", cascade={"remove"})
-     */
-    private $vendors;
-
-    /**
      * @ORM\OneToOne(targetEntity="App\Entity\Building\Affiliate", mappedBy="building", cascade={"all"})
      */
     private $affiliate;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\VendorOrder", mappedBy="building", cascade={"remove"})
-     */
-    private $vendorOrders;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Customer\Email\CustomerEmail", mappedBy="building", cascade={"remove"})
@@ -124,21 +113,6 @@ class Building
     private $images;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\POS", mappedBy="building", cascade={"persist", "remove"})
-     */
-    private $pos;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\Product", mappedBy="building", cascade={"remove"})
-     */
-    private $products;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\Tag", mappedBy="building", cascade={"remove"})
-     */
-    private $tags;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Customer\Apartment", mappedBy="building", cascade={"remove"})
      */
     private $apartments;
@@ -164,7 +138,6 @@ class Building
         $this->createdAt = new \DateTime();
 
         $this->accesses =  new ArrayCollection();
-        $this->tags = new ArrayCollection();
         $this->posts = new ArrayCollection();
     }
 
@@ -400,34 +373,6 @@ class Building
     {
         $autoEmail->setBuilding($this);
         $this->autoEmails[] = $autoEmail;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Tag[] $tags
-     */
-    public function getTags()
-    {
-        return $this->tags;
-    }
-
-    /**
-     * @param mixed $tags
-     */
-    public function setTags($tags)
-    {
-        $this->tags = $tags;
-    }
-
-    /**
-     * @param Tag $tag
-     * @return $this
-     */
-    public function addTag(Tag $tag)
-    {
-        $tag->setBuilding($this);
-        $this->tags[] = $tag;
 
         return $this;
     }

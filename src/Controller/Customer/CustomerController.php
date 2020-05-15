@@ -4,7 +4,6 @@ namespace App\Controller\Customer;
 
 use App\Manager\ImportManager;
 use App\Manager\MemberManager;
-use App\Manager\OrderManager;
 use App\Service\Mail\Sender;
 use App\Service\SpreadsheetService;
 use JMS\Serializer\SerializerInterface;
@@ -132,10 +131,9 @@ class CustomerController extends AbstractController
     /**
      * @param Request $request
      * @param PaginatorInterface $paginator
-     * @param OrderManager $orderManager
      * @return JsonResponse|Response
      */
-    public function list(Request $request, PaginatorInterface $paginator, OrderManager $orderManager)
+    public function list(Request $request, PaginatorInterface $paginator)
     {
         $building = $this->getUser()->getBuilding();
 
@@ -237,27 +235,5 @@ class CustomerController extends AbstractController
             'rowsCounter' => $rowsNum,
             'imported' => $importedNum
         ]);
-    }
-
-    /**
-     * @param Request $request
-     * @param OrderManager $orderManager
-     * @return JsonResponse
-     */
-    public function searchOrders(Request $request, OrderManager $orderManager)
-    {
-        $building = $this->getUser()->getBuilding();
-        $status = $request->request->get('searchStatus');
-        $invoices = $orderManager->searchOpenOrders($building, $status);
-
-        $template = $this->render('customer/invoices_table_list.html.twig', [
-            'invoices' => $invoices
-        ])->getContent();
-
-        return new JsonResponse(
-            $this->serializer->serialize([
-                'template' => $template,
-                'counter' => 1
-            ], 'json'), 200);
     }
 }
