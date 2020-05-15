@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Form\Client;
+namespace App\Form\Building;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use App\Form\Subscriber\OwnerLocationSubscriber;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -12,7 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 use MenaraSolutions\Geographer\Earth;
 
-class ClientNameType extends AbstractType
+class BuildingNameType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -38,14 +38,14 @@ class ClientNameType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Client::class,
+            'data_class' => Building::class,
             'validation_groups' => ['register_validation']
         ]);
     }
 
     public function getName()
     {
-        return 'client';
+        return 'building';
     }
 
 }

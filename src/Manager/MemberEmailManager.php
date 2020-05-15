@@ -8,7 +8,7 @@ use App\Entity\Customer\Email\EmailRecipient;
 use App\Entity\Customer\Customer;
 use App\Repository\MemberEmailRepository;
 use App\Entity\Customer\Email\CustomerEmail;
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use App\Service\Mail\MailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -108,21 +108,21 @@ class MemberEmailManager
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @return \Doctrine\ORM\Query
      */
-    public function getLogsQuery(Client $client)
+    public function getLogsQuery(Building $building)
     {
-        return $this->repo->getEmailsLogQuery($client);
+        return $this->repo->getEmailsLogQuery($building);
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @return array
      */
-    public function getDrafts(Client $client)
+    public function getDrafts(Building $building)
     {
-        return $this->repo->findBy(['client' => $client, 'isDraft' => 1]);
+        return $this->repo->findBy(['building' => $building, 'isDraft' => 1]);
     }
 
     /**
@@ -189,7 +189,7 @@ class MemberEmailManager
     }
 
     /**
-     * Get default auto templates for clients (defined by master in twig)
+     * Get default auto templates for buildings (defined by master in twig)
      *
      * @param Environment $templating
      * @return array
@@ -255,29 +255,29 @@ class MemberEmailManager
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param $typeName
      * @return CustomerEmail
      * @throws \Exception
      */
-    public function createAutoLog(Client $client, $typeName)
+    public function createAutoLog(Building $building, $typeName)
     {
         // Get id of created CustomerEmail log and get entity of email type
         $autoEmail = $this->em->getRepository(AutoEmail::class)->findOneBy([
-            'client' => $client,
+            'building' => $building,
             'type' => $this->getNotifyId($typeName)
         ]);
 
         if ($autoEmail == null) {
-            throw new \Exception('Automated email with type ' . $typeName . ' for client with id ' . $client->getId() . 'doesnt exists.');
+            throw new \Exception('Automated email with type ' . $typeName . ' for building with id ' . $building->getId() . 'doesnt exists.');
         }
 
         $email = new CustomerEmail();
-        $email->setClient($client);
+        $email->setBuilding($building);
         $email->setSubject($autoEmail->getSubject());
         $email->setText($autoEmail->getText());
-        $email->setReplyEmail($client->getEmail());
-        $email->setReplyName($client->getName());
+        $email->setReplyEmail($building->getEmail());
+        $email->setReplyName($building->getName());
         $email->setIsDraft(false);
         $email->setAutomatedEmail($autoEmail);
 
@@ -288,21 +288,21 @@ class MemberEmailManager
     }
 
     /**
-     * CustomerEmail logs created by client in manual sending
+     * CustomerEmail logs created by building in manual sending
      *
-     * @param Client $client
+     * @param Building $building
      * @param $subject
      * @param $text
      * @return CustomerEmail
      */
-    public function createLog(Client $client, $subject, $text)
+    public function createLog(Building $building, $subject, $text)
     {
         $log = new CustomerEmail();
 
-        $log->setClient($client);
+        $log->setBuilding($building);
         $log->setIsDraft(false);
-        $log->setReplyName($client->getEmail());
-        $log->setReplyEmail($client->getEmail());
+        $log->setReplyName($building->getEmail());
+        $log->setReplyEmail($building->getEmail());
         $log->setSubject($subject);
         $log->setText($text);
 
@@ -415,8 +415,8 @@ class MemberEmailManager
         $value = '';
 
         switch ($field) {
-            case 'ClientName':
-                $value = $member->getClient()->getName();
+            case 'BuildingName':
+                $value = $member->getBuilding()->getName();
                 break;
             case 'Firstname':
                 $value = $member->getFirstName();

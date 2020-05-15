@@ -61,13 +61,13 @@
                             {{ product.weight ? count }}
                         </td>
                         <td style="vertical-align: middle; border: 1px solid #ddd; padding: 12px 20px; line-height: 1.5384616; border-top: 1px solid #ddd; transition: background-color ease-in-out 0.15s; display: table-cell; text-align: right; border-collapse: collapse; border-spacing: 0;">
-                            {{ app.user.client.currencyFormat|raw }}{{ (count * product.price)|number_format(2, '.', ',') }}
+                            {{ app.user.building.currency|currencyFormat }}{{ (count * product.price)|number_format(2, '.', ',') }}
                         </td>
                     </tr>
                 {% endfor %}
                 <tr style="transition: background-color ease-in-out 0.15s; display: table-row; vertical-align: inherit; border-top-color: inherit; border-right-color: inherit; border-bottom-color: inherit; border-left-color: inherit; text-align: center;">
                     <td style="vertical-align: middle; border: 1px solid #ddd; padding: 12px 20px; line-height: 1.5384616; border-top: 1px solid #ddd; transition: background-color ease-in-out 0.15s; display: table-cell; text-align: right; border-collapse: collapse; border-spacing: 0;" colspan="4">
-                        <span style="font-weight: bold;">{{ 'invoice.amount_paid'|trans({}, 'labels') }}: {{ app.user.client.currencyFormat|raw }}{{ order.total|number_format(2, '.', ',') }}</span>
+                        <span style="font-weight: bold;">{{ 'invoice.amount_paid'|trans({}, 'labels') }}: {{ app.user.building.currency|currencyFormat }}{{ order.total|number_format(2, '.', ',') }}</span>
                     </td>
                 </tr>
                 </tbody>

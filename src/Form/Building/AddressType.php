@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Form\Client;
+namespace App\Form\Building;
 
-use App\Entity\Client\Address;
+use App\Entity\Building\Address;
 use App\Form\Subscriber\TimezoneSubscriber;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

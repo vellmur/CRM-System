@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\Client;
+namespace App\Form\Building;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;

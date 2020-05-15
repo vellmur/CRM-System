@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Form\Client;
+namespace App\Form\Building;
 
-use App\Entity\Client\Affiliate;
+use App\Entity\Building\Affiliate;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;

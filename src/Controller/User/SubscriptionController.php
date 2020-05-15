@@ -2,7 +2,7 @@
 
 namespace App\Controller\User;
 
-use App\Form\Client\SubscriptionType;
+use App\Form\Building\SubscriptionType;
 use App\Manager\User\SubscriptionManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;

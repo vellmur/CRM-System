@@ -28,8 +28,8 @@ class ImageDirectoryNamer implements DirectoryNamerInterface
      */
     public function getDirName($imageObject)
     {
-        $client = method_exists($imageObject, 'getClient') ? $imageObject->getClient() : null;
-        $path = $client ? ('client/' . $client->getId() . '/') : 'software/';
+        $building = method_exists($imageObject, 'getBuilding') ? $imageObject->getBuilding() : null;
+        $path = $building ? ('building/' . $building->getId() . '/') : 'software/';
 
         return $path;
     }

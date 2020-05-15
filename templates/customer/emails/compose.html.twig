@@ -133,7 +133,7 @@
                                     <div class="col-md-10">
                                         {% if not form.replyEmail.vars.valid %}
                                             {{ form_widget(form.replyEmail, {
-                                                'value': app.user.client.email,
+                                                'value': app.user.building.email,
                                                 'attr': {
                                                     'data-placement': 'top',
                                                     'title': form.replyEmail.vars.errors[0].message,
@@ -141,7 +141,7 @@
                                                 }
                                             }) }}
                                         {% else %}
-                                            {{ form_widget(form.replyEmail, {'value': app.user.client.email}) }}
+                                            {{ form_widget(form.replyEmail, {'value': app.user.building.email}) }}
                                         {% endif %}
                                     </div>
                                 </div>
@@ -150,7 +150,7 @@
                                     <div class="col-md-10">
                                         {% if not form.replyName.vars.valid %}
                                             {{ form_widget(form.replyName, {
-                                                'value': app.user.client.name,
+                                                'value': app.user.building.name,
                                                 'attr': {
                                                     'data-placement': 'top',
                                                     'title': form.replyEmail.vars.errors[0].message,
@@ -158,7 +158,7 @@
                                                 }
                                             }) }}
                                         {% else %}
-                                            {{ form_widget(form.replyName, {'value': app.user.client.name}) }}
+                                            {{ form_widget(form.replyName, {'value': app.user.building.name}) }}
                                         {% endif %}
                                     </div>
                                 </div>

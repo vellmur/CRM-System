@@ -19,7 +19,7 @@ class CustomerOrdersType extends AbstractType
             ->add('share', EntityType::class, [
                 'class' => Share::class,
                 'label' => 'customer.share.share',
-                'choices' => $builder->getData()->getClient()->getShares(),
+                'choices' => $builder->getData()->getBuilding()->getShares(),
                 'label_attr' => [
                     'class' => 'col-md-2 col-sm-3 col-xs-5 control-label'
                 ],

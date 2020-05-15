@@ -18,26 +18,26 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for level in clientsSummary %}
+                    {% for level in buildingsSummary %}
                         <tr>
                             <td>{{ level.name }}</td>
                             <td>
                                 {% if level.total != 0 %}
-                                    <span data-path="{{ path('master_clients_filter', {'status' : 'all'}) }}" class="summary-search">
+                                    <span data-path="{{ path('master_buildings_filter', {'status' : 'all'}) }}" class="summary-search">
                                         {{ level.total }}
                                     </span>
                                 {% endif %}
                             </td>
                             <td>
                                 {% if level.statusNum['pending'] is defined %}
-                                    <span data-path="{{ path('master_clients_filter', {'status' : 'unconfirmed'}) }}" class="summary-search">
+                                    <span data-path="{{ path('master_buildings_filter', {'status' : 'unconfirmed'}) }}" class="summary-search">
                                         {{ level.statusNum['pending'] }}
                                     </span>
                                 {% endif %}
                             </td>
                             <td>
                                 {% if level.statusNum['active'] is defined %}
-                                    <span data-path="{{ path('master_clients_filter', {'status' : 'confirmed'}) }}" class="summary-search">
+                                    <span data-path="{{ path('master_buildings_filter', {'status' : 'confirmed'}) }}" class="summary-search">
                                         {{ level.statusNum['active'] }}
                                     </span>
                                 {% endif %}
@@ -55,14 +55,14 @@
                             </td>
                             <td>
                                 {% if level.weekNum != 0 %}
-                                    <span data-path="{{ path('master_clients_filter', {'status' : 'week'}) }}" class="summary-search">
+                                    <span data-path="{{ path('master_buildings_filter', {'status' : 'week'}) }}" class="summary-search">
                                         {{ level.weekNum }}
                                     </span>
                                 {% endif %}
                             </td>
                             <td>
                                 {% if level.monthNum != 0 %}
-                                    <span data-path="{{ path('master_clients_filter', {'status' : 'month'}) }}" class="summary-search">
+                                    <span data-path="{{ path('master_buildings_filter', {'status' : 'month'}) }}" class="summary-search">
                                         {{ level.monthNum }}
                                     </span>
                                 {% endif %}
@@ -82,7 +82,7 @@
                         <label for="search_text">Search:</label>
                         <input type="text"
                                class="form-control"
-                               data-action="/master/clients/search"
+                               data-action="/master/buildings/search"
                                data-block="content_list"
                                data-counter="users_counter"
                                name="search_text"
@@ -91,7 +91,7 @@
                                placeholder="Search...">
                     </div>
                     <div class="col-sm-6 vertical-table-text">
-                        <p class="vertical-text">Records found: <span id="users_counter">{{ clients|length }}</span></p>
+                        <p class="vertical-text">Records found: <span id="users_counter">{{ buildings|length }}</span></p>
                     </div>
                 </div>
             </div>
@@ -110,7 +110,7 @@
                 </tr>
                 </thead>
                 <tbody id="content_list">
-                    {{ include ("master/client/search.html.twig") }}
+                    {{ include ("master/building/search.html.twig") }}
                 </tbody>
             </table>
         </div>
@@ -120,5 +120,5 @@
 {% endblock body %}
 
 {% block scripts %}
-    <script type="text/javascript" src="{{ asset('js/pages/master/client_search.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/pages/master/building_search.js') }}"></script>
 {% endblock %}

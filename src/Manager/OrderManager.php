@@ -2,7 +2,7 @@
 
 namespace App\Manager;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use App\Entity\Customer\Invoice;
 use App\Entity\Customer\Vendor;
 use App\Entity\Customer\VendorOrder;
@@ -31,39 +31,39 @@ class OrderManager
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @return mixed
      */
-    public function getVendorOrders(Client $client)
+    public function getVendorOrders(Building $building)
     {
-        return $this->em->getRepository(VendorOrder::class)->getOrders($client);
+        return $this->em->getRepository(VendorOrder::class)->getOrders($building);
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @return array
      */
-    public function getVendors(Client $client)
+    public function getVendors(Building $building)
     {
-        return $this->em->getRepository(Vendor::class)->getActiveVendors($client);
+        return $this->em->getRepository(Vendor::class)->getActiveVendors($building);
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @return mixed
      */
-    public function countOrders(Client $client)
+    public function countOrders(Building $building)
     {
-        return $this->em->getRepository(Invoice::class)->countOpenOrders($client);
+        return $this->em->getRepository(Invoice::class)->countOpenOrders($building);
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param $period
      * @return \Doctrine\ORM\Query
      */
-    public function searchOpenOrders(Client $client, $period)
+    public function searchOpenOrders(Building $building, $period)
     {
-        return  $this->em->getRepository(Invoice::class)->searchOpenOrders($client, $period);
+        return  $this->em->getRepository(Invoice::class)->searchOpenOrders($building, $period);
     }
 }

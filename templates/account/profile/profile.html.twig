@@ -11,29 +11,29 @@
             </div>
             <div class="panel-body">
                 <div class="col-md-6">
-                    <div class="form-group {% if form.client.name.vars.errors|length %} has-error {% endif %}">
-                        <label>{{ 'account.settings.client_name'|trans({}, 'labels') }}</label>
-                        {% if not form.client.name.vars.valid %}
-                            {{ form_widget(form.client.name, {'attr': {
+                    <div class="form-group {% if form.building.name.vars.errors|length %} has-error {% endif %}">
+                        <label>{{ 'account.settings.building_name'|trans({}, 'labels') }}</label>
+                        {% if not form.building.name.vars.valid %}
+                            {{ form_widget(form.building.name, {'attr': {
                                 'data-placement': 'top',
-                                'title': form.client.name.vars.errors[0].message,
+                                'title': form.building.name.vars.errors[0].message,
                                 'class': 'form-control tip tip-open'}
                             }) }}
                         {% else %}
-                            {{ form_widget(form.client.name)}}
+                            {{ form_widget(form.building.name)}}
                         {% endif %}
                     </div>
-                    <div class="form-group {% if form.client.email.vars.errors|length %} has-error {% endif %}">
+                    <div class="form-group {% if form.building.email.vars.errors|length %} has-error {% endif %}">
                         <label>{{ 'account.settings.email'|trans({}, 'labels') }}</label>
-                        {% if not form.client.email.vars.valid %}
-                            {{ form_widget(form.client.email, {'attr': {
+                        {% if not form.building.email.vars.valid %}
+                            {{ form_widget(form.building.email, {'attr': {
                                 'data-placement': 'top',
-                                'title': form.client.email.vars.errors[0].message,
+                                'title': form.building.email.vars.errors[0].message,
                                 'class': 'form-control tip tip-open',
                                 'placeholder': 'account.settings.email'|trans({}, 'labels')}
                             }) }}
                         {% else %}
-                            {{ form_widget(form.client.email, {'attr': {
+                            {{ form_widget(form.building.email, {'attr': {
                                 'class': 'form-control',
                                 'placeholder':
                                 'account.settings.email'|trans({}, 'labels')}
@@ -64,94 +64,94 @@
                             {{ form_widget(form.locale)}}
                         {% endif %}
                     </div>
-                    <div class="form-group {% if form.client.timezone.vars.errors|length %} has-error {% endif %}">
+                    <div class="form-group {% if form.building.timezone.vars.errors|length %} has-error {% endif %}">
                         <label>{{ 'account.settings.timezone'|trans({}, 'labels') }}</label>
-                        {% if not form.client.timezone.vars.valid %}
-                            {{ form_widget(form.client.timezone, {'attr': {
+                        {% if not form.building.timezone.vars.valid %}
+                            {{ form_widget(form.building.timezone, {'attr': {
                                 'data-placement': 'top',
-                                'title': form.client.timezone.vars.errors[0].message,
+                                'title': form.building.timezone.vars.errors[0].message,
                                 'class': 'select tip tip-open'}
                             }) }}
                         {% else %}
-                            {{ form_widget(form.client.timezone)}}
+                            {{ form_widget(form.building.timezone)}}
                         {% endif %}
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="form-group {% if form.client.address.country.vars.errors|length %} has-error {% endif %}">
+                    <div class="form-group {% if form.building.address.country.vars.errors|length %} has-error {% endif %}">
                         <label>{{ 'account.settings.country'|trans({}, 'labels') }}</label>
-                        {% if not form.client.address.country.vars.valid %}
-                            {{ form_widget(form.client.address.country, {'attr': {
+                        {% if not form.building.address.country.vars.valid %}
+                            {{ form_widget(form.building.address.country, {'attr': {
                                 'data-placement': 'top',
-                                'title': form.client.address.country.vars.errors[0].message,
+                                'title': form.building.address.country.vars.errors[0].message,
                                 'class': 'select tip tip-open',
                                 'placeholder': 'account.settings.country'|trans({}, 'labels')}
                             }) }}
                         {% else %}
-                            {{ form_widget(form.client.address.country) }}
+                            {{ form_widget(form.building.address.country) }}
                         {% endif %}
                     </div>
-                    <div class="form-group {% if form.client.address.street.vars.errors|length %} has-error {% endif %}">
+                    <div class="form-group {% if form.building.address.street.vars.errors|length %} has-error {% endif %}">
                         <label>{{ 'customer.address.street'|trans({}, 'labels') }}</label>
-                        {% if not form.client.address.street.vars.valid %}
-                            {{ form_widget(form.client.street, {'attr': {
+                        {% if not form.building.address.street.vars.valid %}
+                            {{ form_widget(form.building.street, {'attr': {
                                 'data-placement': 'top',
-                                'title': form.client.address.street.vars.errors[0].message,
+                                'title': form.building.address.street.vars.errors[0].message,
                                 'class': 'select tip tip-open',
                                 'placeholder': 'customer.address.street'|trans({}, 'labels')}
                             }) }}
                         {% else %}
-                            {{ form_widget(form.client.address.street) }}
+                            {{ form_widget(form.building.address.street) }}
                         {% endif %}
                     </div>
-                    <div class="form-group {% if form.client.address.postalCode.vars.errors|length %} has-error {% endif %}">
+                    <div class="form-group {% if form.building.address.postalCode.vars.errors|length %} has-error {% endif %}">
                         <label>{{ 'account.settings.postal_code'|trans({}, 'labels') }}</label>
-                        {% if not form.client.address.postalCode.vars.valid %}
-                            {{ form_widget(form.client.address.postalCode, {'attr': {
+                        {% if not form.building.address.postalCode.vars.valid %}
+                            {{ form_widget(form.building.address.postalCode, {'attr': {
                                 'data-placement': 'top',
-                                'title': form.client.address.postalCode.vars.errors[0].message,
+                                'title': form.building.address.postalCode.vars.errors[0].message,
                                 'class': 'form-control tip tip-open'}
                             }) }}
                         {% else %}
-                            {{ form_widget(form.client.address.postalCode, { 'attr': {'class': 'form-control'} })}}
+                            {{ form_widget(form.building.address.postalCode, { 'attr': {'class': 'form-control'} })}}
                         {% endif %}
                     </div>
-                    <div class="form-group {% if form.client.address.region.vars.errors|length %} has-error {% endif %}">
+                    <div class="form-group {% if form.building.address.region.vars.errors|length %} has-error {% endif %}">
                         <label>{{ 'account.settings.region'|trans({}, 'labels') }}</label>
-                        {% if not form.client.address.region.vars.valid %}
-                            {{ form_widget(form.client.address.region, {'attr': {
+                        {% if not form.building.address.region.vars.valid %}
+                            {{ form_widget(form.building.address.region, {'attr': {
                                 'data-placement': 'top',
-                                'title': form.client.address.region.vars.errors[0].message,
+                                'title': form.building.address.region.vars.errors[0].message,
                                 'class': 'select tip tip-open',
                                 'placeholder': 'account.settings.region_placeholder'|trans({}, 'labels')}
                             }) }}
                         {% else %}
-                            {{ form_widget(form.client.address.region) }}
+                            {{ form_widget(form.building.address.region) }}
                         {% endif %}
                     </div>
-                    <div class="form-group {% if form.client.address.city.vars.errors|length %} has-error {% endif %}">
+                    <div class="form-group {% if form.building.address.city.vars.errors|length %} has-error {% endif %}">
                         <label>{{ 'account.settings.city'|trans({}, 'labels') }}</label>
-                        {% if not form.client.address.city.vars.valid %}
-                            {{ form_widget(form.client.address.city, {'attr' : {
+                        {% if not form.building.address.city.vars.valid %}
+                            {{ form_widget(form.building.address.city, {'attr' : {
                                 'data-placement': 'top',
-                                'title': form.client.address.city.vars.errors[0].message,
+                                'title': form.building.address.city.vars.errors[0].message,
                                 'class': 'select tip tip-open',
                                 'placeholder': 'account.settings.city_placeholder'|trans({}, 'labels')}
                             }) }}
                         {% else %}
-                            {{ form_widget(form.client.address.city) }}
+                            {{ form_widget(form.building.address.city) }}
                         {% endif %}
                     </div>
-                    <div class="form-group {% if form.client.currency.vars.errors|length %} has-error {% endif %}">
+                    <div class="form-group {% if form.building.currency.vars.errors|length %} has-error {% endif %}">
                         <label>{{ 'account.settings.currency'|trans({}, 'labels') }}</label>
-                        {% if not form.client.currency.vars.valid %}
-                            {{ form_widget(form.client.currency, {'attr': {
+                        {% if not form.building.currency.vars.valid %}
+                            {{ form_widget(form.building.currency, {'attr': {
                                 'data-placement': 'top',
-                                'title': form.client.currency.vars.errors[0].message,
+                                'title': form.building.currency.vars.errors[0].message,
                                 'class': 'select tip tip-open'}
                             }) }}
                         {% else %}
-                            {{ form_widget(form.client.currency)}}
+                            {{ form_widget(form.building.currency)}}
                         {% endif %}
                     </div>
                 </div>
@@ -168,17 +168,17 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFudPQ3bgPztQLPBngp9B425BBl9q5Duo&libraries=places"></script>
     <script src="{{ asset('js/plugins/googleMapsSearch.js') }}?v=3"></script>
     <script>
-        let $streetField = $('#profile_client_address_street'),
+        let $streetField = $('#profile_building_address_street'),
             $holder =  $('form'),
-            $countyField = $('#profile_client_address_country'),
+            $countyField = $('#profile_building_address_country'),
             countryCode = $countyField.val() ? $countyField.val() : null;
 
         initAutocomplete($streetField, $holder, countryCode);
 
         // Update currency on country change
         $countyField.on('change', function () {
-            let countryCurrency = $('#profile_client_currency option[data-country-code="' + $(this).val() + '"]').val(),
-                $currencyField =  $('#profile_client_currency');
+            let countryCurrency = $('#profile_building_currency option[data-country-code="' + $(this).val() + '"]').val(),
+                $currencyField =  $('#profile_building_currency');
 
             $currencyField.val(countryCurrency);
             $currencyField.selectpicker('refresh')

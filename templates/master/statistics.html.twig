@@ -8,14 +8,14 @@
                     <div class="form-group form-group-material">
                         <label for="search_filter">Filter by:</label>
                         <select class="select" id="search_filter" data-width="100%" onchange="location = this.value;">
-                            <option>Select client:</option>
-                            {% for client in clients %}
+                            <option>Select building:</option>
+                            {% for building in buildings %}
                                 <option value="{{ path('master_statistics', {
                                     'module': app.request.get('module') ?? 'all',
-                                    'client': client.id
+                                    'building': building.id
                                 }) }}"
-                                        {{ app.request.get('client') and client.id == app.request.get('client').id ? 'selected' }}>
-                                    {{ client.name }}
+                                        {{ app.request.get('building') and building.id == app.request.get('building').id ? 'selected' }}>
+                                    {{ building.name }}
                                 </option>
                             {% endfor %}
                         </select>
@@ -23,7 +23,7 @@
                 </div>
                 <div class="col-md-6 col-sm-6 col-xs-6" style="margin-top: 20px;">
                     <p class="vertical-text">{{ 'customer.search.records_found'|trans({}, 'labels') }}:
-                        <span id="content_counter">{{ clients|length }}</span>
+                        <span id="content_counter">{{ buildings|length }}</span>
                     </p>
                 </div>
             </div>
@@ -41,14 +41,14 @@
                         <li {{ not app.request.get('module') or app.request.get('module') == 'all' ? 'class="active"' }}>
                             <a href="{{ path('master_statistics', {
                                 'module': 'all',
-                                'client': app.request.get('client').id ?? null
+                                'building': app.request.get('building').id ?? null
                             }) }}" class="chart-period-btn">All</a>
                         </li>
                         {% for name in modules %}
                             <li {{ app.request.get('module') == name ? 'class="active"' }}>
                                 <a href="{{ path('master_statistics', {
                                     'module': name,
-                                    'client': app.request.get('client').id ?? null
+                                    'building': app.request.get('building').id ?? null
                                 }) }}" class="chart-period-btn">{{ name|capitalize }}</a>
                             </li>
                         {% endfor %}

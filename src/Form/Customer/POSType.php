@@ -100,7 +100,7 @@ class POSType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => POS::class,
-            'client' => null,
+            'building' => null,
             'translation_domain' => 'labels'
         ]);
     }

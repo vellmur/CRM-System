@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Form\Client;
+namespace App\Form\Building;
 
-use App\Entity\Client\ModuleAccess;
+use App\Entity\Building\ModuleAccess;
 use App\Entity\User\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

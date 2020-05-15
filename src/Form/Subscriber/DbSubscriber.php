@@ -46,7 +46,7 @@ class DbSubscriber implements EventSubscriberInterface
         }
 
         if (stristr(get_class($data), 'Address')) {
-            $country = $data->getMember()->getClient()->getCountry();
+            $country = $data->getMember()->getBuilding()->getCountry();
         } else {
             $country = $data->getCountry();
         }
@@ -95,9 +95,9 @@ class DbSubscriber implements EventSubscriberInterface
         $form = $event->getForm();
         $data = $event->getData();
 
-        // For customer address entity we haven`t country field, so we can country from parent Client entity
+        // For customer address entity we haven`t country field, so we can country from parent Building entity
         if (stristr(get_class($form->getData()), 'Address')) {
-            $country = $form->getData()->getMember()->getClient()->getCountry();
+            $country = $form->getData()->getMember()->getBuilding()->getCountry();
         } else {
             $country = array_key_exists('country', $data) && $data['country'] != '' ? $this->locationService->findLocation('Country', $data['country']) : null;
         }

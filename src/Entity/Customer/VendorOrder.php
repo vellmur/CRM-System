@@ -23,10 +23,10 @@ class VendorOrder
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Client\Client", inversedBy="vendorOrders")
-     * @ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Building\Building", inversedBy="vendorOrders")
+     * @ORM\JoinColumn(name="building_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $client;
+    private $building;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Customer\Vendor", inversedBy="vendorOrders")
@@ -61,17 +61,17 @@ class VendorOrder
     /**
      * @return mixed
      */
-    public function getClient()
+    public function getBuilding()
     {
-        return $this->client;
+        return $this->building;
     }
 
     /**
-     * @param mixed $client
+     * @param mixed $building
      */
-    public function setClient($client)
+    public function setBuilding($building)
     {
-        $this->client = $client;
+        $this->building = $building;
     }
 
     /**

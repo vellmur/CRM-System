@@ -37,7 +37,7 @@ class LoginSubscriber implements EventSubscriberInterface
         }
 
         $this->session->set('date_format', $user->getDateFormat());
-        $this->session->set('timezone', $user->getClient()->getTimezone());
+        $this->session->set('timezone', $user->getBuilding()->getTimezone());
     }
 
     /**

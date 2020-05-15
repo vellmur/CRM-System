@@ -36,10 +36,10 @@ class ProductController extends AbstractController
      */
     public function add(Request $request, PaginatorInterface $paginator, $category, $isPos)
     {
-        $client = $this->getUser()->getClient();
+        $building = $this->getUser()->getBuilding();
 
         $product = new Product();
-        $product->setClient($client);
+        $product->setBuilding($building);
 
         // Pre-set category and isPos for empty data
         if (!$request->request->get('product')) {
@@ -48,7 +48,7 @@ class ProductController extends AbstractController
         }
 
         $form = $this->createForm(ProductType::class, $product, [
-            'client' => $client,
+            'building' => $building,
             'isTopForm' => true
         ]);
 
@@ -75,13 +75,13 @@ class ProductController extends AbstractController
             }
         }
 
-        $products = $paginator->paginate($this->manager->searchProducts($client), $request->query->getInt('page', 1), 20);
+        $products = $paginator->paginate($this->manager->searchProducts($building), $request->query->getInt('page', 1), 20);
 
         $forms = [];
 
         foreach ($products as $product) {
             $listForm = $this->createForm(ProductType::class, $product, [
-                'client' => $client
+                'building' => $building
             ]);
 
             $listForm->remove('name');
@@ -105,10 +105,10 @@ class ProductController extends AbstractController
      */
     public function edit(Request $request, Product $product)
     {
-        $client = $this->getUser()->getClient();
+        $building = $this->getUser()->getBuilding();
 
         $form = $this->createForm(ProductType::class, $product, [
-            'client' => $client,
+            'building' => $building,
             'isTopForm' => true
         ]);
 
@@ -161,16 +161,16 @@ class ProductController extends AbstractController
      */
     public function search(Request $request, PaginatorInterface $paginator, SerializerInterface $serializer, $category, $searchText)
     {
-        $client = $this->getUser()->getClient();
+        $building = $this->getUser()->getBuilding();
 
-        $query = $this->manager->searchProducts($client, $category, $searchText);
+        $query = $this->manager->searchProducts($building, $category, $searchText);
         $products = $paginator->paginate($query, $request->query->getInt('page', 1), 20);
 
         $forms = [];
 
         foreach ($products as $product) {
             $form = $this->createForm(ProductType::class, $product, [
-                'client' => $client
+                'building' => $building
             ]);
 
             $form->remove('name');
@@ -207,8 +207,8 @@ class ProductController extends AbstractController
     public function searchProducts(Request $request, SerializerInterface $serializer)
     {
         if ($request->isXMLHttpRequest()) {
-            $client = $this->getUser()->getClient();
-            $products = $this->manager->searchProducts($client,'all' , $request->request->get('search'))->getResult();
+            $building = $this->getUser()->getBuilding();
+            $products = $this->manager->searchProducts($building,'all' , $request->request->get('search'))->getResult();
 
             $result = [];
 
@@ -232,9 +232,9 @@ class ProductController extends AbstractController
      */
     public function pricing(Request $request, SerializerInterface $serializer, $category)
     {
-        $client = $this->getUser()->getClient();
+        $building = $this->getUser()->getBuilding();
 
-        $products = $this->manager->getProductsPricing($client, $category);
+        $products = $this->manager->getProductsPricing($building, $category);
 
         if (!$request->isXMLHttpRequest()) {
             return $this->render('customer/product/pricing.html.twig', [
@@ -283,7 +283,7 @@ class ProductController extends AbstractController
     {
         if ($request->isXMLHttpRequest()) {
             $form = $this->createForm(ProductType::class, $product, [
-                'client' => $product->getClient()
+                'building' => $product->getBuilding()
             ]);
 
             $form->remove('name');
@@ -309,12 +309,12 @@ class ProductController extends AbstractController
      */
     public function pricingSend(Request $request, MemberEmailManager $memberEmailManager, Sender $sender)
     {
-        $client = $this->getUser()->getClient();
+        $building = $this->getUser()->getBuilding();
         $pricing = $request->request->get('pricing');
-        $products = $this->manager->getProductsPricing($client, $pricing['category']);
+        $products = $this->manager->getProductsPricing($building, $pricing['category']);
 
         $body = $this->render('customer/product/email_list.html.twig', ['products' => $products]);
-        $log = $memberEmailManager->createLog($client, 'Product pricing', $body);
+        $log = $memberEmailManager->createLog($building, 'Product pricing', $body);
 
         $recipient = $memberEmailManager->createRecipient($log,null, $pricing['email']);
 

@@ -25,10 +25,10 @@ class RecipientRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('r');
 
-        $qb->select('r, clients')
-            ->leftJoin('r.client' ,'clients')
+        $qb->select('r, buildings')
+            ->leftJoin('r.building' ,'buildings')
             ->where('r.emailLog = :email')
-            ->orderBy('clients.name')
+            ->orderBy('buildings.name')
             ->setParameter('email', $emailLog);
 
         return $qb->getQuery()->getResult();

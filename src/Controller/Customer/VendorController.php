@@ -28,8 +28,8 @@ class VendorController extends AbstractController
      */
     public function index()
     {
-        $client = $this->getUser()->getClient();
-        $vendors = $this->manager->getClientVendors($client);
+        $building = $this->getUser()->getBuilding();
+        $vendors = $this->manager->getBuildingVendors($building);
 
         return $this->render('customer/vendor/list.html.twig', [
             'vendors' => $vendors
@@ -42,10 +42,10 @@ class VendorController extends AbstractController
      */
     public function add(Request $request)
     {
-        $client = $this->getUser()->getClient();
+        $building = $this->getUser()->getBuilding();
         
         $vendor = new Vendor();
-        $vendor->setClient($client);
+        $vendor->setBuilding($building);
         
         $form = $this->createForm(VendorType::class, $vendor);
         $form->handleRequest($request);
@@ -105,10 +105,10 @@ class VendorController extends AbstractController
      */
     public function search(Request $request, SerializerInterface $serializer)
     {
-        $client = $this->getUser()->getClient();
+        $building = $this->getUser()->getBuilding();
 
         $searchText = $request->request->get('searchText');
-        $vendors = $this->manager->searchVendors($client, $searchText);
+        $vendors = $this->manager->searchVendors($building, $searchText);
 
         $template = $this->render('customer/vendor/search.html.twig', ['vendors' => $vendors])->getContent();
 

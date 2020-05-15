@@ -2,7 +2,7 @@
 
 namespace App\Service\Payment;
 
-use App\Entity\Client\PaymentSettings;
+use App\Entity\Building\PaymentSettings;
 use App\Entity\Customer\Customer;
 use App\Manager\Payment\PaymentManager;
 use App\Service\Payment\Gateway\USAePayService;
@@ -38,7 +38,7 @@ class PaymentService
             $paymentMethods = PaymentSettings::getMethodsNames();
 
             if ($paymentMethods[$cart['method']] == 'card') {
-                $merchant = $this->manager->getUSAePayMerchant($customer->getClient());
+                $merchant = $this->manager->getUSAePayMerchant($customer->getBuilding());
 
                 if ($merchant) {
                     $transactionId = $this->USAePayService->customerPayment($merchant, $invoice, $cart['card']);

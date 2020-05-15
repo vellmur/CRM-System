@@ -4,8 +4,8 @@
 </head>
 <body>
 <div class="col-xs-12" style="border: 1px solid black;background-color: white;">
-    {% set client = invoice.member.client %}
-    {% set currency = client.currencyFormat %}
+    {% set building = invoice.member.building %}
+    {% set currency = building.currency|currencyFormat %}
 
     <div style="display: block;">
         {% if invoice.isPaid %}
@@ -41,8 +41,8 @@
 
         <div style="display: block;">
             <h4 style="font-weight: bold; font-size: 19px; margin-top: 10px; margin-bottom: 10px;">{{ 'invoice.title'|trans({}, 'labels') }}</h4>
-            {% if client.textEditor %}
-                {{ client.textEditor.marketDescription|raw }}
+            {% if building.textEditor %}
+                {{ building.textEditor.marketDescription|raw }}
 
                 <hr style="margin-top: 20px; margin-bottom: 20px; border: 0; border-top: 1px solid #ddd; box-sizing: content-box; height: 0; display: block; -webkit-margin-before: 0.5em; -webkit-margin-after: 0.5em; -webkit-margin-start: auto; -webkit-margin-end: auto;"/>
             {% endif %}
@@ -65,7 +65,7 @@
                             ? 'membership.renew.location.home_delivery'|trans({}, 'labels')|upper
                             : invoice.location.name }}</td>
                         <td style="vertical-align: middle; padding: 0 10px 10px 10px; line-height: 1.5384616; display: table-cell; border-collapse: collapse; border-spacing: 0;">{{ invoice.orderDate ? (invoice.orderDate|date('l')|lower)|trans({}, 'choices') }}</td>
-                        <td style="vertical-align: middle; padding: 0 10px 10px 10px; line-height: 1.5384616; display: table-cell; border-collapse: collapse; border-spacing: 0;">{{ invoice.orderDate ? invoice.orderDate|date(client.getTwigFormatDate()) }}</td>
+                        <td style="vertical-align: middle; padding: 0 10px 10px 10px; line-height: 1.5384616; display: table-cell; border-collapse: collapse; border-spacing: 0;">{{ invoice.orderDate ? invoice.orderDate|date(building.getTwigFormatDate()) }}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -116,7 +116,7 @@
                             {{ item.qty }}
                         </td>
                         <td style="vertical-align: middle; border: 1px solid #ddd; padding: 12px 20px; line-height: 1.5384616; border-top: 1px solid #ddd; transition: background-color ease-in-out 0.15s; display: table-cell; text-align: center; border-collapse: collapse; border-spacing: 0;">
-                            {{ item.weight ? item.weight ~ ' ' ~ client.weightName }}
+                            {{ item.weight ? item.weight ~ ' ' ~ building.weightName }}
                         </td>
                         <td style="vertical-align: middle; border: 1px solid #ddd; padding: 12px 20px; line-height: 1.5384616; border-top: 1px solid #ddd; transition: background-color ease-in-out 0.15s; display: table-cell; text-align: right; border-collapse: collapse; border-spacing: 0;">
                             {{ currency }}{{ item.amount|number_format(2, '.', ',') }}

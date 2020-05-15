@@ -8,7 +8,7 @@ use App\Entity\Customer\CustomerEmailNotify;
 use App\Entity\Customer\Email\AutoEmail;
 use App\Entity\Customer\Product;
 use App\Repository\MemberRepository;
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use App\Entity\Customer\Customer;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -25,16 +25,16 @@ class MemberManager
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param Customer $customer
      * @return Customer
      * @throws \Exception
      */
-    public function addCustomer(Client $client, Customer $customer)
+    public function addCustomer(Building $building, Customer $customer)
     {
         $now = new \DateTime();
         $customer->setToken($customer->getFullname() . $now->format('Y-m-d H:i:s'));
-        $customer->setClient($client);
+        $customer->setBuilding($building);
 
         $this->activateNotifications($customer);
 
@@ -45,21 +45,21 @@ class MemberManager
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param string|null $apartmentNumber
      * @return Apartment|object|null
      */
-    public function findOrCreateApartment(Client $client, ?string $apartmentNumber)
+    public function findOrCreateApartment(Building $building, ?string $apartmentNumber)
     {
         $rep = $this->em->getRepository(Apartment::class);
 
-        if ($apartmentNumber !== null && $apartment = $rep->findOneBy(['building' => $client, 'number' => trim($apartmentNumber)])) {
+        if ($apartmentNumber !== null && $apartment = $rep->findOneBy(['building' => $building, 'number' => trim($apartmentNumber)])) {
             /** @var Apartment $apartment */
             return $apartment;
         }
 
         $apartment = new Apartment();
-        $apartment->setBuilding($client);
+        $apartment->setBuilding($building);
 
         return $apartment;
     }
@@ -94,30 +94,30 @@ class MemberManager
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param $status
      * @param $search
      * @return \Doctrine\ORM\Query
      */
-    public function searchCustomers(Client $client, $status = 'all', $search = '')
+    public function searchCustomers(Building $building, $status = 'all', $search = '')
     {
         $customers = [];
 
         switch ($status) {
             case 'all':
-                $customers = $this->repository->searchByAll($client, $search);
+                $customers = $this->repository->searchByAll($building, $search);
                 break;
             case 'leads':
-                $customers = $this->repository->searchByLeads($client, $search);
+                $customers = $this->repository->searchByLeads($building, $search);
                 break;
             case 'contacts':
-                $customers = $this->repository->searchByContacts($client, $search);
+                $customers = $this->repository->searchByContacts($building, $search);
                 break;
             case 'members':
-                $customers = $this->repository->searchByMembers($client, $search);
+                $customers = $this->repository->searchByMembers($building, $search);
                 break;
             case 'patrons':
-                $customers = $this->repository->searchByPatrons($client, $search);
+                $customers = $this->repository->searchByPatrons($building, $search);
                 break;
         }
 
@@ -125,30 +125,30 @@ class MemberManager
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param $search
      * @return array
      */
-    public function searchByAllCustomers(Client $client, $search)
+    public function searchByAllCustomers(Building $building, $search)
     {
-        return $this->repository->searchByAll($client, $search)->getResult();
+        return $this->repository->searchByAll($building, $search)->getResult();
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param null $email
      * @param null $phone
      * @return object|null
      * @throws \Exception
      */
-    public function findOneByEmailOrPhone(Client $client, $email = null, $phone = null)
+    public function findOneByEmailOrPhone(Building $building, $email = null, $phone = null)
     {
         if ($email) {
-            $member = $this->repository->findOneBy(['client' => $client, 'email' => $email]);
+            $member = $this->repository->findOneBy(['building' => $building, 'email' => $email]);
         } else {
             $countryInfo = new CountryInfo();
-            $phone = $countryInfo->getUnmaskedPhone($phone, $client->getAddress()->getCountry());
-            $member = $this->repository->findOneBy(['client' => $client, 'phone' => $phone]);
+            $phone = $countryInfo->getUnmaskedPhone($phone, $building->getAddress()->getCountry());
+            $member = $this->repository->findOneBy(['building' => $building, 'phone' => $phone]);
         }
 
         return $member;
@@ -164,41 +164,41 @@ class MemberManager
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param $data
      * @return object|null
      * @throws \Exception
      */
-    public function findCustomerByData(Client $client, $data)
+    public function findCustomerByData(Building $building, $data)
     {
         $member = null;
 
         if (isset($data['id'])) {
             $member = $this->findOneById($data['id']);
         } elseif ($data['email'] || $data['phone']) {
-            $member = $this->findOneByEmailOrPhone($client, $data['email'], $data['phone']);
+            $member = $this->findOneByEmailOrPhone($building, $data['email'], $data['phone']);
         }
 
         return $member;
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param $emails
      * @return array
      */
-    public function findEmailsMatch(Client $client, $emails)
+    public function findEmailsMatch(Building $building, $emails)
     {
-        return $this->repository->findEmailsMatch($client, $emails);
+        return $this->repository->findEmailsMatch($building, $emails);
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @return mixed
      */
-    public function getCustomerProducts(Client $client)
+    public function getCustomerProducts(Building $building)
     {
-        return $this->em->getRepository(Product::class)->getCustomerProducts($client);
+        return $this->em->getRepository(Product::class)->getCustomerProducts($building);
     }
 
     /**

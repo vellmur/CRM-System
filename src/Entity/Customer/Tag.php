@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Class Tag
  *
- * @ORM\Table(name="client__tags", uniqueConstraints={@ORM\UniqueConstraint(name="tags_unique", columns={"client_id", "name"})}))
+ * @ORM\Table(name="building__tags", uniqueConstraints={@ORM\UniqueConstraint(name="tags_unique", columns={"building_id", "name"})}))
  * @ORM\Entity(repositoryClass="App\Repository\TagRepository")
  */
 class Tag
@@ -22,10 +22,10 @@ class Tag
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Client\Client", inversedBy="tags")
-     * @ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Building\Building", inversedBy="tags")
+     * @ORM\JoinColumn(name="building_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $client;
+    private $building;
 
     /**
      * @var string
@@ -58,17 +58,17 @@ class Tag
     /**
      * @return mixed
      */
-    public function getClient()
+    public function getBuilding()
     {
-        return $this->client;
+        return $this->building;
     }
 
     /**
-     * @param mixed $client
+     * @param mixed $building
      */
-    public function setClient($client)
+    public function setBuilding($building)
     {
-        $this->client = $client;
+        $this->building = $building;
     }
 
     /**

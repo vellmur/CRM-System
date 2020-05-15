@@ -365,9 +365,9 @@ class XmlApi
     // username to authenticate as
     private $user				= null;
 
-    // The HTTP Client to use
+    // The HTTP Building to use
 
-    private $http_client		= 'curl';
+    private $http_building		= 'curl';
 
     /**
      * Instantiate the XML-API Object
@@ -455,11 +455,11 @@ class XmlApi
             $this->protocol = "http";
         }
 
-        // Detemine what the default http client should be.
+        // Detemine what the default http building should be.
         if ( function_exists('curl_setopt') ) {
-            $this->http_client = "curl";
+            $this->http_building = "curl";
         } elseif ( ini_get('allow_url_fopen') ) {
-            $this->http_client = "fopen";
+            $this->http_building = "fopen";
         } else {
             throw new Exception('allow_url_fopen and curl are neither available in this PHP configuration');
         }
@@ -782,9 +782,9 @@ class XmlApi
     }
 
     /**
-     * Set the HTTP client to use
+     * Set the HTTP building to use
      *
-     * This class is capable of two types of HTTP Clients:
+     * This class is capable of two types of HTTP Buildings:
      *   - curl
      *   - fopen
      *
@@ -793,29 +793,29 @@ class XmlApi
      * This will default to fopen, however if allow_url_fopen is disabled inside of php.ini
      * it will switch to curl
      *
-     * @param string client The http client to use
-     * @see get_http_client()
+     * @param string building The http building to use
+     * @see get_http_building()
      */
 
-    public function set_http_client( $client )
+    public function set_http_building( $building )
     {
-        if ( ( $client != 'curl' ) && ( $client != 'fopen' ) ) {
-            throw new Exception('only curl and fopen and allowed http clients');
+        if ( ( $building != 'curl' ) && ( $building != 'fopen' ) ) {
+            throw new Exception('only curl and fopen and allowed http buildings');
         }
-        $this->http_client = $client;
+        $this->http_building = $building;
     }
 
     /**
-     * Get the HTTP Client in use
+     * Get the HTTP Building in use
      *
-     * This will return a string containing the HTTP client currently in use
+     * This will return a string containing the HTTP building currently in use
      *
-     * @see set_http_client()
+     * @see set_http_building()
      * @return string
      */
-    public function get_http_client()
+    public function get_http_building()
     {
-        return $this->http_client;
+        return $this->http_building;
     }
 
     /*
@@ -884,9 +884,9 @@ class XmlApi
 
         $response = NULL;
 
-        if ($this->http_client == 'curl') {
+        if ($this->http_building == 'curl') {
             $response = $this->curl_query($url, $args, $authstr);
-        } elseif ($this->http_client == 'fopen') {
+        } elseif ($this->http_building == 'fopen') {
             $response = $this->fopen_query($url, $args, $authstr);
         }
 

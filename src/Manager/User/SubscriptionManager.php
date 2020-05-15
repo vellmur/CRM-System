@@ -5,7 +5,7 @@ namespace App\Manager\User;
 use App\Entity\Customer\Merchant;
 use App\Entity\ModuleAccess;
 use App\Entity\Subscription;
-use App\Entity\Client;
+use App\Entity\Building;
 use App\Entity\PaymentMethod;
 use App\Entity\Transaction;
 use App\Repository\PaymentRepository;
@@ -37,17 +37,17 @@ class SubscriptionManager
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param Transaction $transaction
      * @param $usd
      * @return Subscription
      */
-    public function createPayment(Client $client, Transaction $transaction, $usd)
+    public function createPayment(Building $building, Transaction $transaction, $usd)
     {
         $payment = new Subscription();
 
         $payment->setTransaction($transaction);
-        $payment->setClient($client);
+        $payment->setBuilding($building);
         $payment->setAmount($usd);
 
         $this->em->persist($payment);
@@ -57,20 +57,20 @@ class SubscriptionManager
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param $modules
      * @param $paidPeriod
      */
-    public function setAccess(Client $client, $modules, $paidPeriod)
+    public function setAccess(Building $building, $modules, $paidPeriod)
     {
         // Get paid modules from last payment
         foreach ($modules as $moduleId)
         {
             $module = $this->em->getRepository(ModuleAccess::class)->find($moduleId);
-            // Get client access info for this module
-            $access = $this->em->getRepository(ModuleAccess::class)->findOrCreate($client, $module);
+            // Get building access info for this module
+            $access = $this->em->getRepository(ModuleAccess::class)->findOrCreate($building, $module);
 
-            // Count new client access period (Paid days + left days from previous payments)
+            // Count new building access period (Paid days + left days from previous payments)
             $paidPeriod += $this->countDaysLeft($access->getExpiredAt());
 
             $expiredAt = $this->getDateAfterDays($paidPeriod);
@@ -116,12 +116,12 @@ class SubscriptionManager
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @return bool|mixed
      */
-    public function getActiveTransaction(Client $client)
+    public function getActiveTransaction(Building $building)
     {
-        $transaction = $this->em->getRepository(Transaction::class)->getActiveTransaction($client);
+        $transaction = $this->em->getRepository(Transaction::class)->getActiveTransaction($building);
 
         return $transaction;
     }
@@ -136,13 +136,13 @@ class SubscriptionManager
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param $moduleId
      * @return \App\Entity\ModuleAccess
      */
-    public function getModuleAccess(Client $client, $moduleId)
+    public function getModuleAccess(Building $building, $moduleId)
     {
-        $access = $this->em->getRepository('ModuleAccess.php')->findOneBy(['client' => $client, 'module' => $moduleId]);
+        $access = $this->em->getRepository('ModuleAccess.php')->findOneBy(['building' => $building, 'module' => $moduleId]);
 
         return $access;
     }
@@ -174,11 +174,11 @@ class SubscriptionManager
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @return Merchant[]|array
      */
-    public function getMerchants(Client $client)
+    public function getMerchants(Building $building)
     {
-        return $this->em->getRepository(Merchant::class)->findBy(['client' => $client]);
+        return $this->em->getRepository(Merchant::class)->findBy(['building' => $building]);
     }
 }

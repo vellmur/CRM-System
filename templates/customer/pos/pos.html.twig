@@ -170,7 +170,7 @@
                                                     <td>{{ productEntity.name }}</td>
                                                     <td class="productQty">{{ product.qty is defined and product.qty|length ? product.qty }}</td>
                                                     <td><span class="productWeight">{{ product.weight is defined ? product.weight }}</span> {{ product.weight is defined and product.weight|length ? 'Kg' }}</td>
-                                                    <td>{{ app.user.client.currencyFormat }}<span class="productPrice">{{ (productEntity.price * productQty)|number_format(2, '.', ',') }}</span></td>
+                                                    <td>{{ app.user.building.currency|currencyFormat }}<span class="productPrice">{{ (productEntity.price * productQty)|number_format(2, '.', ',') }}</span></td>
                                                 </tr>
                                                 {% set total = total + (productEntity.price * productQty) %}
                                             {% endfor %}
@@ -179,7 +179,7 @@
                                             <td>{{ 'pos.total'|trans({}, 'labels')|upper }}</td>
                                             <td></td>
                                             <td></td>
-                                            <td>{{ app.user.client.currencyFormat }}<span id='total'>{{ total|number_format(2, '.', ',') }}</span></td>
+                                            <td>{{ app.user.building.currency|currencyFormat }}<span id='total'>{{ total|number_format(2, '.', ',') }}</span></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -200,7 +200,7 @@
                 <span class="text-semibold">{{ 'pos.orders'|trans({}, 'labels') }}:</span><br/> {{ summary.totalCount }}
             </div>
             <div class="col-md-6">
-                <span class="text-semibold">{{ 'pos.total'|trans({}, 'labels') }}:</span> <br/>{{ app.user.client.currencyFormat }}{{ summary.totalSum|number_format(2, '.', ',') }}
+                <span class="text-semibold">{{ 'pos.total'|trans({}, 'labels') }}:</span> <br/>{{ app.user.building.currency|currencyFormat }}{{ summary.totalSum|number_format(2, '.', ',') }}
             </div>
         </div>
     </div>
@@ -226,7 +226,7 @@
             {% for key, order in orders %}
                 <tr>
                     <td>{{ key + 1 }}</td>
-                    <td>{{ app.user.client.currencyFormat }}{{ order.total }}</td>
+                    <td>{{ app.user.building.currency|currencyFormat }}{{ order.total }}</td>
                     <td>{{ order.createdAt|date(app.user.getTwigFormatDate() ~ ' H:i:s') }}</td>
                     <td>
                         <a type="button" href="{{ path('pos_invoice', {'id': order.id}) }}" class="btn btn-icon btn-action" target="_blank"><i class="icon-file-text"></i></a>
@@ -246,7 +246,7 @@
             {% endfor %}
             <tr>
                 <td class="text-semibold">{{ orders|length }}</td>
-                <td class="text-semibold">{{ app.user.client.currencyFormat }}{{ total|number_format(2, '.', ',') }}</td>
+                <td class="text-semibold">{{ app.user.building.currency|currencyFormat }}{{ total|number_format(2, '.', ',') }}</td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -264,7 +264,7 @@
 
     {{ include ("modal/delete-modal.html.twig") }}
 
-    <input type="hidden" id="currency_format" value="{{ app.user.client.currencyFormat }}">
+    <input type="hidden" id="currency_format" value="{{ app.user.building.currency|currencyFormat }}">
     <input type="hidden" id="product_search_path" value="{{ path('pos_products_search') }}">
     <input type="hidden" id="customer_search_path" value="{{ path('pos_customers_search') }}">
 {% endblock %}

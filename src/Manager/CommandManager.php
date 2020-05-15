@@ -2,8 +2,8 @@
 
 namespace App\Manager;
 
-use App\Entity\Client\Client;
-use App\Entity\Client\ModuleAccess;
+use App\Entity\Building\Building;
+use App\Entity\Building\ModuleAccess;
 use Doctrine\ORM\EntityManagerInterface;
 
 class CommandManager
@@ -20,13 +20,13 @@ class CommandManager
     }
 
     /**
-     * @return Client[]|array|\object[]
+     * @return Building[]|array|\object[]
      */
-    public function getSoftwareClients()
+    public function getSoftwareBuildings()
     {
-        $clients = $this->em->getRepository(Client::class)->getSoftwareClients();
+        $buildings = $this->em->getRepository(Building::class)->getSoftwareBuildings();
 
-        return $clients;
+        return $buildings;
     }
 
     /**

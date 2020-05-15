@@ -78,15 +78,15 @@ class Sender
 
         $this->manager->saveSentEmail($email);
 
-        // Notification to a master about new client
-        $subject = 'New client join our software';
+        // Notification to a master about new building
+        $subject = 'New building join our software';
         $notifyEmails = ['valentinemurnik@gmail.com'];
 
         if (!$this->isDevelopment()) {
             array_push($notifyEmails, 'cf@blackdirt.org');
         }
 
-        $this->sendMail($this->softwareName, $notifyEmails, 'emails/new_client.html.twig', $subject, [
+        $this->sendMail($this->softwareName, $notifyEmails, 'emails/new_building.html.twig', $subject, [
             'user' => $user
         ]);
     }
@@ -163,7 +163,7 @@ class Sender
 
             // If type of email is activation, send CC (copy of email to a farm owner)
             if ($typeName == 'activation') {
-                $message->setTo($customer->getClient()->getEmail());
+                $message->setTo($customer->getBuilding()->getEmail());
                 $this->mailer->send($message);
             }
         } catch (Exception $exception) {
@@ -226,7 +226,7 @@ class Sender
         $subject = $this->translator->trans('membership.email_access.control', [], 'labels', $locale);
         $template = 'emails/member/send_control.html.twig';
 
-        $this->sendMail($customer->getClient()->getName(), $customer->getEmail(), $template, $subject, [
+        $this->sendMail($customer->getBuilding()->getName(), $customer->getEmail(), $template, $subject, [
             'member' => $customer->getFullname(),
             'email' => $customer->getEmail(),
             'link' => $profileLink
@@ -241,20 +241,20 @@ class Sender
      */
     public function sendCustomerInvoice(Invoice $invoice)
     {
-        $client = $invoice->getCustomer()->getClient();
+        $building = $invoice->getCustomer()->getBuilding();
 
         $template = $this->templating->render('customer/emails/renewal_invoice.html.twig', [
             'invoice' => $invoice
         ]);
 
-        $to = [$client->getEmail(), 'kinroom@blackdirt.org'];
+        $to = [$building->getEmail(), 'kinroom@blackdirt.org'];
 
         if ($invoice->getCustomer()->getEmail()) $to[] = $invoice->getCustomer()->getEmail();
 
         $message = $this->mailer->createMessage()
             ->setSubject($this->translator->trans('invoice.title', [], 'labels'))
-            ->setFrom([$this->mailerUser => $client->getName()])
-            ->setReplyTo([$client->getEmail() => $client->getName()])
+            ->setFrom([$this->mailerUser => $building->getName()])
+            ->setReplyTo([$building->getEmail() => $building->getName()])
             ->setTo($to)
             ->setBody($template, 'text/html');
 
@@ -282,7 +282,7 @@ class Sender
                 ->setSubject($subject)
                 ->setFrom([$this->mailerUser => $this->softwareName])
                 ->setReplyTo([$customer->getEmail() => $customer->getFullname() ? $customer->getFullname() : 'Contact'])
-                ->setTo([$customer->getClient()->getEmail(), 'kinroom@blackdirt.org'])
+                ->setTo([$customer->getBuilding()->getEmail(), 'kinroom@blackdirt.org'])
                 ->setBody($this->templating->render('emails/member/contact_send.html.twig', [
                     'subject' => $subject,
                     'customer' => $customer,
@@ -340,7 +340,7 @@ class Sender
      */
     public function sendTrackedMail(\Swift_Message $message, RecipientInterface $recipient)
     {
-        $recipientType = $recipient instanceof EmailRecipient ? 'customer' : 'client';
+        $recipientType = $recipient instanceof EmailRecipient ? 'customer' : 'building';
         $body = $this->addTracking($message->getBody(), $recipient->getId(), $recipientType);
 
         $message->setBody($body, 'text/html');
@@ -483,7 +483,7 @@ class Sender
         $subject = $this->softwareName . ' - Reset password';
 
         $this->sendMail($this->softwareName, $user->getEmail(), 'emails/password_resetting.email.twig', $subject, [
-            'client' => $user->getClient()->getName(),
+            'building' => $user->getBuilding()->getName(),
             'confirmationUrl' => $url
         ]);
     }

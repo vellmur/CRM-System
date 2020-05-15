@@ -70,12 +70,12 @@ class CheckBouncedEmailsCommand extends Command
                     }
                 }
 
-                $clientNum = isset($recipientsIds['client']) ? count($recipientsIds['client']) : 0;
+                $buildingNum = isset($recipientsIds['building']) ? count($recipientsIds['building']) : 0;
                 $customerNum = isset($recipientsIds['customer']) ? count($recipientsIds['customer']) : 0;
 
                 $output->writeln([
-                    'Number of bounced emails: ' . ($clientNum + $customerNum),
-                    'Client emails: ' . $clientNum,
+                    'Number of bounced emails: ' . ($buildingNum + $customerNum),
+                    'Building emails: ' . $buildingNum,
                     'Customer emails: ' . $customerNum,
                 ]);
 
@@ -98,15 +98,15 @@ class CheckBouncedEmailsCommand extends Command
                         }
                     }
 
-                    if (isset($recipientsIds['client'])) {
-                        $recipients = $this->em->getRepository(Recipient::class)->getRecipientsByIds($recipientsIds['client']);
+                    if (isset($recipientsIds['building'])) {
+                        $recipients = $this->em->getRepository(Recipient::class)->getRecipientsByIds($recipientsIds['building']);
 
                         if ($recipients) {
                             foreach ($recipients as $recipient) {
                                 $recipient->setIsDelivered(false);
                                 $recipient->setIsBounced(true);
 
-                                $output->writeln('Set client email as bounced. ID: ' . $recipient->getId());
+                                $output->writeln('Set building email as bounced. ID: ' . $recipient->getId());
                                 $updatedNum++;
                             }
 

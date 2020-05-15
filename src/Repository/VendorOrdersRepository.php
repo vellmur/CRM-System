@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use App\Entity\Customer\Vendor;
 use App\Entity\Customer\VendorOrder;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -20,15 +20,15 @@ class VendorOrdersRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $client
+     * @param $building
      * @return array
      */
-    public function getOrders($client)
+    public function getOrders($building)
     {
         $qb = $this->createQueryBuilder('v')
-            ->where('v.client = :client')
+            ->where('v.building = :building')
             ->orderBy('v.orderDate')
-            ->setParameter('client', $client);
+            ->setParameter('building', $building);
 
         return $qb->getQuery()->getResult();
     }

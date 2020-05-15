@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\Client\Notification;
+namespace App\Entity\Building\Notification;
 
 use App\Entity\User\User;
 use Doctrine\ORM\Mapping as ORM;
@@ -31,7 +31,7 @@ class NotifiableNotification implements \JsonSerializable
 
     /**
      * @var Notification
-     * @ORM\ManyToOne(targetEntity="App\Entity\Client\Notification\Notification", inversedBy="notifiableNotifications", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Building\Notification\Notification", inversedBy="notifiableNotifications", cascade={"persist"})
      */
     protected $notification;
 

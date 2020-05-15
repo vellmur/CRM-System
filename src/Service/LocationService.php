@@ -77,11 +77,11 @@ class LocationService
     /**
      * @return mixed
      */
-    public function getClientCountry()
+    public function getBuildingCountry()
     {
         $user = $this->token_storage->getToken()->getUser();
 
-        $country = is_object($user) ? $user->getClient()->getCountry() : null;
+        $country = is_object($user) ? $user->getBuilding()->getCountry() : null;
 
         return $country;
     }

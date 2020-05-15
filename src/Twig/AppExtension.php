@@ -3,6 +3,7 @@
 namespace App\Twig;
 
 use App\Entity\Customer\Customer;
+use App\Service\Localization\CurrencyFormatter;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\TwigFilter;
@@ -15,15 +16,19 @@ class AppExtension extends AbstractExtension
 
     private $router;
 
+    private $currencyFormatter;
+
     /**
      * AppExtension constructor.
      * @param TranslatorInterface $translator
      * @param UrlGeneratorInterface $router
+     * @param CurrencyFormatter $currencyFormatter
      */
-    public function __construct(TranslatorInterface $translator, UrlGeneratorInterface $router)
+    public function __construct(TranslatorInterface $translator, UrlGeneratorInterface $router, CurrencyFormatter $currencyFormatter)
     {
         $this->translator = $translator;
         $this->router = $router;
+        $this->currencyFormatter = $currencyFormatter;
     }
 
     /**
@@ -33,7 +38,8 @@ class AppExtension extends AbstractExtension
     {
         return [
             new TwigFilter('profile_link', [$this, 'getProfileLink']),
-            new TwigFilter('file_size', [$this, 'formatSizeUnits'])
+            new TwigFilter('file_size', [$this, 'formatSizeUnits']),
+            new TwigFilter('currencyFormat', [$this, 'currencyFormat'])
         ];
     }
 
@@ -94,5 +100,14 @@ class AppExtension extends AbstractExtension
     public function getName()
     {
         return 'app_extension';
+    }
+
+    /**
+     * @param int $id
+     * @return string|null
+     */
+    public function currencyFormat(?int $id)
+    {
+        return $id === null ? '$' : $this->currencyFormatter->getCurrencySymbolById($id);
     }
 }

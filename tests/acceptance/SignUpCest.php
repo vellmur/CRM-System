@@ -36,7 +36,7 @@ class SignUpCest
 
         $I->selectOption('fos_user_registration_form[language]', '1');
         $I->checkOption('#fos_user_registration_form_level_0');
-        $I->fillField('fos_user_registration_form[client][name]', $this->company);
+        $I->fillField('fos_user_registration_form[building][name]', $this->company);
         $I->fillField('fos_user_registration_form[email]', $this->email);
         $I->fillField('fos_user_registration_form[username]', $this->username);
         $I->fillField('fos_user_registration_form[plainPassword][first]', $this->password);
@@ -46,7 +46,7 @@ class SignUpCest
         $I->see('Dashboard');
 
         $I->canSeeInDatabase('user', ['username' => $this->username, 'email' => $this->email]);
-        $I->canSeeInDatabase('client', ['name' => $this->company]);
+        $I->canSeeInDatabase('building', ['name' => $this->company]);
     }
 
 
@@ -56,7 +56,7 @@ class SignUpCest
 
         $I->selectOption('fos_user_registration_form[language]', 'English');
         $I->checkOption('#fos_user_registration_form_level_1');
-        $I->fillField('fos_user_registration_form[client][name]', $this->company);
+        $I->fillField('fos_user_registration_form[building][name]', $this->company);
         $I->fillField('fos_user_registration_form[email]', $this->email);
         $I->fillField('fos_user_registration_form[username]', $this->username);
         $I->fillField('fos_user_registration_form[plainPassword][first]', $this->password);
@@ -66,7 +66,7 @@ class SignUpCest
         $I->see('Dashboard');
 
         $I->canSeeInDatabase('user', ['username' => $this->username, 'email' => $this->email]);
-        $I->canSeeInDatabase('client', ['name' => $this->company]);
+        $I->canSeeInDatabase('building', ['name' => $this->company]);
     }
 
 
@@ -76,7 +76,7 @@ class SignUpCest
 
         $I->selectOption('fos_user_registration_form[language]', 'Русский');
         $I->checkOption('#fos_user_registration_form_level_0');
-        $I->fillField('fos_user_registration_form[client][name]', $this->company);
+        $I->fillField('fos_user_registration_form[building][name]', $this->company);
         $I->fillField('fos_user_registration_form[email]', $this->email);
         $I->fillField('fos_user_registration_form[username]', $this->username);
         $I->fillField('fos_user_registration_form[plainPassword][first]', $this->password);
@@ -86,7 +86,7 @@ class SignUpCest
         $I->see('Панель управления');
 
         $I->canSeeInDatabase('user', ['username' => $this->username, 'email' => $this->email]);
-        $I->canSeeInDatabase('client', ['name' => $this->company]);
+        $I->canSeeInDatabase('building', ['name' => $this->company]);
     }
 
 
@@ -96,7 +96,7 @@ class SignUpCest
 
         $I->selectOption('fos_user_registration_form[language]', 'Espanol');
         $I->checkOption('#fos_user_registration_form_level_1');
-        $I->fillField('fos_user_registration_form[client][name]', $this->company);
+        $I->fillField('fos_user_registration_form[building][name]', $this->company);
         $I->fillField('fos_user_registration_form[email]', $this->email);
         $I->fillField('fos_user_registration_form[username]', $this->username);
         $I->fillField('fos_user_registration_form[plainPassword][first]', $this->password);
@@ -106,7 +106,7 @@ class SignUpCest
         $I->see('Panel De Control');
 
         $I->canSeeInDatabase('user', ['username' => $this->username, 'email' => $this->email]);
-        $I->canSeeInDatabase('client', ['name' => $this->company]);
+        $I->canSeeInDatabase('building', ['name' => $this->company]);
     }
 
 
@@ -143,7 +143,7 @@ class SignUpCest
         $I->see('Please enter a username');
         $I->see('Please enter a password');
 
-        $I->fillField('fos_user_registration_form[client][name]', $this->company);
+        $I->fillField('fos_user_registration_form[building][name]', $this->company);
         $I->click('Sign up');
 
         $I->dontSee('Please choose your language');
@@ -195,7 +195,7 @@ class SignUpCest
 
         $I->fillField('fos_user_registration_form[plainPassword][first]', $this->password);
         $I->fillField('fos_user_registration_form[plainPassword][second]', $this->password);
-        $I->fillField('fos_user_registration_form[client][name]', 'La Nay Ferme');
+        $I->fillField('fos_user_registration_form[building][name]', 'La Nay Ferme');
         $I->click('Sign up');
 
         $I->dontSee('Please choose your language');
@@ -206,7 +206,7 @@ class SignUpCest
         $I->dontSee("The entered passwords don't match");
         $I->see('This name is already taken.');
 
-        $I->fillField('fos_user_registration_form[client][name]', $this->company);
+        $I->fillField('fos_user_registration_form[building][name]', $this->company);
         $I->fillField('fos_user_registration_form[email]', 'cf@blackdirt.org');
         $I->click('Sign up');
 
@@ -237,6 +237,6 @@ class SignUpCest
         $I->see('Dashboard');
 
         $I->canSeeInDatabase('user', ['username' => $this->username, 'email' => $this->email]);
-        $I->canSeeInDatabase('client', ['name' => $this->company]);
+        $I->canSeeInDatabase('building', ['name' => $this->company]);
     }
 }*/

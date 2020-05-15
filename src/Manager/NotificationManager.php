@@ -2,9 +2,9 @@
 
 namespace App\Manager;
 
-use App\Entity\Client\Notification\NotifiableNotification;
-use App\Entity\Client\Notification\Notification;
-use App\Entity\Client\ModuleAccess;
+use App\Entity\Building\Notification\NotifiableNotification;
+use App\Entity\Building\Notification\Notification;
+use App\Entity\Building\ModuleAccess;
 use App\Entity\User\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;

@@ -54,15 +54,15 @@ class MailController extends AbstractController
             }
         }
 
-        $clients = $this->manager->getSoftwareClients();
+        $buildings = $this->manager->getSoftwareBuildings();
 
         foreach ($email->getRecipients() as $recipient) {
-            $recipients[] = $recipient->getClient()->getId();
+            $recipients[] = $recipient->getBuilding()->getId();
         }
 
         return $this->render('master/email/compose.html.twig', [
             'form' => $form->createView(),
-            'clients' => $clients,
+            'buildings' => $buildings,
             'recipients' => $recipients,
             'macros' => $this->manager->getMacrosList()
         ]);
@@ -79,16 +79,16 @@ class MailController extends AbstractController
         $status = $request->query->get('status');
         $text = $request->query->get('search');
 
-        $clients = $manager->searchClientsBy($status, $text);
+        $buildings = $manager->searchBuildingsBy($status, $text);
 
         $template = $this->render('master/email/recipients_list.html.twig', [
-            'clients' => $clients
+            'buildings' => $buildings
         ])->getContent();
 
         return new JsonResponse(
             $serializer->serialize([
                 'template' => $template,
-                'counter' => count($clients)
+                'counter' => count($buildings)
             ], 'json'), 200);
     }
 
@@ -98,10 +98,10 @@ class MailController extends AbstractController
      * @param Email|null $email
      * @return JsonResponse
      */
-    public function loadClients(PaginatorInterface $paginator, $page, Email $email = null)
+    public function loadBuildings(PaginatorInterface $paginator, $page, Email $email = null)
     {
-        $client = $this->getUser()->getClient();
-        $clients = $paginator->paginate($this->manager->searchClients($client), $page, 20);
+        $building = $this->getUser()->getBuilding();
+        $buildings = $paginator->paginate($this->manager->searchBuildings($building), $page, 20);
 
         $recipients = [];
 
@@ -112,7 +112,7 @@ class MailController extends AbstractController
         }
 
         $list = $this->renderView('master/email/recipients_list.html.twig', [
-            'clients' => $clients,
+            'buildings' => $buildings,
             'recipients' => $recipients
         ]);
 
@@ -176,7 +176,7 @@ class MailController extends AbstractController
             'php',
             'bin/console',
             'app:send-composed-email',
-            $email->getId(), 'client'
+            $email->getId(), 'building'
         ]);
 
         $process->setWorkingDirectory(getcwd() . "/../");
@@ -202,7 +202,7 @@ class MailController extends AbstractController
      */
     public function sendingError(Email $email, Sender $sender)
     {
-        $errorMsg = 'BDS cant send client email with id: ' . $email->getId()
+        $errorMsg = 'BDS cant send building email with id: ' . $email->getId()
             . '. Reason: Wait too long on response from sending progress. Maybe supervisord doesnt work.';
 
         $sender->sendExceptionToDeveloper($errorMsg);

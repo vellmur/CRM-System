@@ -3,7 +3,7 @@
 namespace App\Form\Security;
 
 use App\Entity\User\User;
-use App\Form\Client\ClientNameType;
+use App\Form\Building\BuildingNameType;
 use App\Form\Type\LocaleType;
 use EWZ\Bundle\RecaptchaBundle\Form\Type\EWZRecaptchaType;
 use EWZ\Bundle\RecaptchaBundle\Validator\Constraints\IsTrue;
@@ -63,7 +63,7 @@ class RegistrationType extends AbstractType
                     ]
                 ]
             ])
-            ->add('client', ClientNameType::class, [
+            ->add('building', BuildingNameType::class, [
                 'mapped' => false,
                 'validation_groups' => 'register_validation',
                 'constraints' => [

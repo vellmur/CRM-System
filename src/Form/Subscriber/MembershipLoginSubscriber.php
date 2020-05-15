@@ -47,7 +47,7 @@ class MembershipLoginSubscriber implements EventSubscriberInterface
             $members = $this->em->getRepository(Customer::class)->findBy(['email' => $data['email']]);
 
             if (count($members) > 1) {
-                $this->addClients($form, $members);
+                $this->addBuildings($form, $members);
             }
         }
     }
@@ -56,16 +56,16 @@ class MembershipLoginSubscriber implements EventSubscriberInterface
      * @param FormInterface $form
      * @param $members
      */
-    public function addClients(FormInterface $form, $members)
+    public function addBuildings(FormInterface $form, $members)
     {
-        $clients = [];
+        $buildings = [];
 
         foreach ($members as $member) {
-            $clients[$member->getClient()->getName()] = $member->getClient()->getId();
+            $buildings[$member->getBuilding()->getName()] = $member->getBuilding()->getId();
         }
 
-        $form->add('client', ChoiceType::class, [
-            'label' => $this->translator->trans('membership.client', [], 'labels'),
+        $form->add('building', ChoiceType::class, [
+            'label' => $this->translator->trans('membership.building', [], 'labels'),
             'label_attr' => [
                 'class' => 'control-label'
             ],
@@ -73,7 +73,7 @@ class MembershipLoginSubscriber implements EventSubscriberInterface
                 'data-empty' => 'false',
                 'class' => 'select',
             ],
-            'choices' => $clients,
+            'choices' => $buildings,
             'placeholder' => '',
             'constraints' => [
                 new NotBlank()

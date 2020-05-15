@@ -41,9 +41,9 @@ class POSController extends AbstractController
      */
     public function dashboard(SerializerInterface $serializer)
     {
-        $client = $this->getUser()->getClient();
-        $statistics = $this->manager->getSalesStatistics($client);
-        $monthSales = $this->manager->getMonthSales($client);
+        $building = $this->getUser()->getBuilding();
+        $statistics = $this->manager->getSalesStatistics($building);
+        $monthSales = $this->manager->getMonthSales($building);
 
         return $this->render('customer/pos/dashboard.html.twig', [
             'stats' => $serializer->serialize($statistics, 'json'),
@@ -59,15 +59,15 @@ class POSController extends AbstractController
      */
     public function entry(Request $request, PaginatorInterface $paginator)
     {
-        $client = $this->getUser()->getClient();
+        $building = $this->getUser()->getBuilding();
 
         $order = new POS();
-        $order->setClient($client);
+        $order->setBuilding($building);
 
         // Pre-set customer by email or phone if found
         if ($request->request->get('pos') && $request->request->get('pos')['customer']) {
             $customerData = $request->request->get('pos')['customer'];
-            $order->setCustomer($this->memberManager->findCustomerByData($client, $customerData));
+            $order->setCustomer($this->memberManager->findCustomerByData($building, $customerData));
         }
 
         $form = $this->createForm(POSType::class, $order);
@@ -75,12 +75,12 @@ class POSController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $order->getCustomer()->setClient($client);
+            $order->getCustomer()->setBuilding($building);
 
             // Create customer if he is not created yet
             if (!$order->getCustomer()->getId() && $order->getCustomer()->getFullname()) {
                 $order->getCustomer()->setIsLead(false);
-                $customer = $this->memberManager->addCustomer($client, $order->getCustomer());
+                $customer = $this->memberManager->addCustomer($building, $order->getCustomer());
                 $order->setCustomer($customer);
             } elseif (!$order->getCustomer()->getFullname()) {
                 $order->setCustomer(null);
@@ -95,10 +95,10 @@ class POSController extends AbstractController
             }
         }
 
-        $query = $this->manager->getPOSOrders($client, 'today');
+        $query = $this->manager->getPOSOrders($building, 'today');
         $orders = $paginator->paginate($query, $request->query->getInt('page', 1), 20);
 
-        $summary = $this->manager->getPOSSummary($client, 'today');
+        $summary = $this->manager->getPOSSummary($building, 'today');
 
         return $this->render('customer/pos/pos.html.twig', [
             'form' => $form->createView(),
@@ -114,10 +114,10 @@ class POSController extends AbstractController
     public function searchCustomers(Request $request)
     {
         if ($request->isXMLHttpRequest()) {
-            $client = $this->getUser()->getClient();
+            $building = $this->getUser()->getBuilding();
             $search = $request->request->get('search');
 
-            $customers = $this->manager->searchByCustomers($client, $search);
+            $customers = $this->manager->searchByCustomers($building, $search);
 
             $result = [];
 
@@ -145,10 +145,10 @@ class POSController extends AbstractController
     public function searchPOSProducts(Request $request)
     {
         if ($request->isXMLHttpRequest()) {
-            $client = $this->getUser()->getClient();
+            $building = $this->getUser()->getBuilding();
             $search = $request->request->get('search');
 
-            $products = $this->manager->searchPosProducts($client, $search);
+            $products = $this->manager->searchPosProducts($building, $search);
 
             $result = [];
 
@@ -175,11 +175,11 @@ class POSController extends AbstractController
      */
     public function orders(Request $request, PaginatorInterface $paginator, $period)
     {
-        $client = $this->getUser()->getClient();
+        $building = $this->getUser()->getBuilding();
 
-        $query = $this->manager->getPOSOrders($client, $period);
+        $query = $this->manager->getPOSOrders($building, $period);
         $orders = $paginator->paginate($query, $request->query->getInt('page', 1), 20);
-        $summary = $this->manager->getPOSSummary($client, $period);
+        $summary = $this->manager->getPOSSummary($building, $period);
 
         return $this->render('customer/pos/orders.html.twig', [
             'orders' => $orders,

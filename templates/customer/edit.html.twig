@@ -28,7 +28,7 @@
 
         if ($addressFields[0]) {
             // Enable google address search autocomplete
-            let country = '{{ app.user.client.address and app.user.client.address.country ? app.user.client.address.country : null }}';
+            let country = '{{ app.user.building.address and app.user.building.address.country ? app.user.building.address.country : null }}';
             initAutocomplete($addressFields, country);
         }
     </script>

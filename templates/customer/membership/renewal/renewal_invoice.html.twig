@@ -1,7 +1,7 @@
 <div class="col-md-8 col-md-offset-2 invoice">
     <div class="row invoice-header">
-        {% set client = invoice.member.client %}
-        {% set currency = client.currencyFormat %}
+        {% set building = invoice.member.building %}
+        {% set currency = building.currency|currencyFormat %}
 
         {% if invoice.isPaid %}
             <div class="bg-success">
@@ -34,8 +34,8 @@
 
         <div class="row">
             <h4 class="text-semibold">{{ 'invoice.title'|trans({}, 'labels') }}</h4>
-            {% if client.textEditor %}
-                {{ client.textEditor.marketDescription|raw }}
+            {% if building.textEditor %}
+                {{ building.textEditor.marketDescription|raw }}
                 <hr/>
             {% endif %}
 
@@ -55,7 +55,7 @@
                             ? 'membership.renew.location.home_delivery'|trans({}, 'labels')|upper
                             : invoice.location.name }}</td>
                         <td>{{ invoice.orderDate ? (invoice.orderDate|date('l')|lower)|trans({}, 'choices') }}</td>
-                        <td>{{ invoice.orderDate ? invoice.orderDate|date(client.getTwigFormatDate()) }}</td>
+                        <td>{{ invoice.orderDate ? invoice.orderDate|date(building.getTwigFormatDate()) }}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -100,7 +100,7 @@
                         <tr>
                             <td>{{ item.share ? item.share.name : item.product.name }}</td>
                             <td class="text-center">{{ item.qty }}</td>
-                            <td class="text-center">{{ item.weight ? item.weight ~ ' ' ~ client.weightName }}</td>
+                            <td class="text-center">{{ item.weight ? item.weight ~ ' ' ~ building.weightName }}</td>
                             <td class="text-right">{{ currency }}{{ item.amount|number_format(2, '.', ',') }}</td>
                         </tr>
                     {% endfor %}

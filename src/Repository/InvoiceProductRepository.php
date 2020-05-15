@@ -18,12 +18,12 @@ class InvoiceProductRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $client
+     * @param $building
      * @return mixed
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function countRevenue($client)
+    public function countRevenue($building)
     {
         $qb = $this->createQueryBuilder('p');
 
@@ -36,11 +36,11 @@ class InvoiceProductRepository extends ServiceEntityRepository
             )
             ->innerJoin('p.invoice', 'invoice')
             ->leftJoin('p.product', 'product')
-            ->where('product.client = :client')
+            ->where('product.building = :building')
             ->andWhere('invoice.isPaid = 1')
             ->orderBy('productName, p.createdAt')
             ->groupBy('productName, year, month, day')
-            ->setParameter('client', $client);
+            ->setParameter('building', $building);
 
         $result = $qb->getQuery()->getResult();
 

@@ -56,8 +56,8 @@ class RegistrationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $clientName = $form->get('client')->get('name')->getData();
-                $this->manager->register($user, $clientName, $request->getSession()->get('ref'));
+                $buildingName = $form->get('building')->get('name')->getData();
+                $this->manager->register($user, $buildingName, $request->getSession()->get('ref'));
 
                 $event = new RegistrationSuccessEvent($user);
                 $this->dispatcher->dispatch($event);

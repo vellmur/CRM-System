@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Form\Client;
+namespace App\Form\Building;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use App\Form\Subscriber\TimezoneSubscriber;
 use App\Form\Type\CurrencyType;
 use Symfony\Component\Form\AbstractType;
@@ -10,12 +10,12 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class ClientType extends AbstractType
+class BuildingType extends AbstractType
 {
     public $timezoneSubscriber;
 
     /**
-     * ClientType constructor.
+     * BuildingType constructor.
      * @param TimezoneSubscriber $timezoneSubscriber
      */
     public function __construct(TimezoneSubscriber $timezoneSubscriber)
@@ -64,7 +64,7 @@ class ClientType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Client::class,
+            'data_class' => Building::class,
             'validation_groups' => ['register_validation', 'profile_validation'],
             'translation_domain' => 'labels'
         ]);

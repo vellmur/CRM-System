@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\Client;
+namespace App\Form\Building;
 
 use App\Form\Subscriber\SubscriptionSubscriber;
 use Symfony\Component\Form\AbstractType;

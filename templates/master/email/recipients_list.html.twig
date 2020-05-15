@@ -1,12 +1,12 @@
-{% for key, client in clients %}
+{% for key, building in buildings %}
     <tr {{ key is not divisible by (2) ? "class='row-style'" }}>
-        <td>{{ client.name }}</td>
-        <td>{{ client.email }}</td>
+        <td>{{ building.name }}</td>
+        <td>{{ building.email }}</td>
         <td>
             <label class="checkbox-info" for="email_recipients_{{ key }}">
-                <input type="checkbox" data-name="{{ client.name }}" id="email_recipients_{{ key }}"
-                       name="email[recipients][]" value="{{ client.id }}" class="styled"
-                       {{ recipients is defined and (client.id in recipients) ? "checked" }}>
+                <input type="checkbox" data-name="{{ building.name }}" id="email_recipients_{{ key }}"
+                       name="email[recipients][]" value="{{ building.id }}" class="styled"
+                       {{ recipients is defined and (building.id in recipients) ? "checked" }}>
             </label>
         </td>
     </tr>

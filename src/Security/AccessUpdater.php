@@ -2,7 +2,7 @@
 
 namespace App\Security;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use Doctrine\ORM\EntityManagerInterface;
 
 class AccessUpdater
@@ -24,21 +24,21 @@ class AccessUpdater
      *
      * Status is based on current status and amount of days left to the module expiration date.
      *
-     * PENDING: is the trial period. Trial period defines by TRIAL_DAYS. Sets first time after client Sign up.
-     * ACTIVE: Client module is in ACTIVE status, if to the expiration date left more than TRIAL_DAYS.
+     * PENDING: is the trial period. Trial period defines by TRIAL_DAYS. Sets first time after building Sign up.
+     * ACTIVE: Building module is in ACTIVE status, if to the expiration date left more than TRIAL_DAYS.
      * RENEWAL: Module is in RENEWAL status, if module is ACTIVE and to the expiration date left less than TRIAL_DAYS.
-     * LAPSED: Client module is in LAPSED status, if to the expiration date left 0 days.
+     * LAPSED: Building module is in LAPSED status, if to the expiration date left 0 days.
      *
-     * @param Client $client
+     * @param Building $building
      * @return bool
      * @throws \Exception
      */
-    public function updateModulesAccess(Client $client)
+    public function updateModulesAccess(Building $building)
     {
         // Flag for saving result of changing statuses
         $isAccessUpdated = false;
 
-        foreach ($client->getAccesses() as $access) {
+        foreach ($building->getAccesses() as $access) {
             $daysLeft = $this->countDaysLeft($access->getExpiredAt());
 
             // Is module in trial mode and its not expired yet, nothing to do

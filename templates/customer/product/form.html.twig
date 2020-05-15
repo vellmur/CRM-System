@@ -199,8 +199,8 @@
         });
 
         {% if form.tag.vars.attr['data-tags']|length %}
-            var clientTags = '{{ form.tag.vars.attr['data-tags'] }}',
-                tags = clientTags.split(',');
+            var buildingTags = '{{ form.tag.vars.attr['data-tags'] }}',
+                tags = buildingTags.split(',');
 
             $('#load-tags').on('click', function() {
                 $productTag.tokenfield('setTokens', tags);

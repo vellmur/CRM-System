@@ -14,7 +14,7 @@ class EnvironmentService
     }
 
     /**
-     * Returns information about client browser
+     * Returns information about building browser
      * @return array
      */
     public function getBrowser()
@@ -95,7 +95,7 @@ class EnvironmentService
     }
 
     /**
-     * Returns client IP address
+     * Returns building IP address
      * @return mixed
      */
     public function getRealIpAddress()

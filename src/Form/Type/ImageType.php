@@ -2,7 +2,7 @@
 
 namespace App\Form\Type;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use App\Entity\Media\Image;
 use App\Repository\ImageRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -24,17 +24,17 @@ class ImageType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        /** @var Client $client */
-        $client = $this->security->getUser()->getClient();
+        /** @var Building $building */
+        $building = $this->security->getUser()->getBuilding();
 
         $resolver->setDefaults([
             'required' => false,
             'translation_domain' => 'labels',
             'class' => Image::class,
-            'query_builder' => function (ImageRepository $er) use ($client) {
+            'query_builder' => function (ImageRepository $er) use ($building) {
                 return $er->createQueryBuilder('image')
-                    ->where('image.client = :client')
-                    ->setParameter('client', $client === null ? null : $client->getId());
+                    ->where('image.building = :building')
+                    ->setParameter('building', $building === null ? null : $building->getId());
             },
             'attr' => [
                 'class' => 'hidden',

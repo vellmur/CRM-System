@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\Client;
+namespace App\Entity\Building;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -8,7 +8,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="client__affiliate", uniqueConstraints={@ORM\UniqueConstraint(name="affiliate_unique", columns={"name", "email"})})
+ * @ORM\Table(name="building__affiliate", uniqueConstraints={@ORM\UniqueConstraint(name="affiliate_unique", columns={"name", "email"})})
  * @ORM\Entity(repositoryClass="App\Repository\AffiliateRepository")
  * @UniqueEntity(fields={"email"}, errorPath="email", message="validation.form.unique")
  */
@@ -30,10 +30,10 @@ class Affiliate
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Client\Client", inversedBy="affiliate")
-     * @ORM\JoinColumn(name="client_id", referencedColumnName="id", nullable=true)
+     * @ORM\OneToOne(targetEntity="App\Entity\Building\Building", inversedBy="affiliate")
+     * @ORM\JoinColumn(name="building_id", referencedColumnName="id", nullable=true)
      */
-    private $client;
+    private $building;
 
     /**
      * @var string
@@ -56,7 +56,7 @@ class Affiliate
     private $referralCode;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Client\Referral", mappedBy="affiliate")
+     * @ORM\OneToMany(targetEntity="App\Entity\Building\Referral", mappedBy="affiliate")
      */
     private $referrals;
 
@@ -79,12 +79,12 @@ class Affiliate
     }
 
     /**
-     * @param $client
+     * @param $building
      * @return $this
      */
-    public function setClient($client)
+    public function setBuilding($building)
     {
-        $this->client = $client;
+        $this->building = $building;
 
         return $this;
     }
@@ -92,9 +92,9 @@ class Affiliate
     /**
      * @return string
      */
-    public function getClient()
+    public function getBuilding()
     {
-        return $this->client;
+        return $this->building;
     }
 
     /**

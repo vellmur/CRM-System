@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Entity\Client;
+namespace App\Entity\Building;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Payment
  *
- * @ORM\Table(name="client__subscription")
+ * @ORM\Table(name="building__subscription")
  * @ORM\Entity(repositoryClass="App\Repository\PaymentRepository")
  */
 class Subscription
@@ -27,10 +27,10 @@ class Subscription
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Client\Client", inversedBy="subscriptions")
-     * @ORM\JoinColumn(name="client_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Building\Building", inversedBy="subscriptions")
+     * @ORM\JoinColumn(name="building_id", referencedColumnName="id", nullable=false)
      */
-    private $client;
+    private $building;
 
     /**
      * @var int
@@ -60,12 +60,12 @@ class Subscription
     }
 
     /**
-     * @param $client
+     * @param $building
      * @return $this
      */
-    public function setClient($client)
+    public function setBuilding($building)
     {
-        $this->client = $client;
+        $this->building = $building;
 
         return $this;
     }
@@ -73,9 +73,9 @@ class Subscription
     /**
      * @return mixed
      */
-    public function getClient()
+    public function getBuilding()
     {
-        return $this->client;
+        return $this->building;
     }
 
 

@@ -16,14 +16,14 @@ class MasterService
     /**
      * @return array
      */
-    public function countClientsStats()
+    public function countBuildingsStats()
     {
-        $stats['total'] = $this->manager->countTotalClients();
-        $stats['today'] = $this->manager->countNewClientsByDays(0);
-        $stats['week'] = $this->manager->countNewClientsByDays(7);
-        $stats['month'] = $this->manager->countNewClientsByDays(30);
-        $stats['confirmed'] = $this->manager->countClientsByActivation(true);
-        $stats['unconfirmed'] = $this->manager->countClientsByActivation(false);
+        $stats['total'] = $this->manager->countTotalBuildings();
+        $stats['today'] = $this->manager->countNewBuildingsByDays(0);
+        $stats['week'] = $this->manager->countNewBuildingsByDays(7);
+        $stats['month'] = $this->manager->countNewBuildingsByDays(30);
+        $stats['confirmed'] = $this->manager->countBuildingsByActivation(true);
+        $stats['unconfirmed'] = $this->manager->countBuildingsByActivation(false);
         $stats['visits'] = $this->manager->countLandingViews();
 
         return $stats;

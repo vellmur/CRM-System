@@ -2,7 +2,7 @@
 
 namespace App\Manager;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use App\Entity\Customer\Email\EmailRecipient;
 use App\Entity\Email\AutomatedEmailInterface;
 use App\Entity\Email\RecipientInterface;
@@ -105,25 +105,25 @@ class EmailManager
 
     /**
      * @param Email $email
-     * @param array $clients
+     * @param array $buildings
      * @param bool $isDraft
      * @return Email
      */
-    public function saveEmail(Email $email, array $clients = [], bool $isDraft = true)
+    public function saveEmail(Email $email, array $buildings = [], bool $isDraft = true)
     {
         // Remove recipients that now not in a list and remove already added recipients from the list
         foreach ($email->getRecipients() as $key => $recipient) {
-            if (in_array($recipient->getClient()->getId(), $clients)) {
-                $clients = array_diff($clients, [$recipient->getClient()->getId()]);
+            if (in_array($recipient->getBuilding()->getId(), $buildings)) {
+                $buildings = array_diff($buildings, [$recipient->getBuilding()->getId()]);
             } else {
                 $email->removeRecipient($recipient);
             }
         }
 
-        foreach ($clients as $clientId) {
-            /** @var Client $client */
-            $client = $this->em->find(Client::class, $clientId);
-            $user = $client->getUsers()[0];
+        foreach ($buildings as $buildingId) {
+            /** @var Building $building */
+            $building = $this->em->find(Building::class, $buildingId);
+            $user = $building->getUsers()[0];
             $recipient = $this->addEmailRecipient($email, $user);
 
             $this->em->persist($recipient);
@@ -168,8 +168,8 @@ class EmailManager
         $value = '';
 
         switch ($macros) {
-            case 'ClientName':
-                $value = $user->getClient()->getName();
+            case 'BuildingName':
+                $value = $user->getBuilding()->getName();
                 break;
             case 'ConfirmationLink':
                 if (!$user->isEnabled()) {
@@ -190,18 +190,18 @@ class EmailManager
     /**
      * @return mixed
      */
-    public function getSoftwareClients()
+    public function getSoftwareBuildings()
     {
-        return $this->em->getRepository(Client::class)->getSoftwareClients();
+        return $this->em->getRepository(Building::class)->getSoftwareBuildings();
     }
 
     /**
      * @param $text
      * @return array
      */
-    public function searchClients($text)
+    public function searchBuildings($text)
     {
-        return $this->em->getRepository(Client::class)->searchClientsByAllFields($text);
+        return $this->em->getRepository(Building::class)->searchBuildingsByAllFields($text);
     }
 
     /**
@@ -257,8 +257,8 @@ class EmailManager
     public static function getMacrosList()
     {
         return [
-            'ClientData' => [
-                'ClientName' => 'Name',
+            'BuildingData' => [
+                'BuildingName' => 'Name',
                 'ConfirmationLink' => 'Confirmation link'
             ]
         ];
@@ -437,7 +437,7 @@ class EmailManager
     {
         $recipient = new Recipient();
         $recipient->setUser($user);
-        $recipient->setEmailAddress($user->getClient()->getEmail());
+        $recipient->setEmailAddress($user->getBuilding()->getEmail());
 
         $email->addRecipient($recipient);
 
@@ -450,7 +450,7 @@ class EmailManager
      */
     public function saveClickedEmail(string $id, string $type)
     {
-        $recipient = $type == 'client' ? $this->em->find(Recipient::class, $id)
+        $recipient = $type == 'building' ? $this->em->find(Recipient::class, $id)
             : $this->em->find(EmailRecipient::class, $id);
 
         if ($recipient && !$recipient->isClicked()) {

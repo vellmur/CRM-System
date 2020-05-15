@@ -2,7 +2,7 @@
 
 namespace App\Controller\Master;
 
-use App\Entity\Client\Referral;
+use App\Entity\Building\Referral;
 use App\Manager\AffiliateManager;
 use App\Manager\ImageManager;
 use App\Manager\MasterManager;
@@ -15,11 +15,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use App\Entity\Client\Affiliate;
-use App\Form\Client\AffiliateType;
-use App\Entity\Client\Client;
-use App\Form\Client\AccessType;
-use App\Entity\Client\ModuleAccess;
+use App\Entity\Building\Affiliate;
+use App\Form\Building\AffiliateType;
+use App\Entity\Building\Building;
+use App\Form\Building\AccessType;
+use App\Entity\Building\ModuleAccess;
 
 /**
  * Class MasterController
@@ -52,14 +52,14 @@ class MasterController extends AbstractController
      */
     public function dashboard()
     {
-        $clients = $this->manager->getSoftwareClients();
-        $lapsedClients = $this->manager->getLapsedClients($clients);
-        $stats = $this->service->countClientsStats();
+        $buildings = $this->manager->getSoftwareBuildings();
+        $lapsedBuildings = $this->manager->getLapsedBuildings($buildings);
+        $stats = $this->service->countBuildingsStats();
 
         return $this->render('master/dashboard.html.twig', [
-            'clients' => $clients,
+            'buildings' => $buildings,
             'stats' => $stats,
-            'lapsedClients' => $lapsedClients
+            'lapsedBuildings' => $lapsedBuildings
         ]);
     }
 
@@ -67,17 +67,17 @@ class MasterController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
-    public function filterClients(Request $request)
+    public function filterBuildings(Request $request)
     {
         $status = $request->query->get('status');
         $text = $request->query->get('search');
 
-        $clients = $this->manager->searchClientsBy($status, $text);
-        $lapsedClients = $this->manager->getLapsedClients($clients);
+        $buildings = $this->manager->searchBuildingsBy($status, $text);
+        $lapsedBuildings = $this->manager->getLapsedBuildings($buildings);
 
-        $template = $this->render('master/client/search.html.twig', [
-            'clients' => $clients,
-            'lapsedClients' => $lapsedClients
+        $template = $this->render('master/building/search.html.twig', [
+            'buildings' => $buildings,
+            'lapsedBuildings' => $lapsedBuildings
         ])->getContent();
 
         return new JsonResponse(['template' => $template]);
@@ -168,15 +168,15 @@ class MasterController extends AbstractController
     /**
      * @return Response
      */
-    public function clients()
+    public function buildings()
     {
-        $clients = $this->manager->getSoftwareClients();
-        $lapsedClients = $this->manager->getLapsedClients($clients);
+        $buildings = $this->manager->getSoftwareBuildings();
+        $lapsedBuildings = $this->manager->getLapsedBuildings($buildings);
 
-        return $this->render('master/client/list.html.twig', [
-            'clients' => $clients,
-            'lapsedClients' => $lapsedClients,
-            'clientsSummary' => []
+        return $this->render('master/building/list.html.twig', [
+            'buildings' => $buildings,
+            'lapsedBuildings' => $lapsedBuildings,
+            'buildingsSummary' => []
         ]);
     }
 
@@ -184,53 +184,53 @@ class MasterController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function searchClients(Request $request)
+    public function searchBuildings(Request $request)
     {
-        $clients = $this->manager->searchClients($request->query->get('search'));
-        $lapsedClients = $this->manager->getLapsedClients($clients);
+        $buildings = $this->manager->searchBuildings($request->query->get('search'));
+        $lapsedBuildings = $this->manager->getLapsedBuildings($buildings);
 
-        $template = $this->render('master/client/search.html.twig', [
-            'clients' => $clients,
-            'lapsedClients' => $lapsedClients
+        $template = $this->render('master/building/search.html.twig', [
+            'buildings' => $buildings,
+            'lapsedBuildings' => $lapsedBuildings
         ])->getContent();
 
         return new JsonResponse([
             'template' => $template,
-            'counter' => count($clients)
+            'counter' => count($buildings)
         ]);
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @return Response
      */
-    public function editClient(Client $client)
+    public function editBuilding(Building $building)
     {
         $formsArray = [];
 
-        foreach ($client->getAccesses() as $access) {
+        foreach ($building->getAccesses() as $access) {
             array_push($formsArray, $this->createForm(AccessType::class, $access, [
                 'date_format' => $this->getUser()->getDateFormatName()
             ])->createView());
         }
         
-        return $this->render('master/client/edit_client.html.twig', [
+        return $this->render('master/building/edit_building.html.twig', [
             'modules' => ModuleAccess::MODULES,
             'forms' => $formsArray,
-            'client' => $client,
-            'users' => $this->manager->getClientUsers($client)
+            'building' => $building,
+            'users' => $this->manager->getBuildingUsers($building)
         ]);
     }
 
     /**
      * @param Request $request
-     * @param Client $client
+     * @param Building $building
      * @return JsonResponse|Response
      */
-    public function deleteClient(Request $request, Client $client)
+    public function deleteBuilding(Request $request, Building $building)
     {
-        if ($request->isXMLHttpRequest() && $client) {
-            $this->manager->deleteClient($client);
+        if ($request->isXMLHttpRequest() && $building) {
+            $this->manager->deleteBuilding($building);
 
             return new JsonResponse(['code' => 202, 'status' => 'success']);
 
@@ -257,8 +257,8 @@ class MasterController extends AbstractController
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $this->manager->updateClientAccess($access);
-                $accessUpdater->updateModulesAccess($access->getClient());
+                $this->manager->updateBuildingAccess($access);
+                $accessUpdater->updateModulesAccess($access->getBuilding());
 
                 return new JsonResponse(['code' => 202, 'status' => 'success']);
             } else {
@@ -271,12 +271,12 @@ class MasterController extends AbstractController
 
     /**
      * @param string|null $module
-     * @param Client|null $client
+     * @param Building|null $building
      * @return Response
      */
-    public function statistics(?string $module, ?Client $client)
+    public function statistics(?string $module, ?Building $building)
     {
-        $stats = $this->manager->getViewStatistics($module, $client);
+        $stats = $this->manager->getViewStatistics($module, $building);
         $modules = ['customers', 'website', 'promotion'];
 
         $pages = array_keys($stats);
@@ -289,13 +289,13 @@ class MasterController extends AbstractController
 
         array_unshift($pages,"All");
 
-        $clients = $this->manager->getActiveClients();
+        $buildings = $this->manager->getActiveBuildings();
 
         return $this->render('master/statistics.html.twig', [
             'modules' => $modules,
             'stats' => $stats,
             'items' => $pages,
-            'clients' => $clients
+            'buildings' => $buildings
         ]);
     }
 

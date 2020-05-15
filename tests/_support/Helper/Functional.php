@@ -3,7 +3,6 @@ namespace App\Tests\Helper;
 
 use App\DataFixtures\UserFixtures;
 use App\Entity\User\User;
-use App\Manager\RegistrationManager;
 use Codeception\Exception\ModuleException;
 use Codeception\Module;
 use Symfony\Component\BrowserKit\Cookie;

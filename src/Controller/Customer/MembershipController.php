@@ -50,8 +50,8 @@ class MembershipController extends AbstractController
         if (!$request->isXmlHttpRequest()) {
             if ($form->isSubmitted() && $form->isValid()) {
                 $email = $form->getData()['email'];
-                $client = isset($form->getData()['client']) ? $this->manager->getClientById($form->getData()['client']) : null;
-                $customer = $this->manager->findOneByEmail($email, $client);
+                $building = isset($form->getData()['building']) ? $this->manager->getBuildingById($form->getData()['building']) : null;
+                $customer = $this->manager->findOneByEmail($email, $building);
 
                 if ($customer) {
                     $this->mailer->sendCustomerControl($customer, 'en');
@@ -85,26 +85,26 @@ class MembershipController extends AbstractController
      */
     public function signUp(Request $request, PaymentService $paymentService, $token)
     {
-        $client = $this->manager->findClientByToken($token);
+        $building = $this->manager->findBuildingByToken($token);
 
-        if ($client) {
+        if ($building) {
             $member = null;
 
             // Get info about total shares left, and add existed customer to a form(for prevent unique validation)
             $data = $request->request->get('renew');
-            $member = $this->manager->getMemberManager()->findCustomerByData($client, $data['member']);
+            $member = $this->manager->getMemberManager()->findCustomerByData($building, $data['member']);
 
             $sharesLeft = [];
 
             if (!$member) {
                 $member = new Customer();
-                $member->setClient($client);
+                $member->setBuilding($building);
             } else {
                 $sharesLeft = $this->manager->countPickups($member->getShares());
             }
 
             $form = $this->createForm(RenewType::class, null, [
-                'client' => $client,
+                'building' => $building,
                 'customer' => $member
             ]);
 
@@ -117,7 +117,7 @@ class MembershipController extends AbstractController
                     $invoice = $paymentService->customerPayment($member, $data);
 
                     // Save view of renewal competed page
-                    $this->manager->saveRenewalView($client, $member->getId(), 'Completed');
+                    $this->manager->saveRenewalView($building, $member->getId(), 'Completed');
 
                     // If invoice is already paid, renew customer
                     if ($invoice->isPaid()) $this->manager->renewMembership($invoice);
@@ -136,13 +136,13 @@ class MembershipController extends AbstractController
 
             return $this->render('customer/membership/sign_up.html.twig', [
                 'form' => $form->createView(),
-                'country' => $client->getCountry(),
+                'country' => $building->getCountry(),
                 'sharesLeft' => $sharesLeft
             ]);
         }
 
         return $this->render('customer/membership/message.html.twig', [
-            'message' => 'Page can not be accessed without the client token!'
+            'message' => 'Page can not be accessed without the building token!'
         ]);
     }
 
@@ -153,8 +153,8 @@ class MembershipController extends AbstractController
      */
     public function checkEmail(Request $request, $token)
     {
-        $client = $this->manager->findClientByToken($token);
-        $member = $this->manager->findOneByEmail($request->query->get('email'), $client);
+        $building = $this->manager->findBuildingByToken($token);
+        $member = $this->manager->findOneByEmail($request->query->get('email'), $building);
         $memberData = null;
 
         if ($member) {
@@ -187,7 +187,7 @@ class MembershipController extends AbstractController
             $form = $this->createForm(CustomerType::class, $member, ['isMembership' => true]);
 
             $renewForm = $this->createForm(RenewType::class, null, [
-                'client' => $member->getClient(),
+                'building' => $member->getBuilding(),
                 'customer' => $member
             ]);
 
@@ -201,7 +201,7 @@ class MembershipController extends AbstractController
                     $invoice = $paymentService->customerPayment($member, $data);
 
                     // Save view of renewal competed page
-                    $this->manager->saveRenewalView($member->getClient(), $member->getId(), 'Completed');
+                    $this->manager->saveRenewalView($member->getBuilding(), $member->getId(), 'Completed');
 
                     // If invoice is already paid, renew customer
                     if ($invoice->isPaid()) $this->manager->renewMembership($invoice);
@@ -218,7 +218,7 @@ class MembershipController extends AbstractController
                 }
             }
 
-            // If customer submitted feedback form -> send feedback message to client
+            // If customer submitted feedback form -> send feedback message to building
             if (isset($request->request->all()['feedback']) and strlen($request->request->get('feedback')['message']) > 2) {
                 $this->mailer->sendFeedback($member, $request->request->get('feedback'));
             }
@@ -259,10 +259,10 @@ class MembershipController extends AbstractController
     public function saveRenewalView(Request $request)
     {
         try {
-            $clientId = $request->query->get('clientId');
+            $buildingId = $request->query->get('buildingId');
             $customerId = $request->query->get('customerId');
             $step = $request->query->get('step');
-            $this->manager->saveRenewalView($clientId, $customerId, $step);
+            $this->manager->saveRenewalView($buildingId, $customerId, $step);
 
             $response = new JsonResponse(['result' => 'Purchase (' . $step . ') view was saved!'], 200);
         } catch (\Exception $exception) {
@@ -353,7 +353,7 @@ class MembershipController extends AbstractController
         $contact = $this->manager->findVendorContactByToken($token);
 
         if ($contact) {
-            $client = $contact->getVendor()->getClient();
+            $building = $contact->getVendor()->getBuilding();
 
             // Create Profile tab form
             $form = $this->createForm(ContactType::class, $contact);
@@ -380,7 +380,7 @@ class MembershipController extends AbstractController
                 $orderForm->handleRequest($request);
 
                 if ($form->isSubmitted() && $orderForm->isValid()) {
-                    $order->setClient($client);
+                    $order->setBuilding($building);
                     $this->manager->createVendorOrder($order);
 
                     return $this->redirect($this->generateUrl('vendor_profile', ['token' => $token]) . '#order');
@@ -430,9 +430,9 @@ class MembershipController extends AbstractController
                     $this->getParameter('software_name'),
                     $recipient->getEmail(),
                     'customer/emails/testimonial_email.html.twig',
-                    'Invitation to join ' . $member->getClient()->getName(),
+                    'Invitation to join ' . $member->getBuilding()->getName(),
                     [
-                        'clientName' => $member->getClient()->getName(),
+                        'buildingName' => $member->getBuilding()->getName(),
                         'firstname' => $recipient->getFirstname(),
                         'lastname' => $recipient->getLastname(),
                         'message' => $recipient->getMessage(),
@@ -461,7 +461,7 @@ class MembershipController extends AbstractController
             return new Response('Affiliate email wasn`t found.');
         }
 
-        $existsCustomer = $this->manager->findOneByEmail($recipient->getEmail(), $recipient->getAffiliate()->getClient());
+        $existsCustomer = $this->manager->findOneByEmail($recipient->getEmail(), $recipient->getAffiliate()->getBuilding());
 
         if (!$existsCustomer) {
             $customer = $this->manager->createCustomerFromTestimonial($recipient);

@@ -39,21 +39,21 @@ class OrderController extends AbstractController
      */
     public function vendorOrder(Request $request)
     {
-        $client = $this->getUser()->getClient();
+        $building = $this->getUser()->getBuilding();
 
         $order = new VendorOrder();
-        $order->setClient($client);
+        $order->setBuilding($building);
 
         // Create add form for adding of Vendor orders (top form)
         $form = $this->createForm(VendorOrderType::class, $order, [
             'date_format' => $this->getUser()->getDateFormatName(),
-            'vendors' => $this->manager->getVendors($client)
+            'vendors' => $this->manager->getVendors($building)
         ]);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $order->setClient($client);
+            $order->setBuilding($building);
             $this->manager->createOrder($order);
 
             return $this->redirectToRoute('vendor_orders');
@@ -61,7 +61,7 @@ class OrderController extends AbstractController
 
         $productsForms = [];
 
-        $orders = $this->manager->getVendorOrders($client);
+        $orders = $this->manager->getVendorOrders($building);
 
         return $this->render('customer/order/for_vendor' . '.html.twig', [
             'form' => $form->createView(),

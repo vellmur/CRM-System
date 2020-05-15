@@ -131,8 +131,8 @@
                         {% for key, recipient in recipients.list %}
                             <tr {% if key is not divisible by (2) %} class="row-style" {% endif %}>
                                 <td>
-                                    {% if recipient.client is not null %}
-                                        <a href="{{ path('master_client_edit', {'id': recipient.client.id }) }}">{{ recipient.client.name }}</a>
+                                    {% if recipient.building is not null %}
+                                        <a href="{{ path('master_building_edit', {'id': recipient.building.id }) }}">{{ recipient.building.name }}</a>
                                     {% else %}
                                         <p>{{ recipient.email }}</p>
                                     {% endif %}

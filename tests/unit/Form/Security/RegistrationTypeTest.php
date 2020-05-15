@@ -132,7 +132,7 @@ class RegistrationTypeTest extends TypeTestCase
                     'username' => 'whereismymind',
                     'email' => 'whereismymind@mail.ru',
                     'locale' => 1,
-                    'client' => [
+                    'building' => [
                         'name' => 'Where is mind'
                     ],
                     "plainPassword" => [
@@ -146,7 +146,7 @@ class RegistrationTypeTest extends TypeTestCase
                     'username' => 'john',
                     'email' => 'golt',
                     'locale' => 2,
-                    'client' => [
+                    'building' => [
                         'name' => 'John Golt'
                     ],
                     "plainPassword" => [
@@ -160,7 +160,7 @@ class RegistrationTypeTest extends TypeTestCase
                     'username' => 'john',
                     'email' => 'golt',
                     'locale' => 3,
-                    'client' => [
+                    'building' => [
                         'name' => 'John Golt'
                     ],
                     "plainPassword" => [

@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use App\Entity\User\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -42,17 +42,17 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     * @param $client
+     * @param $building
      * @param $user_id
      * @return mixed
      */
-    public function getClientUsers($client, $user_id)
+    public function getBuildingUsers($building, $user_id)
     {
         $qb =
             $this->createQueryBuilder('u')
-                ->where('u.client = :client')
+                ->where('u.building = :building')
                 ->andWhere('u.id <> :user_id')
-                ->setParameter('client', $client)
+                ->setParameter('building', $building)
                 ->setParameter('user_id', $user_id)
                 ->orderBy('u.username', 'ASC');
 

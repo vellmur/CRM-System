@@ -102,7 +102,7 @@ class ProductType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'labels',
             'data_class' => Product::class,
-            'client' => null,
+            'building' => null,
             'isTopForm' => null
         ]);
     }

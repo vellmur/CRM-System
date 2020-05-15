@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Client\Notification\NotifiableNotification;
+use App\Entity\Building\Notification\NotifiableNotification;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 

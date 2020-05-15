@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Client
+ * Building
  *
  * @ORM\Table(name="customer__vendor_contact")
  * @ORM\Entity()
@@ -186,10 +186,10 @@ class Contact
     }
 
     /**
-     * @return \App\Entity\Client
+     * @return \App\Entity\Building
      */
-    public function getClient()
+    public function getBuilding()
     {
-        return $this->getVendor()->getClient();
+        return $this->getVendor()->getBuilding();
     }
 }

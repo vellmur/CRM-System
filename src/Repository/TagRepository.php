@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use App\Entity\Customer\Tag;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -19,19 +19,19 @@ class TagRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param $tags
      * @return array
      */
-    public function findTags(Client $client, $tags)
+    public function findTags(Building $building, $tags)
     {
         $qb = $this->createQueryBuilder('t');
 
         $query = $qb
             ->select('t.name, t.id')
-            ->where('t.client = :client')
+            ->where('t.building = :building')
             ->andWhere('t.name IN (:tags)')
-            ->setParameter('client', $client)
+            ->setParameter('building', $building)
             ->setParameter('tags', $tags);
 
         $result = $query->getQuery()->getScalarResult();

@@ -2,11 +2,11 @@
 
 namespace App\Manager;
 
-use App\Entity\Client\Affiliate;
-use App\Entity\Client\Client;
+use App\Entity\Building\Affiliate;
+use App\Entity\Building\Building;
 use App\Entity\Customer\Email\AutoEmail;
-use App\Entity\Client\ModuleAccess;
-use App\Entity\Client\Referral;
+use App\Entity\Building\ModuleAccess;
+use App\Entity\Building\Referral;
 use App\Entity\User\User;
 use App\Security\AccessUpdater;
 use App\Service\Localization\LanguageDetector;
@@ -53,20 +53,20 @@ class RegistrationManager
 
     /**
      * @param User $user
-     * @param string $clientName
+     * @param string $buildingName
      * @param string|null $refCode
      * @return User
      * @throws \Doctrine\DBAL\ConnectionException
      * @throws \Throwable
      */
-    public function register(User &$user, string $clientName, ?string $refCode = null)
+    public function register(User &$user, string $buildingName, ?string $refCode = null)
     {
         $this->em->getConnection()->beginTransaction();
 
         try {
-            $this->registerUser($user, $clientName);
+            $this->registerUser($user, $buildingName);
 
-            if ($refCode && $referral = $this->createReferral($user->getClient(), $refCode)) {
+            if ($refCode && $referral = $this->createReferral($user->getBuilding(), $refCode)) {
                 $this->em->persist($referral);
                 $this->em->flush();
             }
@@ -86,41 +86,41 @@ class RegistrationManager
 
     /**
      * @param User $user
-     * @param string $clientName
+     * @param string $buildingName
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function registerUser(User $user, string $clientName)
+    public function registerUser(User $user, string $buildingName)
     {
         $user->setRoles(['ROLE_OWNER']);
         $user->setPassword($this->passwordEncoder->encodePassword($user, $user->getPlainPassword()));
         $user->setConfirmationToken($this->token->generateToken());
 
-        $client = $this->createClient($clientName, $user->getEmail());
-        $user->setClient($client);
+        $building = $this->createBuilding($buildingName, $user->getEmail());
+        $user->setBuilding($building);
 
-        // Save client as new affiliate
+        // Save building as new affiliate
         $affiliate = new Affiliate();
         $affiliate->setReferralCode(substr($this->token->generateToken(),0,20));
-        $client->setAffiliate($affiliate);
+        $building->setAffiliate($affiliate);
 
-        $accesses = $this->createAccess($client);
-        $client->setAccesses($accesses);
-        $this->createAutomatedEmails($client, $this->languageDetector->getLocaleCodeById($user->getLocale()));
+        $accesses = $this->createAccess($building);
+        $building->setAccesses($accesses);
+        $this->createAutomatedEmails($building, $this->languageDetector->getLocaleCodeById($user->getLocale()));
 
-        $this->em->persist($client);
+        $this->em->persist($building);
         $this->em->persist($user);
 
         $this->em->flush();
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param string $refCode
      * @return Referral|null
      */
-    public function createReferral(Client $client, string $refCode)
+    public function createReferral(Building $building, string $refCode)
     {
         $affiliate = $this->em->getRepository(Affiliate::class)->findOneBy([
             'referralCode' => $refCode
@@ -131,26 +131,26 @@ class RegistrationManager
         }
 
         $referral = new Referral();
-        $referral->setClient($client);
+        $referral->setBuilding($building);
         $referral->setAffiliate($affiliate);
 
         return $referral;
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param User $user
      * @param string $roles
      * @throws \Doctrine\DBAL\ConnectionException
      */
-    public function addUserToClient(Client $client, User $user, string $roles)
+    public function addUserToBuilding(Building $building, User $user, string $roles)
     {
         $this->em->getConnection()->beginTransaction();
 
         try {
             $user->setRoles(is_array($roles) ? $roles : [$roles]);
             $user->setPassword($this->passwordEncoder->encodePassword($user, $user->getPlainPassword()));
-            $user->setClient($client);
+            $user->setBuilding($building);
 
             $this->em->persist($user);
             $this->em->flush();
@@ -167,23 +167,23 @@ class RegistrationManager
     /**
      * @param string $name
      * @param string $email
-     * @return Client
+     * @return Building
      */
-    private function createClient(string $name, string $email) : Client
+    private function createBuilding(string $name, string $email) : Building
     {
-        $client = new Client();
-        $client->setName($name);
-        $client->setEmail($email);
+        $building = new Building();
+        $building->setName($name);
+        $building->setEmail($email);
 
-        return $client;
+        return $building;
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @return array
      * @throws \Exception
      */
-    private function createAccess(Client $client)
+    private function createAccess(Building $building)
     {
         $today = new \DateTime();
         $trialExtendsAt = new \DateTime();
@@ -193,7 +193,7 @@ class RegistrationManager
 
         foreach (ModuleAccess::MODULES as $id => $name) {
             $access = new ModuleAccess();
-            $access->setClient($client);
+            $access->setBuilding($building);
             $access->setModule($id);
             $access->setUpdatedAt($today);
             $access->setExpiredAt($trialExtendsAt);
@@ -206,13 +206,13 @@ class RegistrationManager
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param string $locale
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function createAutomatedEmails(Client $client, string $locale)
+    public function createAutomatedEmails(Building $building, string $locale)
     {
         // Run through all automated email types defined in manager
         foreach (AutoEmail::EMAIL_TYPES as $id => $typeName) {
@@ -223,7 +223,7 @@ class RegistrationManager
             $email->setType($id);
             $email->setSubject($subject);
             $email->setText($template);
-            $client->addAutoMail($email);
+            $building->addAutoMail($email);
 
             $this->em->flush();
         }

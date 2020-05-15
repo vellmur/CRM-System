@@ -2,7 +2,7 @@
 
 namespace App\Entity\Customer;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -37,10 +37,10 @@ class Vendor
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Client\Client", inversedBy="vendors")
-     * @ORM\JoinColumn(name="client_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Building\Building", inversedBy="vendors")
+     * @ORM\JoinColumn(name="building_id", referencedColumnName="id", nullable=false)
      */
-    private $client;
+    private $building;
 
     /**
      * @var string
@@ -92,19 +92,19 @@ class Vendor
     }
 
     /**
-     * @return Client
+     * @return Building
      */
-    public function getClient()
+    public function getBuilding()
     {
-        return $this->client;
+        return $this->building;
     }
 
     /**
-     * @param mixed $client
+     * @param mixed $building
      */
-    public function setClient($client)
+    public function setBuilding($building)
     {
-        $this->client = $client;
+        $this->building = $building;
     }
 
     /**

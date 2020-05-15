@@ -3,7 +3,7 @@
 namespace App\Entity\Customer\Email;
 
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use App\Entity\Email\AutomatedEmailBase;
 
 /**
@@ -12,13 +12,13 @@ use App\Entity\Email\AutomatedEmailBase;
  * @ORM\Table(name="email__auto")
  * @ORM\Entity()
  */
-class AutoEmail extends AutomatedEmailBase implements ClientAutoEmailInterface
+class AutoEmail extends AutomatedEmailBase implements BuildingAutoEmailInterface
 {
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Client\Client", inversedBy="autoEmails")
-     * @ORM\JoinColumn(name="client_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Building\Building", inversedBy="autoEmails")
+     * @ORM\JoinColumn(name="building_id", referencedColumnName="id", nullable=false)
      */
-    protected $client;
+    protected $building;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Customer\Email\CustomerEmail", mappedBy="automatedEmail")
@@ -35,18 +35,18 @@ class AutoEmail extends AutomatedEmailBase implements ClientAutoEmailInterface
     ];
 
     /**
-     * @return Client
+     * @return Building
      */
-    public function getClient() : Client
+    public function getBuilding() : Building
     {
-        return $this->client;
+        return $this->building;
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      */
-    public function setClient(Client $client)
+    public function setBuilding(Building $building)
     {
-        $this->client = $client;
+        $this->building = $building;
     }
 }

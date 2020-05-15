@@ -25,11 +25,11 @@
                             {{ form_widget(form.email) }}
                             {{ form_errors(form.email) }}
                         </div>
-                        {% if form.client is defined %}
-                            <div class="form-group {{ form.client.vars.errors|length ? 'has-error' }}" id="client">
-                                {{ form_label(form.client) }}
-                                {{ form_widget(form.client) }}
-                                {{ form_errors(form.client) }}
+                        {% if form.building is defined %}
+                            <div class="form-group {{ form.building.vars.errors|length ? 'has-error' }}" id="building">
+                                {{ form_label(form.building) }}
+                                {{ form_widget(form.building) }}
+                                {{ form_errors(form.building) }}
                             </div>
                         {% endif %}
                         <div class="row form-actions">
@@ -74,12 +74,12 @@
                 type: "POST",
                 data: $form.serialize(),
                 success: function (response) {
-                    // Replace client select field
-                    var replaceTo = $(response).find('#membership_login_client').selectpicker(),
-                        $clientField = $('#client');
+                    // Replace building select field
+                    var replaceTo = $(response).find('#membership_login_building').selectpicker(),
+                        $buildingField = $('#building');
 
-                    if ($clientField.length) {
-                        $clientField.replaceWith(replaceTo.closest('.form-group'));
+                    if ($buildingField.length) {
+                        $buildingField.replaceWith(replaceTo.closest('.form-group'));
                     } else {
                         $email.parent().after(replaceTo.closest('.form-group'));
                     }

@@ -2,7 +2,7 @@
 
 namespace App\Manager;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use App\Entity\Customer\Customer;
 use App\Entity\Customer\POS;
 use App\Entity\Customer\Product;
@@ -38,7 +38,7 @@ class ProductManager
         $this->em->persist($product);
         $this->em->flush();
 
-        $this->createTags($product->getClient(), $product, $tags);
+        $this->createTags($product->getBuilding(), $product, $tags);
     }
 
     /**
@@ -66,74 +66,74 @@ class ProductManager
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param null $category
      * @return array
      */
-    public function getProducts(Client $client, $category = null)
+    public function getProducts(Building $building, $category = null)
     {
-        $products = $this->rep->getClientProducts($client, $category);
+        $products = $this->rep->getBuildingProducts($building, $category);
 
         return $products;
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param $category
      * @return array
      */
-    public function getProductsPricing(Client $client, $category)
+    public function getProductsPricing(Building $building, $category)
     {
-        $products = $this->rep->getProductsPricing($client, $category);
+        $products = $this->rep->getProductsPricing($building, $category);
 
         return $products;
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param $category
      * @param $search
      * @return \Doctrine\ORM\Query
      */
-    public function searchProducts(Client $client, $category = 'all', $search = '')
+    public function searchProducts(Building $building, $category = 'all', $search = '')
     {
-        $customers = $this->rep->searchByAll($client, $category, $search);
+        $customers = $this->rep->searchByAll($building, $category, $search);
 
         return $customers;
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param null $period
      * @return mixed
      */
-    public function getPOSSummary(Client $client, $period = null)
+    public function getPOSSummary(Building $building, $period = null)
     {
-        $summary = $this->em->getRepository(POS::class)->getPOSSummary($client, $period);
+        $summary = $this->em->getRepository(POS::class)->getPOSSummary($building, $period);
 
         return $summary;
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param $search
      * @return array
      */
-    public function searchByCustomers(Client $client, $search)
+    public function searchByCustomers(Building $building, $search)
     {
-        $customers = $this->em->getRepository(Customer::class)->searchByCustomers($client, $search)->getResult();
+        $customers = $this->em->getRepository(Customer::class)->searchByCustomers($building, $search)->getResult();
 
         return $customers;
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param string $search
      * @return \Doctrine\ORM\Query
      */
-    public function searchPosProducts(Client $client, $search = '')
+    public function searchPosProducts(Building $building, $search = '')
     {
-        $customers = $this->rep->searchPOSProducts($client, $search);
+        $customers = $this->rep->searchPOSProducts($building, $search);
 
         return $customers;
     }
@@ -160,13 +160,13 @@ class ProductManager
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param string $period
      * @return mixed
      */
-    public function getPOSOrders(Client $client, $period = null)
+    public function getPOSOrders(Building $building, $period = null)
     {
-        $orders = $this->em->getRepository(POS::class)->getOrders($client, $period);
+        $orders = $this->em->getRepository(POS::class)->getOrders($building, $period);
 
         return $orders;
     }
@@ -181,10 +181,10 @@ class ProductManager
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @return array
      */
-    public function getSalesStatistics(Client $client)
+    public function getSalesStatistics(Building $building)
     {
         $stats = [
             'mostPurchased' => [],
@@ -193,7 +193,7 @@ class ProductManager
             'hourSales' => []
         ];
 
-        $sales = $this->em->getRepository(POS::class)->getSalesStatistics($client);
+        $sales = $this->em->getRepository(POS::class)->getSalesStatistics($building);
 
         foreach ($sales as $sale) {
             $date = new \DateTime($sale['date']);
@@ -202,13 +202,13 @@ class ProductManager
             $stats['averageSale'][$date->format('d M')] = number_format($sale['averageSale'],2);
         }
 
-        $hourSales = $this->em->getRepository(POS::class)->getHourSales($client);
+        $hourSales = $this->em->getRepository(POS::class)->getHourSales($building);
 
         foreach ($hourSales as $hourSale) {
             $stats['hourSales'][$hourSale['hour']] = number_format((float)$hourSale['total'], 2);
         }
 
-        $mostPurchasedProducts = $this->em->getRepository(POS::class)->getMostPurchasedProducts($client);
+        $mostPurchasedProducts = $this->em->getRepository(POS::class)->getMostPurchasedProducts($building);
 
         foreach ($mostPurchasedProducts as $product) {
             $stats['mostPurchased'][$product['name']] = $product['totalWeight'];
@@ -218,40 +218,40 @@ class ProductManager
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @return array
      */
-    public function getMonthSales(Client $client)
+    public function getMonthSales(Building $building)
     {
-        $sales = $this->em->getRepository(POS::class)->getMonthSales($client);
+        $sales = $this->em->getRepository(POS::class)->getMonthSales($building);
 
         return $sales;
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param Product $product
      * @param $tags
      * @return Tag[]|\Doctrine\Common\Collections\Collection
      */
-    public function createTags(Client $client, Product $product, $tags)
+    public function createTags(Building $building, Product $product, $tags)
     {
         if (strlen($tags)) {
             $tags = array_unique(array_map('mb_strtoupper', explode(', ', $tags)));
 
             if (count($tags)) {
-                $existedTags = $this->em->getRepository(Tag::class)->findTags($client, $tags);
+                $existedTags = $this->em->getRepository(Tag::class)->findTags($building, $tags);
 
                 foreach ($tags as $tag) {
                     if (!in_array($tag, $existedTags)) {
-                        $newTag = $this->createClientTag($tag);
-                        $client->addTag($newTag);
+                        $newTag = $this->createBuildingTag($tag);
+                        $building->addTag($newTag);
                     }
                 }
 
-                foreach ($client->getTags() as $clientTag) {
-                    if (in_array($clientTag->getName(), $tags)) {
-                        $productTag = $this->addTag($product, $clientTag);
+                foreach ($building->getTags() as $buildingTag) {
+                    if (in_array($buildingTag->getName(), $tags)) {
+                        $productTag = $this->addTag($product, $buildingTag);
                         $this->em->persist($productTag);
                     }
                 }
@@ -260,7 +260,7 @@ class ProductManager
             }
         }
 
-        return $client->getTags();
+        return $building->getTags();
     }
 
     /**
@@ -280,17 +280,17 @@ class ProductManager
             $this->em->remove($productTag);
         }
 
-        $clientTags = $this->em->getRepository(Tag::class)->findTags($product->getClient(), $tags);
+        $buildingTags = $this->em->getRepository(Tag::class)->findTags($product->getBuilding(), $tags);
 
         foreach ($tags as $tag) {
-            // If tag not added yet, add tags from client tags or create new client tags then add it
+            // If tag not added yet, add tags from building tags or create new building tags then add it
             if (!in_array($tag, $productTags)) {
-                if (in_array($tag, $clientTags)) {
-                    $clientTag = $this->em->find(Tag::class, array_search($tag, $clientTags));
-                    $productTag = $this->addTag($product, $clientTag);
+                if (in_array($tag, $buildingTags)) {
+                    $buildingTag = $this->em->find(Tag::class, array_search($tag, $buildingTags));
+                    $productTag = $this->addTag($product, $buildingTag);
                 } else {
-                    $newTag = $this->createClientTag($tag);
-                    $product->getClient()->addTag($newTag);
+                    $newTag = $this->createBuildingTag($tag);
+                    $product->getBuilding()->addTag($newTag);
 
                     $productTag = $this->addTag($product, $newTag);
                 }
@@ -322,7 +322,7 @@ class ProductManager
      * @param $name
      * @return Tag
      */
-    public function createClientTag($name)
+    public function createBuildingTag($name)
     {
         $tag = new Tag();
         $tag->setName($name);

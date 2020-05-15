@@ -31,32 +31,32 @@ class VendorRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $client
+     * @param $building
      * @param $search
      * @return array
      */
-    public function searchByAllFields($client, $search)
+    public function searchByAllFields($building, $search)
     {
         $qb = $this->createQueryBuilder('v')
-            ->where('v.client = :client')
+            ->where('v.building = :building')
             ->andWhere("v.name LIKE '%$search%'")
             ->addOrderBy('v.name')
-            ->setParameter('client', $client);
+            ->setParameter('building', $building);
 
         return $qb->getQuery()->getResult();
     }
 
     /**
-     * @param $client
+     * @param $building
      * @return array
      */
-    public function getActiveVendors($client)
+    public function getActiveVendors($building)
     {
         $qb = $this->createQueryBuilder('v')
-            ->where('v.client = :client')
+            ->where('v.building = :building')
             ->andWhere('v.isActive = 1')
             ->addOrderBy('v.name')
-            ->setParameter('client', $client);
+            ->setParameter('building', $building);
 
         return $qb->getQuery()->getResult();
     }

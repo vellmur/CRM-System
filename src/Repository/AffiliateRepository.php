@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Client\Affiliate;
+use App\Entity\Building\Affiliate;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -25,7 +25,7 @@ class AffiliateRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('a')
             ->select('a, c, users, accesses, referrals')
-            ->innerJoin('a.client', 'c')
+            ->innerJoin('a.building', 'c')
             ->innerJoin('c.accesses', 'accesses')
             ->leftJoin('a.referrals', 'referrals')
             ->leftJoin('c.users', 'users');

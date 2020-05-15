@@ -2,7 +2,7 @@
 
 namespace App\Entity\Customer;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use App\Entity\Media\Image;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -37,10 +37,10 @@ class Product
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Client\Client", inversedBy="products")
-     * @ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Building\Building", inversedBy="products")
+     * @ORM\JoinColumn(name="building_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $client;
+    private $building;
 
     /**
      * @var string
@@ -218,19 +218,19 @@ class Product
     }
 
     /**
-     * @return Client
+     * @return Building
      */
-    public function getClient()
+    public function getBuilding()
     {
-        return $this->client;
+        return $this->building;
     }
 
     /**
-     * @param mixed $client
+     * @param mixed $building
      */
-    public function setClient($client)
+    public function setBuilding($building)
     {
-        $this->client = $client;
+        $this->building = $building;
     }
 
     /**

@@ -100,7 +100,7 @@ class AddCustomerCest
 
         $I->seeRecordIsAdded(Customer::class, [
             'email' => $formFields['customer_email'],
-            'client' => $customer->getClient()->getId()
+            'building' => $customer->getBuilding()->getId()
         ]);
     }
 

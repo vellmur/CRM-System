@@ -2,9 +2,9 @@
 
 namespace App\Manager;
 
-use App\Entity\Client\Referral;
+use App\Entity\Building\Referral;
 use App\Repository\AffiliateRepository;
-use App\Entity\Client\Affiliate;
+use App\Entity\Building\Affiliate;
 use Doctrine\ORM\EntityManagerInterface;
 
 class AffiliateManager

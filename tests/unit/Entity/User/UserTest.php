@@ -2,7 +2,7 @@
 
 namespace App\Tests\Entity\User;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use App\Entity\User\User;
 use App\Service\Localization\LanguageDetector;
 use PHPUnit\Framework\TestCase;
@@ -25,7 +25,7 @@ class UserTest extends TestCase
     {
         $user = new User();
         $date = new \DateTime();
-        $client = new Client();
+        $building = new Building();
         $dateFormat = $user::DATE_FORMATS[1];
 
         $locales = $this->languageDetector->getLanguagesList();
@@ -38,7 +38,7 @@ class UserTest extends TestCase
         $user->setPlainPassword('23232wdsadafdsr4r42dasdewraerewreq');
         $user->setConfirmationToken('434343434edaerw4r34');
         $user->setLocale(1);
-        $user->setClient($client);
+        $user->setBuilding($building);
         $user->setDateFormat($dateFormat);
         $user->setCreatedAt($date);
         $user->setPasswordRequestedAt($date);
@@ -53,7 +53,7 @@ class UserTest extends TestCase
         $this->assertEquals('23232wdsadafdsr4r42dasdewraerewreq', $user->getPlainPassword());
         $this->assertEquals('434343434edaerw4r34', $user->getConfirmationToken());
         $this->assertSame($locales[1], $locales[$user->getLocale()]);
-        $this->assertEquals($client, $user->getClient());
+        $this->assertEquals($building, $user->getBuilding());
         $this->assertEquals(array_flip($user::DATE_FORMATS)[$dateFormat], $user->getDateFormat());
         $this->assertEquals($date, $user->getCreatedAt());
         $this->assertEquals($date, $user->getPasswordRequestedAt());
@@ -62,15 +62,15 @@ class UserTest extends TestCase
         $this->assertEquals(1, $user->getLocale());
     }
 
-    public function testSetClient()
+    public function testSetBuilding()
     {
         $user = new User();
-        $client = new Client();
+        $building = new Building();
 
-        $user->setClient($client);
+        $user->setBuilding($building);
 
-        $this->assertNotNull($client);
-        $this->assertEquals($user->getClient(), $client);
+        $this->assertNotNull($building);
+        $this->assertEquals($user->getBuilding(), $building);
     }
 
     public function testIsPasswordRequestNonExpired()
@@ -95,11 +95,12 @@ class UserTest extends TestCase
         $user = new User();
         $user->setDateFormat('Y-m-d');
 
+        $dateFormatName = 'dd-MM-yyyy';
+
         $this->assertEquals(null, $user->getDateFormat());
-        $this->assertEquals(null, $user->getDateFormatName());
+        $this->assertEquals($dateFormatName, $user->getDateFormatName());
         $this->assertEquals(null, $user->getTwigFormatDate());
 
-        $dateFormatName = 'dd-MM-yyyy';
         $user->setDateFormat($dateFormatName);
         $this->assertEquals(array_flip($user::DATE_FORMATS)[$dateFormatName], $user->getDateFormat());
         $this->assertEquals($dateFormatName, $user->getDateFormatName());
@@ -108,13 +109,13 @@ class UserTest extends TestCase
 
     public function testTimezone()
     {
-        $client = new Client();
+        $building = new Building();
         $defaultTimezone = 'UTC';
-        $this->assertEquals($defaultTimezone, $client->getTimeZone());
+        $this->assertEquals($defaultTimezone, $building->getTimeZone());
 
         $timezone = 'Europe/Paris';
-        $client->setTimezone($timezone);
-        $this->assertEquals($timezone, $client->getTimeZone());
+        $building->setTimezone($timezone);
+        $this->assertEquals($timezone, $building->getTimeZone());
     }
 
     public function testEmptyData()

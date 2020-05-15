@@ -32,7 +32,7 @@ class Apartment
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Client\Client", inversedBy="apartments")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Building\Building", inversedBy="apartments")
      * @ORM\JoinColumn(name="building_id", referencedColumnName="id", nullable=false)
      */
     private $building;

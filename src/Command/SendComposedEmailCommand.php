@@ -34,7 +34,7 @@ class SendComposedEmailCommand extends Command
         $this
             ->setDescription('Send composed emails to a recipients')
             ->addArgument('id', InputArgument::REQUIRED, 'id of the Email')
-            ->addArgument('recipientType', InputArgument::REQUIRED, 'client/customer');
+            ->addArgument('recipientType', InputArgument::REQUIRED, 'building/customer');
     }
 
     /**

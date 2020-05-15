@@ -2,12 +2,12 @@
 
 namespace App\Manager;
 
-use App\Entity\Client\ModuleSetting;
+use App\Entity\Building\ModuleSetting;
 use App\Repository\UserRepository;
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use App\Entity\User\User;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\Client\PaymentSettings;
+use App\Entity\Building\PaymentSettings;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserManager
@@ -40,13 +40,13 @@ class UserManager
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param UserInterface $user
      * @return mixed
      */
-    public function getClientUsers(Client $client, UserInterface $user)
+    public function getBuildingUsers(Building $building, UserInterface $user)
     {
-        return $this->rep->getClientUsers($client, $user);
+        return $this->rep->getBuildingUsers($building, $user);
     }
 
     /**
@@ -59,40 +59,40 @@ class UserManager
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      */
-    public function createSettings(Client $client)
+    public function createSettings(Building $building)
     {
         $setting = new ModuleSetting();
         $setting->setModule(1);
         $setting->setName('shares_enabled');
         $setting->setEnabled(true);
-        $client->addModuleSettings($setting);
+        $building->addModuleSettings($setting);
 
         $this->em->flush();
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      */
-    public function createPaymentSettings(Client $client)
+    public function createPaymentSettings(Building $building)
     {
-        $clientSettings = [];
+        $buildingSettings = [];
 
-        foreach ($client->getPaymentSettings() as $existingSetting) {
-            $clientSettings[] = $existingSetting->getMethod();
+        foreach ($building->getPaymentSettings() as $existingSetting) {
+            $buildingSettings[] = $existingSetting->getMethod();
         }
 
         $availableSettings = PaymentSettings::getMethodsNames();
 
         foreach ($availableSettings as $methodId => $methodName) {
-            if (!in_array($methodId, $clientSettings)) {
+            if (!in_array($methodId, $buildingSettings)) {
                 $setting = new PaymentSettings();
                 $setting->setMethod($methodId);
                 $setting->setIsActive(true);
                 $this->em->persist($setting);
 
-                $client->addPaymentSettings($setting);
+                $building->addPaymentSettings($setting);
             }
         }
 

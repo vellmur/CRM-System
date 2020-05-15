@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use App\Entity\User\User;
 use App\Manager\EmailManager;
 use App\Manager\RegistrationManager;
@@ -22,7 +22,7 @@ class UserFixtures extends Fixture
     const ENABLED_USER = [
         'username' => 'johnwick',
         'email' => 'johnwick@mail.ru',
-        'client' => [
+        'building' => [
             'name' => 'John Wick Company'
         ],
         'password' => 'admin23101994'
@@ -34,7 +34,7 @@ class UserFixtures extends Fixture
     const NOT_ENABLED_USER = [
         'username' => 'chucknorris',
         'email' => 'chucknorris@gmail.com',
-        'client' => [
+        'building' => [
             'name' => 'Chuck Norris Company'
         ],
         'password' => 'admin34421101994'
@@ -69,14 +69,14 @@ class UserFixtures extends Fixture
         // Create confirmed user
         $firstUser = self::ENABLED_USER;
         $confirmedUser = $this->createUser($firstUser['username'], $firstUser['email'], $firstUser['password'], true);
-        $this->registrationManager->registerUser($confirmedUser, $firstUser['client']['name']);
+        $this->registrationManager->registerUser($confirmedUser, $firstUser['building']['name']);
 
         $this->addReference(self::ENABLED_USER_REFERENCE, $confirmedUser);
 
         // Create not enabled user
         $secondUser = self::NOT_ENABLED_USER;
         $notConfirmedUser = $this->createUser($secondUser['username'], $secondUser['email'], $secondUser['password'], false);
-        $this->registrationManager->registerUser($notConfirmedUser, $secondUser['client']['name']);
+        $this->registrationManager->registerUser($notConfirmedUser, $secondUser['building']['name']);
     }
 
     /**
@@ -95,11 +95,11 @@ class UserFixtures extends Fixture
         $userAdmin->setEnabled(true);
         $userAdmin->setIsActive(true);
 
-        $client = new Client();
-        $client->setName('Customer software');
-        $client->setEmail($adminEmail);
+        $building = new Building();
+        $building->setName('Customer software');
+        $building->setEmail($adminEmail);
 
-        $userAdmin->setClient($client);
+        $userAdmin->setBuilding($building);
 
         return $userAdmin;
     }

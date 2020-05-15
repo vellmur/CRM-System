@@ -3,8 +3,8 @@
 namespace App\Manager;
 
 use App\Entity\User\PageView;
-use App\Entity\Client\ModuleAccess;
-use App\Entity\Client\Client;
+use App\Entity\Building\ModuleAccess;
+use App\Entity\Building\Building;
 use App\Entity\User\User;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -22,15 +22,15 @@ class MasterManager
     }
 
     /**
-     * @param $client
+     * @param $building
      * @return array
      */
-    public function getClientUsers($client)
+    public function getBuildingUsers($building)
     {
-        return $this->em->getRepository(User::class)->findBy(['client' => $client]);
+        return $this->em->getRepository(User::class)->findBy(['building' => $building]);
     }
 
-    public function updateClientAccess(ModuleAccess $access)
+    public function updateBuildingAccess(ModuleAccess $access)
     {
         $access->setUpdatedAt(new \DateTime());
         $this->em->flush();
@@ -42,43 +42,43 @@ class MasterManager
      */
     public function countNewByDays($days)
     {
-        return $this->em->getRepository(Client::class)->countNewClients($days);
+        return $this->em->getRepository(Building::class)->countNewBuildings($days);
     }
 
     /**
      * @param null $search
      * @return mixed
      */
-    public function getSoftwareClients($search = null)
+    public function getSoftwareBuildings($search = null)
     {
-        return $this->em->getRepository(Client::class)->getSoftwareClients($search);
+        return $this->em->getRepository(Building::class)->getSoftwareBuildings($search);
     }
 
     /**
      * @return mixed
      */
-    public function getActiveClients()
+    public function getActiveBuildings()
     {
-        return $this->em->getRepository(Client::class)->getActiveClients();
+        return $this->em->getRepository(Building::class)->getActiveBuildings();
     }
 
     /**
-     * @param $clients
+     * @param $buildings
      * @return array
      */
-    public function getLapsedClients($clients)
+    public function getLapsedBuildings($buildings)
     {
         $accesses = [];
 
-        if (count($clients)) {
-            foreach ($clients as $client) {
+        if (count($buildings)) {
+            foreach ($buildings as $building) {
                 $lapsedCounter = 0;
 
-                foreach ($client->getAccesses() as $access) {
+                foreach ($building->getAccesses() as $access) {
                     if ($access->getStatusName() == 'LAPSED') $lapsedCounter++;
                 }
 
-                if ($lapsedCounter > 2) $accesses[] = $client->getId();
+                if ($lapsedCounter > 2) $accesses[] = $building->getId();
             }
         }
 
@@ -89,46 +89,46 @@ class MasterManager
      * @param $text
      * @return array
      */
-    public function searchClients($text)
+    public function searchBuildings($text)
     {
-        return $this->em->getRepository(Client::class)->searchClientsByAllFields($text);
+        return $this->em->getRepository(Building::class)->searchBuildingsByAllFields($text);
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      */
-    public function deleteClient(Client $client)
+    public function deleteBuilding(Building $building)
     {
-        $this->em->remove($client);
+        $this->em->remove($building);
         $this->em->flush();
     }
 
     /**
      * @return int
      */
-    public function countTotalClients()
+    public function countTotalBuildings()
     {
-        $clientsModules = $this->em->getRepository(Client::class)->getClientsByModulesStatuses();
+        $buildingsModules = $this->em->getRepository(Building::class)->getBuildingsByModulesStatuses();
 
-        return count($clientsModules);
+        return count($buildingsModules);
     }
 
     /**
      * @param $days
      * @return array
      */
-    public function countNewClientsByDays($days)
+    public function countNewBuildingsByDays($days)
     {
-        return $this->em->getRepository(Client::class)->countNewClientsByDays($days);
+        return $this->em->getRepository(Building::class)->countNewBuildingsByDays($days);
     }
 
     /**
      * @param $isConfirmed
      * @return mixed
      */
-    public function countClientsByActivation($isConfirmed)
+    public function countBuildingsByActivation($isConfirmed)
     {
-        return $this->em->getRepository(Client::class)->countClientsByActivation($isConfirmed);
+        return $this->em->getRepository(Building::class)->countBuildingsByActivation($isConfirmed);
     }
 
     /**
@@ -144,53 +144,53 @@ class MasterManager
      * @param $text
      * @return array|mixed|null
      */
-    public function searchClientsBy($status, $text)
+    public function searchBuildingsBy($status, $text)
     {
-        $clients = null;
-        $rep = $this->em->getRepository(Client::class);
+        $buildings = null;
+        $rep = $this->em->getRepository(Building::class);
 
         switch ($status)
         {
             case 'all':
-                $clients = $this->getSoftwareClients($text);
+                $buildings = $this->getSoftwareBuildings($text);
                 break;
             case 'confirmed':
-                $clients = $rep->getClientsByActivation(true, $text);
+                $buildings = $rep->getBuildingsByActivation(true, $text);
                 break;
             case 'unconfirmed':
-                $clients = $rep->getClientsByActivation(false, $text);
+                $buildings = $rep->getBuildingsByActivation(false, $text);
                 break;
             case 'today':
-                $clients = $rep->getNewClientsByDays(0);
+                $buildings = $rep->getNewBuildingsByDays(0);
                 break;
             case 'week':
-                $clients = $rep->getNewClientsByDays(7);
+                $buildings = $rep->getNewBuildingsByDays(7);
                 break;
             case 'month':
-                $clients = $rep->getNewClientsByDays(30);
+                $buildings = $rep->getNewBuildingsByDays(30);
                 break;
             case 'pending':
             case 'active':
             case 'lapsed':
                 $status = $this->em->getRepository(ModuleAccess::class)->findOneBy(['name' => $status]);
-                $clients = $rep->getClientsByStatus($status);
+                $buildings = $rep->getBuildingsByStatus($status);
                 break;
             default:
-                $clients = $rep->getSoftwareClients();
+                $buildings = $rep->getSoftwareBuildings();
         }
 
-        return $clients;
+        return $buildings;
     }
 
     /**
      * @param string|null $module
-     * @param Client|null $client
+     * @param Building|null $building
      * @return array
      */
-    public function getViewStatistics(?string $module, ?Client $client)
+    public function getViewStatistics(?string $module, ?Building $building)
     {
         // Get views data and create associative array for the chart
-        $data = $this->em->getRepository(PageView::class)->countPageViews($module, $client);
+        $data = $this->em->getRepository(PageView::class)->countPageViews($module, $building);
         $chartData = $this->createChartArray($data);
 
         return $chartData;

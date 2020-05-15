@@ -22,7 +22,7 @@ class MailManager
      */
     public function setAsOpened(int $recipientId, string $recipientType)
     {
-        $repository = $recipientType == 'client' ? $this->em->getRepository(Recipient::class)
+        $repository = $recipientType == 'building' ? $this->em->getRepository(Recipient::class)
             : $this->em->getRepository(EmailRecipient::class);
 
         $recipient = $repository->findOneBy(['id' => $recipientId]);

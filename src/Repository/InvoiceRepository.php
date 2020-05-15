@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use App\Entity\Customer\Invoice;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -19,19 +19,19 @@ class InvoiceRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param $status - All/Paid/Unpaid
      * @return \Doctrine\ORM\Query
      */
-    public function getInvoices(Client $client, $status)
+    public function getInvoices(Building $building, $status)
     {
         $qb = $this->createQueryBuilder('i')
             ->select('i, members')
             ->leftJoin('i.customer', 'members')
-            ->leftJoin('members.client', 'client')
-            ->where('client = :client')
+            ->leftJoin('members.building', 'building')
+            ->where('building = :building')
             ->orderBy('i.createdAt', 'DESC')
-            ->setParameter('client', $client);
+            ->setParameter('building', $building);
 
         if ($status !== 'all')
             $qb->andWhere('i.isPaid = ' . ($status == 'paid' ? 1 : 0));
@@ -40,10 +40,10 @@ class InvoiceRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @return mixed
      */
-    public function countOpenOrders(Client $client)
+    public function countOpenOrders(Building $building)
     {
         $now = new \DateTime();
         $today = $now->format('Y-m-d');
@@ -55,27 +55,27 @@ class InvoiceRepository extends ServiceEntityRepository
                 SUM(case when i.orderDate >= :today then 1 else 0 end) as open
             ')
             ->innerJoin('i.customer', 'customer')
-            ->innerJoin('customer.client', 'client')
-            ->where('client = :client')
-            ->setParameter('client', $client)
+            ->innerJoin('customer.building', 'building')
+            ->where('building = :building')
+            ->setParameter('building', $building)
             ->setParameter('today', $today);
 
         return $qb->getQuery()->getSingleResult();
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param $period
      * @return \Doctrine\ORM\Query
      */
-    public function searchOpenOrders(Client $client, $period)
+    public function searchOpenOrders(Building $building, $period)
     {
         $qb = $this->createQueryBuilder('i')
             ->select('i')
             ->innerJoin('i.customer', 'customer')
-            ->innerJoin('customer.client', 'client')
-            ->where('client = :client')
-            ->setParameter('client', $client);
+            ->innerJoin('customer.building', 'building')
+            ->where('building = :building')
+            ->setParameter('building', $building);
 
         switch ($period) {
             case 'today':

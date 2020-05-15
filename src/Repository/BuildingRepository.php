@@ -2,30 +2,30 @@
 
 namespace App\Repository;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
- * ClientRepository
+ * BuildingRepository
  *
  */
-class ClientRepository extends ServiceEntityRepository
+class BuildingRepository extends ServiceEntityRepository
 {
     /**
-     * ClientRepository constructor.
+     * BuildingRepository constructor.
      * @param ManagerRegistry $registry
      */
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Client::class);
+        parent::__construct($registry, Building::class);
     }
 
     /**
      * @param null $search
      * @return mixed
      */
-    public function getSoftwareClients($search = null)
+    public function getSoftwareBuildings($search = null)
     {
         $qb =
             $this->createQueryBuilder('c')
@@ -46,7 +46,7 @@ class ClientRepository extends ServiceEntityRepository
     /**
      * @return mixed
      */
-    public function getActiveClients()
+    public function getActiveBuildings()
     {
         $qb =
             $this->createQueryBuilder('c')
@@ -63,7 +63,7 @@ class ClientRepository extends ServiceEntityRepository
     /**
      * @return array
      */
-    public function countLevelClients()
+    public function countLevelBuildings()
     {
         $qb = $this->createQueryBuilder('c')
             ->select('COUNT(DISTINCT(c.id)) as num');
@@ -74,7 +74,7 @@ class ClientRepository extends ServiceEntityRepository
     /**
      * @return array
      */
-    public function countLevelClientsByStatus()
+    public function countLevelBuildingsByStatus()
     {
         $qb = $this->createQueryBuilder('c')
             ->leftJoin('c.accesses', 'access')
@@ -89,7 +89,7 @@ class ClientRepository extends ServiceEntityRepository
      * @return mixed
      * @throws \Exception
      */
-    public function countNewClients($days)
+    public function countNewBuildings($days)
     {
         $now = new \DateTime();
 
@@ -106,7 +106,7 @@ class ClientRepository extends ServiceEntityRepository
      * @param $search
      * @return array
      */
-    public function searchClientsByAllFields($search)
+    public function searchBuildingsByAllFields($search)
     {
         $search = mb_strtolower($search);
         $qb = $this->createQueryBuilder('c');
@@ -131,7 +131,7 @@ class ClientRepository extends ServiceEntityRepository
     /**
      * @return array
      */
-    public function getClientsByModulesStatuses()
+    public function getBuildingsByModulesStatuses()
     {
         $qb = $this->createQueryBuilder('c');
 
@@ -151,7 +151,7 @@ class ClientRepository extends ServiceEntityRepository
      * @param $days
      * @return array
      */
-    public function countNewClientsByDays($days)
+    public function countNewBuildingsByDays($days)
     {
         $now = new \DateTime();
 
@@ -168,7 +168,7 @@ class ClientRepository extends ServiceEntityRepository
      * @param $statusId
      * @return array
      */
-    public function getClientsByStatus($statusId)
+    public function getBuildingsByStatus($statusId)
     {
         $qb = $this->createQueryBuilder('c');
 
@@ -186,7 +186,7 @@ class ClientRepository extends ServiceEntityRepository
      * @param $isConfirmed
      * @return mixed
      */
-    public function countClientsByActivation($isConfirmed)
+    public function countBuildingsByActivation($isConfirmed)
     {
         $qb = $this->createQueryBuilder('c');
 
@@ -203,7 +203,7 @@ class ClientRepository extends ServiceEntityRepository
      * @param $text
      * @return mixed
      */
-    public function getClientsByActivation($isConfirmed, $text)
+    public function getBuildingsByActivation($isConfirmed, $text)
     {
         $qb = $this->createQueryBuilder('c');
 
@@ -229,7 +229,7 @@ class ClientRepository extends ServiceEntityRepository
      * @return mixed
      * @throws \Exception
      */
-    public function getNewClientsByDays($days)
+    public function getNewBuildingsByDays($days)
     {
         $now = new \DateTime();
 
@@ -265,13 +265,13 @@ class ClientRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function getImages(Client $client)
+    public function getImages(Building $building)
     {
         $qb = $this->createQueryBuilder('c')
             ->select('c, g')
             ->innerJoin('c.gallery', 'g')
-            ->where('c = :client')
-            ->setParameter('client', $client);
+            ->where('c = :building')
+            ->setParameter('building', $building);
 
         return $qb->getQuery();
     }

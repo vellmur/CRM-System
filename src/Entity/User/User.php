@@ -2,7 +2,7 @@
 
 namespace App\Entity\User;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -115,10 +115,10 @@ class User implements UserInterface
     private $isActive = true;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Client\Client", inversedBy="users", cascade={"persist"})
-     * @ORM\JoinColumn(name="client_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Building\Building", inversedBy="users", cascade={"persist"})
+     * @ORM\JoinColumn(name="building_id", referencedColumnName="id", nullable=false)
      */
-    private $client;
+    private $building;
 
     /**
      * @var DateTime
@@ -133,7 +133,7 @@ class User implements UserInterface
     private $devices;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Client\Notification\NotifiableNotification", mappedBy="user", cascade={"all"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Building\Notification\NotifiableNotification", mappedBy="user", cascade={"all"}, orphanRemoval=true)
      */
     private $notifications;
 
@@ -431,20 +431,20 @@ class User implements UserInterface
     }
 
     /**
-     * @return Client|null
+     * @return Building|null
      */
-    public function getClient() : ?Client
+    public function getBuilding() : ?Building
     {
-        return $this->client;
+        return $this->building;
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @return $this
      */
-    public function setClient(Client $client)
+    public function setBuilding(Building $building)
     {
-        $this->client = $client;
+        $this->building = $building;
 
         return $this;
     }

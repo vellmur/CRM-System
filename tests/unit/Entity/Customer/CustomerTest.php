@@ -2,7 +2,7 @@
 
 namespace App\Tests\Entity\User;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use App\Entity\Customer\Customer;
 use App\Entity\Customer\CustomerEmailNotify;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -19,13 +19,13 @@ class CustomerTest extends TestCase
     {
         $customer = new Customer();
         $date = new \DateTime();
-        $client = new Client();
+        $building = new Building();
 
         $customer->setId(1);
         $customer->setEmail('johngolt@gmail.com');
         $customer->setFirstname('John');
         $customer->setLastname('Golt');
-        $customer->setClient($client);
+        $customer->setBuilding($building);
         $customer->setPhone('+380936069590');
         $customer->setCreatedAt($date);
 
@@ -41,25 +41,25 @@ class CustomerTest extends TestCase
         $this->assertEquals('JOHN GOLT', $customer->getFullname());
         $this->assertEquals('johngolt@gmail.com', $customer->getEmail());
         $this->assertEquals('380936069590', $customer->getPhone());
-        $this->assertEquals($client, $customer->getClient());
+        $this->assertEquals($building, $customer->getBuilding());
         $this->assertEquals($date, $customer->getCreatedAt());
         $this->assertEquals(false, $customer->isActivated());
         $customer->setIsActivated(true);
         $this->assertEquals(true, $customer->isActivated());
 
-        $this->testSetClient();
+        $this->testSetBuilding();
         $this->testNotifications();
     }
 
-    public function testSetClient()
+    public function testSetBuilding()
     {
         $customer = new Customer();
-        $client = new Client();
+        $building = new Building();
 
-        $customer->setClient($client);
+        $customer->setBuilding($building);
 
-        $this->assertNotNull($client);
-        $this->assertEquals($customer->getClient(), $client);
+        $this->assertNotNull($building);
+        $this->assertEquals($customer->getBuilding(), $building);
     }
 
     public function testNotifications()

@@ -2,20 +2,20 @@
 
 namespace App\Entity\Customer\Email;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 
-interface ClientEmailInterface
+interface BuildingEmailInterface
 {
     /**
-     * @return Client
+     * @return Building
      */
-    public function getClient() : Client;
+    public function getBuilding() : Building;
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @return mixed
      */
-    public function setClient(Client $client);
+    public function setBuilding(Building $building);
 
     /**
      * @return string

@@ -2,7 +2,7 @@
 
 namespace App\Manager;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use App\Entity\Media\Image;
 use Doctrine\ORM\EntityManagerInterface;
 use Liip\ImagineBundle\Imagine\Data\DataManager;
@@ -52,38 +52,38 @@ class ImageManager
     }
 
     /**
-     * @param Client|null $client
+     * @param Building|null $building
      * @return \Doctrine\ORM\Query
      */
-    public function getImagesQuery(Client $client = null)
+    public function getImagesQuery(Building $building = null)
     {
         $query = $this->em->createQueryBuilder()
             ->select('image')
             ->from(Image::class, 'image')
             ->orderBy('image.createdAt', 'desc');
 
-        if (null !== $client) {
-            $query->where('image.client = :id')
-                ->setParameter('id', $client->getId());
+        if (null !== $building) {
+            $query->where('image.building = :id')
+                ->setParameter('id', $building->getId());
         } else {
-            $query->where('image.client is null');
+            $query->where('image.building is null');
         }
 
         return $query->getQuery();
     }
 
     /**
-     * @param Client|null $client
+     * @param Building|null $building
      * @param $imagesFiles
      * @throws \Exception
      */
-    public function uploadImages(?Client $client, $imagesFiles)
+    public function uploadImages(?Building $building, $imagesFiles)
     {
         $this->em->beginTransaction();
 
         try {
             foreach ($imagesFiles as $imageFile) {
-                $this->upload($client, $imageFile);
+                $this->upload($building, $imageFile);
             }
 
             $this->em->commit();
@@ -95,16 +95,16 @@ class ImageManager
     }
 
     /**
-     * @param Client|null $client
+     * @param Building|null $building
      * @param UploadedFile $imageFile
      * @return Image|null
      * @throws \Exception
      */
-    private function upload(?Client $client, $imageFile)
+    private function upload(?Building $building, $imageFile)
     {
         $image = $this->em->getRepository(Image::class)->findOneBy([
-            'name' => $imageFile->getClientOriginalName(),
-            'client' => $client === null ? null : $client->getId()
+            'name' => $imageFile->getBuildingOriginalName(),
+            'building' => $building === null ? null : $building->getId()
         ]);
 
         // Remove image from db if file doesnt exists
@@ -113,7 +113,7 @@ class ImageManager
         }
 
         if (null === $image) {
-            $image = $this->saveImage($client, $imageFile);
+            $image = $this->saveImage($building, $imageFile);
 
             if (!file_exists($this->getImagePath($image))) {
                 throw new \Exception('File wasn`t uploaded');
@@ -203,14 +203,14 @@ class ImageManager
     /**
      * Save uploaded image file to server, resize/crop image, save image to database
      *
-     * @param Client|null $client
+     * @param Building|null $building
      * @param UploadedFile $imageFile
      * @return Image
      * @throws \Exception
      */
-    private function saveImage(?Client $client, $imageFile)
+    private function saveImage(?Building $building, $imageFile)
     {
-        $image = new Image($client);
+        $image = new Image($building);
 
         // Upload image to the server with vichUploader
         $image->setImageFile($imageFile);

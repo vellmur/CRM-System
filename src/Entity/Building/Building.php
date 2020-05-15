@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\Client;
+namespace App\Entity\Building;
 
 use App\Entity\User\User;
 use Doctrine\Common\Collections\Collection;
@@ -13,11 +13,11 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Table(name="client")
- * @ORM\Entity(repositoryClass="App\Repository\ClientRepository")
+ * @ORM\Table(name="building")
+ * @ORM\Entity(repositoryClass="App\Repository\BuildingRepository")
  * @UniqueEntity(fields={"name"}, errorPath="name", message="validation.form.unique", groups={"register_validation", "profile_validation"})
  */
-class Client
+class Building
 {
     /**
      * @var int
@@ -69,72 +69,72 @@ class Client
     private $createdAt;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Client\ModuleAccess", mappedBy="client", cascade={"all"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Building\ModuleAccess", mappedBy="building", cascade={"all"})
      */
     private $accesses;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Client\Subscription", mappedBy="client", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Building\Subscription", mappedBy="building", cascade={"remove"})
      */
     private $subscriptions;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\Customer", mappedBy="client", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Customer\Customer", mappedBy="building", cascade={"remove"})
      */
     private $customers;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\Vendor", mappedBy="client", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Customer\Vendor", mappedBy="building", cascade={"remove"})
      */
     private $vendors;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Client\Affiliate", mappedBy="client", cascade={"all"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Building\Affiliate", mappedBy="building", cascade={"all"})
      */
     private $affiliate;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\VendorOrder", mappedBy="client", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Customer\VendorOrder", mappedBy="building", cascade={"remove"})
      */
     private $vendorOrders;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\Email\CustomerEmail", mappedBy="client", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Customer\Email\CustomerEmail", mappedBy="building", cascade={"remove"})
      */
     private $emails;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\Email\AutoEmail", mappedBy="client", cascade={"all"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Customer\Email\AutoEmail", mappedBy="building", cascade={"all"})
      */
     private $autoEmails;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Master\Email\Recipient", mappedBy="client", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Master\Email\Recipient", mappedBy="building", cascade={"remove"})
      */
     private $emailRecipients;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Client\Post", mappedBy="client", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Building\Post", mappedBy="building", cascade={"persist", "remove"})
      */
     private $posts;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Media\Image", mappedBy="client", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Media\Image", mappedBy="building", cascade={"persist", "remove"})
      */
     private $images;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\POS", mappedBy="client", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Customer\POS", mappedBy="building", cascade={"persist", "remove"})
      */
     private $pos;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\Product", mappedBy="client", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Customer\Product", mappedBy="building", cascade={"remove"})
      */
     private $products;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\Tag", mappedBy="client", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Customer\Tag", mappedBy="building", cascade={"remove"})
      */
     private $tags;
 
@@ -144,18 +144,18 @@ class Client
     private $apartments;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\User\User", mappedBy="client", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\User\User", mappedBy="building", cascade={"remove"})
      */
     private $users;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Client\Address", cascade={"all"})
+     * @ORM\OneToOne(targetEntity="App\Entity\Building\Address", cascade={"all"})
      * @ORM\JoinColumn(name="address_id", referencedColumnName="id")
      */
     private $address;
 
     /**
-     * Client constructor.
+     * Building constructor.
      * @throws \Exception
      */
     public function __construct()
@@ -198,7 +198,7 @@ class Client
      *
      * @param string $name
      *
-     * @return Client
+     * @return Building
      */
     public function setName($name)
     {
@@ -398,7 +398,7 @@ class Client
      */
     public function addAutoMail(AutoEmail $autoEmail)
     {
-        $autoEmail->setClient($this);
+        $autoEmail->setBuilding($this);
         $this->autoEmails[] = $autoEmail;
 
         return $this;
@@ -426,7 +426,7 @@ class Client
      */
     public function addTag(Tag $tag)
     {
-        $tag->setClient($this);
+        $tag->setBuilding($this);
         $this->tags[] = $tag;
 
         return $this;

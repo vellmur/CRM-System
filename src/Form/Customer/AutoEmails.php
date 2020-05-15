@@ -2,7 +2,7 @@
 
 namespace App\Form\Customer;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -34,7 +34,7 @@ class AutoEmails extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Client::class,
+            'data_class' => Building::class,
             'translation_domain' => 'labels'
         ]);
     }

@@ -2,7 +2,7 @@
 
 namespace App\Entity\Media;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use Doctrine\ORM\Mapping as ORM;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
@@ -13,10 +13,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Class Image
  *
  * @ORM\Table(name="media__image", uniqueConstraints={
- *     @ORM\UniqueConstraint(name="client_image_unique", columns={"client_id", "name"})
+ *     @ORM\UniqueConstraint(name="building_image_unique", columns={"building_id", "name"})
  * })
  * @ORM\Entity(repositoryClass="App\Repository\ImageRepository")
- * @UniqueEntity(fields={"client", "name"}, errorPath="name", message="validation.form.unique")
+ * @UniqueEntity(fields={"building", "name"}, errorPath="name", message="validation.form.unique")
  * @Vich\Uploadable
  */
 class Image
@@ -31,10 +31,10 @@ class Image
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Client\Client", inversedBy="images")
-     * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Building\Building", inversedBy="images")
+     * @ORM\JoinColumn(name="building_id", referencedColumnName="id")
      */
-    private $client;
+    private $building;
 
     /**
      * @var string
@@ -79,13 +79,13 @@ class Image
      */
     private $updatedAt;
 
-    public function __construct(Client $client = null)
+    public function __construct(Building $building = null)
     {
         $now = new \DateTime('now');
 
         $this->createdAt = $now;
         $this->updatedAt = $now;
-        $this->client = $client;
+        $this->building = $building;
     }
 
     public function __toString()
@@ -112,9 +112,9 @@ class Image
     /**
      * @return mixed
      */
-    public function getClient()
+    public function getBuilding()
     {
-        return $this->client;
+        return $this->building;
     }
 
     /**

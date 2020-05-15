@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use App\Entity\ModuleAccess;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -19,17 +19,17 @@ class ModuleAccessRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param $moduleId
      * @return mixed|null
      */
-    public function getModuleAccess(Client $client, $moduleId)
+    public function getModuleAccess(Building $building, $moduleId)
     {
         $qb = $this->createQueryBuilder('a')
             ->select()
-            ->where('a.client = :client')
+            ->where('a.building = :building')
             ->andWhere('a.module = :module')
-            ->setParameter('client', $client)
+            ->setParameter('building', $building)
             ->setParameter('module', $moduleId)
             ->setMaxResults(1);
 

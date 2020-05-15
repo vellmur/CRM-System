@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Entity\Client;
+namespace App\Entity\Building;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\Table(name="client__address")
+ * @ORM\Table(name="building__address")
  * @ORM\Entity()
  * @UniqueEntity(fields={"country", "region", "city", "street"}, errorPath="name", message="validation.form.unique")
  */

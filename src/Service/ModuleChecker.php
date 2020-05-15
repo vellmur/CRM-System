@@ -2,8 +2,8 @@
 
 namespace App\Service;
 
-use App\Entity\Client\Client;
-use App\Entity\Client\ModuleAccess;
+use App\Entity\Building\Building;
+use App\Entity\Building\ModuleAccess;
 
 class ModuleChecker
 {
@@ -58,38 +58,38 @@ class ModuleChecker
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @return array
      */
-    public function getModulesStatuses(Client $client)
+    public function getModulesStatuses(Building $building)
     {
         return [
-            'lapsed' => $this->getLapsedModules($client)
+            'lapsed' => $this->getLapsedModules($building)
         ];
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param $moduleName
      * @return bool
      */
-    public function isModuleActive(Client $client, $moduleName)
+    public function isModuleActive(Building $building, $moduleName)
     {
         $moduleName = strtolower($moduleName);
-        $module = $this->getClientModuleByName($client, $moduleName);
+        $module = $this->getBuildingModuleByName($building, $moduleName);
         return $module && $module->getStatusName() != 'LAPSED';
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param $moduleName
      * @return ModuleAccess|mixed|null
      */
-    public function getClientModuleByName(Client $client, $moduleName)
+    public function getBuildingModuleByName(Building $building, $moduleName)
     {
         $module = null;
 
-        foreach ($client->getAccesses() as $moduleAccess) {
+        foreach ($building->getAccesses() as $moduleAccess) {
             if ($moduleAccess->getModuleName() == $moduleName) {
                 $module = $moduleAccess;
                 break;
@@ -100,29 +100,29 @@ class ModuleChecker
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param $roles
      * @param $moduleName
      * @return bool
      */
-    public function clientHasModuleAccess(Client $client, $roles, $moduleName)
+    public function buildingHasModuleAccess(Building $building, $roles, $moduleName)
     {
         if (!in_array('ROLE_OWNER', $roles) && !in_array('ROLE_EMPLOYEE', $roles)) {
             return false;
         }
 
-        return $this->isModuleActive($client, $moduleName);
+        return $this->isModuleActive($building, $moduleName);
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @return array
      */
-    public function getLapsedModules(Client $client)
+    public function getLapsedModules(Building $building)
     {
         $lapsed = [];
 
-        foreach ($client->getAccesses() as $moduleAccess) {
+        foreach ($building->getAccesses() as $moduleAccess) {
             if ($moduleAccess->getStatusName() == 'LAPSED') {
                 $lapsed[] = $moduleAccess->getModuleName();
             }

@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Entity\Client;
+namespace App\Entity\Building;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * ModuleAccess
  *
- * @ORM\Table(name="client__module_access", uniqueConstraints={
- *     @ORM\UniqueConstraint(name="access_unique", columns={"client_id", "module_id"})
+ * @ORM\Table(name="building__module_access", uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="access_unique", columns={"building_id", "module_id"})
  * })
  * @ORM\Entity(repositoryClass="App\Repository\ModuleAccessRepository")
  */
@@ -24,10 +24,10 @@ class ModuleAccess
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Client\Client", inversedBy="accesses", cascade={"persist", "remove" })
-     * @ORM\JoinColumn(name="client_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Building\Building", inversedBy="accesses", cascade={"persist", "remove" })
+     * @ORM\JoinColumn(name="building_id", referencedColumnName="id", nullable=false)
      */
-    private $client;
+    private $building;
 
     /**
      * @ORM\Column(name="module_id", type="integer", length=1, nullable=false)
@@ -83,22 +83,22 @@ class ModuleAccess
     }
 
     /**
-     * @param $client
+     * @param $building
      * @return $this
      */
-    public function setClient($client)
+    public function setBuilding($building)
     {
-        $this->client = $client;
+        $this->building = $building;
 
         return $this;
     }
 
     /**
-     * @return Client
+     * @return Building
      */
-    public function getClient()
+    public function getBuilding()
     {
-        return $this->client;
+        return $this->building;
     }
 
     /**

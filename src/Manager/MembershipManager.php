@@ -2,7 +2,7 @@
 
 namespace App\Manager;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use App\Entity\Customer\Contact;
 use App\Entity\Customer\Invoice;
 use App\Entity\Customer\Email\EmailRecipient;
@@ -37,13 +37,13 @@ class MembershipManager
     }
 
     /**
-     * @return \App\Entity\Client[]|array
+     * @return \App\Entity\Building[]|array
      */
-    public function getSoftwareClients()
+    public function getSoftwareBuildings()
     {
-        $clients = $this->em->getRepository(Client::class)->getSoftwareClients();
+        $buildings = $this->em->getRepository(Building::class)->getSoftwareBuildings();
 
-        return $clients;
+        return $buildings;
     }
 
     /**
@@ -66,30 +66,30 @@ class MembershipManager
 
     /**
      * @param $token
-     * @return Client|null|object
+     * @return Building|null|object
      */
-    public function findClientByToken($token)
+    public function findBuildingByToken($token)
     {
-        return $this->em->getRepository(Client::class)->findOneBy(['token' => $token]);
+        return $this->em->getRepository(Building::class)->findOneBy(['token' => $token]);
     }
     /**
      * @param $id
-     * @return Client|null|object
+     * @return Building|null|object
      */
-    public function getClientById($id)
+    public function getBuildingById($id)
     {
-        return $this->em->find(Client::class, $id);
+        return $this->em->find(Building::class, $id);
     }
 
     /**
      * @param $email
-     * @param Client $client
+     * @param Building $building
      * @return null|object|Customer
      */
-    public function findOneByEmail($email, Client $client = null)
+    public function findOneByEmail($email, Building $building = null)
     {
-        if ($client) {
-            $member = $this->em->getRepository(Customer::class)->findOneBy(['client' => $client, 'email' => $email]);
+        if ($building) {
+            $member = $this->em->getRepository(Customer::class)->findOneBy(['building' => $building, 'email' => $email]);
         } else {
             $member = $this->em->getRepository(Customer::class)->findOneBy(['email' => $email]);
         }
@@ -143,10 +143,10 @@ class MembershipManager
     }
 
     /**
-     * @return \Doctrine\Common\Collections\Collection|Client[] $clients
+     * @return \Doctrine\Common\Collections\Collection|Building[] $buildings
      */
-    public function getClientsWithPatrons()
+    public function getBuildingsWithPatrons()
     {
-        return $this->em->getRepository(Client::class)->getPOSPatrons();
+        return $this->em->getRepository(Building::class)->getPOSPatrons();
     }
 }

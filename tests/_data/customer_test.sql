@@ -25,10 +25,10 @@ USE `customer_test`;
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `client`
+-- Структура таблицы `building`
 --
 
-CREATE TABLE `client` (
+CREATE TABLE `building` (
   `id` int(11) NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -46,12 +46,12 @@ CREATE TABLE `client` (
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `client__affiliate`
+-- Структура таблицы `building__affiliate`
 --
 
-CREATE TABLE `client__affiliate` (
+CREATE TABLE `building__affiliate` (
   `id` int(11) NOT NULL,
-  `client_id` int(11) DEFAULT NULL,
+  `building_id` int(11) DEFAULT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `email` varchar(25) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `referral_code` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -61,12 +61,12 @@ CREATE TABLE `client__affiliate` (
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `client__module_access`
+-- Структура таблицы `building__module_access`
 --
 
-CREATE TABLE `client__module_access` (
+CREATE TABLE `building__module_access` (
   `id` int(11) NOT NULL,
-  `client_id` int(11) NOT NULL,
+  `building_id` int(11) NOT NULL,
   `module_id` int(11) NOT NULL,
   `expired_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
@@ -76,12 +76,12 @@ CREATE TABLE `client__module_access` (
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `client__posts`
+-- Структура таблицы `building__posts`
 --
 
-CREATE TABLE `client__posts` (
+CREATE TABLE `building__posts` (
   `id` int(11) NOT NULL,
-  `client_id` int(11) NOT NULL,
+  `building_id` int(11) NOT NULL,
   `thumb_id` int(11) DEFAULT NULL,
   `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `text` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -93,12 +93,12 @@ CREATE TABLE `client__posts` (
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `client__referral`
+-- Структура таблицы `building__referral`
 --
 
-CREATE TABLE `client__referral` (
+CREATE TABLE `building__referral` (
   `id` int(11) NOT NULL,
-  `client_id` int(11) DEFAULT NULL,
+  `building_id` int(11) DEFAULT NULL,
   `affiliate_id` int(11) NOT NULL,
   `is_paid` tinyint(1) NOT NULL,
   `created_at` date NOT NULL
@@ -107,12 +107,12 @@ CREATE TABLE `client__referral` (
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `client__settings`
+-- Структура таблицы `building__settings`
 --
 
-CREATE TABLE `client__settings` (
+CREATE TABLE `building__settings` (
   `id` int(11) NOT NULL,
-  `client_id` int(11) NOT NULL,
+  `building_id` int(11) NOT NULL,
   `module` int(11) NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `enabled` tinyint(1) NOT NULL
@@ -121,36 +121,36 @@ CREATE TABLE `client__settings` (
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `client__subscription`
+-- Структура таблицы `building__subscription`
 --
 
-CREATE TABLE `client__subscription` (
+CREATE TABLE `building__subscription` (
   `id` int(11) NOT NULL,
-  `client_id` int(11) NOT NULL,
+  `building_id` int(11) NOT NULL,
   `amount` decimal(8,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `client__tags`
+-- Структура таблицы `building__tags`
 --
 
-CREATE TABLE `client__tags` (
+CREATE TABLE `building__tags` (
   `id` int(11) NOT NULL,
-  `client_id` int(11) DEFAULT NULL,
+  `building_id` int(11) DEFAULT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `client__team`
+-- Структура таблицы `building__team`
 --
 
-CREATE TABLE `client__team` (
+CREATE TABLE `building__team` (
   `id` int(11) NOT NULL,
-  `client_id` int(11) NOT NULL,
+  `building_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -162,7 +162,7 @@ CREATE TABLE `client__team` (
 
 CREATE TABLE `customer` (
   `id` int(11) NOT NULL,
-  `client_id` int(11) DEFAULT NULL,
+  `building_id` int(11) DEFAULT NULL,
   `firstname` varchar(25) COLLATE utf8mb4_unicode_ci NOT NULL,
   `lastname` varchar(25) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -237,7 +237,7 @@ CREATE TABLE `customer__invoice_product` (
 
 CREATE TABLE `customer__location` (
   `id` int(11) NOT NULL,
-  `client_id` int(11) NOT NULL,
+  `building_id` int(11) NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `street` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `apartment` int(11) DEFAULT NULL,
@@ -286,7 +286,7 @@ CREATE TABLE `customer__notifies` (
 
 CREATE TABLE `customer__orders` (
   `id` int(11) NOT NULL,
-  `client_id` int(11) DEFAULT NULL,
+  `building_id` int(11) DEFAULT NULL,
   `share_id` int(11) DEFAULT NULL,
   `start_date` date NOT NULL,
   `end_date` date NOT NULL
@@ -329,7 +329,7 @@ CREATE TABLE `customer__payment_method` (
 CREATE TABLE `customer__product__tag` (
   `id` int(11) NOT NULL,
   `product_id` int(11) DEFAULT NULL,
-  `client_id` int(11) DEFAULT NULL
+  `building_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -353,7 +353,7 @@ CREATE TABLE `customer__referrals` (
 
 CREATE TABLE `customer__renewal_views` (
   `id` int(11) NOT NULL,
-  `client_id` int(11) NOT NULL,
+  `building_id` int(11) NOT NULL,
   `customer_id` int(11) DEFAULT NULL,
   `ip` int(10) UNSIGNED DEFAULT NULL,
   `step` int(11) NOT NULL,
@@ -399,7 +399,7 @@ CREATE TABLE `customer__transaction_status` (
 
 CREATE TABLE `customer__vendor` (
   `id` int(11) NOT NULL,
-  `client_id` int(11) NOT NULL,
+  `building_id` int(11) NOT NULL,
   `address_id` int(11) DEFAULT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `category` longtext COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '(DC2Type:array)',
@@ -431,7 +431,7 @@ CREATE TABLE `customer__vendor_contact` (
 
 CREATE TABLE `customer__vendor_orders` (
   `id` int(11) NOT NULL,
-  `client_id` int(11) DEFAULT NULL,
+  `building_id` int(11) DEFAULT NULL,
   `vendor_id` int(11) DEFAULT NULL,
   `order_date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -472,7 +472,7 @@ CREATE TABLE `device__promotion_visit` (
 
 CREATE TABLE `email__auto` (
   `id` int(11) NOT NULL,
-  `client_id` int(11) NOT NULL,
+  `building_id` int(11) NOT NULL,
   `subject` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `text` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `type` int(11) NOT NULL
@@ -502,7 +502,7 @@ CREATE TABLE `email__feedback` (
 
 CREATE TABLE `email__log` (
   `id` int(11) NOT NULL,
-  `client_id` int(11) NOT NULL,
+  `building_id` int(11) NOT NULL,
   `automated_id` int(11) DEFAULT NULL,
   `reply_email` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `reply_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -583,7 +583,7 @@ CREATE TABLE `master__email_automated` (
 CREATE TABLE `master__email_recipient` (
   `id` int(11) NOT NULL,
   `email_id` int(11) NOT NULL,
-  `client_id` int(11) NOT NULL,
+  `building_id` int(11) NOT NULL,
   `email_address` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `is_delivered` tinyint(1) NOT NULL,
   `is_opened` tinyint(1) NOT NULL,
@@ -615,7 +615,7 @@ CREATE TABLE `master__posts` (
 
 CREATE TABLE `media__image` (
   `id` int(11) NOT NULL,
-  `client_id` int(11) DEFAULT NULL,
+  `building_id` int(11) DEFAULT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `size` int(11) NOT NULL,
   `mime_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -677,7 +677,7 @@ CREATE TABLE `notification__notify` (
 
 CREATE TABLE `pos` (
   `id` int(11) NOT NULL,
-  `client_id` int(11) DEFAULT NULL,
+  `building_id` int(11) DEFAULT NULL,
   `customer_id` int(11) DEFAULT NULL,
   `total` decimal(7,2) NOT NULL,
   `received_amount` decimal(7,2) NOT NULL,
@@ -707,7 +707,7 @@ CREATE TABLE `pos__product` (
 
 CREATE TABLE `pos__products` (
   `id` int(11) NOT NULL,
-  `client_id` int(11) DEFAULT NULL,
+  `building_id` int(11) DEFAULT NULL,
   `image` int(11) DEFAULT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `description` text COLLATE utf8mb4_unicode_ci,
@@ -728,7 +728,7 @@ CREATE TABLE `pos__products` (
 
 CREATE TABLE `share` (
   `id` int(11) NOT NULL,
-  `client_id` int(11) NOT NULL,
+  `building_id` int(11) NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `description` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `price` decimal(8,2) NOT NULL,
@@ -806,7 +806,7 @@ CREATE TABLE `share__products` (
 
 CREATE TABLE `share__suspended_weeks` (
   `id` int(11) NOT NULL,
-  `client_id` int(11) DEFAULT NULL,
+  `building_id` int(11) DEFAULT NULL,
   `week` int(11) NOT NULL,
   `year` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -915,85 +915,85 @@ CREATE TABLE `user__device` (
 --
 
 --
--- Индексы таблицы `client`
+-- Индексы таблицы `building`
 --
-ALTER TABLE `client`
+ALTER TABLE `building`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `UNIQ_C74404555E237E06` (`name`);
 
 --
--- Индексы таблицы `client__affiliate`
+-- Индексы таблицы `building__affiliate`
 --
-ALTER TABLE `client__affiliate`
+ALTER TABLE `building__affiliate`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `UNIQ_84B239936447454A` (`referral_code`),
-  ADD UNIQUE KEY `UNIQ_84B2399319EB6921` (`client_id`),
+  ADD UNIQUE KEY `UNIQ_84B2399319EB6921` (`building_id`),
   ADD UNIQUE KEY `affiliate_unique` (`name`,`email`);
 
 --
--- Индексы таблицы `client__module_access`
+-- Индексы таблицы `building__module_access`
 --
-ALTER TABLE `client__module_access`
+ALTER TABLE `building__module_access`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `access_unique` (`client_id`,`module_id`),
-  ADD KEY `IDX_22F969DA19EB6921` (`client_id`);
+  ADD UNIQUE KEY `access_unique` (`building_id`,`module_id`),
+  ADD KEY `IDX_22F969DA19EB6921` (`building_id`);
 
 --
--- Индексы таблицы `client__posts`
+-- Индексы таблицы `building__posts`
 --
-ALTER TABLE `client__posts`
+ALTER TABLE `building__posts`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `UNIQ_57C31DD52B36786B` (`title`),
-  ADD KEY `IDX_57C31DD519EB6921` (`client_id`),
+  ADD KEY `IDX_57C31DD519EB6921` (`building_id`),
   ADD KEY `IDX_57C31DD5C7034EA5` (`thumb_id`);
 
 --
--- Индексы таблицы `client__referral`
+-- Индексы таблицы `building__referral`
 --
-ALTER TABLE `client__referral`
+ALTER TABLE `building__referral`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `UNIQ_B6E7086F19EB6921` (`client_id`),
-  ADD UNIQUE KEY `referral_unique` (`client_id`,`affiliate_id`),
+  ADD UNIQUE KEY `UNIQ_B6E7086F19EB6921` (`building_id`),
+  ADD UNIQUE KEY `referral_unique` (`building_id`,`affiliate_id`),
   ADD KEY `IDX_B6E7086F9F12C49A` (`affiliate_id`);
 
 --
--- Индексы таблицы `client__settings`
+-- Индексы таблицы `building__settings`
 --
-ALTER TABLE `client__settings`
+ALTER TABLE `building__settings`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `IDX_20A535AA19EB6921` (`client_id`);
+  ADD KEY `IDX_20A535AA19EB6921` (`building_id`);
 
 --
--- Индексы таблицы `client__subscription`
+-- Индексы таблицы `building__subscription`
 --
-ALTER TABLE `client__subscription`
+ALTER TABLE `building__subscription`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `IDX_8E2B3C4E19EB6921` (`client_id`);
+  ADD KEY `IDX_8E2B3C4E19EB6921` (`building_id`);
 
 --
--- Индексы таблицы `client__tags`
+-- Индексы таблицы `building__tags`
 --
-ALTER TABLE `client__tags`
+ALTER TABLE `building__tags`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `tags_unique` (`client_id`,`name`),
-  ADD KEY `IDX_91F4788A19EB6921` (`client_id`);
+  ADD UNIQUE KEY `tags_unique` (`building_id`,`name`),
+  ADD KEY `IDX_91F4788A19EB6921` (`building_id`);
 
 --
--- Индексы таблицы `client__team`
+-- Индексы таблицы `building__team`
 --
-ALTER TABLE `client__team`
+ALTER TABLE `building__team`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `UNIQ_3AA84AB3A76ED395` (`user_id`),
-  ADD KEY `IDX_3AA84AB319EB6921` (`client_id`);
+  ADD KEY `IDX_3AA84AB319EB6921` (`building_id`);
 
 --
 -- Индексы таблицы `customer`
 --
 ALTER TABLE `customer`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `customer_unique` (`client_id`,`email`),
-  ADD UNIQUE KEY `customer_phone_unique` (`client_id`,`phone`),
-  ADD KEY `IDX_81398E0919EB6921` (`client_id`);
+  ADD UNIQUE KEY `customer_unique` (`building_id`,`email`),
+  ADD UNIQUE KEY `customer_phone_unique` (`building_id`,`phone`),
+  ADD KEY `IDX_81398E0919EB6921` (`building_id`);
 
 --
 -- Индексы таблицы `customer__address`
@@ -1024,7 +1024,7 @@ ALTER TABLE `customer__invoice_product`
 --
 ALTER TABLE `customer__location`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `IDX_DBA334B119EB6921` (`client_id`);
+  ADD KEY `IDX_DBA334B119EB6921` (`building_id`);
 
 --
 -- Индексы таблицы `customer__location_workdays`
@@ -1046,7 +1046,7 @@ ALTER TABLE `customer__notifies`
 --
 ALTER TABLE `customer__orders`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `IDX_C1BED319EB6921` (`client_id`),
+  ADD KEY `IDX_C1BED319EB6921` (`building_id`),
   ADD KEY `IDX_C1BED32AE63FDB` (`share_id`);
 
 --
@@ -1069,7 +1069,7 @@ ALTER TABLE `customer__payment_method`
 ALTER TABLE `customer__product__tag`
   ADD PRIMARY KEY (`id`),
   ADD KEY `IDX_FD349E724584665A` (`product_id`),
-  ADD KEY `IDX_FD349E7219EB6921` (`client_id`);
+  ADD KEY `IDX_FD349E7219EB6921` (`building_id`);
 
 --
 -- Индексы таблицы `customer__referrals`
@@ -1085,7 +1085,7 @@ ALTER TABLE `customer__referrals`
 --
 ALTER TABLE `customer__renewal_views`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `IDX_88E36BAB19EB6921` (`client_id`),
+  ADD KEY `IDX_88E36BAB19EB6921` (`building_id`),
   ADD KEY `IDX_88E36BAB9395C3F3` (`customer_id`);
 
 --
@@ -1109,7 +1109,7 @@ ALTER TABLE `customer__transaction_status`
 ALTER TABLE `customer__vendor`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `UNIQ_10CC70CBF5B7AF75` (`address_id`),
-  ADD KEY `IDX_10CC70CB19EB6921` (`client_id`);
+  ADD KEY `IDX_10CC70CB19EB6921` (`building_id`);
 
 --
 -- Индексы таблицы `customer__vendor_contact`
@@ -1123,7 +1123,7 @@ ALTER TABLE `customer__vendor_contact`
 --
 ALTER TABLE `customer__vendor_orders`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `IDX_A5D88E9819EB6921` (`client_id`),
+  ADD KEY `IDX_A5D88E9819EB6921` (`building_id`),
   ADD KEY `IDX_A5D88E98F603EE73` (`vendor_id`);
 
 --
@@ -1145,7 +1145,7 @@ ALTER TABLE `device__promotion_visit`
 --
 ALTER TABLE `email__auto`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `IDX_A6D2146E19EB6921` (`client_id`);
+  ADD KEY `IDX_A6D2146E19EB6921` (`building_id`);
 
 --
 -- Индексы таблицы `email__feedback`
@@ -1161,7 +1161,7 @@ ALTER TABLE `email__feedback`
 --
 ALTER TABLE `email__log`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `IDX_5D6251BA19EB6921` (`client_id`),
+  ADD KEY `IDX_5D6251BA19EB6921` (`building_id`),
   ADD KEY `IDX_5D6251BAB1254A89` (`automated_id`);
 
 --
@@ -1198,9 +1198,9 @@ ALTER TABLE `master__email_automated`
 --
 ALTER TABLE `master__email_recipient`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `master_email_recipient` (`email_id`,`client_id`),
+  ADD UNIQUE KEY `master_email_recipient` (`email_id`,`building_id`),
   ADD KEY `IDX_8A5C4BC4A832C1C9` (`email_id`),
-  ADD KEY `IDX_8A5C4BC419EB6921` (`client_id`);
+  ADD KEY `IDX_8A5C4BC419EB6921` (`building_id`);
 
 --
 -- Индексы таблицы `master__posts`
@@ -1215,8 +1215,8 @@ ALTER TABLE `master__posts`
 --
 ALTER TABLE `media__image`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `client_image_unique` (`client_id`,`name`),
-  ADD KEY `IDX_F37C721D19EB6921` (`client_id`);
+  ADD UNIQUE KEY `building_image_unique` (`building_id`,`name`),
+  ADD KEY `IDX_F37C721D19EB6921` (`building_id`);
 
 --
 -- Индексы таблицы `migration_versions`
@@ -1243,7 +1243,7 @@ ALTER TABLE `notification__notify`
 --
 ALTER TABLE `pos`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `IDX_80D9E6AC19EB6921` (`client_id`),
+  ADD KEY `IDX_80D9E6AC19EB6921` (`building_id`),
   ADD KEY `IDX_80D9E6AC9395C3F3` (`customer_id`);
 
 --
@@ -1259,7 +1259,7 @@ ALTER TABLE `pos__product`
 --
 ALTER TABLE `pos__products`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `IDX_BBEA2BDC19EB6921` (`client_id`),
+  ADD KEY `IDX_BBEA2BDC19EB6921` (`building_id`),
   ADD KEY `IDX_BBEA2BDCC53D045F` (`image`);
 
 --
@@ -1267,7 +1267,7 @@ ALTER TABLE `pos__products`
 --
 ALTER TABLE `share`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `IDX_EF069D5A19EB6921` (`client_id`);
+  ADD KEY `IDX_EF069D5A19EB6921` (`building_id`);
 
 --
 -- Индексы таблицы `share__custom`
@@ -1308,7 +1308,7 @@ ALTER TABLE `share__products`
 --
 ALTER TABLE `share__suspended_weeks`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `IDX_5A20DD0519EB6921` (`client_id`);
+  ADD KEY `IDX_5A20DD0519EB6921` (`building_id`);
 
 --
 -- Индексы таблицы `translation`
@@ -1371,57 +1371,57 @@ ALTER TABLE `user__device`
 --
 
 --
--- AUTO_INCREMENT для таблицы `client`
+-- AUTO_INCREMENT для таблицы `building`
 --
-ALTER TABLE `client`
+ALTER TABLE `building`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT для таблицы `client__affiliate`
+-- AUTO_INCREMENT для таблицы `building__affiliate`
 --
-ALTER TABLE `client__affiliate`
+ALTER TABLE `building__affiliate`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT для таблицы `client__module_access`
+-- AUTO_INCREMENT для таблицы `building__module_access`
 --
-ALTER TABLE `client__module_access`
+ALTER TABLE `building__module_access`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT для таблицы `client__posts`
+-- AUTO_INCREMENT для таблицы `building__posts`
 --
-ALTER TABLE `client__posts`
+ALTER TABLE `building__posts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT для таблицы `client__referral`
+-- AUTO_INCREMENT для таблицы `building__referral`
 --
-ALTER TABLE `client__referral`
+ALTER TABLE `building__referral`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT для таблицы `client__settings`
+-- AUTO_INCREMENT для таблицы `building__settings`
 --
-ALTER TABLE `client__settings`
+ALTER TABLE `building__settings`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT для таблицы `client__subscription`
+-- AUTO_INCREMENT для таблицы `building__subscription`
 --
-ALTER TABLE `client__subscription`
+ALTER TABLE `building__subscription`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT для таблицы `client__tags`
+-- AUTO_INCREMENT для таблицы `building__tags`
 --
-ALTER TABLE `client__tags`
+ALTER TABLE `building__tags`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT для таблицы `client__team`
+-- AUTO_INCREMENT для таблицы `building__team`
 --
-ALTER TABLE `client__team`
+ALTER TABLE `building__team`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -1717,61 +1717,61 @@ ALTER TABLE `user__device`
 --
 
 --
--- Ограничения внешнего ключа таблицы `client__affiliate`
+-- Ограничения внешнего ключа таблицы `building__affiliate`
 --
-ALTER TABLE `client__affiliate`
-  ADD CONSTRAINT `FK_84B2399319EB6921` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`);
+ALTER TABLE `building__affiliate`
+  ADD CONSTRAINT `FK_84B2399319EB6921` FOREIGN KEY (`building_id`) REFERENCES `building` (`id`);
 
 --
--- Ограничения внешнего ключа таблицы `client__module_access`
+-- Ограничения внешнего ключа таблицы `building__module_access`
 --
-ALTER TABLE `client__module_access`
-  ADD CONSTRAINT `FK_22F969DA19EB6921` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`);
+ALTER TABLE `building__module_access`
+  ADD CONSTRAINT `FK_22F969DA19EB6921` FOREIGN KEY (`building_id`) REFERENCES `building` (`id`);
 
 --
--- Ограничения внешнего ключа таблицы `client__posts`
+-- Ограничения внешнего ключа таблицы `building__posts`
 --
-ALTER TABLE `client__posts`
-  ADD CONSTRAINT `FK_57C31DD519EB6921` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`) ON DELETE CASCADE,
+ALTER TABLE `building__posts`
+  ADD CONSTRAINT `FK_57C31DD519EB6921` FOREIGN KEY (`building_id`) REFERENCES `building` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `FK_57C31DD5C7034EA5` FOREIGN KEY (`thumb_id`) REFERENCES `media__image` (`id`) ON DELETE SET NULL;
 
 --
--- Ограничения внешнего ключа таблицы `client__referral`
+-- Ограничения внешнего ключа таблицы `building__referral`
 --
-ALTER TABLE `client__referral`
-  ADD CONSTRAINT `FK_B6E7086F19EB6921` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`),
-  ADD CONSTRAINT `FK_B6E7086F9F12C49A` FOREIGN KEY (`affiliate_id`) REFERENCES `client__affiliate` (`id`);
+ALTER TABLE `building__referral`
+  ADD CONSTRAINT `FK_B6E7086F19EB6921` FOREIGN KEY (`building_id`) REFERENCES `building` (`id`),
+  ADD CONSTRAINT `FK_B6E7086F9F12C49A` FOREIGN KEY (`affiliate_id`) REFERENCES `building__affiliate` (`id`);
 
 --
--- Ограничения внешнего ключа таблицы `client__settings`
+-- Ограничения внешнего ключа таблицы `building__settings`
 --
-ALTER TABLE `client__settings`
-  ADD CONSTRAINT `FK_20A535AA19EB6921` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`) ON DELETE CASCADE;
+ALTER TABLE `building__settings`
+  ADD CONSTRAINT `FK_20A535AA19EB6921` FOREIGN KEY (`building_id`) REFERENCES `building` (`id`) ON DELETE CASCADE;
 
 --
--- Ограничения внешнего ключа таблицы `client__subscription`
+-- Ограничения внешнего ключа таблицы `building__subscription`
 --
-ALTER TABLE `client__subscription`
-  ADD CONSTRAINT `FK_8E2B3C4E19EB6921` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`);
+ALTER TABLE `building__subscription`
+  ADD CONSTRAINT `FK_8E2B3C4E19EB6921` FOREIGN KEY (`building_id`) REFERENCES `building` (`id`);
 
 --
--- Ограничения внешнего ключа таблицы `client__tags`
+-- Ограничения внешнего ключа таблицы `building__tags`
 --
-ALTER TABLE `client__tags`
-  ADD CONSTRAINT `FK_91F4788A19EB6921` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`) ON DELETE CASCADE;
+ALTER TABLE `building__tags`
+  ADD CONSTRAINT `FK_91F4788A19EB6921` FOREIGN KEY (`building_id`) REFERENCES `building` (`id`) ON DELETE CASCADE;
 
 --
--- Ограничения внешнего ключа таблицы `client__team`
+-- Ограничения внешнего ключа таблицы `building__team`
 --
-ALTER TABLE `client__team`
-  ADD CONSTRAINT `FK_3AA84AB319EB6921` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`),
+ALTER TABLE `building__team`
+  ADD CONSTRAINT `FK_3AA84AB319EB6921` FOREIGN KEY (`building_id`) REFERENCES `building` (`id`),
   ADD CONSTRAINT `FK_3AA84AB3A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
 
 --
 -- Ограничения внешнего ключа таблицы `customer`
 --
 ALTER TABLE `customer`
-  ADD CONSTRAINT `FK_81398E0919EB6921` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`);
+  ADD CONSTRAINT `FK_81398E0919EB6921` FOREIGN KEY (`building_id`) REFERENCES `building` (`id`);
 
 --
 -- Ограничения внешнего ключа таблицы `customer__address`
@@ -1798,7 +1798,7 @@ ALTER TABLE `customer__invoice_product`
 -- Ограничения внешнего ключа таблицы `customer__location`
 --
 ALTER TABLE `customer__location`
-  ADD CONSTRAINT `FK_DBA334B119EB6921` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`);
+  ADD CONSTRAINT `FK_DBA334B119EB6921` FOREIGN KEY (`building_id`) REFERENCES `building` (`id`);
 
 --
 -- Ограничения внешнего ключа таблицы `customer__location_workdays`
@@ -1816,7 +1816,7 @@ ALTER TABLE `customer__notifies`
 -- Ограничения внешнего ключа таблицы `customer__orders`
 --
 ALTER TABLE `customer__orders`
-  ADD CONSTRAINT `FK_C1BED319EB6921` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_C1BED319EB6921` FOREIGN KEY (`building_id`) REFERENCES `building` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `FK_C1BED32AE63FDB` FOREIGN KEY (`share_id`) REFERENCES `share` (`id`) ON DELETE CASCADE;
 
 --
@@ -1830,7 +1830,7 @@ ALTER TABLE `customer__payments`
 -- Ограничения внешнего ключа таблицы `customer__product__tag`
 --
 ALTER TABLE `customer__product__tag`
-  ADD CONSTRAINT `FK_FD349E7219EB6921` FOREIGN KEY (`client_id`) REFERENCES `client__tags` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_FD349E7219EB6921` FOREIGN KEY (`building_id`) REFERENCES `building__tags` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `FK_FD349E724584665A` FOREIGN KEY (`product_id`) REFERENCES `pos__products` (`id`) ON DELETE CASCADE;
 
 --
@@ -1844,7 +1844,7 @@ ALTER TABLE `customer__referrals`
 -- Ограничения внешнего ключа таблицы `customer__renewal_views`
 --
 ALTER TABLE `customer__renewal_views`
-  ADD CONSTRAINT `FK_88E36BAB19EB6921` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`),
+  ADD CONSTRAINT `FK_88E36BAB19EB6921` FOREIGN KEY (`building_id`) REFERENCES `building` (`id`),
   ADD CONSTRAINT `FK_88E36BAB9395C3F3` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`);
 
 --
@@ -1859,7 +1859,7 @@ ALTER TABLE `customer__transactions`
 -- Ограничения внешнего ключа таблицы `customer__vendor`
 --
 ALTER TABLE `customer__vendor`
-  ADD CONSTRAINT `FK_10CC70CB19EB6921` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`),
+  ADD CONSTRAINT `FK_10CC70CB19EB6921` FOREIGN KEY (`building_id`) REFERENCES `building` (`id`),
   ADD CONSTRAINT `FK_10CC70CBF5B7AF75` FOREIGN KEY (`address_id`) REFERENCES `customer__address` (`id`);
 
 --
@@ -1872,7 +1872,7 @@ ALTER TABLE `customer__vendor_contact`
 -- Ограничения внешнего ключа таблицы `customer__vendor_orders`
 --
 ALTER TABLE `customer__vendor_orders`
-  ADD CONSTRAINT `FK_A5D88E9819EB6921` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_A5D88E9819EB6921` FOREIGN KEY (`building_id`) REFERENCES `building` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `FK_A5D88E98F603EE73` FOREIGN KEY (`vendor_id`) REFERENCES `customer__vendor` (`id`) ON DELETE CASCADE;
 
 --
@@ -1891,7 +1891,7 @@ ALTER TABLE `device__promotion_visit`
 -- Ограничения внешнего ключа таблицы `email__auto`
 --
 ALTER TABLE `email__auto`
-  ADD CONSTRAINT `FK_A6D2146E19EB6921` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`);
+  ADD CONSTRAINT `FK_A6D2146E19EB6921` FOREIGN KEY (`building_id`) REFERENCES `building` (`id`);
 
 --
 -- Ограничения внешнего ключа таблицы `email__feedback`
@@ -1905,7 +1905,7 @@ ALTER TABLE `email__feedback`
 -- Ограничения внешнего ключа таблицы `email__log`
 --
 ALTER TABLE `email__log`
-  ADD CONSTRAINT `FK_5D6251BA19EB6921` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`),
+  ADD CONSTRAINT `FK_5D6251BA19EB6921` FOREIGN KEY (`building_id`) REFERENCES `building` (`id`),
   ADD CONSTRAINT `FK_5D6251BAB1254A89` FOREIGN KEY (`automated_id`) REFERENCES `email__auto` (`id`);
 
 --
@@ -1931,7 +1931,7 @@ ALTER TABLE `master__email`
 -- Ограничения внешнего ключа таблицы `master__email_recipient`
 --
 ALTER TABLE `master__email_recipient`
-  ADD CONSTRAINT `FK_8A5C4BC419EB6921` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`),
+  ADD CONSTRAINT `FK_8A5C4BC419EB6921` FOREIGN KEY (`building_id`) REFERENCES `building` (`id`),
   ADD CONSTRAINT `FK_8A5C4BC4A832C1C9` FOREIGN KEY (`email_id`) REFERENCES `master__email` (`id`);
 
 --
@@ -1944,7 +1944,7 @@ ALTER TABLE `master__posts`
 -- Ограничения внешнего ключа таблицы `media__image`
 --
 ALTER TABLE `media__image`
-  ADD CONSTRAINT `FK_F37C721D19EB6921` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`);
+  ADD CONSTRAINT `FK_F37C721D19EB6921` FOREIGN KEY (`building_id`) REFERENCES `building` (`id`);
 
 --
 -- Ограничения внешнего ключа таблицы `notification__notify`
@@ -1957,7 +1957,7 @@ ALTER TABLE `notification__notify`
 -- Ограничения внешнего ключа таблицы `pos`
 --
 ALTER TABLE `pos`
-  ADD CONSTRAINT `FK_80D9E6AC19EB6921` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_80D9E6AC19EB6921` FOREIGN KEY (`building_id`) REFERENCES `building` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `FK_80D9E6AC9395C3F3` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`) ON DELETE CASCADE;
 
 --
@@ -1971,14 +1971,14 @@ ALTER TABLE `pos__product`
 -- Ограничения внешнего ключа таблицы `pos__products`
 --
 ALTER TABLE `pos__products`
-  ADD CONSTRAINT `FK_BBEA2BDC19EB6921` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_BBEA2BDC19EB6921` FOREIGN KEY (`building_id`) REFERENCES `building` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `FK_BBEA2BDCC53D045F` FOREIGN KEY (`image`) REFERENCES `media__image` (`id`) ON DELETE SET NULL;
 
 --
 -- Ограничения внешнего ключа таблицы `share`
 --
 ALTER TABLE `share`
-  ADD CONSTRAINT `FK_EF069D5A19EB6921` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`);
+  ADD CONSTRAINT `FK_EF069D5A19EB6921` FOREIGN KEY (`building_id`) REFERENCES `building` (`id`);
 
 --
 -- Ограничения внешнего ключа таблицы `share__custom`
@@ -2014,7 +2014,7 @@ ALTER TABLE `share__products`
 -- Ограничения внешнего ключа таблицы `share__suspended_weeks`
 --
 ALTER TABLE `share__suspended_weeks`
-  ADD CONSTRAINT `FK_5A20DD0519EB6921` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `FK_5A20DD0519EB6921` FOREIGN KEY (`building_id`) REFERENCES `building` (`id`) ON DELETE CASCADE;
 
 --
 -- Ограничения внешнего ключа таблицы `translation`

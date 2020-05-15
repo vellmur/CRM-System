@@ -3,7 +3,7 @@
 namespace App\Entity\Customer;
 
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use App\Form\Customer\NotificationType;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Validator\Constraints as AppAssert;
@@ -14,17 +14,17 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * Customer
  *
  * @ORM\Table(name="customer", uniqueConstraints={
- *     @ORM\UniqueConstraint(name="customer_unique", columns={"client_id", "email"}),
- *     @ORM\UniqueConstraint(name="customer_phone_unique", columns={"client_id", "phone"})
+ *     @ORM\UniqueConstraint(name="customer_unique", columns={"building_id", "email"}),
+ *     @ORM\UniqueConstraint(name="customer_phone_unique", columns={"building_id", "phone"})
  * })
  * @ORM\Entity(repositoryClass="App\Repository\MemberRepository")
  * @UniqueEntity(
- *     fields={"client", "email"},
+ *     fields={"building", "email"},
  *     errorPath="email",
  *     message="validation.form.email_unique"
  * )
  * @UniqueEntity(
- *     fields={"client", "phone"},
+ *     fields={"building", "phone"},
  *     errorPath="phone",
  *     message="validation.form.unique"
  * )
@@ -43,10 +43,10 @@ class Customer
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Client\Client", inversedBy="customers")
-     * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Building\Building", inversedBy="customers")
+     * @ORM\JoinColumn(name="building_id", referencedColumnName="id")
      */
-    private $client;
+    private $building;
 
     /**
      * @ORM\Column(name="firstname", type="string", length=25)
@@ -170,22 +170,22 @@ class Customer
     }
 
     /**
-     * @param $client
+     * @param $building
      * @return $this
      */
-    public function setClient($client)
+    public function setBuilding($building)
     {
-        $this->client = $client;
+        $this->building = $building;
 
         return $this;
     }
 
     /**
-     * @return Client
+     * @return Building
      */
-    public function getClient()
+    public function getBuilding()
     {
-        return $this->client;
+        return $this->building;
     }
 
     /**

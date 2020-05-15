@@ -52,13 +52,13 @@ final class SecurityListener extends AppListener
 
         try {
             $user = $this->token->getToken() ? $this->token->getToken()->getUser() : null;
-            $client = $user && $user != 'anon.' && $user->getClient() ? $user->getClient() : null;
+            $building = $user && $user != 'anon.' && $user->getBuilding() ? $user->getBuilding() : null;
 
-            if ($client) {
-                $this->session->set('modules_statuses', $this->moduleChecker->getModulesStatuses($client));
+            if ($building) {
+                $this->session->set('modules_statuses', $this->moduleChecker->getModulesStatuses($building));
 
                 if ($moduleName = $this->moduleChecker->getModuleNameByUrl($request->getRequestUri())) {
-                    if (!$this->moduleChecker->clientHasModuleAccess($client, $user->getRoles(), $moduleName)) {
+                    if (!$this->moduleChecker->buildingHasModuleAccess($building, $user->getRoles(), $moduleName)) {
                         $deniedMessage = $this->translator->trans('access.access_expired', [],'validators');
                         throw new AccessDeniedException($deniedMessage);
                     }

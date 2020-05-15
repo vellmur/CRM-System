@@ -54,7 +54,7 @@ final class NotificationListener extends AppListener
             $user = $token !== null && $token->getUser() !== 'anon.' ? $token->getUser() : null;
 
             // Set notifications as marked and load new notifications
-            if ($user && $user->getClient() && $moduleName = $this->moduleChecker->getModuleNameByUrl($request->getRequestUri())) {
+            if ($user && $user->getBuilding() && $moduleName = $this->moduleChecker->getModuleNameByUrl($request->getRequestUri())) {
                 if ($notifyID = $request->query->get('clicked_notification')) {
                     $this->notificationManager->setNotificationAsSeen($notifyID);
                 }

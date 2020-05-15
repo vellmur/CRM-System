@@ -2,7 +2,7 @@
 
 namespace App\Form\Subscriber;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use App\Entity\Customer\Location;
 use App\Entity\Customer\Customer;
 use App\Entity\Customer\Workday;
@@ -17,7 +17,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use App\Entity\Client\PaymentSettings;
+use App\Entity\Building\PaymentSettings;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RenewSubscriber implements EventSubscriberInterface
@@ -58,9 +58,9 @@ class RenewSubscriber implements EventSubscriberInterface
     public function postSet(FormEvent $event)
     {
         $form = $event->getForm();
-        $client = $form->getConfig()->getOptions()['client'];
+        $building = $form->getConfig()->getOptions()['building'];
 
-        date_default_timezone_set($client->getTimezone());
+        date_default_timezone_set($building->getTimezone());
 
         /** @var Customer $customer */
         $customer = $form->get('member')->getData();
@@ -136,10 +136,10 @@ class RenewSubscriber implements EventSubscriberInterface
     {
         $options = $form->get('products')->getConfig()->getOptions();
 
-        /** @var Client $client */
-        $client = $form->getConfig()->getOptions()['client'];
+        /** @var Building $building */
+        $building = $form->getConfig()->getOptions()['building'];
 
-        $products = $this->manager->getCustomerProducts($client);
+        $products = $this->manager->getCustomerProducts($building);
 
         $filters = [];
 
@@ -149,7 +149,7 @@ class RenewSubscriber implements EventSubscriberInterface
             $productName = $product->getName();
             $productDescription = $product->getDescription() ? $product->getDescription() : $productName;
             $productPrice = $product->isPos() && $product->getDeliveryPrice() ? $product->getDeliveryPrice() : $product->getPrice();
-            $pricePer = $product->isPos() ? ($product->isPayByItem() ? 'per_item' : 'per_' . $client->getWeightName()) : 'each';
+            $pricePer = $product->isPos() ? ($product->isPayByItem() ? 'per_item' : 'per_' . $building->getWeightName()) : 'each';
 
             $tags = [];
 
@@ -188,20 +188,20 @@ class RenewSubscriber implements EventSubscriberInterface
      */
     public function addLocation(FormInterface $form)
     {
-        /** @var Client $client */
-        $client = $form->getConfig()->getOptions()['client'];
+        /** @var Building $building */
+        $building = $form->getConfig()->getOptions()['building'];
 
-        $locations = $this->manager->getActiveLocations($client);
+        $locations = $this->manager->getActiveLocations($building);
 
         $options = $form->get('location')->getConfig()->getOptions();
 
-        // Get all suspended weeks by client
-        $suspendedWeeks = $weeks = $this->manager->getSuspendedWeeks($client);
+        // Get all suspended weeks by building
+        $suspendedWeeks = $weeks = $this->manager->getSuspendedWeeks($building);
 
         foreach ($locations as $location) {
             $options['choices'][$location->getName()] = $location->getId();
 
-            $ordersDates = $this->getOrdersDates($location->getWorkdays(), $suspendedWeeks, $client->getOrderTime());
+            $ordersDates = $this->getOrdersDates($location->getWorkdays(), $suspendedWeeks, $building->getOrderTime());
 
             $options['choice_attr'][$location->getName()] = [
                 'class' => 'styled',
@@ -209,7 +209,7 @@ class RenewSubscriber implements EventSubscriberInterface
                 'data-description' => $location->getDescription(),
                 'data-address' => $this->setAddressFormat($location),
                 'data-ordersDates' => json_encode($ordersDates),
-                'data-nextOrderDate' => $this->getDateOfNextOrder($ordersDates, $client->isSameDayOrdersAllowed())
+                'data-nextOrderDate' => $this->getDateOfNextOrder($ordersDates, $building->isSameDayOrdersAllowed())
             ];
 
             $options['choice_label'] = function ($choice, $key, $value) {
@@ -232,10 +232,10 @@ class RenewSubscriber implements EventSubscriberInterface
      */
     public function addPaymentMethods(FormInterface $form)
     {
-        /** @var Client $client */
-        $client = $form->getConfig()->getOptions()['client'];
+        /** @var Building $building */
+        $building = $form->getConfig()->getOptions()['building'];
 
-        $paymentSettings = $this->manager->getPaymentSettings($client);
+        $paymentSettings = $this->manager->getPaymentSettings($building);
         $methods = PaymentSettings::getMethodsNames();
 
         foreach ($methods as $id => $method) {
@@ -277,14 +277,14 @@ class RenewSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Get orders dates (datetime) from active workdays (weekday) of client work locations
+     * Get orders dates (datetime) from active workdays (weekday) of building work locations
      *
      * @param \Doctrine\Common\Collections\Collection|Workday $workdays
      * @param $suspendedWeeks
-     * @param $clientOrderTime string
+     * @param $buildingOrderTime string
      * @return array
      */
-    public function getOrdersDates($workdays, $suspendedWeeks, $clientOrderTime)
+    public function getOrdersDates($workdays, $suspendedWeeks, $buildingOrderTime)
     {
         $daysOfWeek = [];
 
@@ -297,14 +297,14 @@ class RenewSubscriber implements EventSubscriberInterface
 
         $dates = [];
 
-        $orderTime = explode(':', $clientOrderTime); // get hours and minutes from client order time
+        $orderTime = explode(':', $buildingOrderTime); // get hours and minutes from building order time
 
-        // Find dates of the following weekdays, so they are used as orders dates and with $clientOrderTime
+        // Find dates of the following weekdays, so they are used as orders dates and with $buildingOrderTime
         foreach ($daysOfWeek as $day) {
             $now = new \DateTime();
             $orderDate = $day != $now->format('l') ? $now->modify('next ' . $day) : $now;
 
-            // Suspend all forward weeks, if client suspended pickup week
+            // Suspend all forward weeks, if building suspended pickup week
             while ($this->manager->isDateSuspended($suspendedWeeks, $orderDate)) {
                 $orderDate->modify('+7 days');
             }

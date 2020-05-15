@@ -2,7 +2,7 @@
 
 namespace App\Menu;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use App\Service\ModuleChecker;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -51,7 +51,7 @@ class MenuBuilder
     {
         $domain = 'labels';
         $menu = $this->factory->createItem('root');
-        $client = $this->security->getUser()->getClient();
+        $building = $this->security->getUser()->getBuilding();
 
         // Master menu
         if ($this->security->isGranted('ROLE_ADMIN')) {
@@ -79,7 +79,7 @@ class MenuBuilder
             $menu->addChild($customersHeader)->setAttribute('icon', 'icon-menu')->setAttribute('class', 'navigation-header');
 
             // Module Customers
-            $this->addManageCustomersMenu($menu, $domain, $client);
+            $this->addManageCustomersMenu($menu, $domain, $building);
             $this->addEmailsMenu($menu, $domain);
             $this->addOrdersMenu($menu, $domain);
             $this->addPosMenu($menu, $domain);
@@ -120,7 +120,7 @@ class MenuBuilder
         $menu->addChild($master)->setAttribute('icon', 'icon-grid6')->setAttribute('class', 'has-ul');;
         $menu[$master]->addChild('Dashboard', ['route' => 'master_dashboard'])->setAttribute('icon', 'icon-home');
         $menu[$master]->addChild('Affiliates', ['route' => 'master_affiliates'])->setAttribute('icon', 'icon-tree7');
-        $menu[$master]->addChild('Clients', ['route' => 'master_clients'])->setAttribute('icon', 'icon-users');
+        $menu[$master]->addChild('Buildings', ['route' => 'master_buildings'])->setAttribute('icon', 'icon-users');
         $menu[$master]->addChild('Posts', ['route' => 'master_blog'])->setAttribute('icon', 'icon-newspaper');
         $menu[$master]->addChild('Statistics', ['route' => 'master_statistics'])->setAttribute('icon', 'icon-stats-bars2');
         $menu[$master]->addChild('Media Manager', ['route' => 'master_image_manager'])->setAttribute('icon', 'icon-image2');
@@ -156,9 +156,9 @@ class MenuBuilder
     /**
      * @param $menu
      * @param $domain
-     * @param Client|null $client
+     * @param Building|null $building
      */
-    private function addManageCustomersMenu(&$menu, $domain, ?Client $client = null)
+    private function addManageCustomersMenu(&$menu, $domain, ?Building $building = null)
     {
         $customers = $this->trans->trans('navigation.customers.manage_customers', [], $domain);
         $menu->addChild($customers)->setAttribute('icon', 'icon-people')->setAttribute('class', 'has-ul');;

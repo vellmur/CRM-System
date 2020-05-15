@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use App\Entity\Customer\Apartment;
 use App\Entity\Customer\Customer;
 use App\Manager\MemberManager;
@@ -23,7 +23,7 @@ class CustomerFixtures extends Fixture implements DependentFixtureInterface
         'apartment' => [
             'number' => 63
         ],
-        'notes' => 'We want to track our home. So we are your clients.'
+        'notes' => 'We want to track our home. So we are your buildings.'
     ];
 
     /**
@@ -43,10 +43,10 @@ class CustomerFixtures extends Fixture implements DependentFixtureInterface
     {
         $firstCustomer = self::ENABLED_CUSTOMER;
 
-        $client = $this->getReference(UserFixtures::ENABLED_USER_REFERENCE)->getClient();
+        $building = $this->getReference(UserFixtures::ENABLED_USER_REFERENCE)->getBuilding();
 
         $customer = $this->createCustomer(
-            $client,
+            $building,
             $firstCustomer['firstname'],
             $firstCustomer['lastname'],
             $firstCustomer['email'],
@@ -55,13 +55,13 @@ class CustomerFixtures extends Fixture implements DependentFixtureInterface
             $firstCustomer['apartment']['number']
         );
 
-        $this->memberManager->addCustomer($client, $customer);
+        $this->memberManager->addCustomer($building, $customer);
 
         $faker = Factory::create();
 
         for ($i = 0; $i < 10; $i++) {
             $customer = $this->createCustomer(
-                $client,
+                $building,
                 $faker->firstName,
                 $faker->lastName,
                 $faker->email,
@@ -70,12 +70,12 @@ class CustomerFixtures extends Fixture implements DependentFixtureInterface
                 $faker->numberBetween(1, 100)
             );
 
-            $this->memberManager->addCustomer($client, $customer);
+            $this->memberManager->addCustomer($building, $customer);
         }
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param string $firstname
      * @param string $lastname
      * @param string $email
@@ -85,7 +85,7 @@ class CustomerFixtures extends Fixture implements DependentFixtureInterface
      * @return Customer
      * @throws \Exception
      */
-    private function createCustomer(Client $client, string $firstname, string $lastname, string $email, string $phone, string $notes, string $apartmentNumber)
+    private function createCustomer(Building $building, string $firstname, string $lastname, string $email, string $phone, string $notes, string $apartmentNumber)
     {
         $customer = new Customer();
         $customer->setFirstname($firstname);
@@ -95,7 +95,7 @@ class CustomerFixtures extends Fixture implements DependentFixtureInterface
         $customer->setNotes($notes);
 
         $apartment = new Apartment();
-        $apartment->setBuilding($client);
+        $apartment->setBuilding($building);
         $apartment->setNumber($apartmentNumber);
 
         $customer->setApartment($apartment);

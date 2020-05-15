@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\Client;
+namespace App\Entity\Building;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Referral
  *
- * @ORM\Table(name="client__referral", uniqueConstraints={@ORM\UniqueConstraint(name="referral_unique", columns={"client_id", "affiliate_id"})})
+ * @ORM\Table(name="building__referral", uniqueConstraints={@ORM\UniqueConstraint(name="referral_unique", columns={"building_id", "affiliate_id"})})
  * @ORM\Entity(repositoryClass="App\Repository\ReferralRepository")
  */
 
@@ -31,12 +31,12 @@ class Referral
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Client\Client")
+     * @ORM\OneToOne(targetEntity="App\Entity\Building\Building")
      */
-    private $client;
+    private $building;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Client\Affiliate", inversedBy="referrals")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Building\Affiliate", inversedBy="referrals")
      * @ORM\JoinColumn(name="affiliate_id", referencedColumnName="id", nullable=false)
      */
     private $affiliate;
@@ -66,12 +66,12 @@ class Referral
     }
 
     /**
-     * @param $client
+     * @param $building
      * @return $this
      */
-    public function setClient($client)
+    public function setBuilding($building)
     {
-        $this->client = $client;
+        $this->building = $building;
 
         return $this;
     }
@@ -79,9 +79,9 @@ class Referral
     /**
      * @return mixed
      */
-    public function getClient()
+    public function getBuilding()
     {
-        return $this->client;
+        return $this->building;
     }
 
     /**

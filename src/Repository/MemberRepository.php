@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use App\Entity\Customer\Customer;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -19,18 +19,18 @@ class MemberRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param $emails
      * @return array
      */
-    public function findEmailsMatch(Client $client, $emails)
+    public function findEmailsMatch(Building $building, $emails)
     {
         $qb = $this->createQueryBuilder('m');
 
         $qb
             ->select('m.email')
-            ->where('m.email IN (:emails) AND m.client = :client')
-            ->setParameter('client', $client)
+            ->where('m.email IN (:emails) AND m.building = :building')
+            ->setParameter('building', $building)
             ->setParameter('emails', $emails, \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
 
         $result = $qb->getQuery()->getScalarResult();
@@ -54,17 +54,17 @@ class MemberRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $client
+     * @param $building
      * @param $search
      * @return \Doctrine\ORM\Query
      */
-    public function searchByAll($client, $search)
+    public function searchByAll($building, $search)
     {
         $qb = $this->createQueryBuilder('m')
                 ->select('m')
-                ->where('m.client = :client')
+                ->where('m.building = :building')
                 ->orderBy('m.firstname, m.lastname')
-                ->setParameter('client', $client);
+                ->setParameter('building', $building);
 
         if (strlen($search) > 0) {
             $query = "(CONCAT(m.firstname, ' ',m.lastname) LIKE '%$search%') OR m.email LIKE '%$search%'";
@@ -76,16 +76,16 @@ class MemberRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $client
+     * @param $building
      * @param $search
      * @return \Doctrine\ORM\Query
      */
-    public function searchByLeads($client, $search)
+    public function searchByLeads($building, $search)
     {
         $qb = $this->createQueryBuilder('m')
-                ->andWhere('m.client = :client AND m.isLead = 1')
+                ->andWhere('m.building = :building AND m.isLead = 1')
                 ->orderBy('m.firstname, m.lastname')
-                ->setParameter('client', $client);
+                ->setParameter('building', $building);
 
         if (strlen($search) > 0) {
             $qb->andWhere("(CONCAT(m.firstname, ' ',m.lastname) LIKE '%$search%') OR m.email LIKE '%$search%'");
@@ -95,16 +95,16 @@ class MemberRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $client
+     * @param $building
      * @param $search
      * @return \Doctrine\ORM\Query
      */
-    public function searchByContacts($client, $search)
+    public function searchByContacts($building, $search)
     {
         $qb = $this->createQueryBuilder('m')
-            ->where('m.client = :client AND m.isLead = 0')
+            ->where('m.building = :building AND m.isLead = 0')
             ->orderBy('m.firstname, m.lastname')
-            ->setParameter('client', $client);
+            ->setParameter('building', $building);
 
         if (strlen($search) > 0) {
             $qb->andWhere("(CONCAT(m.firstname, ' ',m.lastname) LIKE '%$search%') OR m.email LIKE '%$search%'");
@@ -115,39 +115,39 @@ class MemberRepository extends ServiceEntityRepository
 
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param $deliveryTypeId
      * @return mixed
      * @throws \Exception
      */
-    public function getLeadsAndContacts(Client $client, $deliveryTypeId)
+    public function getLeadsAndContacts(Building $building, $deliveryTypeId)
     {
         $date = new \DateTime("midnight");
         $date->modify('+2 days');
 
         $qb = $this->createQueryBuilder('m')
             ->innerJoin('m.notifications', 'notifications')
-            ->where('m.client = :client')
+            ->where('m.building = :building')
             ->andWhere('m.email IS NOT NULL')
             ->andWhere('notifications.notifyType = :deliveryType AND notifications.isActive = 1')
             ->setParameter('deliveryType', $deliveryTypeId)
-            ->setParameter('client', $client);
+            ->setParameter('building', $building);
 
         return $qb->getQuery()->getResult();
     }
 
     /**
-     * @param $client
+     * @param $building
      * @param $search
      * @return \Doctrine\ORM\Query
      */
-    public function searchByMembers($client, $search)
+    public function searchByMembers($building, $search)
     {
         $qb = $this->createQueryBuilder('m')
             ->select('m')
-            ->where('m.client = :client AND m.isLead = 0')
+            ->where('m.building = :building AND m.isLead = 0')
             ->orderBy('m.firstname, m.lastname')
-            ->setParameter('client', $client);
+            ->setParameter('building', $building);
 
         if (strlen($search) > 0) {
             $query = "(CONCAT(m.firstname, ' ',m.lastname) LIKE '%$search%') OR m.email LIKE '%$search%'";
@@ -159,19 +159,19 @@ class MemberRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $client
+     * @param $building
      * @param $search
      * @return \Doctrine\ORM\Query
      */
-    public function searchByPatrons($client, $search)
+    public function searchByPatrons($building, $search)
     {
         $qb = $this->createQueryBuilder('m')
             ->select('m, orders')
-            ->where('m.client = :client AND m.isLead = 0')
-            ->orWhere('m.client = :client AND m.isLead = 0 AND orders.customer IS NOT NULL')
+            ->where('m.building = :building AND m.isLead = 0')
+            ->orWhere('m.building = :building AND m.isLead = 0 AND orders.customer IS NOT NULL')
             ->leftJoin('m.orders', 'orders')
             ->orderBy('m.firstname, m.lastname')
-            ->setParameter('client', $client);
+            ->setParameter('building', $building);
 
         if (strlen($search) > 0) {
             $query = "(CONCAT(m.firstname, ' ',m.lastname) LIKE '%$search%') OR m.email LIKE '%$search%'";
@@ -182,17 +182,17 @@ class MemberRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $client
+     * @param $building
      * @param $search
      * @return \Doctrine\ORM\Query
      */
-    public function searchByCustomers($client, $search)
+    public function searchByCustomers($building, $search)
     {
         $qb = $this->createQueryBuilder('m')
             ->select('m')
-            ->where('m.client = :client')
+            ->where('m.building = :building')
             ->orderBy('m.firstname, m.lastname')
-            ->setParameter('client', $client);
+            ->setParameter('building', $building);
 
         if (strlen($search) > 0) {
             $query = "(CONCAT(m.firstname, ' ',m.lastname) LIKE '%$search%') OR m.email LIKE '%$search%'";

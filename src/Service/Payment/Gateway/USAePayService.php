@@ -497,7 +497,7 @@ class USAePayService
             $data['UMhash'] = $hash;
         }
 
-        // Tell the gateway what the client side timeout is
+        // Tell the gateway what the building side timeout is
         if (@$this->timeout) $data['UMtimeout'] = intval($this->timeout);
 
         // Figure out URL

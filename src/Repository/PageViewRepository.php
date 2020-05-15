@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use App\Entity\User\PageView;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -82,10 +82,10 @@ class PageViewRepository extends ServiceEntityRepository
 
     /**
      * @param string|null $chart
-     * @param Client|null $client
+     * @param Building|null $building
      * @return mixed
      */
-    public function countPageViews(?string $chart, ?Client $client)
+    public function countPageViews(?string $chart, ?Building $building)
     {
         $qb = $this->createQueryBuilder('v')
             ->select('
@@ -108,13 +108,13 @@ class PageViewRepository extends ServiceEntityRepository
             }
         }
 
-        if ($client) {
+        if ($building) {
             // Here must be user views
             /*
             $qb->innerJoin('v.device', 'device')
                 ->innerJoin('device.user', 'user')
                 ->andWhere('user.id = :userId')
-                ->setParameter('userId', $client->getOwner()->getId());*/
+                ->setParameter('userId', $building->getOwner()->getId());*/
         }
 
         return $qb->getQuery()->getResult();

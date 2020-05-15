@@ -32,7 +32,7 @@
             <div class="col-md-6">
                 <span class="text-semibold">
                     {{ 'pos.total'|trans({}, 'labels') }}:</span><br/>
-                {{ app.user.client.currencyFormat|raw }}{{ summary.totalSum|number_format(2, '.', ',') }}
+                {{ app.user.building.currency|currencyFormat }}{{ summary.totalSum|number_format(2, '.', ',') }}
             </div>
         </div>
     </div>
@@ -52,7 +52,7 @@
             {% for key, order in orders %}
                 <tr>
                     <td>{{ key + 1 }}</td>
-                    <td>{{ app.user.client.currencyFormat|raw }}{{ order.total }}</td>
+                    <td>{{ app.user.building.currency|currencyFormat }}{{ order.total }}</td>
                     <td>{{ order.createdAt|date(app.user.getTwigFormatDate() ~ ' H:i:s') }}</td>
                 </tr>
 
@@ -60,7 +60,7 @@
             {% endfor %}
             <tr>
                 <td class="text-semibold">{{ orders|length }}</td>
-                <td class="text-semibold">{{ app.user.client.currencyFormat|raw }}{{ total|number_format(2, '.', ',') }}</td>
+                <td class="text-semibold">{{ app.user.building.currency|currencyFormat }}{{ total|number_format(2, '.', ',') }}</td>
                 <td></td>
             </tr>
             </tbody>

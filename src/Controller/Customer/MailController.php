@@ -47,10 +47,10 @@ class MailController extends AbstractController
      */
     public function compose(Request $request, CustomerEmail $email = null)
     {
-        $client = $this->getUser()->getClient();
+        $building = $this->getUser()->getBuilding();
 
         if (!$email) $email = new CustomerEmail();
-        $email->setClient($client);
+        $email->setBuilding($building);
         $form = $this->createForm(EmailType::class, $email);
         $form->handleRequest($request);
 
@@ -69,7 +69,7 @@ class MailController extends AbstractController
             }
         }
 
-        $customers = $this->memberManager->searchCustomers($client)->getResult();
+        $customers = $this->memberManager->searchCustomers($building)->getResult();
 
         foreach ($email->getRecipients() as $recipient) {
             $recipients[] = $recipient->getCustomer()->getId();
@@ -91,9 +91,9 @@ class MailController extends AbstractController
      */
     public function loadCustomers(PaginatorInterface $paginator, $page, CustomerEmail $email = null)
     {
-        $client = $this->getUser()->getClient();
+        $building = $this->getUser()->getBuilding();
 
-        $customers = $paginator->paginate($this->memberManager->searchCustomers($client), $page, 20);
+        $customers = $paginator->paginate($this->memberManager->searchCustomers($building), $page, 20);
 
         $recipients = [];
 
@@ -148,7 +148,7 @@ class MailController extends AbstractController
         if ($request->isXmlHttpRequest()) {
             if (!$email) {
                 $email = new CustomerEmail();
-                $email->setClient($this->getUser()->getClient());
+                $email->setBuilding($this->getUser()->getBuilding());
             }
 
             $form = $this->createForm(EmailType::class, $email, [
@@ -216,12 +216,12 @@ class MailController extends AbstractController
      */
     public function searchRecipients(Request $request)
     {
-        $client = $this->getUser()->getClient();
+        $building = $this->getUser()->getBuilding();
 
         $searchBy = $request->query->get('searchBy');
         $searchText = $request->query->get('search');
 
-        $customers = $this->memberManager->searchCustomers($client, $searchBy, $searchText)->getResult();
+        $customers = $this->memberManager->searchCustomers($building, $searchBy, $searchText)->getResult();
 
         $template = $this->render('customer/forms/recipients_list.html.twig', ['customers' => $customers])->getContent();
 
@@ -239,7 +239,7 @@ class MailController extends AbstractController
      */
     public function log(PaginatorInterface $paginator, Request $request)
     {
-        $query = $this->manager->getLogsQuery($this->getUser()->getClient());
+        $query = $this->manager->getLogsQuery($this->getUser()->getBuilding());
         $logs = $paginator->paginate($query, $request->query->getInt('page', 1), 20);
 
         return $this->render('customer/emails/logs.html.twig', [
@@ -252,8 +252,8 @@ class MailController extends AbstractController
      */
     public function drafts()
     {
-        $client = $this->getUser()->getClient();
-        $drafts = $this->manager->getDrafts($client);
+        $building = $this->getUser()->getBuilding();
+        $drafts = $this->manager->getDrafts($building);
 
         return $this->render('customer/emails/drafts.html.twig', [
             'drafts' => $drafts
@@ -284,8 +284,8 @@ class MailController extends AbstractController
      */
     public function autoEmails(Request $request, Environment $engine)
     {
-        $client = $this->getUser()->getClient();
-        $form = $this->createForm(AutoEmails::class, $client);
+        $building = $this->getUser()->getBuilding();
+        $form = $this->createForm(AutoEmails::class, $building);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

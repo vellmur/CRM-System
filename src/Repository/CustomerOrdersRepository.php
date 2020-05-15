@@ -18,15 +18,15 @@ class CustomerOrdersRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $client
+     * @param $building
      * @return array
      */
-    public function getOrders($client)
+    public function getOrders($building)
     {
         $qb = $this->createQueryBuilder('s')
-                    ->where('s.client = :client')
+                    ->where('s.building = :building')
                     ->orderBy('s.startDate')
-                    ->setParameter('client', $client);
+                    ->setParameter('building', $building);
 
         return $qb->getQuery()->getResult();
     }

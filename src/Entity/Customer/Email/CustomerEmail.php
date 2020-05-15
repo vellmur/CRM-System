@@ -2,7 +2,7 @@
 
 namespace App\Entity\Customer\Email;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Entity\Email\BaseEmailLog;
@@ -11,13 +11,13 @@ use App\Entity\Email\BaseEmailLog;
  * @ORM\Table(name="email__log")
  * @ORM\Entity(repositoryClass="App\Repository\MemberEmailRepository")
  */
-class CustomerEmail extends BaseEmailLog implements ClientEmailInterface
+class CustomerEmail extends BaseEmailLog implements BuildingEmailInterface
 {
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Client\Client", inversedBy="emails")
-     * @ORM\JoinColumn(name="client_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Building\Building", inversedBy="emails")
+     * @ORM\JoinColumn(name="building_id", referencedColumnName="id", nullable=false)
      */
-    private $client;
+    private $building;
 
     /**
      * @ORM\Column(name="reply_email", type="string", length=50, nullable=false)
@@ -46,19 +46,19 @@ class CustomerEmail extends BaseEmailLog implements ClientEmailInterface
     protected $recipients;
 
     /**
-     * @return Client
+     * @return Building
      */
-    public function getClient() : Client
+    public function getBuilding() : Building
     {
-        return $this->client;
+        return $this->building;
     }
 
     /**
-     * @param mixed $client
+     * @param mixed $building
      */
-    public function setClient(Client $client)
+    public function setBuilding(Building $building)
     {
-        $this->client = $client;
+        $this->building = $building;
     }
 
     /**
@@ -101,7 +101,7 @@ class CustomerEmail extends BaseEmailLog implements ClientEmailInterface
     {
         $macros = [
             'MemberData' => [
-                'ClientName' => 'Client name',
+                'BuildingName' => 'Building name',
                 'Firstname' => 'First name',
                 'Lastname' => 'Last name',
                 'Notes' => 'Notes',

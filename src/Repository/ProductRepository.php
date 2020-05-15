@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use App\Entity\Customer\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -19,34 +19,34 @@ class ProductRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $client
+     * @param $building
      * @return \Doctrine\Common\Collections\Collection|Product[] $products
      */
-    public function getCustomerProducts($client)
+    public function getCustomerProducts($building)
     {
         $qb =
             $this->createQueryBuilder('product')
                 ->select('product, productTags, tags')
                 ->leftJoin('product.tags', 'productTags')
                 ->leftJoin('productTags.tag', 'tags')
-                ->where('product.client = :client AND product.category = 1')
+                ->where('product.building = :building AND product.category = 1')
                 ->andWhere('product.isPos = 1 AND product.deliveryPrice IS NOT NULL')
                 ->orderBy('product.name')
-                ->setParameter('client', $client);
+                ->setParameter('building', $building);
 
         return $qb->getQuery()->getResult();
     }
 
     /**
-     * @param $client
+     * @param $building
      * @param $categories
      * @return array
      */
-    public function getClientProducts($client, $categories)
+    public function getBuildingProducts($building, $categories)
     {
         $qb =
             $this->createQueryBuilder('product')
-                ->where('product.client = :client');
+                ->where('product.building = :building');
 
         if ($categories) {
             $qb->andWhere('product.category IN (:categories)')
@@ -54,7 +54,7 @@ class ProductRepository extends ServiceEntityRepository
         }
 
         $qb->orderBy('product.name')
-            ->setParameter('client', $client);
+            ->setParameter('building', $building);
 
         $products = $qb->getQuery()->getResult();
 
@@ -63,18 +63,18 @@ class ProductRepository extends ServiceEntityRepository
 
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param $category
      * @return array
      */
-    public function getProductsPricing(Client $client, $category)
+    public function getProductsPricing(Building $building, $category)
     {
         $qb =
             $this->createQueryBuilder('product')
                 ->select('product')
-                ->where('product.client = :client')
+                ->where('product.building = :building')
                 ->orderBy('product.name')
-                ->setParameter('client', $client);
+                ->setParameter('building', $building);
 
         if ($category !== 'all') $qb->andWhere('product.category = ' . $category);
 
@@ -82,18 +82,18 @@ class ProductRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $client
+     * @param $building
      * @param $category
      * @param $search
      * @return \Doctrine\ORM\Query
      */
-    public function searchByAll($client, $category, $search)
+    public function searchByAll($building, $category, $search)
     {
         $qb = $this->createQueryBuilder('product')
             ->select('product')
-            ->where('product.client = :client')
+            ->where('product.building = :building')
             ->orderBy('product.name')
-            ->setParameter('client', $client);
+            ->setParameter('building', $building);
 
         $search = ucfirst($search);
 
@@ -107,22 +107,22 @@ class ProductRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $client
+     * @param $building
      * @param $search
      * @return \Doctrine\ORM\Query
      */
-    public function searchPOSProducts($client, $search)
+    public function searchPOSProducts($building, $search)
     {
         $search = ucfirst($search);
 
         $qb = $this->createQueryBuilder('product')
             ->select('product')
-            ->where('product.client = :client')
+            ->where('product.building = :building')
             ->andWhere('product.category = 1')
             ->andWhere('product.isPos = 1')
             ->andWhere("product.name LIKE '%$search%' OR product.sku LIKE '%$search%'")
             ->orderBy('product.name')
-            ->setParameter('client', $client);
+            ->setParameter('building', $building);
 
         return $qb->getQuery()->getResult();
     }

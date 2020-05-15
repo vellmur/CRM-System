@@ -30,10 +30,10 @@ class POS
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Client\Client", inversedBy="pos")
-     * @ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Building\Building", inversedBy="pos")
+     * @ORM\JoinColumn(name="building_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $client;
+    private $building;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Customer\Customer", inversedBy="orders", cascade={"persist"})
@@ -101,17 +101,17 @@ class POS
     /**
      * @return mixed
      */
-    public function getClient()
+    public function getBuilding()
     {
-        return $this->client;
+        return $this->building;
     }
 
     /**
-     * @param mixed $client
+     * @param mixed $building
      */
-    public function setClient($client)
+    public function setBuilding($building)
     {
-        $this->client = $client;
+        $this->building = $building;
     }
 
     /**

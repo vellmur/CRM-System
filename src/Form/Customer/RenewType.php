@@ -100,7 +100,7 @@ class RenewType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'labels',
-            'client' => null,
+            'building' => null,
             'customer' => null
         ]);
     }

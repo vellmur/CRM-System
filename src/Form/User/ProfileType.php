@@ -3,7 +3,7 @@
 namespace App\Form\User;
 
 use App\Entity\User\User;
-use App\Form\Client\ClientType;
+use App\Form\Building\BuildingType;
 use App\Form\Subscriber\ProfileSubscriber;
 use App\Form\Type\DateFormatType;
 use App\Form\Type\LocaleType;
@@ -34,7 +34,7 @@ class ProfileType extends AbstractType
         $builder
             ->add('locale', LocaleType::class)
             ->add('dateFormat', DateFormatType::class)
-            ->add('client', ClientType::class, [
+            ->add('building', BuildingType::class, [
                 'validation_groups' => 'profile_validation',
                 'constraints' => [
                     new Valid()

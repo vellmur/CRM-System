@@ -2,7 +2,7 @@
 
 namespace App\Manager;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use App\Entity\Customer\Vendor;
 use App\Repository\VendorRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -57,24 +57,24 @@ class VendorManager
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @return array
      */
-    public function getClientVendors(Client $client)
+    public function getBuildingVendors(Building $building)
     {
-        $vendors = $this->rep->findBy(['client' => $client], ['name' => 'asc']);
+        $vendors = $this->rep->findBy(['building' => $building], ['name' => 'asc']);
 
         return $vendors;
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param $search
      * @return array
      */
-    public function searchVendors(Client $client, $search)
+    public function searchVendors(Building $building, $search)
     {
-        $vendors = $this->rep->searchByAllFields($client, $search);
+        $vendors = $this->rep->searchByAllFields($building, $search);
 
         return $vendors;
     }

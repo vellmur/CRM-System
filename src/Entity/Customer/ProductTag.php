@@ -29,7 +29,7 @@ class ProductTag
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Customer\Tag", inversedBy="products")
-     * @ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="building_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $tag;
 

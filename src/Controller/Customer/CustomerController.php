@@ -44,21 +44,21 @@ class CustomerController extends AbstractController
      */
     public function add(Request $request)
     {
-        $client = $this->getUser()->getClient();
+        $building = $this->getUser()->getBuilding();
 
         $requestData = $request->request->get('customer');
         $apartmentNum = $requestData != null ? $requestData['apartment']['number'] : null;
-        $apartment = $this->manager->findOrCreateApartment($client, $apartmentNum);
+        $apartment = $this->manager->findOrCreateApartment($building, $apartmentNum);
 
         $customer = new Customer();
-        $customer->setClient($client);
+        $customer->setBuilding($building);
         $customer->setApartment($apartment);
 
         $form = $this->createForm(CustomerType::class, $customer);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->manager->addCustomer($client, $customer);
+            $this->manager->addCustomer($building, $customer);
 
             return $this->redirectToRoute('member_edit', ['id' => $customer->getId()]);
         }
@@ -79,7 +79,7 @@ class CustomerController extends AbstractController
         $apartmentNum = $requestData != null ? $requestData['apartment']['number'] : null;
 
         if ($apartmentNum && (!$customer->getApartment() || $customer->getApartment()->getNumber() != $apartmentNum)) {
-            $apartment = $this->manager->findOrCreateApartment($customer->getClient(), $apartmentNum);
+            $apartment = $this->manager->findOrCreateApartment($customer->getBuilding(), $apartmentNum);
             $customer->setApartment($apartment);
         }
 
@@ -115,7 +115,7 @@ class CustomerController extends AbstractController
      */
     public function checkEmail(Request $request)
     {
-        $customer = $this->manager->findOneByEmailOrPhone($this->getUser()->getClient(), $request->request->get('email'));
+        $customer = $this->manager->findOneByEmailOrPhone($this->getUser()->getBuilding(), $request->request->get('email'));
 
         $link = null;
 
@@ -137,13 +137,13 @@ class CustomerController extends AbstractController
      */
     public function list(Request $request, PaginatorInterface $paginator, OrderManager $orderManager)
     {
-        $client = $this->getUser()->getClient();
+        $building = $this->getUser()->getBuilding();
 
         $searchBy = $request->query->get('searchBy') && $request->query->get('searchBy') != 'undefined'
             ? $request->query->get('searchBy')
             : 'all';
 
-        $query = $this->manager->searchCustomers($client, $searchBy, $request->query->get('search'));
+        $query = $this->manager->searchCustomers($building, $searchBy, $request->query->get('search'));
         $customers = $paginator->paginate($query, $request->query->getInt('page', 1), 20);
 
         if ($request->getMethod() == 'POST' && $request->isXmlHttpRequest()) {
@@ -169,8 +169,8 @@ class CustomerController extends AbstractController
     public function searchCustomers(Request $request)
     {
         if ($request->isXMLHttpRequest()) {
-            $client = $this->getUser()->getClient();
-            $customers = $this->manager->searchByAllCustomers($client, $request->request->get('search'));
+            $building = $this->getUser()->getBuilding();
+            $customers = $this->manager->searchByAllCustomers($building, $request->request->get('search'));
 
             $result = [];
 
@@ -230,7 +230,7 @@ class CustomerController extends AbstractController
             $members = $spreadsheetService->createAssociativeArray($spreadsheet);
 
             $status = $request->request->get('parseMembers')['status'];
-            $importedNum = $importManager->importCustomers($this->getUser()->getClient(), $members, $status);
+            $importedNum = $importManager->importCustomers($this->getUser()->getBuilding(), $members, $status);
         }
 
         return $this->render('customer/parse.html.twig', [
@@ -246,9 +246,9 @@ class CustomerController extends AbstractController
      */
     public function searchOrders(Request $request, OrderManager $orderManager)
     {
-        $client = $this->getUser()->getClient();
+        $building = $this->getUser()->getBuilding();
         $status = $request->request->get('searchStatus');
-        $invoices = $orderManager->searchOpenOrders($client, $status);
+        $invoices = $orderManager->searchOpenOrders($building, $status);
 
         $template = $this->render('customer/invoices_table_list.html.twig', [
             'invoices' => $invoices

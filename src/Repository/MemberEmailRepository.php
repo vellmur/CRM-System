@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use App\Entity\Customer\Email\CustomerEmail;
 use App\Entity\Customer\Customer;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -20,10 +20,10 @@ class MemberEmailRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @return \Doctrine\ORM\Query
      */
-    public function getEmailsLogQuery(Client $client)
+    public function getEmailsLogQuery(Building $building)
     {
         $qb = $this->createQueryBuilder('e');
 
@@ -36,9 +36,9 @@ class MemberEmailRepository extends ServiceEntityRepository
                 SUM(case when recipients.isBounced = 1 then 1 else 0 end) as bounced'
             )
             ->innerJoin('e.recipients', 'recipients')
-            ->where('e.client = :client')
+            ->where('e.building = :building')
             ->andWhere('e.isDraft = 0')
-            ->setParameter('client', $client)
+            ->setParameter('building', $building)
             ->groupBy('e.id')
             ->orderBy('e.createdAt', 'desc');
 

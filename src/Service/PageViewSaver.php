@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use App\Entity\User\Device;
-use App\Entity\Client\ModuleAccess;
+use App\Entity\Building\ModuleAccess;
 use App\Manager\DeviceManager;
 use App\Manager\PageViewManager;
 use App\Menu\MenuBuilder;

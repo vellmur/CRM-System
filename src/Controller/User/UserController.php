@@ -53,7 +53,7 @@ class UserController extends AbstractController
      */
     public function list(Request $request, RegistrationManager $registrationManager)
     {
-        $client = $this->getUser()->getClient();
+        $building = $this->getUser()->getBuilding();
 
         $user = new User();
         $form = $this->createForm(UserType::class, $user, [
@@ -65,12 +65,12 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $role = $request->request->get('user')['role'] == 'owner' ? 'ROLE_OWNER' : 'ROLE_EMPLOYEE';
-            $registrationManager->addUserToClient($client, $user, $role);
+            $registrationManager->addUserToBuilding($building, $user, $role);
 
             return $this->redirectToRoute('user_index');
         }
 
-        $users = $this->manager->getClientUsers($client, $this->getUser());
+        $users = $this->manager->getBuildingUsers($building, $this->getUser());
         array_unshift($users, $this->getUser());
 
         $formsArray = [];

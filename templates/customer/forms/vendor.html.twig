@@ -1,4 +1,4 @@
-{{ form_start(form, {'attr': {'class': 'form-horizontal jquery-validation', 'role' : 'form'} }) }}
+{{ form_start(form, {'attr': {'class': 'form-horizontal jquery-validation'} }) }}
     <h6><i class="icon-user-plus"></i> {{ 'customer.vendor.vendor'|trans({}, 'labels') }}</h6><hr>
     <div class="form-group {{ form.name.vars.errors|length ? 'has-error' }}">
         {{ form_label(form.name) }}
@@ -148,11 +148,11 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFudPQ3bgPztQLPBngp9B425BBl9q5Duo&libraries=places"></script>
     <script src="{{ asset('js/plugins/googleMapsSearch.js') }}"></script>
     <script>
-        var $addressFields = $('input[name$="street]"]');
+        let $addressFields = $('input[name$="street]"]');
 
         if ($addressFields[0]) {
             // Enable google address search autocomplete
-            var country = '{{ app.user.client.address.country }}'.length > 0 ? '{{ app.user.client.address.country }}' : null;
+            let country = '{{ app.user.building.address and app.user.building.address.country ? app.user.building.address.country : 'null' }}';
             initAutocomplete($addressFields, country);
         }
     </script>

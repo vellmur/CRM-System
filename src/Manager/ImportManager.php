@@ -2,7 +2,7 @@
 
 namespace App\Manager;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use App\Entity\Customer\Customer;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -19,12 +19,12 @@ class ImportManager
     }
 
     /**
-     * @param Client $client
+     * @param Building $building
      * @param $customers
      * @param $status
      * @return int
      */
-    public function importCustomers(Client $client, $customers, $status)
+    public function importCustomers(Building $building, $customers, $status)
     {
         $fileEmails = [];
 
@@ -34,7 +34,7 @@ class ImportManager
         }
 
         // Find same emails in database for handle duplicate import by emails checking
-        $databaseEmails = $this->memberManager->findEmailsMatch($client, $fileEmails);
+        $databaseEmails = $this->memberManager->findEmailsMatch($building, $fileEmails);
 
         $counter = 0;
 
@@ -48,7 +48,7 @@ class ImportManager
                 try {
                     // If customer with same email doesn't exists
                     $newCustomer = new Customer();
-                    $newCustomer->setClient($client);
+                    $newCustomer->setBuilding($building);
                     $newCustomer->setFirstname($customer['First name']);
                     $newCustomer->setLastname($customer['Last name']);
                     $newCustomer->setEmail($customer['Email']);

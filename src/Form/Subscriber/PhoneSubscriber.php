@@ -2,7 +2,7 @@
 
 namespace App\Form\Subscriber;
 
-use App\Entity\Client\Client;
+use App\Entity\Building\Building;
 use App\Form\Type\PhoneType;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -52,10 +52,10 @@ class PhoneSubscriber implements EventSubscriberInterface
             return;
         }
 
-        /** @var Client|null $client */
-        $client = $this->security->getUser() ? $this->security->getUser()->getClient() : null;
+        /** @var Building|null $building */
+        $building = $this->security->getUser() ? $this->security->getUser()->getBuilding() : null;
 
-        if ($client && $client->getAddress() && $countryCode = $client->getAddress()->getCountry()) {
+        if ($building && $building->getAddress() && $countryCode = $building->getAddress()->getCountry()) {
             $phoneFormat = $this->countriesInfo->getPhoneFormat($countryCode);
 
             $phoneLengthError = $this->translator->trans('validation.form.phone_length', [
@@ -89,10 +89,10 @@ class PhoneSubscriber implements EventSubscriberInterface
         $form = $event->getForm();
         $phone = $event->getData();
 
-        /** @var Client|null $client */
-        $client = $this->security->getUser() ? $this->security->getUser()->getClient() : null;
+        /** @var Building|null $building */
+        $building = $this->security->getUser() ? $this->security->getUser()->getBuilding() : null;
 
-        if ($client && $client->getAddress() && $countryCode = $client->getAddress()->getCountry()) {
+        if ($building && $building->getAddress() && $countryCode = $building->getAddress()->getCountry()) {
             $unmaskedPhone = $this->countriesInfo->getUnmaskedPhone($phone, $countryCode);
 
             if ($unmaskedPhone) {

@@ -56,13 +56,13 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group has-feedback">
-                                {{ form_widget(form.client.name) }}
+                                {{ form_widget(form.building.name) }}
                                 <div class="form-control-feedback">
                                     <i class="icon-user-check text-muted"></i>
                                 </div>
-                                {% if form.client.name.vars.errors|length %}
-                                    <label class="validation-error-label" for="{{ form.client.name.vars.id }}">
-                                        {{ form.client.name.vars.errors[0].message }}
+                                {% if form.building.name.vars.errors|length %}
+                                    <label class="validation-error-label" for="{{ form.building.name.vars.id }}">
+                                        {{ form.building.name.vars.errors[0].message }}
                                     </label>
                                 {% endif %}
                             </div>

@@ -18,21 +18,21 @@ class PaymentRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $client
+     * @param $building
      * @return mixed
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getLastPaid($client)
+    public function getLastPaid($building)
     {
         $qb = $this->createQueryBuilder('p');
 
         $qb->select('method.id as methodId, method.name as methodName, method.price as methodPrice')
             ->leftJoin('p.transaction', 'transaction')
             ->leftJoin('transaction.method', 'method')
-            ->where('p.client = :client')
+            ->where('p.building = :building')
             ->orderBy('p.id', 'DESC')
-            ->setParameter('client', $client)
+            ->setParameter('building', $building)
             ->setMaxResults(1);
 
         $result = $qb->getQuery()->getResult();

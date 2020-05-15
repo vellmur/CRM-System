@@ -23,7 +23,7 @@ class SubscriptionUpdateCommand extends Command
 
     protected function configure()
     {
-        $this->setDescription('Update statuses of clients subscriptions.');
+        $this->setDescription('Update statuses of buildings subscriptions.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

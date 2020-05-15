@@ -43,10 +43,10 @@
                         <tbody id="users_list">
                         {%  for key, affiliate in affiliates %}
                             <tr {% if key is not divisible by (2) %} class="row-style" {% endif %}>
-                                {% if affiliate['affiliate'].client is null %}
+                                {% if affiliate['affiliate'].building is null %}
                                     <td><a class="website-link" href="{{ path('master_affiliate_edit', {id : affiliate['affiliate'].id}) }}">{{ affiliate['affiliate'].name }}</a></td>
                                 {% else %}
-                                    <td>{{ affiliate['affiliate'].client.name }}</td>
+                                    <td>{{ affiliate['affiliate'].building.name }}</td>
                                 {% endif %}
                                 <td>{{ affiliate['affiliate'].email }}</td>
                                 <td>{{ affiliate['affiliate'].referralLink }}</td>

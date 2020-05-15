@@ -2,10 +2,10 @@
 
 namespace App\Tests\Form\User;
 
-use App\Entity\Client\Address;
-use App\Entity\Client\Client;
+use App\Entity\Building\Address;
+use App\Entity\Building\Building;
 use App\Entity\User\User;
-use App\Form\Client\ClientType;
+use App\Form\Building\BuildingType;
 use App\Form\Subscriber\ProfileSubscriber;
 use App\Form\Subscriber\TimezoneSubscriber;
 use App\Form\Type\CurrencyType;
@@ -73,11 +73,11 @@ class ProfileTypeTest extends TypeTestCase
         $currencyType = new CurrencyType($this->currencyFormatter);
 
         $timezoneSubscriber = new TimezoneSubscriber($this->formFactory, $this->locationService);
-        $clientType = new ClientType($timezoneSubscriber);
+        $buildingType = new BuildingType($timezoneSubscriber);
 
         return [
             new PreloadedExtension([$localeType], []),
-            new PreloadedExtension([$clientType], []),
+            new PreloadedExtension([$buildingType], []),
             new PreloadedExtension([$currencyType], []),
             new PreloadedExtension([$type], []),
             new ValidatorExtension($this->getValidatorExtension()),
@@ -108,8 +108,8 @@ class ProfileTypeTest extends TypeTestCase
     public function testSubmitValidData($data)
     {
         $formUser = new User();
-        $formClient = new Client();
-        $formUser->setClient($formClient);
+        $formBuilding = new Building();
+        $formUser->setBuilding($formBuilding);
 
         $form = $this->factory->create(ProfileType::class, $formUser);
         $form->submit($data);
@@ -118,23 +118,23 @@ class ProfileTypeTest extends TypeTestCase
         $this->assertTrue($form->isSubmitted());
         $this->assertTrue($form->isValid());
 
-        $client = new Client();
-        $client->setName($data['client']['name']);
-        $client->setEmail($data['client']['email']);
-        $client->setCurrency($data['client']['currency']);
+        $building = new Building();
+        $building->setName($data['building']['name']);
+        $building->setEmail($data['building']['email']);
+        $building->setCurrency($data['building']['currency']);
 
         $address = new Address();
-        $address->setCountry($data['client']['address']['country']);
-        $address->setStreet($data['client']['address']['street']);
-        $address->setPostalCode($data['client']['address']['postalCode']);
-        $address->setRegion($data['client']['address']['region']);
-        $address->setCity($data['client']['address']['city']);
-        $client->setAddress($address);
-        $client->setToken($formClient->getToken());
-        $client->setCreatedAt($formClient->getCreatedAt());
+        $address->setCountry($data['building']['address']['country']);
+        $address->setStreet($data['building']['address']['street']);
+        $address->setPostalCode($data['building']['address']['postalCode']);
+        $address->setRegion($data['building']['address']['region']);
+        $address->setCity($data['building']['address']['city']);
+        $building->setAddress($address);
+        $building->setToken($formBuilding->getToken());
+        $building->setCreatedAt($formBuilding->getCreatedAt());
 
         $user = new User();
-        $user->setClient($client);
+        $user->setBuilding($building);
         $user->setLocale($data['locale']);
         $user->setCreatedAt($formUser->getCreatedAt());
         $user->setConfirmationToken($formUser->getConfirmationToken());
@@ -150,7 +150,7 @@ class ProfileTypeTest extends TypeTestCase
         return [
             [
                 [
-                    'client' => [
+                    'building' => [
                         'name' => 'Where is my mind',
                         'email' => 'whereismymind@mail.com',
                         'currency' => '&#8381;',
@@ -167,7 +167,7 @@ class ProfileTypeTest extends TypeTestCase
             ],
             [
                 [
-                    'client' => [
+                    'building' => [
                         'name' => 'John Golt',
                         'email' => 'johngolt@mail.com',
                         'currency' => '&#8372;',
@@ -184,7 +184,7 @@ class ProfileTypeTest extends TypeTestCase
             ],
             [
                 [
-                    'client' => [
+                    'building' => [
                         'name' => 'Jack Jones',
                         'email' => 'jackjones@mail.com',
                         'currency' => '&#8381;',

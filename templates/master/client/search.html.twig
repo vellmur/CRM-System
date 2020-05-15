@@ -1,11 +1,11 @@
-{%  for key, client in clients %}
+{%  for key, building in buildings %}
     <tr role="row" class="odd {{ key is not divisible by (2) ? 'row-style' }}">
-        <td><a class="website-link" href="{{ path('master_client_edit', {'id': client.id }) }}">{{ client.name }}</a></td>
-        <td>{{ client.users[0].enabled ? 'Yes' : 'No' }}</td>
-        <td>{{ client.createdAt|date('Y-m-d') }}</td>
+        <td><a class="website-link" href="{{ path('master_building_edit', {'id': building.id }) }}">{{ building.name }}</a></td>
+        <td>{{ building.users[0].enabled ? 'Yes' : 'No' }}</td>
+        <td>{{ building.createdAt|date('Y-m-d') }}</td>
         <td>
-            {% if client.id in lapsedClients %}
-                <button data-path="{{ path('master_client_delete', {id: client.id}) }}"
+            {% if building.id in lapsedClients %}
+                <button data-path="{{ path('master_building_delete', {id: building.id}) }}"
                         data-toggle="modal"
                         href="#small_modal"
                         class="btn btn-danger btn-icon btn-delete">

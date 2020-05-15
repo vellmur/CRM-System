@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Entity\Client\Notification;
+namespace App\Entity\Building\Notification;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Client\Notification\NotifiableNotification;
+use App\Entity\Building\Notification\NotifiableNotification;
 
 /**
  * Class Notification
@@ -60,7 +60,7 @@ class Notification implements \JsonSerializable
 
     /**
      * @var NotifiableNotification[]|ArrayCollection
-     * @ORM\OneToMany(targetEntity="App\Entity\Client\Notification\NotifiableNotification", mappedBy="notification", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Building\Notification\NotifiableNotification", mappedBy="notification", cascade={"persist"})
      */
     protected $notifiableNotifications;
 

@@ -18,7 +18,7 @@
                         <tbody id="users_list">
                         {% for r in referrals %}
                             <tr>
-                                <td>{{ r.referral.client.name }}</td>
+                                <td>{{ r.referral.building.name }}</td>
                                 {% if r.amount is not null %}
                                     <td>${{ r.amount }}</td>
                                     <td>${{ r.amount * 0.3 }}</td>
