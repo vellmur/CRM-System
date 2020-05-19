@@ -2,14 +2,14 @@
 
 namespace App\Manager;
 
-use App\Data\CountryInfo;
 use App\Entity\Customer\Apartment;
 use App\Entity\Customer\CustomerEmailNotify;
 use App\Entity\Customer\Email\AutoEmail;
-use App\Entity\Customer\Product;
 use App\Repository\MemberRepository;
 use App\Entity\Building\Building;
 use App\Entity\Customer\Customer;
+use App\Service\Localization\PhoneFormat;
+use App\Service\Localization\PhoneFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 
 class MemberManager
@@ -33,7 +33,7 @@ class MemberManager
     public function addCustomer(Building $building, Customer $customer)
     {
         $now = new \DateTime();
-        $customer->setToken($customer->getFullname() . $now->format('Y-m-d H:i:s'));
+        $customer->setToken($customer->getFullName() . $now->format('Y-m-d H:i:s'));
         $customer->setBuilding($building);
 
         $this->activateNotifications($customer);
@@ -146,8 +146,9 @@ class MemberManager
         if ($email) {
             $member = $this->repository->findOneBy(['building' => $building, 'email' => $email]);
         } else {
-            $countryInfo = new CountryInfo();
-            $phone = $countryInfo->getUnmaskedPhone($phone, $building->getAddress()->getCountry());
+            $phoneFormat = new PhoneFormat($building->getAddress()->getCountry());
+            $phoneFormatter = new PhoneFormatter($phoneFormat, $phone);
+            $phone = $phoneFormatter->getClearPhoneNumber();
             $member = $this->repository->findOneBy(['building' => $building, 'phone' => $phone]);
         }
 

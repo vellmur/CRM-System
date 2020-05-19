@@ -126,10 +126,10 @@ customer:
         todays_orders: Сегодняшние заказы
         future_orders: Будущие заказы
         filter: Фильтр
-        customer: Покупатель
-        customers: Покупатели
+        owner: Владелец
+        owners: Владельцы
         records_found: Найдено записей
-        search_by_placeholder: ПОИСК по КЛИЕНТУ, ПОЧТЕ ...
+        search_by_placeholder: ПОИСК по ВЛАДЕЛЬЦУ, ПОЧТЕ, НОМЕРУ ТЕЛЕФОНА, КВАРТИРЕ ...
         search_by: ПОИСК ПО ПОКУПАТЕЛЮ
     upload:
         upload: Загрузить

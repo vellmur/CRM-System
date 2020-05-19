@@ -5,13 +5,21 @@ namespace App\Tests;
 use App\DataFixtures\CustomerFixtures;
 use App\Entity\Customer\Apartment;
 use App\Entity\Customer\Customer;
+use App\Service\Localization\PhoneFormat;
+use App\Service\Localization\PhoneFormatter;
 use Codeception\Example;
 use Faker\Factory;
 
 class AddCustomerCest
 {
+    private $countryCode;
+    private $phoneFormat;
+
     public function _before(FunctionalTester $I)
     {
+        $this->countryCode = $I->grabEntitiesFromRepository(Customer::class)[0]->getCountry();
+        $this->phoneFormat = new PhoneFormat($this->countryCode);
+
         $I->auth();
     }
 
@@ -32,7 +40,7 @@ class AddCustomerCest
      * @param Example $data
      * @param FunctionalTester $I
      */
-    public function testAdd(FunctionalTester $I, Example $data)
+    public function testSuccessfulAdd(FunctionalTester $I, Example $data)
     {
         $I->wantToTest('Successful add of customer to database.');
 
@@ -60,11 +68,14 @@ class AddCustomerCest
         $I->seeInCurrentUrl('/edit');
         $I->see('Customer');
 
+        $formatter = new PhoneFormatter($this->phoneFormat, $formFields['customer_phone']);
+        $formFields['customer_phone'] = $formatter->getClearPhoneNumber();
+
         $I->seeRecordIsAdded(Customer::class, [
             'firstname' => $formFields['customer_firstname'],
             'lastname' => $formFields['customer_lastname'],
             'email' => $formFields['customer_email'],
-            'phone' => preg_replace('/[^0-9.]+/', '', $formFields['customer_phone']),
+            'phone' => $formFields['customer_phone'],
             'notes' => $formFields['customer_notes']
         ]);
 
@@ -77,17 +88,19 @@ class AddCustomerCest
      * @before goToCustomerAddPage
      * @param FunctionalTester $I
      */
-    public function testAddCustomerToSameApartment(FunctionalTester $I)
+    public function testAddingCustomerToSameApartment(FunctionalTester $I)
     {
         $I->wantToTest('Adding of customer to existed apartment.');
 
         $existedCustomer = CustomerFixtures::ENABLED_CUSTOMER;
 
+        $faker = Factory::create();
+
         $formFields = [
             'customer_firstname' => 'Customer',
             'customer_lastname' => 'Wife',
             'customer_email' => 'customerwife@mail.com',
-            'customer_phone' => '384378927568',
+            'customer_phone' => $faker->phoneNumber . '-' . $faker->phoneNumber,
             'customer_apartment_number' => $existedCustomer['apartment']['number'],
             'customer_notes' => 'This is customer to existed apartment'
         ];
@@ -149,7 +162,7 @@ class AddCustomerCest
             'customer_firstname' => '',
             'customer_lastname' => '',
             'customer_email' => '',
-            'customer_phone' => '',
+            'customer_phone' => null,
             'customer_apartment_number' => null
         ];
 
@@ -172,7 +185,7 @@ class AddCustomerCest
                 'firstname' => $faker->firstName,
                 'lastname' => $faker->lastName,
                 'email' => $faker->email,
-                'phone' => $faker->phoneNumber,
+                'phone' => $faker->phoneNumber . '-' . $faker->phoneNumber,
                 'apartment' => [
                     'number' => $faker->numberBetween(1, 100)
                 ],

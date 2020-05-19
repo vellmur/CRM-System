@@ -23,8 +23,8 @@ class CustomerTest extends TestCase
 
         $customer->setId(1);
         $customer->setEmail('johngolt@gmail.com');
-        $customer->setFirstname('John');
-        $customer->setLastname('Golt');
+        $customer->setFirstName('John');
+        $customer->setLastName('Golt');
         $customer->setBuilding($building);
         $customer->setPhone('+380936069590');
         $customer->setCreatedAt($date);
@@ -36,9 +36,9 @@ class CustomerTest extends TestCase
 
         $this->assertEquals(1, $customer->getId());
         $this->assertEquals('johngolt@gmail.com', $customer->getEmail());
-        $this->assertEquals('JOHN', $customer->getFirstname());
-        $this->assertEquals('GOLT', $customer->getLastname());
-        $this->assertEquals('JOHN GOLT', $customer->getFullname());
+        $this->assertEquals('JOHN', $customer->getFirstName());
+        $this->assertEquals('GOLT', $customer->getLastName());
+        $this->assertEquals('JOHN GOLT', $customer->getFullName());
         $this->assertEquals('johngolt@gmail.com', $customer->getEmail());
         $this->assertEquals('380936069590', $customer->getPhone());
         $this->assertEquals($building, $customer->getBuilding());

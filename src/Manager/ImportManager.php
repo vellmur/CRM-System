@@ -49,8 +49,8 @@ class ImportManager
                     // If customer with same email doesn't exists
                     $newCustomer = new Customer();
                     $newCustomer->setBuilding($building);
-                    $newCustomer->setFirstname($customer['First name']);
-                    $newCustomer->setLastname($customer['Last name']);
+                    $newCustomer->setFirstName($customer['First name']);
+                    $newCustomer->setLastName($customer['Last name']);
                     $newCustomer->setEmail($customer['Email']);
                     $newCustomer->setPhone($customer['Phone']);
                     $newCustomer->setNotes($customer['Additional information']);
@@ -113,7 +113,7 @@ class ImportManager
      */
     public function saveCustomer(Customer $customer)
     {
-        $customer->setToken($customer->getFirstname() . $customer->getLastname() . $customer->getEmail());
+        $customer->setToken($customer->getFirstName() . $customer->getLastName() . $customer->getEmail());
 
         // Add all email notifies to a customer, add pickups and update share statuses
         $this->memberManager->activateNotifications($customer);

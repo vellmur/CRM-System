@@ -63,6 +63,7 @@ class CustomerTypeTest extends TypeTestCase
     /**
      * @dataProvider getCustomersValidData
      * @param $data
+     * @throws \Exception
      */
     public function testSubmitValidData($data)
     {
@@ -72,8 +73,8 @@ class CustomerTypeTest extends TypeTestCase
         $form->submit($data);
 
         $customer = new Customer();
-        $customer->setFirstname($data['firstname']);
-        $customer->setLastname($data['lastname']);
+        $customer->setFirstName($data['firstname']);
+        $customer->setLastName($data['lastname']);
         $customer->setPhone($data['phone']);
         $customer->setEmail($data['email']);
         $customer->setNotes($data['notes']);

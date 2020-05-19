@@ -227,101 +227,10 @@ class Sender
         $template = 'emails/member/send_control.html.twig';
 
         $this->sendMail($customer->getBuilding()->getName(), $customer->getEmail(), $template, $subject, [
-            'member' => $customer->getFullname(),
+            'member' => $customer->getFullName(),
             'email' => $customer->getEmail(),
             'link' => $profileLink
         ]);
-    }
-
-    /**
-     * @param Invoice $invoice
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
-     */
-    public function sendCustomerInvoice(Invoice $invoice)
-    {
-        $building = $invoice->getCustomer()->getBuilding();
-
-        $template = $this->templating->render('customer/emails/renewal_invoice.html.twig', [
-            'invoice' => $invoice
-        ]);
-
-        $to = [$building->getEmail(), 'kinroom@blackdirt.org'];
-
-        if ($invoice->getCustomer()->getEmail()) $to[] = $invoice->getCustomer()->getEmail();
-
-        $message = $this->mailer->createMessage()
-            ->setSubject($this->translator->trans('invoice.title', [], 'labels'))
-            ->setFrom([$this->mailerUser => $building->getName()])
-            ->setReplyTo([$building->getEmail() => $building->getName()])
-            ->setTo($to)
-            ->setBody($template, 'text/html');
-
-        $this->mailer->send($message);
-        $invoice->setIsSent(true);
-        
-        $this->manager->flush();
-    }
-
-    /**
-     * @param Customer $customer
-     * @param null $message
-     * @return string
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
-     */
-    public function sendWidgetContact(Customer $customer, $message = null)
-    {
-        try {
-            $subject = $message ? 'Contact us message' : 'New subscription';
-            if (strlen($customer->getFullname()) > 1) $subject .= ' from ' . $customer->getFullname();
-
-            $message = $this->mailer->createMessage()
-                ->setSubject($subject)
-                ->setFrom([$this->mailerUser => $this->softwareName])
-                ->setReplyTo([$customer->getEmail() => $customer->getFullname() ? $customer->getFullname() : 'Contact'])
-                ->setTo([$customer->getBuilding()->getEmail(), 'kinroom@blackdirt.org'])
-                ->setBody($this->templating->render('emails/member/contact_send.html.twig', [
-                    'subject' => $subject,
-                    'customer' => $customer,
-                    'message' => $message
-                ]), 'text/html');
-
-            $this->mailer->send($message);
-            return 'Contact was successfully sent!';
-        } catch (Exception $exception) {
-            die(var_dump($exception->getMessage()));
-        }
-    }
-
-    /**
-     * @param Customer $customer
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
-     */
-    public function sendAddedMailchimpContact(Customer $customer)
-    {
-        try {
-            $subject = 'New subscription';
-            if (strlen($customer->getFullname()) > 1) $subject .= ' from ' . $customer->getFullname();
-
-            $message = $this->mailer->createMessage()
-                ->setSubject($subject)
-                ->setFrom([$this->mailerUser => $this->softwareName])
-                ->setReplyTo(['cf@blackdirt.org' => $this->softwareName])
-                ->setTo(['kinroom@blackdirt.org', 'cf@blackdirt.org'])
-                ->setBody($this->templating->render('emails/widget/new_mailchimp_subscription.twig', [
-                    'subject' => $subject,
-                    'customer' => $customer
-                ]), 'text/html');
-
-            $this->mailer->send($message);
-        } catch (Exception $exception) {
-            throw $exception;
-        }
     }
 
     /**

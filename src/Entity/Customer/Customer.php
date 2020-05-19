@@ -174,6 +174,14 @@ class Customer
     }
 
     /**
+     * @return string|null
+     */
+    public function getCountry(): ?string
+    {
+        return $this->getBuilding()->getAddress() ? $this->getBuilding()->getAddress()->getCountry() : null;
+    }
+
+    /**
      * Get firstname
      *
      * @return string
@@ -184,37 +192,37 @@ class Customer
     }
 
     /**
-     * Set firstname
+     * Set firstName
      *
-     * @param string $firstname
+     * @param string $firstName
      * @return Customer
      */
-    public function setFirstname($firstname)
+    public function setFirstName($firstName)
     {
-        $this->firstname = mb_strtoupper($firstname, "utf-8");
+        $this->firstname = mb_strtoupper($firstName, "utf-8");
 
         return $this;
     }
 
     /**
-     * Get lastname
+     * Get getLastName
      *
      * @return string
      */
-    public function getLastname()
+    public function getLastName()
     {
         return $this->lastname;
     }
 
     /**
-     * Set lastname
+     * Set $lastName
      *
-     * @param string $lastname
+     * @param string $lastName
      * @return Customer
      */
-    public function setLastname($lastname)
+    public function setLastName($lastName)
     {
-        $this->lastname = mb_strtoupper($lastname, "utf-8");
+        $this->lastname = mb_strtoupper($lastName, "utf-8");
 
         return $this;
     }
@@ -222,7 +230,7 @@ class Customer
     /**
      * @return string
      */
-    public function getFullname()
+    public function getFullName()
     {
         return $this->firstname || $this->lastname ? $this->firstname . ' ' . $this->lastname : null;
     }

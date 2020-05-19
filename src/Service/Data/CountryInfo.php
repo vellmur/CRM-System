@@ -1,70 +1,24 @@
 <?php
 
-namespace App\Data;
+namespace App\Service\Data;
 
 class CountryInfo
 {
     /**
      * @param string $countryCode
      * @return mixed
-     * @throws \Exception
      */
-    public function getCountryInfo(string $countryCode)
+    public static function getCountryInfo(string $countryCode)
     {
         $countryCode = mb_strtoupper($countryCode);
 
-        if (!isset($this->countryInfo[$countryCode])) {
-            throw new \Exception('Country phone format was not found.');
-        }
-
-        return $this->countryInfo[$countryCode];
+        return self::$countryInfo[$countryCode];
     }
-
-    /**
-     * @param string $countryCode
-     * @return mixed
-     * @throws \Exception
-     */
-    public function getPhoneFormat(string $countryCode)
-    {
-        $countryInfo = $this->getCountryInfo($countryCode);
-
-        $countryFormat = '+' . $countryInfo['country_code'];
-
-        $phoneFormat['code'] = $countryFormat;
-        $phoneFormat['mask'] = $countryFormat . ' ' . $countryInfo['phone_format'];
-        $phoneFormat['unmaskedLength'] = preg_match_all( "/[0-9]/", $countryInfo['phone_format']);
-        $phoneFormat['length'] = preg_match_all( "/[0-9]/", $phoneFormat['mask']);
-        $phoneFormat['validationLength'] = strlen($phoneFormat['mask']);
-
-        return $phoneFormat;
-    }
-
-    /**
-     * @param $phone
-     * @param $countryCode
-     * @return string|string[]|null
-     * @throws \Exception
-     */
-    public function getUnmaskedPhone($phone, $countryCode)
-    {
-        $unmaskedPhone = null;
-
-        if ($countryCode) {
-            $countryInfo = $this->getCountryInfo($countryCode);
-            if ($countryInfo) {
-                $unmaskedPhone = str_replace(' ' , '', str_replace('+' . $countryInfo['country_code'], '', $phone));
-            }
-        }
-
-        return $unmaskedPhone;
-    }
-
 
     /**
      * @var array
      */
-    private $countryInfo = [
+    private static $countryInfo = [
         'AF' => [
             'territoryType' => '',
             'country_code' => '93',
@@ -978,7 +932,7 @@ class CountryInfo
         'RU' => [
             'territoryType' => '',
             'country_code' => '7',
-            'phone_format' => '912 999 99 99',
+            'phone_format' => '999 999 99 99',
         ],
         'RW' => [
             'territoryType' => '',

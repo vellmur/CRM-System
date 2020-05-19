@@ -60,14 +60,18 @@ class MemberRepository extends ServiceEntityRepository
      */
     public function searchByAll($building, $search)
     {
-        $qb = $this->createQueryBuilder('m')
-                ->select('m')
-                ->where('m.building = :building')
-                ->orderBy('m.firstname, m.lastname')
+        $qb = $this->createQueryBuilder('c')
+                ->select('c')
+                ->innerJoin('c.apartment', 'apartment')
+                ->where('c.building = :building')
+                ->orderBy('apartment.number, c.firstname, c.lastname')
                 ->setParameter('building', $building);
 
         if (strlen($search) > 0) {
-            $qb->andWhere("(CONCAT(m.firstname,' ', m.lastname) LIKE :search) OR m.email LIKE :search")
+            $search = trim(str_replace('-', '', str_replace('+', '', $search)));
+
+            $qb->andWhere("(CONCAT(c.firstname,' ', c.lastname) LIKE :search) OR c.email LIKE :search 
+                OR c.phone LIKE :search OR apartment.number LIKE :search")
                 ->setParameter(':search', '%'. $search . '%');
         }
 

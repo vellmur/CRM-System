@@ -159,8 +159,8 @@ class MembershipController extends AbstractController
 
         if ($member) {
             $memberData = [
-                'firstname' => $member->getFirstname(),
-                'lastname' => $member->getLastname(),
+                'firstname' => $member->getFirstName(),
+                'lastname' => $member->getLastName(),
                 'phone' => $member->getPhone()
             ];
         }

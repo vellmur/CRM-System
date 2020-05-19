@@ -126,10 +126,10 @@ customer:
         todays_orders: Today's orders
         future_orders: Future orders
         filter: Filter
-        customer: Customer
-        customers: Customers
+        owner: Owner
+        owners: Owners
         records_found: Records found
-        search_by_placeholder: SEARCH BY CUSTOMER, EMAIL...
+        search_by_placeholder: SEARCH BY OWNER, EMAIL, PHONE, APARTMENT NUMBER ...
         search_by: SEARCH BY CUSTOMER
     upload:
         upload: Upload

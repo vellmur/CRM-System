@@ -59,7 +59,7 @@ class RegistrationManager
      * @throws \Doctrine\DBAL\ConnectionException
      * @throws \Throwable
      */
-    public function register(User &$user, string $buildingName, ?string $refCode = null)
+    public function register(User $user, string $buildingName, ?string $refCode = null)
     {
         $this->em->getConnection()->beginTransaction();
 

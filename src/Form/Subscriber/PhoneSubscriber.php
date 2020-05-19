@@ -4,29 +4,32 @@ namespace App\Form\Subscriber;
 
 use App\Entity\Building\Building;
 use App\Form\Type\PhoneType;
+use App\Service\Localization\PhoneFormat;
+use App\Service\Localization\PhoneFormatter;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Validator\Constraints\Length;
-use App\Data\CountryInfo;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PhoneSubscriber implements EventSubscriberInterface
 {
     private $factory;
 
-    private $countriesInfo;
-
     private $translator;
 
     private $security;
 
-    public function __construct(FormFactoryInterface $factory, TranslatorInterface $translator, Security $security)
-    {
+    /**
+     * PhoneSubscriber constructor.
+     * @param FormFactoryInterface $factory
+     * @param TranslatorInterface $translator
+     * @param Security $security
+     */
+    public function __construct(FormFactoryInterface $factory, TranslatorInterface $translator, Security $security) {
         $this->factory = $factory;
-        $this->countriesInfo = new CountryInfo();
         $this->translator = $translator;
         $this->security = $security;
     }
@@ -56,27 +59,25 @@ class PhoneSubscriber implements EventSubscriberInterface
         $building = $this->security->getUser() ? $this->security->getUser()->getBuilding() : null;
 
         if ($building && $building->getAddress() && $countryCode = $building->getAddress()->getCountry()) {
-            $phoneFormat = $this->countriesInfo->getPhoneFormat($countryCode);
+            $phoneFormat = new PhoneFormat($countryCode);
 
             $phoneLengthError = $this->translator->trans('validation.form.phone_length', [
-                '%number%' => $phoneFormat['length']
+                '%number%' => $phoneFormat->getDigitsNum()
             ], 'validators');
 
-            if ($phoneFormat) {
-                $options['attr']['data-mask'] = $phoneFormat['mask'];
-                $options['attr']['data-rule-exactLength'] = $phoneFormat['validationLength'];
-                $options['attr']['data-length-message'] = $phoneLengthError;
+            $options['attr']['data-mask'] = $phoneFormat->getMask();
+            $options['attr']['data-rule-exactLength'] = $phoneFormat->getMaskLength();
+            $options['attr']['data-length-message'] = $phoneLengthError;
 
-                $options['constraints'] = [
-                    new Length([
-                        'min' => $phoneFormat['unmaskedLength'],
-                        'max' => $phoneFormat['unmaskedLength'],
-                        'exactMessage' => $phoneLengthError
-                    ])
-                ];
+            $options['constraints'] = [
+                new Length([
+                    'min' => $phoneFormat->getDigitsNum(),
+                    'max' => $phoneFormat->getDigitsNum(),
+                    'exactMessage' => $phoneLengthError
+                ])
+            ];
 
-                $form->getParent()->add('phone', PhoneType::class, $options);
-            }
+            $form->getParent()->add('phone', PhoneType::class, $options);
         }
     }
 
@@ -93,20 +94,18 @@ class PhoneSubscriber implements EventSubscriberInterface
         $building = $this->security->getUser() ? $this->security->getUser()->getBuilding() : null;
 
         if ($building && $building->getAddress() && $countryCode = $building->getAddress()->getCountry()) {
-            $unmaskedPhone = $this->countriesInfo->getUnmaskedPhone($phone, $countryCode);
+            $phoneFormat = new PhoneFormat($countryCode);
 
-            if ($unmaskedPhone) {
-                $event->setData($unmaskedPhone);
-            } else {
+            if (strlen($phone) == strlen($phoneFormat->getPhonePrefix())) {
                 // If phone value contain only phone code, don't validate field (because field is empty)
-                $phoneCode = $this->countriesInfo->getPhoneFormat($countryCode)['code'];
-
-                // Replace phone field
-                if (strlen(($phone)) == strlen($phoneCode)) {
-                    $options = $form->getConfig()->getOptions();
-                    $options['validation_groups'] = false;
-                    $form->getParent()->add('phone', PhoneType::class, $options);
-                }
+                $options = $form->getConfig()->getOptions();
+                $options['validation_groups'] = false;
+                $form->getParent()->add('phone', PhoneType::class, $options);
+                $event->setData(null);
+            } else {
+                $phoneFormatter = new PhoneFormatter($phoneFormat, $phone);
+                $unmaskedPhone = $phoneFormatter->getClearPhoneNumber();
+                $event->setData($unmaskedPhone);
             }
         }
     }

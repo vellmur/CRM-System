@@ -79,7 +79,7 @@ class CustomerFixtures extends Fixture implements DependentFixtureInterface
      * @param string $firstname
      * @param string $lastname
      * @param string $email
-     * @param bool $phone
+     * @param string $phone
      * @param string $notes
      * @param string $apartmentNumber
      * @return Customer
@@ -88,8 +88,8 @@ class CustomerFixtures extends Fixture implements DependentFixtureInterface
     private function createCustomer(Building $building, string $firstname, string $lastname, string $email, string $phone, string $notes, string $apartmentNumber)
     {
         $customer = new Customer();
-        $customer->setFirstname($firstname);
-        $customer->setLastname($lastname);
+        $customer->setFirstName($firstname);
+        $customer->setLastName($lastname);
         $customer->setEmail($email);
         $customer->setPhone($phone);
         $customer->setNotes($notes);

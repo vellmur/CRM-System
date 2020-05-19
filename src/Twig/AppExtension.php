@@ -4,6 +4,8 @@ namespace App\Twig;
 
 use App\Entity\Customer\Customer;
 use App\Service\Localization\CurrencyFormatter;
+use App\Service\Localization\PhoneFormat;
+use App\Service\Localization\PhoneFormatter;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\TwigFilter;
@@ -24,8 +26,7 @@ class AppExtension extends AbstractExtension
      * @param UrlGeneratorInterface $router
      * @param CurrencyFormatter $currencyFormatter
      */
-    public function __construct(TranslatorInterface $translator, UrlGeneratorInterface $router, CurrencyFormatter $currencyFormatter)
-    {
+    public function __construct(TranslatorInterface $translator, UrlGeneratorInterface $router, CurrencyFormatter $currencyFormatter) {
         $this->translator = $translator;
         $this->router = $router;
         $this->currencyFormatter = $currencyFormatter;
@@ -39,7 +40,8 @@ class AppExtension extends AbstractExtension
         return [
             new TwigFilter('profile_link', [$this, 'getProfileLink']),
             new TwigFilter('file_size', [$this, 'formatSizeUnits']),
-            new TwigFilter('currencyFormat', [$this, 'currencyFormat'])
+            new TwigFilter('currencyFormat', [$this, 'currencyFormat']),
+            new TwigFilter('formatPhoneNumber', [$this, 'formatPhoneNumber'])
         ];
     }
 
@@ -109,5 +111,19 @@ class AppExtension extends AbstractExtension
     public function currencyFormat(?int $id)
     {
         return $id === null ? '$' : $this->currencyFormatter->getCurrencySymbolById($id);
+    }
+
+    /**
+     * @param string $phone
+     * @param string $countryCode
+     * @return string|null
+     * @throws \Exception
+     */
+    public function formatPhoneNumber(string $phone, string $countryCode)
+    {
+        $phoneFormat = new PhoneFormat($countryCode);
+        $phoneFormatter = new PhoneFormatter($phoneFormat, $phone);
+
+        return $phoneFormatter->getLocalizedPhone();
     }
 }
