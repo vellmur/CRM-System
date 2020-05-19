@@ -62,10 +62,11 @@ class MemberRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('c')
                 ->select('c')
+                ->addSelect('ABS(apartment.number) AS HIDDEN apartmentNumber')
                 ->innerJoin('c.apartment', 'apartment')
                 ->where('c.building = :building')
-                ->orderBy('apartment.number, c.firstname, c.lastname')
-                ->setParameter('building', $building);
+                ->orderBy('apartmentNumber, c.firstname, c.lastname')
+                ->setParameter('building', $building );
 
         if (strlen($search) > 0) {
             $search = trim(str_replace('-', '', str_replace('+', '', $search)));
