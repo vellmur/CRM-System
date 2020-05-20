@@ -4,7 +4,6 @@ namespace App\Twig;
 
 use App\Entity\Owner\Owner;
 use App\Service\Localization\CurrencyFormatter;
-use App\Service\Localization\PhoneFormat;
 use App\Service\Localization\PhoneFormatter;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -121,9 +120,8 @@ class AppExtension extends AbstractExtension
      */
     public function formatPhoneNumber(string $phone, string $countryCode)
     {
-        $phoneFormat = new PhoneFormat($countryCode);
-        $phoneFormatter = new PhoneFormatter($phoneFormat, $phone);
+        $phoneFormatter = new PhoneFormatter($countryCode);
 
-        return $phoneFormatter->getLocalizedPhone();
+        return $phoneFormatter->getLocalizedPhone($phone);
     }
 }

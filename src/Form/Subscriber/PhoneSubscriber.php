@@ -4,7 +4,6 @@ namespace App\Form\Subscriber;
 
 use App\Entity\Building\Building;
 use App\Form\Type\PhoneType;
-use App\Service\Localization\PhoneFormat;
 use App\Service\Localization\PhoneFormatter;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -59,20 +58,20 @@ class PhoneSubscriber implements EventSubscriberInterface
         $building = $this->security->getUser() ? $this->security->getUser()->getBuilding() : null;
 
         if ($building && $building->getAddress() && $countryCode = $building->getAddress()->getCountry()) {
-            $phoneFormat = new PhoneFormat($countryCode);
+            $phoneFormatter = new PhoneFormatter($countryCode);
 
             $phoneLengthError = $this->translator->trans('validation.form.phone_length', [
-                '%number%' => $phoneFormat->getDigitsNum()
+                '%number%' => $phoneFormatter->getDigitsNum()
             ], 'validators');
 
-            $options['attr']['data-mask'] = $phoneFormat->getMask();
-            $options['attr']['data-rule-exactLength'] = $phoneFormat->getMaskLength();
+            $options['attr']['data-mask'] = $phoneFormatter->getMask();
+            $options['attr']['data-rule-exactLength'] = $phoneFormatter->getMaskLength();
             $options['attr']['data-length-message'] = $phoneLengthError;
 
             $options['constraints'] = [
                 new Length([
-                    'min' => $phoneFormat->getDigitsNum(),
-                    'max' => $phoneFormat->getDigitsNum(),
+                    'min' => $phoneFormatter->getDigitsNum(),
+                    'max' => $phoneFormatter->getDigitsNum(),
                     'exactMessage' => $phoneLengthError
                 ])
             ];
@@ -94,17 +93,16 @@ class PhoneSubscriber implements EventSubscriberInterface
         $building = $this->security->getUser() ? $this->security->getUser()->getBuilding() : null;
 
         if ($building && $building->getAddress() && $countryCode = $building->getAddress()->getCountry()) {
-            $phoneFormat = new PhoneFormat($countryCode);
+            $phoneFormatter = new PhoneFormatter($countryCode);
 
-            if (strlen($phone) == strlen($phoneFormat->getPhonePrefix())) {
+            if (strlen($phone) == strlen($phoneFormatter->getPhonePrefix())) {
                 // If phone value contain only phone code, don't validate field (because field is empty)
                 $options = $form->getConfig()->getOptions();
                 $options['validation_groups'] = false;
                 $form->getParent()->add('phone', PhoneType::class, $options);
                 $event->setData(null);
             } else {
-                $phoneFormatter = new PhoneFormatter($phoneFormat, $phone);
-                $unmaskedPhone = $phoneFormatter->getCleanPhoneNumber();
+                $unmaskedPhone = $phoneFormatter->getCleanPhoneNumber($phone);
                 $event->setData($unmaskedPhone);
             }
         }

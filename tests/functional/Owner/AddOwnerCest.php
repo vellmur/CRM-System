@@ -6,18 +6,17 @@ use App\DataFixtures\OwnerFixtures;
 use App\DataFixtures\UserFixtures;
 use App\Entity\Owner\Apartment;
 use App\Entity\Owner\Owner;
-use App\Service\Localization\PhoneFormat;
 use App\Service\Localization\PhoneFormatter;
 use Codeception\Example;
 use Faker\Factory;
 
 class AddOwnerCest
 {
-    private $phoneFormat;
+    private $phoneFormatter;
 
     public function _before(FunctionalTester $I)
     {
-        $this->phoneFormat = new PhoneFormat(UserFixtures::ADMIN['building']['address']['country']);
+        $this->phoneFormatter = new PhoneFormatter(UserFixtures::ADMIN['building']['address']['country']);
 
         $I->auth();
     }
@@ -67,8 +66,7 @@ class AddOwnerCest
         $I->seeInCurrentUrl('/edit');
         $I->see('Owner');
 
-        $formatter = new PhoneFormatter($this->phoneFormat, $formFields['owner_phone']);
-        $formFields['owner_phone'] = $formatter->getCleanPhoneNumber();
+        $formFields['owner_phone'] = $this->phoneFormatter->getCleanPhoneNumber($formFields['owner_phone']);
 
         $I->seeRecordIsAdded(Owner::class, [
             'firstname' => $formFields['owner_firstname'],

@@ -2,54 +2,58 @@
 
 namespace App\Service\Localization;
 
+use App\Service\Data\CountryInfo;
+
 /**
  * Class PhoneFormatter
  * @package App\Service\Localization
  */
 class PhoneFormatter
 {
-    private $format;
+    private $phoneCode;
 
-    private $phone;
+    private $phoneFormat;
 
     /**
      * PhoneFormatter constructor.
-     * @param PhoneFormat $phoneFormat
-     * @param string $phone
+     * @param string $countryCode
      */
-    public function __construct(PhoneFormat $phoneFormat, string $phone)
+    public function __construct(string $countryCode)
     {
-        $this->format = $phoneFormat;
-        $this->phone = $phone;
+        $countryInfo = CountryInfo::getCountryInfo($countryCode);
+
+        $this->phoneCode = $countryInfo['country_code'];
+        $this->phoneFormat = $countryInfo['phone_format'];
     }
 
     /**
-     * Returns clear phone number without mask and spaces. Just digits.
-     * @return string|null
+     * @param string $phone
+     * @return string
      */
-    public function getCleanPhoneNumber(): string
+    public function getCleanPhoneNumber(string $phone): string
     {
-        if (strlen($this->phone) < $this->format->getMaskLength()) {
-            return $this->phone;
+        if (strlen($phone) < $this->getMaskLength()) {
+            return $phone;
         }
 
         // Remove all chars
-        $phone = preg_replace('/[^0-9]/', '', $this->phone);
-        $digitsNumber = $this->format->getDigitsNum();
+        $phone = preg_replace('/[^0-9]/', '', $phone);
+        $digitsNumber = $this->getDigitsNum();
 
         return strlen($phone) > $digitsNumber ? substr($phone, 0, $digitsNumber) : $phone;
     }
 
     /**
+     * @param string $phone
      * @return string
      */
-    public function getLocalizedPhone(): string
+    public function getLocalizedPhone(string $phone): string
     {
-        if (strlen($this->phone) !== $this->format->getDigitsNum()) {
-            return $this->phone;
+        if (strlen($phone) !== $this->getDigitsNum()) {
+            return $phone;
         }
 
-        $phone = $this->addSpacesByFormat($this->format->getPhoneFormat(), $this->phone);
+        $phone = $this->addSpacesByFormat($this->getPhoneFormat(), $phone);
 
         return  '+' . $phone;
     }
@@ -82,5 +86,45 @@ class PhoneFormatter
         }
 
         return $localizedPhone;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhonePrefix(): string
+    {
+        return '+' . $this->phoneCode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhoneFormat(): string
+    {
+        return $this->phoneFormat;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDigitsNum(): int
+    {
+        return strlen(str_replace(' ', '', $this->phoneCode . $this->phoneFormat));
+    }
+
+    /**
+     * @return string
+     */
+    public function getMask(): string
+    {
+        return '+' . $this->phoneCode . ' ' . $this->phoneFormat;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMaskLength(): int
+    {
+        return strlen($this->getMask());
     }
 }

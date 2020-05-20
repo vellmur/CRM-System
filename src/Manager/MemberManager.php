@@ -8,7 +8,6 @@ use App\Entity\Owner\Email\AutoEmail;
 use App\Repository\MemberRepository;
 use App\Entity\Building\Building;
 use App\Entity\Owner\Owner;
-use App\Service\Localization\PhoneFormat;
 use App\Service\Localization\PhoneFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -146,9 +145,8 @@ class MemberManager
         if ($email) {
             $member = $this->repository->findOneBy(['building' => $building, 'email' => $email]);
         } else {
-            $phoneFormat = new PhoneFormat($building->getAddress()->getCountry());
-            $phoneFormatter = new PhoneFormatter($phoneFormat, $phone);
-            $phone = $phoneFormatter->getCleanPhoneNumber();
+            $phoneFormatter = new PhoneFormatter($building->getAddress()->getCountry());
+            $phone = $phoneFormatter->getCleanPhoneNumber($phone);
             $member = $this->repository->findOneBy(['building' => $building, 'phone' => $phone]);
         }
 
