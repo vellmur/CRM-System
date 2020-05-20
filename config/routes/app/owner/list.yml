@@ -1,0 +1,21 @@
+owner_list:
+    path:     /search
+    defaults: { _controller: App\Controller\Owner\OwnerController::list }
+    methods:  [GET, POST]
+
+member_edit:
+    path:     /{id}/edit
+    defaults: { _controller: App\Controller\Owner\OwnerController::edit }
+    methods:  [GET, POST]
+    options:
+            expose: true
+
+member_add:
+    path:     /add
+    defaults: { _controller: App\Controller\Owner\OwnerController::add }
+    methods:  [GET, POST]
+
+member_delete:
+    path:     /{id}/delete
+    defaults: { _controller: App\Controller\Owner\OwnerController::delete }
+    methods:  DELETE

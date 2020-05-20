@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
     <meta name="google-site-verification" content="T6axsgGzL09p--ZdK_oYVPu6769x32Oc9-nBcOQ7ojw"/>
 
-    <title>{{ software_name }}{% if customer is defined %} {{ ' - ' ~ customer.building.name }} {% endif %}</title>
+    <title>{{ software_name }}{% if owner is defined %} {{ ' - ' ~ owner.building.name }} {% endif %}</title>
 
     <!-- Favicons --->
     <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('apple-touch-icon.png') }}">
@@ -37,7 +37,7 @@
     <div class="navbar navbar-inverse navbar-custom" role="navigation">
         <div class="navbar-header-logo center-logo">
             <div class="navbar-logo">
-                <a  class="navbar-logo" href="/">{{ software_name }}{% if customer is defined %} {{ ' - ' ~ customer.building.name }} {% endif %}</a>
+                <a  class="navbar-logo" href="/">{{ software_name }}{% if owner is defined %} {{ ' - ' ~ owner.building.name }} {% endif %}</a>
             </div>
         </div>
     </div>

@@ -92,13 +92,13 @@
                         {% endif %}
                     </div>
                     <div class="form-group {% if form.building.address.street.vars.errors|length %} has-error {% endif %}">
-                        <label>{{ 'customer.address.street'|trans({}, 'labels') }}</label>
+                        <label>{{ 'owner.address.street'|trans({}, 'labels') }}</label>
                         {% if not form.building.address.street.vars.valid %}
                             {{ form_widget(form.building.street, {'attr': {
                                 'data-placement': 'top',
                                 'title': form.building.address.street.vars.errors[0].message,
                                 'class': 'select tip tip-open',
-                                'placeholder': 'customer.address.street'|trans({}, 'labels')}
+                                'placeholder': 'owner.address.street'|trans({}, 'labels')}
                             }) }}
                         {% else %}
                             {{ form_widget(form.building.address.street) }}

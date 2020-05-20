@@ -103,7 +103,7 @@ class PageViewRepository extends ServiceEntityRepository
             if ($chart == 'website' || $chart == 'promotion') {
                 $qb->andWhere('v.module is NULL');
             } else {
-                $modules = ['customers' => 1];
+                $modules = ['owners' => 1];
                 $qb->andWhere('v.module = :module')->setParameter('module', $modules[$chart]);
             }
         }

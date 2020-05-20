@@ -3,7 +3,7 @@
 namespace App\Command;
 
 use App\Entity\Master\Email\Recipient;
-use App\Entity\Customer\Email\EmailRecipient;
+use App\Entity\Owner\Email\EmailRecipient;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -71,26 +71,26 @@ class CheckBouncedEmailsCommand extends Command
                 }
 
                 $buildingNum = isset($recipientsIds['building']) ? count($recipientsIds['building']) : 0;
-                $customerNum = isset($recipientsIds['customer']) ? count($recipientsIds['customer']) : 0;
+                $ownerNum = isset($recipientsIds['owner']) ? count($recipientsIds['owner']) : 0;
 
                 $output->writeln([
-                    'Number of bounced emails: ' . ($buildingNum + $customerNum),
+                    'Number of bounced emails: ' . ($buildingNum + $ownerNum),
                     'Building emails: ' . $buildingNum,
-                    'Customer emails: ' . $customerNum,
+                    'Owner emails: ' . $ownerNum,
                 ]);
 
                 $updatedNum = 0;
 
                 if ($recipientsIds) {
-                    if (isset($recipientsIds['customer'])) {
-                        $recipients = $this->em->getRepository(EmailRecipient::class)->getRecipientsByIds($recipientsIds['customer']);
+                    if (isset($recipientsIds['owner'])) {
+                        $recipients = $this->em->getRepository(EmailRecipient::class)->getRecipientsByIds($recipientsIds['owner']);
 
                         if ($recipients) {
                             foreach ($recipients as $recipient) {
                                 $recipient->setIsDelivered(false);
                                 $recipient->setIsBounced(true);
 
-                                $output->writeln('Set customer email as bounced. ID: ' . $recipient->getId());
+                                $output->writeln('Set owner email as bounced. ID: ' . $recipient->getId());
                                 $updatedNum++;
                             }
 

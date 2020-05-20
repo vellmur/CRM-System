@@ -277,7 +277,7 @@ class MasterController extends AbstractController
     public function statistics(?string $module, ?Building $building)
     {
         $stats = $this->manager->getViewStatistics($module, $building);
-        $modules = ['customers', 'website', 'promotion'];
+        $modules = ['owners', 'website', 'promotion'];
 
         $pages = array_keys($stats);
 

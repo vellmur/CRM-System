@@ -2,7 +2,7 @@
 
 namespace App\Service\Mail;
 
-use App\Entity\Customer\Email\AutoEmail;
+use App\Entity\Owner\Email\AutoEmail;
 use App\Entity\Email\EmailLogInterface;
 use Doctrine\Common\Collections\Collection;
 

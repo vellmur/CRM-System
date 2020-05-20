@@ -33,7 +33,7 @@ class DbSubscriber implements EventSubscriberInterface
 
     /**
      *
-     * Here we dynamically set customer location data, based on country/region/city/postalCode
+     * Here we dynamically set owner location data, based on country/region/city/postalCode
      * @param FormEvent $event
      */
     public function postSet(FormEvent $event)
@@ -86,7 +86,7 @@ class DbSubscriber implements EventSubscriberInterface
 
     /**
      *
-     * Here we dynamically set customer location data, based on country/region/city/postalCode
+     * Here we dynamically set owner location data, based on country/region/city/postalCode
      *
      * @param FormEvent $event
      */
@@ -95,7 +95,7 @@ class DbSubscriber implements EventSubscriberInterface
         $form = $event->getForm();
         $data = $event->getData();
 
-        // For customer address entity we haven`t country field, so we can country from parent Building entity
+        // For owner address entity we haven`t country field, so we can country from parent Building entity
         if (stristr(get_class($form->getData()), 'Address')) {
             $country = $form->getData()->getMember()->getBuilding()->getCountry();
         } else {

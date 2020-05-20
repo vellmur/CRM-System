@@ -2,12 +2,12 @@
 
 namespace App\Manager;
 
-use App\Entity\Customer\Apartment;
-use App\Entity\Customer\CustomerEmailNotify;
-use App\Entity\Customer\Email\AutoEmail;
+use App\Entity\Owner\Apartment;
+use App\Entity\Owner\OwnerEmailNotify;
+use App\Entity\Owner\Email\AutoEmail;
 use App\Repository\MemberRepository;
 use App\Entity\Building\Building;
-use App\Entity\Customer\Customer;
+use App\Entity\Owner\Owner;
 use App\Service\Localization\PhoneFormat;
 use App\Service\Localization\PhoneFormatter;
 use Doctrine\ORM\EntityManagerInterface;
@@ -26,22 +26,22 @@ class MemberManager
 
     /**
      * @param Building $building
-     * @param Customer $customer
-     * @return Customer
+     * @param Owner $owner
+     * @return Owner
      * @throws \Exception
      */
-    public function addCustomer(Building $building, Customer $customer)
+    public function addOwner(Building $building, Owner $owner)
     {
         $now = new \DateTime();
-        $customer->setToken($customer->getFullName() . $now->format('Y-m-d H:i:s'));
-        $customer->setBuilding($building);
+        $owner->setToken($owner->getFullName() . $now->format('Y-m-d H:i:s'));
+        $owner->setBuilding($building);
 
-        $this->activateNotifications($customer);
+        $this->activateNotifications($owner);
 
-        $this->em->persist($customer);
+        $this->em->persist($owner);
         $this->em->flush();
 
-        return $customer;
+        return $owner;
     }
 
     /**
@@ -65,12 +65,12 @@ class MemberManager
     }
 
     /**
-     * @param Customer $member
+     * @param Owner $member
      */
-    public function activateNotifications(Customer $member)
+    public function activateNotifications(Owner $member)
     {
         foreach (AutoEmail::EMAIL_TYPES as $key => $type) {
-            $notify = new CustomerEmailNotify();
+            $notify = new OwnerEmailNotify();
             $notify->setNotifyType($key);
             $this->em->persist($notify);
 
@@ -79,11 +79,11 @@ class MemberManager
     }
 
     /**
-     * Update customer without sending of notifications
+     * Update owner without sending of notifications
      *
-     * @param Customer $member
+     * @param Owner $member
      */
-    public function update(Customer $member)
+    public function update(Owner $member)
     {
         if (!count($member->getNotifications())) {
             $this->activateNotifications($member);
@@ -99,29 +99,29 @@ class MemberManager
      * @param $search
      * @return \Doctrine\ORM\Query
      */
-    public function searchCustomers(Building $building, $status = 'all', $search = '')
+    public function searchOwners(Building $building, $status = 'all', $search = '')
     {
-        $customers = [];
+        $owners = [];
 
         switch ($status) {
             case 'all':
-                $customers = $this->repository->searchByAll($building, $search);
+                $owners = $this->repository->searchByAll($building, $search);
                 break;
             case 'leads':
-                $customers = $this->repository->searchByLeads($building, $search);
+                $owners = $this->repository->searchByLeads($building, $search);
                 break;
             case 'contacts':
-                $customers = $this->repository->searchByContacts($building, $search);
+                $owners = $this->repository->searchByContacts($building, $search);
                 break;
             case 'members':
-                $customers = $this->repository->searchByMembers($building, $search);
+                $owners = $this->repository->searchByMembers($building, $search);
                 break;
             case 'patrons':
-                $customers = $this->repository->searchByPatrons($building, $search);
+                $owners = $this->repository->searchByPatrons($building, $search);
                 break;
         }
 
-        return $customers;
+        return $owners;
     }
 
     /**
@@ -129,7 +129,7 @@ class MemberManager
      * @param $search
      * @return array
      */
-    public function searchByAllCustomers(Building $building, $search)
+    public function searchByAllOwners(Building $building, $search)
     {
         return $this->repository->searchByAll($building, $search)->getResult();
     }
@@ -148,7 +148,7 @@ class MemberManager
         } else {
             $phoneFormat = new PhoneFormat($building->getAddress()->getCountry());
             $phoneFormatter = new PhoneFormatter($phoneFormat, $phone);
-            $phone = $phoneFormatter->getClearPhoneNumber();
+            $phone = $phoneFormatter->getCleanPhoneNumber();
             $member = $this->repository->findOneBy(['building' => $building, 'phone' => $phone]);
         }
 
@@ -170,7 +170,7 @@ class MemberManager
      * @return object|null
      * @throws \Exception
      */
-    public function findCustomerByData(Building $building, $data)
+    public function findOwnerByData(Building $building, $data)
     {
         $member = null;
 
@@ -197,15 +197,15 @@ class MemberManager
      * @param Building $building
      * @return mixed
      */
-    public function getCustomerProducts(Building $building)
+    public function getOwnerProducts(Building $building)
     {
-        return $this->em->getRepository(Product::class)->getCustomerProducts($building);
+        return $this->em->getRepository(Product::class)->getOwnerProducts($building);
     }
 
     /**
-     * @param Customer $member
+     * @param Owner $member
      */
-    public function removeCustomer(Customer $member)
+    public function removeOwner(Owner $member)
     {
         $this->em->remove($member);
         $this->em->flush();

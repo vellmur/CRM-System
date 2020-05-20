@@ -1,11 +1,11 @@
 emails.open.tracking:
     path:     /mail/opened/{recipientId}/{recipientType}/{imageName}
-    defaults: { _controller: App\Controller\API\MailController::opensTracking, imageName: customerimagename.png }
+    defaults: { _controller: App\Controller\API\MailController::opensTracking, imageName: ownerimagename.png }
     methods:  GET
 
-referred_customer_create:
-    path:  /create-customer-account/{recipientId}
-    defaults: { _controller: App\Controller\MembershipController::referredCustomerCreate }
+referred_owner_create:
+    path:  /create-owner-account/{recipientId}
+    defaults: { _controller: App\Controller\MembershipController::referredOwnerCreate }
     methods: GET
 
 widget_test:

@@ -2,7 +2,7 @@
 
 namespace App\Twig;
 
-use App\Entity\Customer\Customer;
+use App\Entity\Owner\Owner;
 use App\Service\Localization\CurrencyFormatter;
 use App\Service\Localization\PhoneFormat;
 use App\Service\Localization\PhoneFormatter;
@@ -56,16 +56,16 @@ class AppExtension extends AbstractExtension
     }
 
     /**
-     * @param Customer $customer
+     * @param Owner $owner
      * @param string|null $locale
      * @return string|string[]
      */
-    public function getProfileLink(Customer $customer, ?string $locale = null)
+    public function getProfileLink(Owner $owner, ?string $locale = null)
     {
         // Generate absolute url
         $link = $this->router->generate('membership_profile', [
             '_locale' => $locale ? $locale : 'en',
-            'token' => $customer->getToken()
+            'token' => $owner->getToken()
         ], UrlGeneratorInterface::ABSOLUTE_URL);
 
         // If server is not localhost, change scheme to https

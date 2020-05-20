@@ -2,7 +2,7 @@
 
 namespace App\Manager\Mail;
 
-use App\Entity\Customer\Email\EmailRecipient;
+use App\Entity\Owner\Email\EmailRecipient;
 use App\Entity\Master\Email\Recipient;
 use Doctrine\ORM\EntityManagerInterface;
 

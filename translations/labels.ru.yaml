@@ -1,5 +1,5 @@
 navigation:
-    module_customers: 'Модуль: Клиенты'
+    module_owners: 'Модуль: Клиенты'
     account:
         account: Аккаунт
         profile: Профиль
@@ -8,8 +8,8 @@ navigation:
         subscription: Подписка
         owner: Владелец
         logout: Выйти
-    customers:
-        manage_customers: Управление клиентами
+    owners:
+        manage_owners: Управление клиентами
         add: Добавить
         search: Поиск
         upload: Загрузить
@@ -19,23 +19,6 @@ navigation:
         drafts: Черновики
         compose: Создать
         logs: Логи
-    orders:
-        orders: Заказы
-        for_vendors: Для поставщиков
-    pos:
-        pos: Касса
-        dashboard: Панель управления
-        entry: Добавления
-        orders: Заказы
-    products:
-        products: Продукты
-        add: Добавить
-        pricing: Цены
-        search: Поиск
-    vendors:
-        vendors: Поставщики
-        add: Добавить
-        search: Поиск
     help:
         help: Помощь
         support: Поддержка
@@ -50,7 +33,7 @@ account:
         method: Метод
         description: Описание
         payment_methods: Способы оплаты
-        customer_module: Модуль Клиент
+        owner_module: Модуль Клиент
         client_name: Название дома
         my_settings: Профиль
         firstname: Имя
@@ -72,7 +55,7 @@ account:
     payment:
         payment: Оплата
         module: Модуль
-        customers: Клиенты
+        owners: Клиенты
         price: Цена
         description: Описание
         pay: Оплатить
@@ -99,8 +82,8 @@ report:
     report: Отчет
     count: Номер
     year: Год
-customer:
-    customer: Покупатель
+owner:
+    owner: Покупатель
     add:
         lead: Лид
         firstname: Имя
@@ -142,24 +125,6 @@ customer:
         rows_of: строк
         in_file_uploaded: в файле были успешно загружены
         in_file_not_uploaded: в файле не были загружены
-    orders:
-        start_date: Дата начала
-        end_date: Дата завершения
-        for_vendors: Для поставщиков
-        vendor: Поставщик
-        order_date: Дата заказа
-        total_weight: Общий вес
-        units: Единиц
-        order: Заказ
-    vendor:
-        vendor: Поставщик
-        contacts: Контакты
-        name: Имя
-        category: Категория
-        order_day: День заказа
-        status: Статус
-        search_by_placeholder: ПОИСК ПО ПОСТАВЩИКУ
-        vendor_activated: Vendor is not activated!
 emails:
     subject: Тема
     text: Текст
@@ -225,48 +190,6 @@ emails:
         title: Уведомление о дне доставке вашего сервиса
         profile_link: Нажмите здесь, чтобы посмотреть свой профиль
         your_delivery_day: ваш день доставки
-pos:
-    entry: Запись
-    products_search: Поиск по названию продукта, SKU...
-    customers_search: Поиск по клиентам
-    received_amount: Полученная сумма
-    change: Сдача
-    total: Всего
-    new_customer: Новый покупатель
-    cancel_order: Отменить заказ
-    next_order: Следующий заказ
-    products: Товары
-    orders: Заказы
-    order_id: ID заказа
-    counter: Номер
-    order_date: Дата заказа
-    receipt: Чек
-    summary: Итог
-    daily_sales: Ежедневные общие продажи
-    average_sale: Средняя цена продажи
-    hour_sales: Ежедневные продажи по часам
-    most_purchased: Самый покупаемый товар
-    month_average_sales: Среднесуточные продажи за последние 30 дней
-    average_sale_price: Средняя цена продажи за последние 30 дней
-product:
-    pricing: Ценообразование
-    category: Категория
-    name: Название
-    product: Товар
-    description: Описание
-    product_weight: Вес (%format%)
-    price: Розничная цена
-    delivery_price: Цена доставки
-    sku: SKU
-    pay_by: Оплата за
-    item: Единица
-    qty: К-во
-    weight: Вес
-    filter: Фильтр
-    filters: Фильтры
-    search_by: ПОИСК ПО НАИМЕНОВАНИЮ, ТОВАРУ, ОПИСАНИЮ...
-    vendor_eatery: Продавец - Столовая
-    vendor_market: Продавец - Рынок
 membership:
     profile_link: Ссылка на профиль
     view_profile: Просмотреть профиль
@@ -326,16 +249,6 @@ membership:
             billing_address: Платежный адрес
             billing_and_delivery_address: Адрес для Счета и Доставки
         summary: Итог
-invoice:
-    invoice: Счет
-    date_created: Дата создания
-    title: Квитанция для фермерского рынка
-    transaction: Транзакция
-    amount_paid: Оплачено
-    total_owed: Всего долга
-    paid: Оплачено
-    unpaid: Неоплачено
-    is_paid: Оплачено?
 label:
     image: Изображение
     all: Все

@@ -2,12 +2,12 @@
 
 namespace App\Manager;
 
-use App\Entity\Customer\CustomerEmailNotify;
-use App\Entity\Customer\Email\AutoEmail;
-use App\Entity\Customer\Email\EmailRecipient;
-use App\Entity\Customer\Customer;
+use App\Entity\Owner\OwnerEmailNotify;
+use App\Entity\Owner\Email\AutoEmail;
+use App\Entity\Owner\Email\EmailRecipient;
+use App\Entity\Owner\Owner;
 use App\Repository\MemberEmailRepository;
-use App\Entity\Customer\Email\CustomerEmail;
+use App\Entity\Owner\Email\OwnerEmail;
 use App\Entity\Building\Building;
 use App\Service\Mail\MailService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -55,29 +55,29 @@ class MemberEmailManager
     }
 
     /**
-     * @param CustomerEmail $email
-     * @param $customers
+     * @param OwnerEmail $email
+     * @param $owners
      * @param bool $isDraft
-     * @return CustomerEmail
+     * @return OwnerEmail
      */
-    public function saveEmail(CustomerEmail $email, $customers, $isDraft = true)
+    public function saveEmail(OwnerEmail $email, $owners, $isDraft = true)
     {
         // Remove recipients that now not in a list and remove already added recipients from the list
         foreach ($email->getRecipients() as $key => $recipient) {
-            if (in_array($recipient->getCustomer()->getId(), $customers)) {
-                $customers = array_diff($customers, [$recipient->getCustomer()->getId()]);
+            if (in_array($recipient->getOwner()->getId(), $owners)) {
+                $owners = array_diff($owners, [$recipient->getOwner()->getId()]);
             } else {
                 $email->removeRecipient($recipient);
             }
         }
 
         // Add new recipient
-        foreach ($customers as $customerId) {
-            $member = $this->em->find(Customer::class, $customerId);
+        foreach ($owners as $ownerId) {
+            $member = $this->em->find(Owner::class, $ownerId);
 
             if ($member->getEmail()) {
                 $recipient = new EmailRecipient();
-                $recipient->setCustomer($member);
+                $recipient->setOwner($member);
                 $recipient->setEmailAddress($member->getEmail());
                 $email->addRecipient($recipient);
                 $this->em->persist($recipient);
@@ -93,10 +93,10 @@ class MemberEmailManager
     }
 
     /**
-     * @param CustomerEmail $email
-     * @return CustomerEmail
+     * @param OwnerEmail $email
+     * @return OwnerEmail
      */
-    public function saveSentEmail(CustomerEmail $email)
+    public function saveSentEmail(OwnerEmail $email)
     {
         $email->setInProcess(false);
         $email->setIsDraft(false);
@@ -126,10 +126,10 @@ class MemberEmailManager
     }
 
     /**
-     * @param CustomerEmail $email
+     * @param OwnerEmail $email
      * @return array
      */
-    public function getEmailStats(CustomerEmail $email)
+    public function getEmailStats(OwnerEmail $email)
     {
         $rep = $this->em->getRepository(EmailRecipient::class);
         $recipients = $rep->getEmailRecipients($email);
@@ -171,7 +171,7 @@ class MemberEmailManager
                 ],
             ];
 
-            array_unshift($recipientsStats['feedback']['chart'], ['CustomerEmail', 'Feedback']);
+            array_unshift($recipientsStats['feedback']['chart'], ['OwnerEmail', 'Feedback']);
         }
 
         $recipientsStats['list'] = $recipients;
@@ -181,7 +181,7 @@ class MemberEmailManager
 
     /**
      * @param $id
-     * @return CustomerEmail|object|null
+     * @return OwnerEmail|object|null
      */
     public function getEmail($id)
     {
@@ -203,7 +203,7 @@ class MemberEmailManager
 
         foreach (AutoEmail::EMAIL_TYPES as $id => $typeName) {
             $defaultEmails[$typeName]['subject'] = $this->translator->trans('emails.' . $typeName . '.subject', [], 'labels');
-            $defaultEmails[$typeName]['body'] = $templating->render('customer/emails/default/' . $typeName . '.html.twig');
+            $defaultEmails[$typeName]['body'] = $templating->render('owner/emails/default/' . $typeName . '.html.twig');
         }
 
         return $defaultEmails;
@@ -222,7 +222,7 @@ class MemberEmailManager
 
         $link = $this->router->generate('membership_profile', [
             '_locale' => 'en',
-            'token' => $recipient->getCustomer()->getToken(),
+            'token' => $recipient->getOwner()->getToken(),
             'id' => $recipient->getId()
         ], UrlGeneratorInterface::ABSOLUTE_URL);
 
@@ -230,12 +230,12 @@ class MemberEmailManager
     }
 
     /**
-     * Weekly notification can be send if customer enabled type in profile and weekly type was'nt already sent this week
+     * Weekly notification can be send if owner enabled type in profile and weekly type was'nt already sent this week
      *
-     * @param Customer $member
+     * @param Owner $member
      * @return bool
      */
-    public function canReceiveWeeklyNotify(Customer $member)
+    public function canReceiveWeeklyNotify(Owner $member)
     {
         return $this->notifyEnabled($member, 'weekly')
             && !$this->repo->receivedWeekly($member, $this->getNotifyId('weekly'));
@@ -257,12 +257,12 @@ class MemberEmailManager
     /**
      * @param Building $building
      * @param $typeName
-     * @return CustomerEmail
+     * @return OwnerEmail
      * @throws \Exception
      */
     public function createAutoLog(Building $building, $typeName)
     {
-        // Get id of created CustomerEmail log and get entity of email type
+        // Get id of created OwnerEmail log and get entity of email type
         $autoEmail = $this->em->getRepository(AutoEmail::class)->findOneBy([
             'building' => $building,
             'type' => $this->getNotifyId($typeName)
@@ -272,7 +272,7 @@ class MemberEmailManager
             throw new \Exception('Automated email with type ' . $typeName . ' for building with id ' . $building->getId() . 'doesnt exists.');
         }
 
-        $email = new CustomerEmail();
+        $email = new OwnerEmail();
         $email->setBuilding($building);
         $email->setSubject($autoEmail->getSubject());
         $email->setText($autoEmail->getText());
@@ -288,16 +288,16 @@ class MemberEmailManager
     }
 
     /**
-     * CustomerEmail logs created by building in manual sending
+     * OwnerEmail logs created by building in manual sending
      *
      * @param Building $building
      * @param $subject
      * @param $text
-     * @return CustomerEmail
+     * @return OwnerEmail
      */
     public function createLog(Building $building, $subject, $text)
     {
-        $log = new CustomerEmail();
+        $log = new OwnerEmail();
 
         $log->setBuilding($building);
         $log->setIsDraft(false);
@@ -313,16 +313,16 @@ class MemberEmailManager
     }
 
     /**
-     * Check if customer enabled given notification type
+     * Check if owner enabled given notification type
      *
-     * @param Customer $customer
+     * @param Owner $owner
      * @param $typeName
      * @return bool
      */
-    public function notifyEnabled(Customer $customer, $typeName)
+    public function notifyEnabled(Owner $owner, $typeName)
     {
-        $notify = $this->em->getRepository(CustomerEmailNotify::class)->findOneBy([
-            'customer' => $customer,
+        $notify = $this->em->getRepository(OwnerEmailNotify::class)->findOneBy([
+            'owner' => $owner,
             'notifyType' => $this->getNotifyId($typeName)
         ]);
 
@@ -347,19 +347,19 @@ class MemberEmailManager
     }
 
     /**
-     * @param CustomerEmail $email
-     * @param Customer|null $member
+     * @param OwnerEmail $email
+     * @param Owner|null $member
      * @param null $address
      * @return EmailRecipient
      */
-    public function createRecipient(CustomerEmail $email, Customer $member = null, $address = null)
+    public function createRecipient(OwnerEmail $email, Owner $member = null, $address = null)
     {
         $recipient = new EmailRecipient();
 
-        // Save recipient as customer
+        // Save recipient as owner
         if ($member) {
             if ($member->getEmail()) {
-                $recipient->setCustomer($member);
+                $recipient->setOwner($member);
                 $recipient->setEmailAddress($member->getEmail());
             }
         } else {
@@ -375,9 +375,9 @@ class MemberEmailManager
     }
 
     /**
-     * @param CustomerEmail $email
+     * @param OwnerEmail $email
      */
-    public function destroyEmail(CustomerEmail $email)
+    public function destroyEmail(OwnerEmail $email)
     {
         $this->em->remove($email);
         $this->em->flush();
@@ -394,7 +394,7 @@ class MemberEmailManager
             foreach ($macros as $key => $macro) {
                 // If macros found -> replace it
                 if (stristr($message, '{' . $key . '}')) {
-                    $value = $this->setCustomerMacros($recipient, $key);
+                    $value = $this->setOwnerMacros($recipient, $key);
                     $message = str_replace('{' . $key . '}', $value, $message);
                 }
             }
@@ -408,9 +408,9 @@ class MemberEmailManager
      * @param $field
      * @return string
      */
-    public function setCustomerMacros(EmailRecipient $recipient, $field)
+    public function setOwnerMacros(EmailRecipient $recipient, $field)
     {
-        $member = $recipient->getCustomer();
+        $member = $recipient->getOwner();
 
         $value = '';
 
@@ -427,7 +427,7 @@ class MemberEmailManager
             case 'Notes':
                 $value = $member->getNotes();
                 break;
-            case 'CustomerEmail':
+            case 'OwnerEmail':
                 $value = $member->getEmail();
                 break;
             case 'Phone':

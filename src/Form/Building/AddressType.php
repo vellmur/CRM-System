@@ -33,7 +33,7 @@ class AddressType extends AbstractType
             ->add('street', TextType::class, [
                 'attr' => [
                     'class' => 'form-control text-uppercase readonly-visible',
-                    'placeholder' => 'customer.address.street',
+                    'placeholder' => 'owner.address.street',
                     'data-type' => 'string',
                     'onfocus'=> "this.removeAttribute('readonly');",
                     'readonly' => 'readonly'

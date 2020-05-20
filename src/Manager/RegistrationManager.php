@@ -4,7 +4,7 @@ namespace App\Manager;
 
 use App\Entity\Building\Affiliate;
 use App\Entity\Building\Building;
-use App\Entity\Customer\Email\AutoEmail;
+use App\Entity\Owner\Email\AutoEmail;
 use App\Entity\Building\ModuleAccess;
 use App\Entity\Building\Referral;
 use App\Entity\User\User;
@@ -93,7 +93,7 @@ class RegistrationManager
      */
     public function registerUser(User $user, string $buildingName)
     {
-        $user->setRoles(['ROLE_OWNER']);
+        $user->setRoles([User::ROLE_OWNER]);
         $user->setPassword($this->passwordEncoder->encodePassword($user, $user->getPlainPassword()));
         $user->setConfirmationToken($this->token->generateToken());
 
@@ -217,7 +217,7 @@ class RegistrationManager
         // Run through all automated email types defined in manager
         foreach (AutoEmail::EMAIL_TYPES as $id => $typeName) {
             $subject = $this->translator->trans(('emails.' . $typeName . '.subject'), [], 'labels', $locale);
-            $template = $this->twig->render('customer/emails/default/' . $typeName . '.html.twig');
+            $template = $this->twig->render('owner/emails/default/' . $typeName . '.html.twig');
 
             $email = new AutoEmail();
             $email->setType($id);

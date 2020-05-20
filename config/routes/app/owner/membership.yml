@@ -1,0 +1,57 @@
+membership:
+    path:     /membership-login
+    defaults: { _controller: App\Controller\Owner\MembershipController::login }
+    methods:  [GET, POST]
+
+membership_access_sent:
+    path:     /access_sent
+    defaults: { _controller: App\Controller\Owner\MembershipController::accessSent }
+    methods:  GET
+
+membership_profile:
+    path:     /profile/{token}/{id}
+    defaults: { _controller: App\Controller\Owner\MembershipController::profile, id: null }
+    methods:  [GET, POST]
+
+
+membership_widget:
+    path:     /widget-test/test/
+    defaults: { _controller: App\Controller\Owner\MembershipController::widgetTest }
+    methods:  GET
+
+membership_profile_save:
+    path:     /profile/{token}/profile-save/
+    defaults: { _controller: App\Controller\Owner\MembershipController::saveProfile }
+    methods:  POST
+
+membership_delete:
+    path:     /{id}/delete
+    defaults: { _controller: App\Controller\Owner\MembershipController::delete }
+    methods:  DELETE
+
+membership_skip_pickup:
+    path:     /renewal/profile/skip-pickup
+    defaults: { _controller: App\Controller\Owner\MembershipController::skipPickup }
+    methods:  POST
+
+membership_renewal_summary:
+    path:     /profile/renewal/summary/{id}/{token}/
+    defaults: { _controller: App\Controller\Owner\MembershipController::renewalSummary }
+    methods:  GET
+
+membership_check_payment_method:
+    path:     /renewal/payment-method-check/{token}/{merchant}/{isSent}
+    defaults: { _controller: App\Controller\Owner\MembershipController::isMethodConfigured, merchant: null, isSent: true }
+    methods:  POST
+    options:
+              expose: true
+
+membership_signup:
+    path:      /sign-up/{token}
+    defaults:  {_controller: App\Controller\Owner\MembershipController::signUp }
+    methods:   [GET, POST]
+
+membership_check_email:
+    path:     /profile/sign-up/email-check/{token}
+    defaults: { _controller: App\Controller\Owner\MembershipController::checkEmail }
+    methods:  GET

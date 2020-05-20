@@ -5,8 +5,8 @@ namespace App\Entity\Building;
 use App\Entity\User\User;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Customer\Email\AutoEmail;
-use App\Entity\Customer\Customer;
+use App\Entity\Owner\Email\AutoEmail;
+use App\Entity\Owner\Owner;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -78,9 +78,9 @@ class Building
     private $subscriptions;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\Customer", mappedBy="building", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Owner\Owner", mappedBy="building", cascade={"remove"})
      */
-    private $customers;
+    private $owners;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Building\Affiliate", mappedBy="building", cascade={"all"})
@@ -88,12 +88,12 @@ class Building
     private $affiliate;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\Email\CustomerEmail", mappedBy="building", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Owner\Email\OwnerEmail", mappedBy="building", cascade={"remove"})
      */
     private $emails;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\Email\AutoEmail", mappedBy="building", cascade={"all"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Owner\Email\AutoEmail", mappedBy="building", cascade={"all"})
      */
     private $autoEmails;
 
@@ -113,7 +113,7 @@ class Building
     private $images;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Customer\Apartment", mappedBy="building", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Owner\Apartment", mappedBy="building", cascade={"remove"})
      */
     private $apartments;
 
@@ -301,32 +301,32 @@ class Building
     }
 
     /**
-     * @param Customer $customer
+     * @param Owner $owner
      * @return $this
      */
-    public function addCustomer(Customer $customer)
+    public function addOwner(Owner $owner)
     {
-        $this->customers[] = $customer;
+        $this->owners[] = $owner;
 
         return $this;
     }
 
     /**
-     * @param Customer $customer
+     * @param Owner $owner
      */
-    public function removeCustomer(Customer $customer)
+    public function removeOwner(Owner $owner)
     {
-        $this->customers->removeElement($customer);
+        $this->owners->removeElement($owner);
     }
 
     /**
-     * Get customers
+     * Get owners
      *
-     * @return Collection|Customer[] $customers
+     * @return Collection|Owner[] $owners
      */
-    public function getCustomers()
+    public function getOwners()
     {
-        return $this->customers;
+        return $this->owners;
     }
 
     /**
@@ -402,17 +402,17 @@ class Building
     }
 
     /**
-     * @return mixed
+     * @return Address|null
      */
-    public function getAddress()
+    public function getAddress(): ?Address
     {
         return $this->address;
     }
 
     /**
-     * @param mixed $address
+     * @param Address $address
      */
-    public function setAddress($address): void
+    public function setAddress(Address $address): void
     {
         $this->address = $address;
     }

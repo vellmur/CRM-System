@@ -3,7 +3,7 @@
 namespace App\Service\Payment;
 
 use App\Entity\Building\PaymentSettings;
-use App\Entity\Customer\Customer;
+use App\Entity\Owner\Owner;
 use App\Manager\Payment\PaymentManager;
 use App\Service\Payment\Gateway\USAePayService;
 
@@ -25,24 +25,24 @@ class PaymentService
     }
 
     /**
-     * @param Customer $customer
+     * @param Owner $owner
      * @param $cart
-     * @return \App\Entity\Customer\Invoice
+     * @return \App\Entity\Owner\Invoice
      * @throws \Throwable
      */
-    public function customerPayment(Customer $customer, $cart)
+    public function ownerPayment(Owner $owner, $cart)
     {
         if (isset($cart['shares']) || isset($cart['products'])) {
-            $invoice = $this->manager->createCustomerInvoice($customer, $cart);
+            $invoice = $this->manager->createOwnerInvoice($owner, $cart);
 
             $paymentMethods = PaymentSettings::getMethodsNames();
 
             if ($paymentMethods[$cart['method']] == 'card') {
-                $merchant = $this->manager->getUSAePayMerchant($customer->getBuilding());
+                $merchant = $this->manager->getUSAePayMerchant($owner->getBuilding());
 
                 if ($merchant) {
-                    $transactionId = $this->USAePayService->customerPayment($merchant, $invoice, $cart['card']);
-                    $this->manager->completeCustomerPayment($invoice, $transactionId);
+                    $transactionId = $this->USAePayService->ownerPayment($merchant, $invoice, $cart['card']);
+                    $this->manager->completeOwnerPayment($invoice, $transactionId);
                 } else {
                     throw new \Exception('Merchant settings are not configured!');
                 }

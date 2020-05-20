@@ -104,7 +104,7 @@ class PhoneSubscriber implements EventSubscriberInterface
                 $event->setData(null);
             } else {
                 $phoneFormatter = new PhoneFormatter($phoneFormat, $phone);
-                $unmaskedPhone = $phoneFormatter->getClearPhoneNumber();
+                $unmaskedPhone = $phoneFormatter->getCleanPhoneNumber();
                 $event->setData($unmaskedPhone);
             }
         }

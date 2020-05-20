@@ -86,7 +86,7 @@ payment:
         empty_amount: Payment amount can`t be 0.
 notes:
     default: Change this note to the action you preform during this week.
-customer:
+owner:
     upload:
         instructions:
             instructions: Instructions

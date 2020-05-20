@@ -3,12 +3,12 @@
 namespace App\Manager;
 
 use App\Entity\Building\Building;
-use App\Entity\Customer\Contact;
-use App\Entity\Customer\Invoice;
-use App\Entity\Customer\Email\EmailRecipient;
-use App\Entity\Customer\Customer;
-use App\Entity\Customer\Vendor;
-use App\Entity\Customer\VendorOrder;
+use App\Entity\Owner\Contact;
+use App\Entity\Owner\Invoice;
+use App\Entity\Owner\Email\EmailRecipient;
+use App\Entity\Owner\Owner;
+use App\Entity\Owner\Vendor;
+use App\Entity\Owner\VendorOrder;
 use Doctrine\ORM\EntityManagerInterface;
 
 class MembershipManager
@@ -48,11 +48,11 @@ class MembershipManager
 
     /**
      * @param $token
-     * @return null|Customer|object
+     * @return null|Owner|object
      */
     public function findOneByToken($token)
     {
-        return $this->em->getRepository(Customer::class)->findByToken($token);
+        return $this->em->getRepository(Owner::class)->findByToken($token);
     }
 
     /**
@@ -84,14 +84,14 @@ class MembershipManager
     /**
      * @param $email
      * @param Building $building
-     * @return null|object|Customer
+     * @return null|object|Owner
      */
     public function findOneByEmail($email, Building $building = null)
     {
         if ($building) {
-            $member = $this->em->getRepository(Customer::class)->findOneBy(['building' => $building, 'email' => $email]);
+            $member = $this->em->getRepository(Owner::class)->findOneBy(['building' => $building, 'email' => $email]);
         } else {
-            $member = $this->em->getRepository(Customer::class)->findOneBy(['email' => $email]);
+            $member = $this->em->getRepository(Owner::class)->findOneBy(['email' => $email]);
         }
 
         return $member;

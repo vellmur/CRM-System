@@ -2,8 +2,8 @@
 
 namespace App\Service\Payment\Gateway;
 
-use App\Entity\Customer\Invoice;
-use App\Entity\Customer\Merchant;
+use App\Entity\Owner\Invoice;
+use App\Entity\Owner\Merchant;
 
 define("USAEPAY_VERSION", "1.7.1");
 
@@ -16,7 +16,7 @@ class USAePayService
     // Required for all transactions
     var $key;			// Source key
     var $pin;			// Source pin (optional)
-    var $amount;		// the entire amount that will be charged to the customers card
+    var $amount;		// the entire amount that will be charged to the owners card
     // (including tax, shipping, etc)
     var $invoice;		// invoice number.  must be unique.  limited to 10 digits.  use orderid if you need longer.
 
@@ -90,11 +90,11 @@ class USAePayService
     // the order for which this transaction corresponds to. This field
     // can contain up to 64 characters and should be used instead of
     // UMinvoice when orderids longer that 10 digits are needed.
-    var $custid;   // Alpha-numeric id that uniquely identifies the customer.
+    var $custid;   // Alpha-numeric id that uniquely identifies the owner.
     var $description;	// description of charge
     var $cvv2;			// cvv2 code
-    var $custemail;		// customers email address
-    var $custreceipt;	// send customer a receipt
+    var $custemail;		// owners email address
+    var $custreceipt;	// send owner a receipt
     var $custreceiptname;	// name of custom receipt template
     var $ignoreduplicate; // prevent the system from detecting and folding duplicates
     var $ip;			// ip address of remote host
@@ -124,9 +124,9 @@ class USAePayService
     var $cavv;
     var $eci;
 
-    // Customer Database
-    var $addcustomer;		//  Save transaction as a recurring transaction:  yes/no
-    var $recurring;		// (obsolete,  see the addcustomer)
+    // Owner Database
+    var $addowner;		//  Save transaction as a recurring transaction:  yes/no
+    var $recurring;		// (obsolete,  see the addowner)
 
     var $schedule;		//  How often to run transaction: daily, weekly, biweekly, monthly, bimonthly, quarterly, annually.  Default is monthly, set to disabled if you don't want recurring billing
     var $numleft; 		//  The number of times to run. Either a number or * for unlimited.  Default is unlimited.
@@ -219,7 +219,7 @@ class USAePayService
     var $convertedamount;  // transaction amount after server has converted it to merchants currency
     var $convertedamountcurrency;  // merchants currency
     var $conversionrate;  // the conversion rate that was used
-    var $custnum;  //  gateway assigned customer ref number for recurring billing
+    var $custnum;  //  gateway assigned owner ref number for recurring billing
     var $authamount; // amount that was authorized
     var $balance;  //remaining balance
     var $cardlevelresult;
@@ -1085,7 +1085,7 @@ class USAePayService
             "UMcheckformat" => 'checkformat',
             "UMcheckimagefront" => 'checkimage_front',
             "UMcheckimageback" => 'checkimage_back',
-            "UMaddcustomer" => 'addcustomer',
+            "UMaddowner" => 'addowner',
             "UMrecurring" => 'recurring',
             "UMbillamount" => 'billamount',
             "UMbilltax" => 'billtax',
@@ -1383,11 +1383,11 @@ class USAePayService
     /**
      * @param Merchant $merchant
      * @param Invoice $invoice
-     * @param $customerCard
+     * @param $ownerCard
      * @return mixed
      * @throws \Exception
      */
-    public function customerPayment(Merchant $merchant, Invoice $invoice, $customerCard)
+    public function ownerPayment(Merchant $merchant, Invoice $invoice, $ownerCard)
     {
         $this->key = $merchant->getKey();
         $this->pin = $merchant->getPin();
@@ -1396,10 +1396,10 @@ class USAePayService
         $this->command = "cc:sale";
 
         $this->invoice = $invoice->getId();
-        $this->card = $customerCard['number'];
-        $this->cardholder = $customerCard['name'];
+        $this->card = $ownerCard['number'];
+        $this->cardholder = $ownerCard['name'];
         $this->amount = $invoice->getAmount();
-        $cardExp = explode(' / ', $customerCard['expiredAt']);
+        $cardExp = explode(' / ', $ownerCard['expiredAt']);
         $this->exp = $cardExp[0] . $cardExp[1];
 
         $billingAddress = $invoice->getMember()->getAddressByType('BILLING');

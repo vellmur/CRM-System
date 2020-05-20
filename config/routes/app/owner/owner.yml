@@ -1,0 +1,29 @@
+members_parse:
+    path:     /owner-upload
+    defaults: { _controller: App\Controller\Owner\OwnerController::parse }
+    methods:  [GET, POST]
+
+members_file_count:
+    path:     /file-count
+    defaults: { _controller: App\Controller\Owner\OwnerController::countFileRows }
+    methods:  POST
+
+member_check_email:
+    path:     /email-check
+    defaults: { _controller: App\Controller\Owner\OwnerController::checkEmail }
+    methods:  POST
+
+owner_search:
+    path:     /owner-find
+    defaults: { _controller: App\Controller\Owner\OwnerController::searchOwners }
+    methods:  POST
+    options:
+          expose: true
+
+owners_list:
+    prefix:   /
+    resource: list.yml
+
+owners_emails:
+    prefix:   /emails
+    resource: email.yml

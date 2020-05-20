@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Building\Building;
 use App\Entity\Building\ModuleAccess;
+use App\Entity\User\User;
 
 class ModuleChecker
 {
@@ -27,9 +28,9 @@ class ModuleChecker
         if ($this->isModuleVisit($url)) {
             switch (true)
             {
-                case (strstr($url, '/module/customers/')):
+                case (strstr($url, '/module/owners/')):
                 case (strstr($url, '/module/membership/')):
-                    $name = 'customers';
+                    $name = 'owners';
                     break;
                 default:
                     $name = null;
@@ -107,7 +108,7 @@ class ModuleChecker
      */
     public function buildingHasModuleAccess(Building $building, $roles, $moduleName)
     {
-        if (!in_array('ROLE_OWNER', $roles) && !in_array('ROLE_EMPLOYEE', $roles)) {
+        if (!in_array(User::ROLE_OWNER, $roles) && !in_array(User::ROLE_EMPLOYEE, $roles)) {
             return false;
         }
 

@@ -55,7 +55,7 @@ class ModuleAccess
 
 
     public const MODULES = [
-        1 => 'customers'
+        1 => 'owners'
     ];
 
     /**

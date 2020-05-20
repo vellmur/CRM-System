@@ -34,7 +34,7 @@ class SendComposedEmailCommand extends Command
         $this
             ->setDescription('Send composed emails to a recipients')
             ->addArgument('id', InputArgument::REQUIRED, 'id of the Email')
-            ->addArgument('recipientType', InputArgument::REQUIRED, 'building/customer');
+            ->addArgument('recipientType', InputArgument::REQUIRED, 'building/owner');
     }
 
     /**
@@ -50,7 +50,7 @@ class SendComposedEmailCommand extends Command
         $recipientType = $input->getArgument('recipientType');
         $output->writeln('Sending of emails to ' . $recipientType . 's:');
 
-        $manager = $recipientType == 'customer' ? $this->memberEmailManager : $this->manager;
+        $manager = $recipientType == 'owner' ? $this->memberEmailManager : $this->manager;
 
         $email = $manager->getEmail($input->getArgument('id'));
         $email->setInProcess(true);

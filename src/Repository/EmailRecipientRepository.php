@@ -2,8 +2,8 @@
 
 namespace App\Repository;
 
-use App\Entity\Customer\Email\CustomerEmail;
-use App\Entity\Customer\Email\EmailRecipient;
+use App\Entity\Owner\Email\OwnerEmail;
+use App\Entity\Owner\Email\EmailRecipient;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -19,19 +19,19 @@ class EmailRecipientRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param CustomerEmail $emailLog
+     * @param OwnerEmail $emailLog
      * @return \Doctrine\Common\Collections\Collection|EmailRecipient[] $recipients
      */
-    public function getEmailRecipients(CustomerEmail $emailLog)
+    public function getEmailRecipients(OwnerEmail $emailLog)
     {
         $qb = $this->createQueryBuilder('r');
 
-        $qb->select('r, customers, feedback')
-            ->leftJoin('r.customer' ,'customers')
+        $qb->select('r, owners, feedback')
+            ->leftJoin('r.owner' ,'owners')
             ->leftJoin('r.feedback', 'feedback')
             ->where('r.emailLog = :emailLog')
-            ->orderBy('customers.firstname')
-            ->addOrderBy('customers.lastname')
+            ->orderBy('owners.firstname')
+            ->addOrderBy('owners.lastname')
             ->setParameter('emailLog', $emailLog);
 
         return $qb->getQuery()->getResult();
@@ -47,11 +47,11 @@ class EmailRecipientRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('r');
 
-        $qb->select('r, customers')
-            ->leftJoin('r.customer' ,'customers')
+        $qb->select('r, owners')
+            ->leftJoin('r.owner' ,'owners')
             ->where('r.emailLog = :emailLog AND r.' . $field . '= :value')
-            ->orderBy('customers.firstname')
-            ->addOrderBy('customers.lastname')
+            ->orderBy('owners.firstname')
+            ->addOrderBy('owners.lastname')
             ->setParameter('email', $email)
             ->setParameter('value', $value);
 

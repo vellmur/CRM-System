@@ -33,12 +33,12 @@ api:
   resource: "routes/app/api.yml"
   prefix:   /api
 
-customer:
-  resource: "routes/app/customer/customer.yml"
-  prefix:   /module/customers
+owner:
+  resource: "routes/app/owner/owner.yml"
+  prefix:   /module/owners
 
 membership:
-  resource: "routes/app/customer/membership.yml"
+  resource: "routes/app/owner/membership.yml"
   prefix:   /module/membership/{_locale}
 
 subscription:

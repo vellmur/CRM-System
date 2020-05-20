@@ -2,12 +2,12 @@
 
 namespace App\Service\Mail;
 
-use App\Entity\Customer\Email\AutoEmail;
+use App\Entity\Owner\Email\AutoEmail;
 use App\Entity\Email\RecipientInterface;
-use App\Entity\Customer\Invoice;
-use App\Entity\Customer\Email\EmailRecipient;
-use App\Entity\Customer\Customer;
-use App\Entity\Customer\Email\CustomerEmail;
+use App\Entity\Owner\Invoice;
+use App\Entity\Owner\Email\EmailRecipient;
+use App\Entity\Owner\Owner;
+use App\Entity\Owner\Email\OwnerEmail;
 use App\Entity\User\User;
 use App\Manager\EmailManager;
 use App\Manager\MemberEmailManager;
@@ -132,18 +132,18 @@ class Sender
     }
 
     /**
-     * @param CustomerEmail $email
-     * @param Customer $customer
+     * @param OwnerEmail $email
+     * @param Owner $owner
      * @param null $share
      * @return bool
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function sendAutomatedEmail(CustomerEmail $email, Customer $customer, $share = null)
+    public function sendAutomatedEmail(OwnerEmail $email, Owner $owner, $share = null)
     {
         try {
-            $recipient = $this->memberEmailManager->createRecipient($email, $customer);
+            $recipient = $this->memberEmailManager->createRecipient($email, $owner);
 
             $body = $this->templating->render('emails/composed_email.html.twig', [
                 'message' => $this->memberEmailManager->setMacrosFields($recipient, $email->getText(), $share)
@@ -154,7 +154,7 @@ class Sender
                 ->setSubject($email->getSubject())
                 ->setFrom([$this->mailerUser => $email->getReplyName()])
                 ->setReplyTo([$email->getReplyEmail() => $email->getReplyName()])
-                ->setTo($recipient->getCustomer()->getEmail())
+                ->setTo($recipient->getOwner()->getEmail())
                 ->setBody($body);
 
             $delivered = $this->sendTrackedMail($message, $recipient);
@@ -163,7 +163,7 @@ class Sender
 
             // If type of email is activation, send CC (copy of email to a farm owner)
             if ($typeName == 'activation') {
-                $message->setTo($customer->getBuilding()->getEmail());
+                $message->setTo($owner->getBuilding()->getEmail());
                 $this->mailer->send($message);
             }
         } catch (Exception $exception) {
@@ -194,7 +194,7 @@ class Sender
                 $message->setFrom([$this->mailerUser => $recipient->getEmailLog()->getReplyName()])
                     ->setSubject($recipient->getEmailLog()->getSubject())
                     ->setReplyTo([$recipient->getEmailLog()->getReplyEmail() => $recipient->getEmailLog()->getReplyName()])
-                    ->setTo($recipient->getCustomer()->getEmail());
+                    ->setTo($recipient->getOwner()->getEmail());
             } else {
                 $message->setFrom([$this->mailerUser => $this->softwareName])
                     ->setTo($recipient->getEmailAddress())
@@ -210,25 +210,25 @@ class Sender
     }
 
     /**
-     * @param Customer $customer
+     * @param Owner $owner
      * @param string|null $locale
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function sendCustomerControl(Customer $customer, ?string $locale)
+    public function sendOwnerControl(Owner $owner, ?string $locale)
     {
         $profileLink = $this->router->generate('membership_profile', [
-            'token' => $customer->getToken(),
+            'token' => $owner->getToken(),
             '_locale' => $locale
         ], UrlGeneratorInterface::ABSOLUTE_URL);
 
         $subject = $this->translator->trans('membership.email_access.control', [], 'labels', $locale);
         $template = 'emails/member/send_control.html.twig';
 
-        $this->sendMail($customer->getBuilding()->getName(), $customer->getEmail(), $template, $subject, [
-            'member' => $customer->getFullName(),
-            'email' => $customer->getEmail(),
+        $this->sendMail($owner->getBuilding()->getName(), $owner->getEmail(), $template, $subject, [
+            'member' => $owner->getFullName(),
+            'email' => $owner->getEmail(),
             'link' => $profileLink
         ]);
     }
@@ -239,7 +239,7 @@ class Sender
     function isDevelopment() : bool {
         return strstr($this->domain, 'testserver')
             || strstr($this->domain, '127.0.0.1')
-            || strstr($this->domain, 'customer.local');
+            || strstr($this->domain, 'owner.local');
     }
 
     /**
@@ -249,7 +249,7 @@ class Sender
      */
     public function sendTrackedMail(\Swift_Message $message, RecipientInterface $recipient)
     {
-        $recipientType = $recipient instanceof EmailRecipient ? 'customer' : 'building';
+        $recipientType = $recipient instanceof EmailRecipient ? 'owner' : 'building';
         $body = $this->addTracking($message->getBody(), $recipient->getId(), $recipientType);
 
         $message->setBody($body, 'text/html');

@@ -1,0 +1,34 @@
+<table class="table">
+    <thead>
+    <tr role="row" class="heading-style">
+        <th>{{ 'owner.search.owner'|trans({}, 'labels') }}</th>
+        <th>{{ 'owner.add.email'|trans({}, 'labels') }}</th>
+        <th>Phone</th>
+        <th>Apartment</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% if owners|length > 0 %}
+        {% for key, owner in owners %}
+            <tr>
+                <td>
+                    <a class="website-link" href="{{ path('member_edit', {'id': owner.id}) }}">
+                        {{ owner.fullname }}
+                    </a>
+                </td>
+                <td>{{ owner.email }}</td>
+                <td>
+                    {{ owner.phone and owner.country ? owner.phone|formatPhoneNumber(owner.country) : owner.phone }}
+                </td>
+                <td>{{ owner.apartment.number }}</td>
+            </tr>
+        {% endfor %}
+    {% endif %}
+    </tbody>
+</table>
+
+{% if withoutNav is not defined  %}
+    <div class="navigation text-right">
+        {{ knp_pagination_render(owners, 'parts/pagination.html.twig') }}
+    </div>
+{% endif %}

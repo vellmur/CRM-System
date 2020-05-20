@@ -3,6 +3,7 @@
 namespace App\Menu;
 
 use App\Entity\Building\Building;
+use App\Entity\User\User;
 use App\Service\ModuleChecker;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -70,15 +71,15 @@ class MenuBuilder
         }
 
         // User menu
-        if ($this->security->isGranted('ROLE_OWNER') || $this->security->isGranted('ROLE_EMPLOYEE')) {
+        if ($this->security->isGranted(User::ROLE_OWNER) || $this->security->isGranted(User::ROLE_EMPLOYEE)) {
             $this->addOwnerAccountMenu($menu, $domain);
 
-            // Module Customers Header
-            $customersHeader = $this->trans->trans('navigation.module_customers', [], $domain);
-            $menu->addChild($customersHeader)->setAttribute('icon', 'icon-menu')->setAttribute('class', 'navigation-header');
+            // Module Owners Header
+            $ownersHeader = $this->trans->trans('navigation.module_owners', [], $domain);
+            $menu->addChild($ownersHeader)->setAttribute('icon', 'icon-menu')->setAttribute('class', 'navigation-header');
 
-            // Module Customers
-            $this->addManageCustomersMenu($menu, $domain, $building);
+            // Module Owners
+            $this->addManageOwnersMenu($menu, $domain, $building);
             $this->addEmailsMenu($menu, $domain);
         }
 
@@ -94,9 +95,9 @@ class MenuBuilder
         $menu = $this->factory->createItem('root');
 
         $this->addOwnerAccountMenu($menu, $domain);
-        $customersHeader = $this->trans->trans('navigation.module_customers', [], $domain);
-        $menu->addChild($customersHeader)->setAttribute('icon', 'icon-menu')->setAttribute('class', 'navigation-header');
-        $this->addManageCustomersMenu($menu, $domain);
+        $ownersHeader = $this->trans->trans('navigation.module_owners', [], $domain);
+        $menu->addChild($ownersHeader)->setAttribute('icon', 'icon-menu')->setAttribute('class', 'navigation-header');
+        $this->addManageOwnersMenu($menu, $domain);
         $this->addEmailsMenu($menu, $domain);
 
         return $menu;
@@ -149,23 +150,23 @@ class MenuBuilder
      * @param $domain
      * @param Building|null $building
      */
-    private function addManageCustomersMenu(&$menu, $domain, ?Building $building = null)
+    private function addManageOwnersMenu(&$menu, $domain, ?Building $building = null)
     {
-        $customers = $this->trans->trans('navigation.customers.manage_customers', [], $domain);
-        $menu->addChild($customers)->setAttribute('icon', 'icon-people')->setAttribute('class', 'has-ul');;
-        $menu[$customers]->addChild($this->trans->trans('navigation.customers.add', [], $domain), ['route' => 'member_add'])->setAttribute('icon', 'icon-user-plus');
+        $owners = $this->trans->trans('navigation.owners.manage_owners', [], $domain);
+        $menu->addChild($owners)->setAttribute('icon', 'icon-people')->setAttribute('class', 'has-ul');;
+        $menu[$owners]->addChild($this->trans->trans('navigation.owners.add', [], $domain), ['route' => 'member_add'])->setAttribute('icon', 'icon-user-plus');
 
-        $filterBy = $this->request->cookies->get('customersFilterBy');
+        $filterBy = $this->request->cookies->get('ownersFilterBy');
         if ($filterBy === null || $filterBy === 'undefined') $filterBy = 'all';
 
-        $menu[$customers]->addChild($this->trans->trans('navigation.customers.search', [], $domain), [
-            'route' => 'customer_list',
+        $menu[$owners]->addChild($this->trans->trans('navigation.owners.search', [], $domain), [
+            'route' => 'owner_list',
             'routeParameters' => [
                 'searchBy' => $filterBy
             ]
         ])->setAttribute('icon', 'icon-search4');
 
-        $menu[$customers]->addChild($this->trans->trans('navigation.customers.upload', [], $domain), ['route' => 'members_parse'])->setAttribute('icon', 'icon-file-excel');
+        $menu[$owners]->addChild($this->trans->trans('navigation.owners.upload', [], $domain), ['route' => 'members_parse'])->setAttribute('icon', 'icon-file-excel');
     }
 
     /**

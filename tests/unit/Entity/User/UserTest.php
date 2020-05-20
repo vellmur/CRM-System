@@ -33,7 +33,7 @@ class UserTest extends TestCase
         $user->setId(1);
         $user->setEmail('johngolt@gmail.com');
         $user->setUsername('johngolt');
-        $user->setRoles(['ROLE_OWNER']);
+        $user->setRoles([User::ROLE_OWNER]);
         $user->setPassword('23232wdsadafdsr4r42dasdewraerewreq');
         $user->setPlainPassword('23232wdsadafdsr4r42dasdewraerewreq');
         $user->setConfirmationToken('434343434edaerw4r34');
@@ -48,7 +48,7 @@ class UserTest extends TestCase
         $this->assertEquals(1, $user->getId());
         $this->assertEquals('johngolt@gmail.com', $user->getEmail());
         $this->assertEquals('johngolt', $user->getUsername());
-        $this->assertEquals(['ROLE_OWNER', 'ROLE_USER'], $user->getRoles());
+        $this->assertEquals([User::ROLE_OWNER, User::ROLE_USER], $user->getRoles());
         $this->assertEquals('23232wdsadafdsr4r42dasdewraerewreq', $user->getPassword());
         $this->assertEquals('23232wdsadafdsr4r42dasdewraerewreq', $user->getPlainPassword());
         $this->assertEquals('434343434edaerw4r34', $user->getConfirmationToken());

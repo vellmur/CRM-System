@@ -31,7 +31,7 @@ class TimezoneSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Here we dynamically set customer location data, based on country/region/city/postalCode
+     * Here we dynamically set owner location data, based on country/region/city/postalCode
      * @param FormEvent $event
      */
     public function postSet(FormEvent $event)
@@ -45,7 +45,7 @@ class TimezoneSubscriber implements EventSubscriberInterface
 
     /**
      *
-     * Here we dynamically set customer location data, based on country/region/city/postalCode
+     * Here we dynamically set owner location data, based on country/region/city/postalCode
      *
      * @param FormEvent $event
      */

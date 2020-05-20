@@ -1,0 +1,13 @@
+{% for key, owner in owners %}
+    <tr {{ key is not divisible by (2) ? "class='row-style'" }}>
+        <td>{{ owner.fullname }}</td>
+        <td>{{ owner.email }}</td>
+        <td>
+            <label class="checkbox-info" for="email_recipients_{{ key }}">
+                <input type="checkbox" data-name="{{ owner.fullname }}" id="email_recipients_{{ key }}"
+                       name="email[recipients][]" value="{{ owner.id }}" class="styled"
+                       {{ recipients is defined and (owner.id in recipients) ? "checked" }}>
+            </label>
+        </td>
+    </tr>
+{% endfor %}

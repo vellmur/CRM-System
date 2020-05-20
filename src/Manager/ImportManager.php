@@ -3,7 +3,7 @@
 namespace App\Manager;
 
 use App\Entity\Building\Building;
-use App\Entity\Customer\Customer;
+use App\Entity\Owner\Owner;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ImportManager
@@ -20,17 +20,17 @@ class ImportManager
 
     /**
      * @param Building $building
-     * @param $customers
+     * @param $owners
      * @param $status
      * @return int
      */
-    public function importCustomers(Building $building, $customers, $status)
+    public function importOwners(Building $building, $owners, $status)
     {
         $fileEmails = [];
 
         // Get all emails from file
-        foreach ($customers as $customer) {
-            $fileEmails[] = trim(strtolower($customer['Email']));
+        foreach ($owners as $owner) {
+            $fileEmails[] = trim(strtolower($owner['Email']));
         }
 
         // Find same emails in database for handle duplicate import by emails checking
@@ -38,27 +38,27 @@ class ImportManager
 
         $counter = 0;
 
-        foreach ($customers as $customer)
+        foreach ($owners as $owner)
         {
-            // If all needed fields for customer exists and duplicates of emails not found in database
-            if ($this->array_keys_exists(['Email', 'First name', 'Last name'], $customer)
-                && strlen($customer['Email']) > 4 && strlen($customer['First name']) > 1 && strlen($customer['Last name']) > 1
-                && !in_array(trim(strtolower($customer['Email'])), $databaseEmails))
+            // If all needed fields for owner exists and duplicates of emails not found in database
+            if ($this->array_keys_exists(['Email', 'First name', 'Last name'], $owner)
+                && strlen($owner['Email']) > 4 && strlen($owner['First name']) > 1 && strlen($owner['Last name']) > 1
+                && !in_array(trim(strtolower($owner['Email'])), $databaseEmails))
             {
                 try {
-                    // If customer with same email doesn't exists
-                    $newCustomer = new Customer();
-                    $newCustomer->setBuilding($building);
-                    $newCustomer->setFirstName($customer['First name']);
-                    $newCustomer->setLastName($customer['Last name']);
-                    $newCustomer->setEmail($customer['Email']);
-                    $newCustomer->setPhone($customer['Phone']);
-                    $newCustomer->setNotes($customer['Additional information']);
+                    // If owner with same email doesn't exists
+                    $newOwner = new Owner();
+                    $newOwner->setBuilding($building);
+                    $newOwner->setFirstName($owner['First name']);
+                    $newOwner->setLastName($owner['Last name']);
+                    $newOwner->setEmail($owner['Email']);
+                    $newOwner->setPhone($owner['Phone']);
+                    $newOwner->setNotes($owner['Additional information']);
 
-                    $this->saveCustomer($newCustomer);
+                    $this->saveOwner($newOwner);
 
                     // Save emails in array to prevent duplicates
-                    $databaseEmails[] = trim(strtolower($customer['Email']));
+                    $databaseEmails[] = trim(strtolower($owner['Email']));
 
                     $counter++;
                 } catch (\Exception $e) {
@@ -109,14 +109,14 @@ class ImportManager
     }
 
     /**
-     * @param Customer $customer
+     * @param Owner $owner
      */
-    public function saveCustomer(Customer $customer)
+    public function saveOwner(Owner $owner)
     {
-        $customer->setToken($customer->getFirstName() . $customer->getLastName() . $customer->getEmail());
+        $owner->setToken($owner->getFirstName() . $owner->getLastName() . $owner->getEmail());
 
-        // Add all email notifies to a customer, add pickups and update share statuses
-        $this->memberManager->activateNotifications($customer);
-        $this->em->persist($customer);
+        // Add all email notifies to a owner, add pickups and update share statuses
+        $this->memberManager->activateNotifications($owner);
+        $this->em->persist($owner);
     }
 }

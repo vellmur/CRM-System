@@ -3,16 +3,16 @@
 {% block body %}
     <h4>{{ subject }}</h4>
 
-    {% if customer.id %}
-        <p>Name: {{ customer.fullname }}</p>
+    {% if owner.id %}
+        <p>Name: {{ owner.fullname }}</p>
     {% endif %}
-    <p>Email: {{ customer.email }}</p>
+    <p>Email: {{ owner.email }}</p>
 
     {% if message %}
         <p>Message: {{ message }}</p>
     {% endif %}
 
-    {% if customer.id %}
-        <p>This is a link to membership panel: <a href="{{ customer|profile_link }}">Profile</a></p>
+    {% if owner.id %}
+        <p>This is a link to membership panel: <a href="{{ owner|profile_link }}">Profile</a></p>
     {% endif %}
 {% endblock %}

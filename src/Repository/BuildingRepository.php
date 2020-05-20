@@ -255,10 +255,10 @@ class BuildingRepository extends ServiceEntityRepository
         $today = new \DateTime('midnight');
 
         $qb = $this->createQueryBuilder('c')
-            ->select('c, customers')
-            ->leftJoin('c.customers', 'customers')
-            ->leftJoin('customers.orders', 'orders')
-            ->where('customers.isLead = 0')
+            ->select('c, owners')
+            ->leftJoin('c.owners', 'owners')
+            ->leftJoin('owners.orders', 'orders')
+            ->where('owners.isLead = 0')
             ->andWhere('orders.id IS NOT NULL AND orders.createdAt < :now')
             ->setParameter('now', $today->format('Y-m-d'));
 

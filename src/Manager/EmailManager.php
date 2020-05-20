@@ -3,7 +3,7 @@
 namespace App\Manager;
 
 use App\Entity\Building\Building;
-use App\Entity\Customer\Email\EmailRecipient;
+use App\Entity\Owner\Email\EmailRecipient;
 use App\Entity\Email\AutomatedEmailInterface;
 use App\Entity\Email\RecipientInterface;
 use App\Entity\Master\Email\AutomatedEmail;

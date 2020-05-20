@@ -39,7 +39,7 @@ class BuildingType extends AbstractType
             ])
             ->add('email', TextType::class, [
                 'required' => false,
-                'label' => 'customer.add.email',
+                'label' => 'owner.add.email',
                 'label_attr' => [
                     'class' => 'control-label'
                 ],

@@ -3,8 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Building\Building;
-use App\Entity\Customer\Email\CustomerEmail;
-use App\Entity\Customer\Customer;
+use App\Entity\Owner\Email\OwnerEmail;
+use App\Entity\Owner\Owner;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -16,7 +16,7 @@ class MemberEmailRepository extends ServiceEntityRepository
      */
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, CustomerEmail::class);
+        parent::__construct($registry, OwnerEmail::class);
     }
 
     /**
@@ -46,12 +46,12 @@ class MemberEmailRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param Customer $customer
+     * @param Owner $owner
      * @param $typeId
      * @return bool
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function receivedWeekly(Customer $customer, $typeId)
+    public function receivedWeekly(Owner $owner, $typeId)
     {
         $start_week = date("Y-m-d", strtotime('monday this week'));
         $end_week = date("Y-m-d", strtotime('sunday this week'));
@@ -60,11 +60,11 @@ class MemberEmailRepository extends ServiceEntityRepository
 
         $qb->innerJoin('e.recipients', 'recipients')
             ->innerJoin('e.automatedEmail', 'automatedEmail')
-            ->where('recipients.customer = :customer')
+            ->where('recipients.owner = :owner')
             ->andWhere('e.createdAt >= :start')
             ->andWhere('e.createdAt <= :end')
             ->andWhere('automatedEmail.type = :type')
-            ->setParameter('customer', $customer)
+            ->setParameter('owner', $owner)
             ->setParameter('start', $start_week)
             ->setParameter('end', $end_week)
             ->setParameter('type', $typeId)

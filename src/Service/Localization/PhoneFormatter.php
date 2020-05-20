@@ -27,7 +27,7 @@ class PhoneFormatter
      * Returns clear phone number without mask and spaces. Just digits.
      * @return string|null
      */
-    public function getClearPhoneNumber(): string
+    public function getCleanPhoneNumber(): string
     {
         if (strlen($this->phone) < $this->format->getMaskLength()) {
             return $this->phone;

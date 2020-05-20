@@ -107,7 +107,7 @@ class MailController extends AbstractController
 
         if ($email) {
             foreach ($email->getRecipients() as $recipient) {
-                $recipients[] = $recipient->getCustomer()->getId();
+                $recipients[] = $recipient->getOwner()->getId();
             }
         }
 

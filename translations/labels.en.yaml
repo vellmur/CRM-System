@@ -1,5 +1,5 @@
 navigation:
-    module_customers: 'Module: Customers'
+    module_owners: 'Module: Owners'
     account:
         account: Account
         profile: Profile
@@ -8,8 +8,8 @@ navigation:
         subscription: Subscription
         owner: Owner
         logout: Log out
-    customers:
-        manage_customers: Manage customers
+    owners:
+        manage_owners: Manage owners
         add: Add
         search: Search
         upload: Upload
@@ -19,23 +19,6 @@ navigation:
         drafts: Drafts
         compose: Compose
         logs: Logs
-    orders:
-        orders: Orders
-        for_vendors: For vendors
-    pos:
-        pos: POS
-        dashboard: Dashboard
-        entry: Entry
-        orders: Orders
-    products:
-        products: Products
-        add: Add
-        pricing: Pricing
-        search: Search
-    vendors:
-        vendors: Vendors
-        add: Add
-        search: Search
     help:
        help: Help
        support: Support
@@ -50,7 +33,7 @@ account:
         method: Method
         description: Description
         payment_methods: Payment methods
-        customer_module: Module Customer
+        owner_module: Module Owner
         client_name: Building name
         my_settings: Profile
         firstname: Firstname
@@ -72,7 +55,7 @@ account:
     payment:
         payment: Payment
         module: Module
-        customers: Customers
+        owners: Owners
         price: Price
         description: Description
         pay: Pay
@@ -99,8 +82,8 @@ report:
     report: Report
     count: Count
     year: Year
-customer:
-    customer: Customer
+owner:
+    owner: Owner
     add:
         lead: Lead
         firstname: First name
@@ -130,7 +113,7 @@ customer:
         owners: Owners
         records_found: Records found
         search_by_placeholder: SEARCH BY OWNER, EMAIL, PHONE, APARTMENT NUMBER ...
-        search_by: SEARCH BY CUSTOMER
+        search_by: SEARCH BY OWNER
     upload:
         upload: Upload
         upload_as: Upload data as
@@ -142,24 +125,6 @@ customer:
         rows_of: rows of
         in_file_uploaded: in the file were uploaded successfully
         in_file_not_uploaded: in the file were not uploaded
-    orders:
-        start_date: Start date
-        end_date: End date
-        for_vendors: For vendors
-        vendor: Vendor
-        order_date: Order date
-        total_weight: Total weight
-        units: Units
-        order: Order
-    vendor:
-        vendor: Vendor
-        contacts: Contacts
-        name: Name
-        category: Category
-        order_day: Order day
-        status: Status
-        search_by_placeholder: SEARCH BY VENDOR
-        vendor_activated: Vendor is now activated!
 emails:
     subject: Subject
     text: Text
@@ -177,7 +142,7 @@ emails:
     review_and_send: Review and send
     is_notification_enabled: Is notification enabled?
     macros:
-        MemberData: Customer data
+        OwnerData: Owner data
         BillingAddressData: Billing address data
         DeliveryAddressData: Delivery address data
         ClientData: Client data
@@ -225,48 +190,6 @@ emails:
         title: Your membership delivery day notification
         profile_link: Click here to view your profile
         your_delivery_day: your delivery day is
-pos:
-    entry: Entry
-    products_search: Search by Product name, SKU...
-    customers_search: Search by Customers
-    received_amount: Received amount
-    change: Change
-    total: Total
-    new_customer: New customer
-    cancel_order: Cancel order
-    next_order: Next order
-    products: Products
-    orders: Orders
-    order_id: Order ID
-    counter: Counter
-    order_date: Order date
-    receipt: Receipt
-    summary: Summary
-    daily_sales: Daily total sales
-    average_sale: Average sale price
-    hour_sales: Daily sales by hour
-    most_purchased: Most purchased product
-    month_average_sales: The average daily sales for the past 30 days
-    average_sale_price: The average sale price for the past 30 days
-product:
-    pricing: Pricing
-    category: Category
-    name: Name
-    product: Product
-    description: Description
-    product_weight: Weight (%format%)
-    price: Retail price
-    delivery_price: Delivery price
-    sku: SKU
-    pay_by: Pay by
-    item: Item
-    qty: Qty
-    weight: Weight
-    filter: Filter
-    filters: Filters
-    search_by: SEARCH BY NAME, PRODUCT, DESCRIPTION...
-    vendor_eatery: Vendor - Eatery
-    vendor_market: Vendor - Market
 membership:
     profile_link: Profile link
     view_profile: View profile
@@ -326,16 +249,6 @@ membership:
             billing_address: Billing address
             billing_and_delivery_address: Billing and Delivery address
         summary: Summary
-invoice:
-    invoice: Invoice
-    date_created: Date created
-    title: Receipt for Farm Market
-    transaction: Transaction
-    amount_paid: Amount paid
-    total_owed: Total amount owed
-    paid: Paid
-    unpaid: Unpaid
-    is_paid: Is paid
 label:
     image: Image
     all: All

@@ -2,7 +2,7 @@
 
 namespace App\Form\Subscriber;
 
-use App\Entity\Customer\Customer;
+use App\Entity\Owner\Owner;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormEvent;
@@ -44,7 +44,7 @@ class MembershipLoginSubscriber implements EventSubscriberInterface
         $data = $event->getData();
 
         if ($data['email']) {
-            $members = $this->em->getRepository(Customer::class)->findBy(['email' => $data['email']]);
+            $members = $this->em->getRepository(Owner::class)->findBy(['email' => $data['email']]);
 
             if (count($members) > 1) {
                 $this->addBuildings($form, $members);

@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Building\Building;
-use App\Entity\Customer\Customer;
+use App\Entity\Owner\Owner;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -15,7 +15,7 @@ class MemberRepository extends ServiceEntityRepository
      */
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Customer::class);
+        parent::__construct($registry, Owner::class);
     }
 
     /**
@@ -172,7 +172,7 @@ class MemberRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('m')
             ->select('m, orders')
             ->where('m.building = :building AND m.isLead = 0')
-            ->orWhere('m.building = :building AND m.isLead = 0 AND orders.customer IS NOT NULL')
+            ->orWhere('m.building = :building AND m.isLead = 0 AND orders.owner IS NOT NULL')
             ->leftJoin('m.orders', 'orders')
             ->orderBy('m.firstname, m.lastname')
             ->setParameter('building', $building);
@@ -190,7 +190,7 @@ class MemberRepository extends ServiceEntityRepository
      * @param $search
      * @return \Doctrine\ORM\Query
      */
-    public function searchByCustomers($building, $search)
+    public function searchByOwners($building, $search)
     {
         $qb = $this->createQueryBuilder('m')
             ->select('m')

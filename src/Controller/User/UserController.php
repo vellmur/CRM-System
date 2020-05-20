@@ -64,7 +64,7 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $role = $request->request->get('user')['role'] == 'owner' ? 'ROLE_OWNER' : 'ROLE_EMPLOYEE';
+            $role = $request->request->get('user')['role'] == User::ROLE_OWNER ? User::ROLE_OWNER : User::ROLE_EMPLOYEE;
             $registrationManager->addUserToBuilding($building, $user, $role);
 
             return $this->redirectToRoute('user_index');
@@ -76,7 +76,7 @@ class UserController extends AbstractController
         $formsArray = [];
 
         foreach ($users as $user) {
-            $role = in_array('ROLE_OWNER', $user->getRoles()) ? 'owner' : 'employee';
+            $role = in_array(User::ROLE_OWNER, $user->getRoles()) ? User::ROLE_OWNER : User::ROLE_EMPLOYEE;
 
             $userForm = $this->createForm(UserType::class, $user, [
                 'user_role' => $role
@@ -136,7 +136,7 @@ class UserController extends AbstractController
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $role = $request->request->get('user')['role'] == 'owner' ? 'ROLE_OWNER' : 'ROLE_EMPLOYEE';
+                $role = $request->request->get('user')['role'] == User::ROLE_OWNER ? User::ROLE_OWNER : USER::ROLE_EMPLOYEE;
                 $this->manager->updateUser($user, [$role]);
 
                 return new JsonResponse(['code' => 202, 'status' => 'success'], 202);

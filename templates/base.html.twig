@@ -74,11 +74,11 @@
                 </ul>
 
                 {% if (is_granted('ROLE_OWNER') or is_granted('ROLE_EMPLOYEE'))
-                    and (app.session.get('modules_statuses') is null or 'customers' not in app.session.get('modules_statuses').lapsed) %}
-                    <div class="customer-search navbar navbar-right ">
+                    and (app.session.get('modules_statuses') is null or 'owners' not in app.session.get('modules_statuses').lapsed) %}
+                    <div class="owner-search navbar navbar-right ">
                         <div class="has-feedback has-feedback-right">
-                            <input type="text" id="customer-search" class="form-control text-uppercase"
-                                   placeholder="{{ 'customer.search.search_by'|trans({}, 'labels') }}" autocomplete="off">
+                            <input type="text" id="owner-search" class="form-control text-uppercase"
+                                   placeholder="{{ 'owner.search.search_by'|trans({}, 'labels') }}" autocomplete="off">
                             <div class="form-control-feedback">
                                 <i class="icon-search4"></i>
                             </div>
@@ -243,12 +243,12 @@
         <script src="{{ asset('js/ajax.js') }}?v=7"></script>
         <script src="{{ asset('js/plugins/visibility/jquery.visible.min.js') }}"></script>
 
-        <!-- Scripts for work of top bar search by customers -->
+        <!-- Scripts for work of top bar search by owners -->
         <script src="{{ asset('js/plugins/forms/inputs/typeahead/typeahead.bundle.min.js') }}"></script>
         <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
         <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
         <script src="{{ asset('js/pages/top_search.js') }}"></script>
-        <!-- /End of scripts for work of top bar search by customers -->
+        <!-- /End of scripts for work of top bar search by owners -->
 
         <script>
             {% if is_granted('ROLE_OWNER') or is_granted('ROLE_EMPLOYEE') %}

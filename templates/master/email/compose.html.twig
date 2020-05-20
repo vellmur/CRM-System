@@ -118,7 +118,7 @@
                                                     <div class="col-sm-2">
                                                         <div class="form-group form-group-material">
                                                             <label for="search_filter">Filter:</label>
-                                                            <select class="select" id="search_customers_filter" data-width="100%">
+                                                            <select class="select" id="search_owners_filter" data-width="100%">
                                                                 <option value="all">All</option>
                                                                 <option value="confirmed">Confirmed</option>
                                                                 <option value="unconfirmed">Unconfirmed</option>
@@ -133,7 +133,7 @@
                                                                data-block="content_list"
                                                                data-counter="content_counter"
                                                                name="search_text"
-                                                               id="search_customers_text"
+                                                               id="search_owners_text"
                                                                placeholder="Search by buildings">
                                                     </div>
                                                     <div class="col-sm-3 vertical-table-text">
@@ -211,13 +211,13 @@
     <script type="text/javascript" src="{{ asset('js/plugins/ckeditor/ckeditor.js') }}?v=1"></script>
     <script type="text/javascript" src="{{ asset('js/pages/member/emails/compose.js') }}?v=1"></script>
     <script>
-        $('#search_customers_filter, #search_customers_text').on('keyup change', function ()
+        $('#search_owners_filter, #search_owners_text').on('keyup change', function ()
         {
-            if ($(this).attr('id') === 'search_customers_text') {
+            if ($(this).attr('id') === 'search_owners_text') {
                 searchField = $(this);
-                searchBy = $('#search_customers_filter');
+                searchBy = $('#search_owners_filter');
             } else {
-                var searchField = $('#search_customers_text');
+                var searchField = $('#search_owners_text');
                 var searchBy = $(this);
             }
 

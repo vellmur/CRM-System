@@ -24,7 +24,7 @@
                             <td>
                                 {% if app.user.id != user.id %}
                                     <a role="button"
-                                       href="{{ path('customer_list', {'_switch_user' : user.username}) }}"
+                                       href="{{ path('owner_list', {'_switch_user' : user.username}) }}"
                                        class="btn btn-success btn-icon">
                                         <i class="icon-enter2"></i>
                                     </a>

@@ -85,10 +85,10 @@ class FunctionalTester extends Actor
     public function seeRecordIsAdded($entity, $data)
     {
         $this->seeInRepository($entity, $data);
-        $dbCustomer = $this->grabEntityFromRepository($entity, $data);
-        $this->assertNotNull($dbCustomer);
-        $this->assertNotNull($dbCustomer->getId());
-        $this->assertIsInt($dbCustomer->getId());
+        $dbOwner= $this->grabEntityFromRepository($entity, $data);
+        $this->assertNotNull($dbOwner);
+        $this->assertNotNull($dbOwner->getId());
+        $this->assertIsInt($dbOwner->getId());
     }
 
     /**

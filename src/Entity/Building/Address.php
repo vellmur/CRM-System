@@ -83,14 +83,6 @@ class Address
     }
 
     /**
-     * @return array
-     */
-    public function getRegions()
-    {
-        return $this->country ? $this->country->getRegions() : [];
-    }
-
-    /**
      * @return mixed
      */
     public function getPostalCode()
