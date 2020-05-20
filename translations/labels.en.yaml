@@ -34,7 +34,7 @@ account:
         description: Description
         payment_methods: Payment methods
         owner_module: Module Owner
-        client_name: Building name
+        building_name: Building name
         my_settings: Profile
         firstname: Firstname
         lastname: Lastname
