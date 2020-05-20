@@ -20,7 +20,7 @@ class UserFixtures extends Fixture
     private $encoder;
 
     const ADMIN = [
-        'username' => 'admin',
+        'username' => 'master',
         'email' => 'admin@mail.ru',
         'building' => [
             'name' => '[NEW COMPANY]',
@@ -28,7 +28,7 @@ class UserFixtures extends Fixture
                 'country' => 'ua'
             ]
         ],
-        'password' => 'admin23101994'
+        'password' => '11111111'
     ];
 
     // This user data will be used in codeception tests after load (test/(functional/acceptance)/SignUpCest.php)
