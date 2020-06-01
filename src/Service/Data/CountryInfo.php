@@ -6,11 +6,16 @@ class CountryInfo
 {
     /**
      * @param string $countryCode
-     * @return mixed
+     * @return array
+     * @throws \Exception
      */
-    public static function getCountryInfo(string $countryCode)
+    public static function getCountryInfo(string $countryCode): array
     {
         $countryCode = mb_strtoupper($countryCode);
+
+        if (!isset(self::$countryInfo[$countryCode])) {
+            throw new \Exception('Country phone format was not found.');
+        }
 
         return self::$countryInfo[$countryCode];
     }

@@ -98,11 +98,6 @@ class Building
     private $autoEmails;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Master\Email\Recipient", mappedBy="building", cascade={"remove"})
-     */
-    private $emailRecipients;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Building\Post", mappedBy="building", cascade={"persist", "remove"})
      */
     private $posts;

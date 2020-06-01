@@ -1,7 +1,12 @@
 owner_list:
-    path:     /search
+    path:     /list
     defaults: { _controller: App\Controller\Owner\OwnerController::list }
-    methods:  [GET, POST]
+    methods:  GET
+
+owner_search:
+    path:     /search
+    defaults: { _controller: App\Controller\Owner\OwnerController::searchOwners }
+    methods:  POST
 
 member_edit:
     path:     /{id}/edit

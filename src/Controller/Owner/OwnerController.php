@@ -131,29 +131,14 @@ class OwnerController extends AbstractController
     /**
      * @param Request $request
      * @param PaginatorInterface $paginator
-     * @return JsonResponse|Response
+     * @return Response
      */
     public function list(Request $request, PaginatorInterface $paginator)
     {
         $building = $this->getUser()->getBuilding();
 
-        $searchBy = $request->query->get('searchBy') && $request->query->get('searchBy') != 'undefined'
-            ? $request->query->get('searchBy')
-            : 'all';
-
-        $query = $this->manager->searchOwners($building, $searchBy, $request->query->get('search'));
+        $query = $this->manager->searchOwners($building, 'all', $request->query->get('search'));
         $owners = $paginator->paginate($query, $request->query->getInt('page', 1), 20);
-
-        if ($request->getMethod() == 'POST' && $request->isXmlHttpRequest()) {
-            $template = $this->render('owner/forms/table.html.twig', [
-                'owners' => $owners
-            ])->getContent();
-
-            return new JsonResponse([
-                'template' => $template,
-                'counter' => $owners->getTotalItemCount()
-            ],  200);
-        }
 
         return $this->render('owner/list.html.twig', [
             'owners' => $owners
@@ -162,28 +147,24 @@ class OwnerController extends AbstractController
 
     /**
      * @param Request $request
-     * @return JsonResponse|Response
+     * @return JsonResponse
      */
     public function searchOwners(Request $request)
     {
-        if ($request->isXMLHttpRequest()) {
-            $building = $this->getUser()->getBuilding();
-            $owners = $this->manager->searchByAllOwners($building, $request->request->get('search'));
+        if ($request->getMethod() === 'POST') {
+            $owners = $this->manager->searchByAllOwners($this->getUser()->getBuilding(), $request->query->get('search'));
+            $template = $this->render('owner/forms/table.html.twig', [
+                'owners' => $owners,
+                'withoutNav' => true
+            ])->getContent();
 
-            $result = [];
-
-            foreach ($owners as $owner) {
-                $result['names'][] = $owner->getFullname();
-                $result['values'][$owner->getFullname()] = $owner->getId();
-            }
-
-            return new JsonResponse(
-                $this->serializer->serialize([
-                    'owners' => $result,
-                ], 'json'), 200);
+            return new JsonResponse([
+                'template' => $template,
+                'counter' => count($owners)
+            ], Response::HTTP_OK);
         }
 
-        return new Response('Request not valid', 400);
+        return new JsonResponse('Request not valid', 400);
     }
 
     /**

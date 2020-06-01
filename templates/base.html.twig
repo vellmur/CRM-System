@@ -44,198 +44,203 @@
         <script src="{{ asset('js/functions.js') }}?v=5"></script>
         <!-- /added JS files -->
 
+
+
         {% block stylesheets %}{% endblock %}
     </head>
     <body class="navbar-bottom">
-        <div class="navbar navbar-inverse">
-            <div class="navbar-header">
-                <span class="navbar-brand">{{ software_name }}</span>
-                <ul class="nav navbar-nav visible-xs-block">
-                    <li><a data-toggle="collapse" data-target="#navbar-mobile"><i class="icon-tree5"></i></a></li>
-                    <li><a class="sidebar-mobile-main-toggle"><i class="icon-paragraph-justify3"></i></a></li>
-                </ul>
-            </div>
-            <div class="navbar-collapse collapse" id="navbar-mobile">
-                <ul class="nav navbar-nav">
-                    <li>
-                        <a class="sidebar-control sidebar-main-toggle hidden-xs">
-                            <i class="icon-paragraph-justify3"></i>
-                        </a>
-                    </li>
-                </ul>
+        <div id="app">
+            <div class="navbar navbar-inverse">
+                <div class="navbar-header">
+                    <span class="navbar-brand">{{ software_name }}</span>
+                    <ul class="nav navbar-nav visible-xs-block">
+                        <li><a data-toggle="collapse" data-target="#navbar-mobile"><i class="icon-tree5"></i></a></li>
+                        <li><a class="sidebar-mobile-main-toggle"><i class="icon-paragraph-justify3"></i></a></li>
+                    </ul>
+                </div>
+                <div class="navbar-collapse collapse" id="navbar-mobile">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a class="sidebar-control sidebar-main-toggle hidden-xs">
+                                <i class="icon-paragraph-justify3"></i>
+                            </a>
+                        </li>
+                    </ul>
 
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown">
-                        <a href="/logout">
-                            <i class="icon-exit position-left"></i>
-                            {{ 'navigation.account.logout'|trans({}, 'labels') }}
-                        </a>
-                    </li>
-                </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a href="/logout">
+                                <i class="icon-exit position-left"></i>
+                                {{ 'navigation.account.logout'|trans({}, 'labels') }}
+                            </a>
+                        </li>
+                    </ul>
 
-                {% if (is_granted('ROLE_OWNER') or is_granted('ROLE_EMPLOYEE'))
-                    and (app.session.get('modules_statuses') is null or 'owners' not in app.session.get('modules_statuses').lapsed) %}
-                    <div class="owner-search navbar navbar-right ">
-                        <div class="has-feedback has-feedback-right">
-                            <input type="text" id="owner-search" class="form-control text-uppercase"
-                                   placeholder="{{ 'owner.search.search_by'|trans({}, 'labels') }}" autocomplete="off">
-                            <div class="form-control-feedback">
-                                <i class="icon-search4"></i>
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-
-        <div class="page-header">
-            <div class="breadcrumb-line">
-                <ul class="breadcrumb">
-                    {% for breadcrumb_item in knp_menu_get_breadcrumbs_array(knp_menu_get_current_item('main')) %}
-                        {% if breadcrumb_item.label != 'root'  %}
-                            {% if not loop.last %}
-                                <li>
-                                    <i class="{{ breadcrumb_item.item.attributes.icon }} position-left"></i>
-                                    <span>{{ breadcrumb_item.label|upper }}</span>
-                                </li>
-                            {% else %}
-                                <li><a href="{{ breadcrumb_item.uri }}">{{ breadcrumb_item.label }}</a></li>
-                            {% endif %}
-                        {% endif %}
-                    {% endfor %}
-                </ul>
-
-                <ul class="breadcrumb-elements">
-                    {% set notifiesExists = notifications is defined and notifications|length > 0 %}
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle navbar-notifications" data-toggle="dropdown">
-                            <i class="icon-bell2"></i><span class="badge bg-warning-400">{{ notifiesExists ? notifications|length }}</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-content width-350">
-                            <div class="dropdown-content-heading">
-                                {{ 'notifications.notification'|trans({}, 'labels') }}
-                            </div>
-
-                            <ul class="media-list dropdown-content-body">
-                                {% if notifiesExists %}
-                                    {% for notify in notifications %}
-                                        <li class="media">
-                                            <div class="media-body">
-                                                {% if not notify.seen %}
-                                                    {% set notifyLink = (notify.notification.link ?? app.request.pathinfo)
-                                                        ~ '?clicked_notification=' ~ notify.id
-                                                    %}
-                                                    {% set userDateFormat = app.user.getTwigFormatDate() ~ ' H:i:s'  %}
-                                                    <a href="{{ notifyLink }}"
-                                                       class="media-heading">
-                                                        <span class="text-semibold">
-                                                            {{ notify.notification.subject }}
-                                                        </span>
-                                                        <span class="media-annotation pull-right">
-                                                            {{ notify.notification.createdAt|date(userDateFormat) }}
-                                                        </span>
-                                                    </a>
-                                                {% else %}
-                                                    <div class="block">
-                                                        <span class="text-semibold">
-                                                            {{ notify.notification.subject }}
-                                                        </span>
-                                                        <span class="media-annotation pull-right">
-                                                            {{ notify.notification.createdAt|date(userDateFormat) }}
-                                                        </span>
-                                                    </div>
-                                                {% endif %}
-
-                                                <span class="text-muted">{{ notify.notification.message }}</span>
-                                            </div>
-                                        </li>
-                                    {% endfor %}
-                                {% else %}
-                                    <li class="media">
-                                        <div class="media-body">
-                                            <span> {{ 'notifications.no_new_notifications'|trans({}, 'labels') }}.</span>
-                                        </div>
-                                    </li>
-                                {% endif %}
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="icon-help position-left"></i>
-                            {{ 'navigation.help.help'|trans({}, 'labels') }}
-                            <span class="caret"></span>
-                        </a>
-
-                        <ul class="dropdown-menu dropdown-menu-right">
-                            <li>
-                                <a href="{{ path('help_support') }}"><i class="icon-comment-discussion"></i>
-                                    {{ 'navigation.help.support'|trans({}, 'labels') }}
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="page-container">
-            <div class="page-content">
-                <div class="sidebar sidebar-main sidebar-default">
-                    <div class="sidebar-content">
-                        <div class="sidebar-category sidebar-category-visible">
-                            <div class="category-content sidebar-user">
-                                <div class="media">
-                                    <div class="media-body">
-                                        <span class="media-heading text-semibold">
-                                            {{ app.user.building.name }}
-                                        </span>
-                                    </div>
+                    {% if (is_granted('ROLE_OWNER') or is_granted('ROLE_EMPLOYEE'))
+                        and (app.session.get('modules_statuses') is null or 'owners' not in app.session.get('modules_statuses').lapsed) %}
+                        <div class="owner-search navbar navbar-right ">
+                            <div class="has-feedback has-feedback-right">
+                                <input type="text" id="owner-search" class="form-control text-uppercase"
+                                       placeholder="{{ 'owner.search.search_by'|trans({}, 'labels') }}" autocomplete="off">
+                                <div class="form-control-feedback">
+                                    <i class="icon-search4"></i>
                                 </div>
                             </div>
-
-                            <div class="category-content no-padding">
-                                <ul class="navigation navigation-main navigation-accordion">
-                                    {{ knp_menu_render('main', {currentClass: 'menu-highlight'}) }}
-                                </ul>
-                            </div>
                         </div>
-                    </div>
-                </div>
-
-                <div class="content-wrapper">
-                    {% block body %}{% endblock %}
-                    <div id="picker-holder"></div>
+                    {% endif %}
                 </div>
             </div>
-        </div>
 
-        <!-- Footer -->
-        <div class="navbar navbar-default navbar-fixed-bottom footer">
-            <ul class="nav navbar-nav visible-xs-block">
-                <li>
-                    <a class="text-center collapsed" data-toggle="collapse" data-target="#footer">
-                        <i class="icon-circle-up2"></i>
-                    </a>
-                </li>
-            </ul>
-            <div class="navbar-collapse collapse" id="footer">
-                <div class="navbar-text">
-                    &copy; 2020. Developed by {{ software_name }}
-                </div>
-                <div class="navbar-right">
-                    <ul class="nav navbar-nav">
-                        <li><a href="#">About</a></li>
-                        <li><a href="#">Terms</a></li>
-                        <li><a href="#">Contact</a></li>
+            <div class="page-header">
+                <div class="breadcrumb-line">
+                    <ul class="breadcrumb">
+                        {% for breadcrumb_item in knp_menu_get_breadcrumbs_array(knp_menu_get_current_item('main')) %}
+                            {% if breadcrumb_item.label != 'root'  %}
+                                {% if not loop.last %}
+                                    <li>
+                                        <i class="{{ breadcrumb_item.item.attributes.icon }} position-left"></i>
+                                        <span>{{ breadcrumb_item.label|upper }}</span>
+                                    </li>
+                                {% else %}
+                                    <li><a href="{{ breadcrumb_item.uri }}">{{ breadcrumb_item.label }}</a></li>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+
+                    <ul class="breadcrumb-elements">
+                        {% set notifiesExists = notifications is defined and notifications|length > 0 %}
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle navbar-notifications" data-toggle="dropdown">
+                                <i class="icon-bell2"></i><span class="badge bg-warning-400">{{ notifiesExists ? notifications|length }}</span>
+                            </a>
+                            <div class="dropdown-menu dropdown-content width-350">
+                                <div class="dropdown-content-heading">
+                                    {{ 'notifications.notification'|trans({}, 'labels') }}
+                                </div>
+
+                                <ul class="media-list dropdown-content-body">
+                                    {% if notifiesExists %}
+                                        {% for notify in notifications %}
+                                            <li class="media">
+                                                <div class="media-body">
+                                                    {% if not notify.seen %}
+                                                        {% set notifyLink = (notify.notification.link ?? app.request.pathinfo)
+                                                            ~ '?clicked_notification=' ~ notify.id
+                                                        %}
+                                                        {% set userDateFormat = app.user.getTwigFormatDate() ~ ' H:i:s'  %}
+                                                        <a href="{{ notifyLink }}"
+                                                           class="media-heading">
+                                                            <span class="text-semibold">
+                                                                {{ notify.notification.subject }}
+                                                            </span>
+                                                            <span class="media-annotation pull-right">
+                                                                {{ notify.notification.createdAt|date(userDateFormat) }}
+                                                            </span>
+                                                        </a>
+                                                    {% else %}
+                                                        <div class="block">
+                                                            <span class="text-semibold">
+                                                                {{ notify.notification.subject }}
+                                                            </span>
+                                                            <span class="media-annotation pull-right">
+                                                                {{ notify.notification.createdAt|date(userDateFormat) }}
+                                                            </span>
+                                                        </div>
+                                                    {% endif %}
+
+                                                    <span class="text-muted">{{ notify.notification.message }}</span>
+                                                </div>
+                                            </li>
+                                        {% endfor %}
+                                    {% else %}
+                                        <li class="media">
+                                            <div class="media-body">
+                                                <span> {{ 'notifications.no_new_notifications'|trans({}, 'labels') }}.</span>
+                                            </div>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="icon-help position-left"></i>
+                                {{ 'navigation.help.help'|trans({}, 'labels') }}
+                                <span class="caret"></span>
+                            </a>
+
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li>
+                                    <a href="{{ path('help_support') }}"><i class="icon-comment-discussion"></i>
+                                        {{ 'navigation.help.support'|trans({}, 'labels') }}
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
             </div>
+
+            <div class="page-container">
+                <div class="page-content">
+                    <div class="sidebar sidebar-main sidebar-default">
+                        <div class="sidebar-content">
+                            <div class="sidebar-category sidebar-category-visible">
+                                <div class="category-content sidebar-user">
+                                    <div class="media">
+                                        <div class="media-body">
+                                            <span class="media-heading text-semibold">
+                                                {{ app.user.building.name }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="category-content no-padding">
+                                    <ul class="navigation navigation-main navigation-accordion">
+                                        {{ knp_menu_render('main', {currentClass: 'menu-highlight'}) }}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content-wrapper">
+                        {% block body %}{% endblock %}
+                        <div id="picker-holder"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="navbar navbar-default navbar-fixed-bottom footer">
+                <ul class="nav navbar-nav visible-xs-block">
+                    <li>
+                        <a class="text-center collapsed" data-toggle="collapse" data-target="#footer">
+                            <i class="icon-circle-up2"></i>
+                        </a>
+                    </li>
+                </ul>
+                <div class="navbar-collapse collapse" id="footer">
+                    <div class="navbar-text">
+                        &copy; 2020. Developed by {{ software_name }}
+                    </div>
+                    <div class="navbar-right">
+                        <ul class="nav navbar-nav">
+                            <li><a href="#">About</a></li>
+                            <li><a href="#">Terms</a></li>
+                            <li><a href="#">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- /footer -->
         </div>
-        <!-- /footer -->
     </body>
 
     <footer>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
         <script src="{{ asset('js/validation/jquery-validation.js') }}"></script>
 
@@ -249,12 +254,6 @@
         <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
         <script src="{{ asset('js/pages/top_search.js') }}"></script>
         <!-- /End of scripts for work of top bar search by owners -->
-
-        <script>
-            {% if is_granted('ROLE_OWNER') or is_granted('ROLE_EMPLOYEE') %}
-                var country = '{{ app.request.locale }}'.length > 0 ? '{{ app.request.locale }}' : null;
-            {% endif %}
-        </script>
 
         {% block scripts %} {% endblock %}
 

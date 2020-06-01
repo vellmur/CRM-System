@@ -17,6 +17,7 @@ class PhoneFormatter
     /**
      * PhoneFormatter constructor.
      * @param string $countryCode
+     * @throws \Exception
      */
     public function __construct(string $countryCode)
     {
