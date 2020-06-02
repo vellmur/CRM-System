@@ -109,7 +109,7 @@ class AppExtension extends AbstractExtension
      */
     public function currencyFormat(?int $id)
     {
-        return $id === null ? '$' : $this->currencyFormatter->getCurrencySymbolById($id);
+        return $id === null ? '$' : CurrencyFormatter::getCurrencySymbolById($id);
     }
 
     /**

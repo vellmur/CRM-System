@@ -107,17 +107,6 @@ class UserTest extends TestCase
         $this->assertEquals($user::TWIG_DATE_FORMATS[$user->getDateFormat()], $user->getTwigFormatDate());
     }
 
-    public function testTimezone()
-    {
-        $building = new Building();
-        $defaultTimezone = 'UTC';
-        $this->assertEquals($defaultTimezone, $building->getTimeZone());
-
-        $timezone = 'Europe/Paris';
-        $building->setTimezone($timezone);
-        $this->assertEquals($timezone, $building->getTimeZone());
-    }
-
     public function testEmptyData()
     {
         $user = new User();

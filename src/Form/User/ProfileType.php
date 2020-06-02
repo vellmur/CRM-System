@@ -35,6 +35,7 @@ class ProfileType extends AbstractType
             ->add('locale', LocaleType::class)
             ->add('dateFormat', DateFormatType::class)
             ->add('building', BuildingType::class, [
+                'data' => $builder->getData()->getBuilding(),
                 'validation_groups' => 'profile_validation',
                 'constraints' => [
                     new Valid()

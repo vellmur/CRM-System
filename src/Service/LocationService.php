@@ -26,16 +26,16 @@ class LocationService
 
     /**
      * Returns list of all timezones supported by PHP
-     *
-     * @param $countryCode
+     * @param string|null $countryCode
      * @return array
-     * @throws \Exception
      */
-    public function getTimezonesList($countryCode)
+    public function getTimezonesList(?string $countryCode = null)
     {
         $timezones = [];
 
-        $zones = $countryCode ? timezone_identifiers_list(\DateTimeZone::PER_COUNTRY, $countryCode) : timezone_identifiers_list();
+        $zones = $countryCode && $countryCode != ''
+            ? timezone_identifiers_list(\DateTimeZone::PER_COUNTRY, strtoupper($countryCode))
+            : timezone_identifiers_list();
 
         foreach ($zones as $key => $zone) {
             $zoneExploded = explode('/', $zone); // 0 => Continent, 1 => City

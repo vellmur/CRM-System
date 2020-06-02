@@ -227,11 +227,11 @@ class Building
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getTimezone()
     {
-        return $this->timezone ? $this->timezone : date_default_timezone_get();
+        return $this->timezone;
     }
 
     /**

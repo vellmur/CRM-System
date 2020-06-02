@@ -12,16 +12,13 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class BuildingType extends AbstractType
 {
-    public $timezoneSubscriber;
+    private $timezoneSubscriber;
 
-    /**
-     * BuildingType constructor.
-     * @param TimezoneSubscriber $timezoneSubscriber
-     */
     public function __construct(TimezoneSubscriber $timezoneSubscriber)
     {
         $this->timezoneSubscriber = $timezoneSubscriber;
     }
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options

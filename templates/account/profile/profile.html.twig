@@ -64,18 +64,6 @@
                             {{ form_widget(form.locale)}}
                         {% endif %}
                     </div>
-                    <div class="form-group {% if form.building.timezone.vars.errors|length %} has-error {% endif %}">
-                        <label>{{ 'account.settings.timezone'|trans({}, 'labels') }}</label>
-                        {% if not form.building.timezone.vars.valid %}
-                            {{ form_widget(form.building.timezone, {'attr': {
-                                'data-placement': 'top',
-                                'title': form.building.timezone.vars.errors[0].message,
-                                'class': 'select tip tip-open'}
-                            }) }}
-                        {% else %}
-                            {{ form_widget(form.building.timezone)}}
-                        {% endif %}
-                    </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group {% if form.building.address.country.vars.errors|length %} has-error {% endif %}">
@@ -89,6 +77,18 @@
                             }) }}
                         {% else %}
                             {{ form_widget(form.building.address.country) }}
+                        {% endif %}
+                    </div>
+                    <div class="form-group {% if form.building.timezone.vars.errors|length %} has-error {% endif %}">
+                        <label>{{ 'account.settings.timezone'|trans({}, 'labels') }}</label>
+                        {% if not form.building.timezone.vars.valid %}
+                            {{ form_widget(form.building.timezone, {'attr': {
+                                'data-placement': 'top',
+                                'title': form.building.timezone.vars.errors[0].message,
+                                'class': 'select tip tip-open'}
+                            }) }}
+                        {% else %}
+                            {{ form_widget(form.building.timezone)}}
                         {% endif %}
                     </div>
                     <div class="form-group {% if form.building.address.street.vars.errors|length %} has-error {% endif %}">
@@ -168,8 +168,8 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFudPQ3bgPztQLPBngp9B425BBl9q5Duo&libraries=places"></script>
     <script src="{{ asset('js/plugins/googleMapsSearch.js') }}?v=3"></script>
     <script>
-        let $streetField = $('#profile_building_address_street'),
-            $holder =  $('form'),
+        let $holder =  $('form[name="profile"]'),
+            $streetField = $('#profile_building_address_street'),
             $countyField = $('#profile_building_address_country'),
             countryCode = $countyField.val() ? $countyField.val() : null;
 
@@ -180,8 +180,23 @@
             let countryCurrency = $('#profile_building_currency option[data-country-code="' + $(this).val() + '"]').val(),
                 $currencyField =  $('#profile_building_currency');
 
-            $currencyField.val(countryCurrency);
-            $currencyField.selectpicker('refresh')
+            $.ajax({
+                url: '{{ path('profile_edit') }}',
+                type: "post",
+                data: $holder.serialize(),
+                success: function (response) {
+                    let timezoneFieldId = '#profile_building_timezone',
+                        $timezoneField = $(timezoneFieldId);
+
+                    $timezoneField.html($(response).find(timezoneFieldId).find('option')).val('').selectpicker('refresh');
+
+                    $currencyField.val(countryCurrency);
+                    $currencyField.selectpicker('refresh');
+                },
+                error: function (response) {
+                    console.log(response);
+                }
+            });
         });
     </script>
 {% endblock %}

@@ -16,12 +16,20 @@ class TimezoneSubscriber implements EventSubscriberInterface
 
     private $locationService;
 
+    /**
+     * TimezoneSubscriber constructor.
+     * @param FormFactoryInterface $factory
+     * @param LocationService $locationService
+     */
     public function __construct(FormFactoryInterface $factory, LocationService $locationService)
     {
         $this->factory = $factory;
         $this->locationService = $locationService;
     }
 
+    /**
+     * @return array
+     */
     public static function getSubscribedEvents()
     {
         return [
@@ -44,7 +52,6 @@ class TimezoneSubscriber implements EventSubscriberInterface
     }
 
     /**
-     *
      * Here we dynamically set owner location data, based on country/region/city/postalCode
      *
      * @param FormEvent $event
@@ -54,20 +61,17 @@ class TimezoneSubscriber implements EventSubscriberInterface
         $form = $event->getForm();
         $data = $event->getData();
 
-        $countryCode = array_key_exists('country', $data) ? $data['country'] : null;
-
         // All this have must happens only if some country selected
-        if ($countryCode && $countryCode !== '') {
+        if ($countryCode = isset($data['address']['country']) ? $data['address']['country'] : null) {
             $this->addTimezoneField($form, $countryCode);
-            $event->setData($data);
         }
     }
 
     /**
      * @param FormInterface $form
-     * @param $countryCode
+     * @param string|null $countryCode
      */
-    public function addTimezoneField(FormInterface $form, $countryCode)
+    public function addTimezoneField(FormInterface $form, ?string $countryCode = null)
     {
         $form->add('timezone', ChoiceType::class, [
             'required' => false,

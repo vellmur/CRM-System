@@ -121,7 +121,7 @@ class ProfileTypeTest extends TypeTestCase
         $building = new Building();
         $building->setName($data['building']['name']);
         $building->setEmail($data['building']['email']);
-        $building->setCurrency($data['building']['currency']);
+        $building->setCurrency(CurrencyFormatter::getCurrencyIdBySymbol($data['building']['currency']));
 
         $address = new Address();
         $address->setCountry($data['building']['address']['country']);

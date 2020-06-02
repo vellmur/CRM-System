@@ -2,6 +2,7 @@
 
 namespace App\Form\Subscriber;
 
+use App\Service\Localization\CurrencyFormatter;
 use App\Service\Localization\LanguageDetector;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -31,8 +32,25 @@ class ProfileSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
+            FormEvents::POST_SET_DATA => 'postSet',
             FormEvents::POST_SUBMIT => 'preSubmit'
         ];
+    }
+
+    /**
+     * Here we dynamically set owner location data, based on country/region/city/postalCode
+     * @param FormEvent $event
+     */
+    public function postSet(FormEvent $event)
+    {
+        $form = $event->getForm();
+        $user = $event->getData();
+
+        $currency = $user->getBuilding()->getCurrency()
+            ? CurrencyFormatter::getCurrencySymbolById($user->getBuilding()->getCurrency())
+            : null;
+
+        $form->get('building')->get('currency')->setData($currency);
     }
 
     /**
@@ -41,6 +59,10 @@ class ProfileSubscriber implements EventSubscriberInterface
     public function preSubmit(FormEvent $event)
     {
         $user = $event->getData();
+
+        if ($user->getBuilding()->getCurrency()) {
+            $user->getBuilding()->setCurrency(CurrencyFormatter::getCurrencyIdBySymbol($user->getBuilding()->getCurrency()));
+        }
 
         $this->session->set('_locale', $this->languageDetector->getLocaleCodeById($user->getLocale()));
         $this->session->set('date_format', $user->getDateFormatName());

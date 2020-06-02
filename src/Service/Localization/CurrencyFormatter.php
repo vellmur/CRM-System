@@ -23,11 +23,22 @@ class CurrencyFormatter
      * @param int $id
      * @return string|null
      */
-    public function getCurrencySymbolById(int $id) :? string
+    public static function getCurrencySymbolById(int $id) :? string
     {
         $currency = self::LIST[$id];
 
         return self::SYMBOL_LIST[$currency];
+    }
+
+    /**
+     * @param string $symbol
+     * @return int|null
+     */
+    public static function getCurrencyIdBySymbol(string $symbol) :? string
+    {
+        $currency = array_flip(self::SYMBOL_LIST)[$symbol];
+
+        return array_flip(self::LIST)[$currency];
     }
 
     /**

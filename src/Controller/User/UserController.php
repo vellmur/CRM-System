@@ -15,7 +15,6 @@ use App\Form\User\UserType;
 use App\Entity\User\User;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-
 class UserController extends AbstractController
 {
     private $manager;
@@ -31,18 +30,19 @@ class UserController extends AbstractController
      */
     public function update(Request $request)
     {
-        $form = $this->createForm(ProfileType::class, $this->getUser());
+        $user = $this->getUser();
+        $form = $this->createForm(ProfileType::class, $user);
         $form->handleRequest($request);
 
        if ($form->isSubmitted() && $form->isValid()) {
-            $this->manager->saveUser($this->getUser());
+           $this->manager->saveUser($user);
 
-            return $this->redirect($this->generateUrl('profile_edit'));
-        }
+           return $this->redirect($this->generateUrl('profile_edit'));
+       }
 
-        return $this->render('account/profile/profile.html.twig', [
-            'form' => $form->createView()
-        ]);
+       return $this->render('account/profile/profile.html.twig', [
+           'form' => $form->createView()
+       ]);
     }
 
     /**

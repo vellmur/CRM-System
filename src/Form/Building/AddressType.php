@@ -3,7 +3,6 @@
 namespace App\Form\Building;
 
 use App\Entity\Building\Address;
-use App\Form\Subscriber\TimezoneSubscriber;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
