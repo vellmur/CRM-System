@@ -40,7 +40,3 @@ owner:
 membership:
   resource: "routes/app/owner/membership.yml"
   prefix:   /module/membership/{_locale}
-
-subscription:
-  resource: "routes/app/subscription.yml"
-  prefix:   /owner/subscription

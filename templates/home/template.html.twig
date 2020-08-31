@@ -67,7 +67,7 @@
       tweak-product-quick-view-lightbox-excerpt-display-truncate tweak-product-quick-view-lightbox-show-arrows
       tweak-product-quick-view-lightbox-show-close-button tweak-product-quick-view-lightbox-controls-weight-light
       native-currency-code-usd collection-5c338edc8a922dea26197063
-      view-list mobile-style-available has-banner-image {{ bodyClasses }}">
+      view-list mobile-style-available has-banner-image collection-type-index">
 <div id="backToHeader"></div>
 <div class="show-on-scroll-wrapper" id="showOnScrollWrapper">
     <header id="header" class="show-on-scroll" data-offset-el=".header-beginning" data-offset-behavior="bottom" role="banner">
@@ -90,21 +90,6 @@
             <div id="headerNav">
                 <div id="mainNavWrapper" class="nav-wrapper" data-content-field="navigation-mainNav">
                     <nav id="mainNavigation" data-content-field="navigation-mainNav">
-                        <div class="index{{ 'mission' in app.request.requestUri ? ' active'}}">
-                            <a href="{{ path('home_mission') }}">
-                                Mission
-                            </a>
-                        </div>
-                        <div class="collection{{ 'blog' in app.request.requestUri ? ' active'}}">
-                            <a href="{{ path('home_blog') }}">
-                                Blog
-                            </a>
-                        </div>
-                        <div class="collection{{ 'faq' in app.request.requestUri ? ' active'}}">
-                            <a href="{{ path('home_faq') }}">
-                                FAQs
-                            </a>
-                        </div>
                         <div class="collection">
                             <a href="{{ path('app_registration') }}">
                                 Get Started
@@ -123,21 +108,6 @@
 <div id="sidecarNav">
     <div id="mobileNavWrapper" class="nav-wrapper" data-content-field="navigation-mobileNav">
         <nav id="mobileNavigation">
-            <div class="index{{ 'mission' in app.request.requestUri ? ' active'}}">
-                <a href="{{ path('home_mission') }}">
-                    Mission
-                </a>
-            </div>
-            <div class="collection{{ 'blog' in app.request.requestUri ? ' active'}}">
-                <a href="{{ path('home_blog') }}">
-                    Blog
-                </a>
-            </div>
-            <div class="collection{{ 'faq' in app.request.requestUri ? ' active'}}">
-                <a href="{{ path('home_faq') }}">
-                    FAQs
-                </a>
-            </div>
             <div class="collection">
                 <a href="{{ path('app_registration') }}">
                     Get Started
@@ -168,21 +138,6 @@
             <div id="headerNav">
                 <div id="mainNavWrapper" class="nav-wrapper" data-content-field="navigation-mainNav">
                     <nav id="mainNavigation" data-content-field="navigation-mainNav">
-                        <div class="index{{ 'mission' in app.request.requestUri ? ' active'}}">
-                            <a href="{{ path('home_mission') }}">
-                                Mission
-                            </a>
-                        </div>
-                        <div class="collection{{ 'blog' in app.request.requestUri ? ' active'}}">
-                            <a href="{{ path('home_blog') }}">
-                                Blog
-                            </a>
-                        </div>
-                        <div class="collection{{ 'faq' in app.request.requestUri ? ' active'}}">
-                            <a href="{{ path('home_faq') }}">
-                                FAQs
-                            </a>
-                        </div>
                         <div class="collection">
                             <a href="{{ path('app_registration') }}">
                                 Get Started
@@ -213,10 +168,7 @@
                             <div class="sqs-block-content">
                                 <p>
                                     ©2020 {{ software_name }}<br>
-                                    <br>hi@blackdirt.org<br>
-                                    <br>Photography by:<br>
-                                    <span>Jocelyn Horne</span><br/>
-                                    <span>Anne Stephenson</span>
+                                    <br>mail@something.org<br>
                                 </p>
                             </div>
                         </div>
@@ -255,14 +207,14 @@
                                     <div class="sqs-block-content">
                                         <div class="sqs-svg-icon--outer social-icon-alignment-center social-icons-color-black social-icons-size-small social-icons-style-regular ">
                                             <nav class="sqs-svg-icon--list">
-                                                <a href="https://www.facebook.com/blackdirtsoftware/" target="_blank" class="sqs-svg-icon--wrapper facebook">
+                                                <a href="https://www.facebook.com/soft/" target="_blank" class="sqs-svg-icon--wrapper facebook">
                                                     <div>
                                                         <svg class="sqs-svg-icon--social" viewBox="0 0 64 64">
                                                             <use class="sqs-use--icon" xlink:href="#facebook-icon"></use>
                                                             <use class="sqs-use--mask" xlink:href="#facebook-mask"></use>
                                                         </svg>
                                                     </div>
-                                                </a><a href="https://www.instagram.com/blackdirttechnology/" target="_blank" class="sqs-svg-icon--wrapper instagram">
+                                                </a><a href="https://www.instagram.com/soft/" target="_blank" class="sqs-svg-icon--wrapper instagram">
                                                     <div>
                                                         <svg class="sqs-svg-icon--social" viewBox="0 0 64 64">
                                                             <use class="sqs-use--icon" xlink:href="#instagram-icon"></use>

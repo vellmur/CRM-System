@@ -137,6 +137,11 @@ class User implements UserInterface
      */
     private $notifications;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Master\Email\Recipient", mappedBy="user", cascade={"all"}, orphanRemoval=true)
+     */
+    private $emailRecipients;
+
     const ROLE_ADMIN = 'ROLE_ADMIN';
     const ROLE_OWNER = 'ROLE_OWNER';
     const ROLE_EMPLOYEE = 'ROLE_EMPLOYEE';

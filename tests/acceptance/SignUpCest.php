@@ -207,7 +207,7 @@ class SignUpCest
         $I->see('This name is already taken.');
 
         $I->fillField('fos_user_registration_form[building][name]', $this->company);
-        $I->fillField('fos_user_registration_form[email]', 'cf@blackdirt.org');
+        $I->fillField('fos_user_registration_form[email]', 'cf@soft.org');
         $I->click('Sign up');
 
         $I->dontSee('Please choose your language');

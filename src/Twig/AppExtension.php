@@ -68,7 +68,7 @@ class AppExtension extends AbstractExtension
         ], UrlGeneratorInterface::ABSOLUTE_URL);
 
         // If server is not localhost, change scheme to https
-        if (!strstr($link, '127.0.0.1') && !strstr($link, 'blackdirt.local')) {
+        if (!strstr($link, '127.0.0.1') && !strstr($link, 'soft.local')) {
             $link = str_replace('http:', 'https:', $link);
         }
 

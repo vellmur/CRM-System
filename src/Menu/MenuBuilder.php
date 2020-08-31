@@ -142,7 +142,6 @@ class MenuBuilder
         $menu[$account]->addChild($this->trans->trans('navigation.account.profile', [], $domain), ['route' => 'profile_edit'])->setAttribute('icon', 'icon-user');
 
         $menu[$account]->addChild($this->trans->trans('navigation.account.users', [], $domain), ['route' => 'user_index'])->setAttribute('icon', 'icon-user-plus');
-        $menu[$account]->addChild($this->trans->trans('navigation.account.subscription', [], $domain), ['route' => 'subscription_index'])->setAttribute('icon', 'icon-pencil5');
     }
 
     /**

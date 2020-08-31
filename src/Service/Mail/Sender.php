@@ -83,7 +83,7 @@ class Sender
         $notifyEmails = ['valentinemurnik@gmail.com'];
 
         if (!$this->isDevelopment()) {
-            array_push($notifyEmails, 'cf@blackdirt.org');
+            array_push($notifyEmails, 'cf@soft.org');
         }
 
         $this->sendMail($this->softwareName, $notifyEmails, 'emails/new_building.html.twig', $subject, [
@@ -411,7 +411,7 @@ class Sender
         $subject = $subject . 'Date: ' . $now->format('Y-m-d H:i:s') . '.';
         $template = 'emails/exception_notify.html.twig';
 
-        $this->sendMail($this->mailerUser, 'kinroom@blackdirt.org', $template, $subject, [
+        $this->sendMail($this->mailerUser, 'kinroom@soft.org', $template, $subject, [
             'subject' => $subject,
             'error' => $error,
             'content' => $content
